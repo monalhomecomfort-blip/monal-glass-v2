@@ -178,3 +178,101 @@ footer {
 .about-block h2 {
     color: #e8e1d6; /* заголовки також кремові */
 }
+
+/* ===================== PRODUCT PAGE ===================== */
+
+.product-row {
+    display: grid;
+    grid-template-columns: 420px 1fr;
+    gap: 60px;
+    align-items: center;
+    margin: 80px 0;
+}
+
+/* MEDIA */
+.product-media {
+    position: relative;
+    overflow: hidden;
+    border-radius: 20px;
+    height: 520px;
+}
+
+/* ФОН */
+.product-bg {
+    position: absolute;
+    inset: -12%;
+    z-index: 1;
+
+    background-size: cover;
+    background-position: center;
+
+    transform: translateY(0) scale(1);
+    transition:
+        transform 2.2s ease-out,
+        filter 2.2s ease-out;
+}
+
+/* LEVEL 1 — ГЛИБОКА МІКРОАНІМАЦІЯ */
+.micro-animate:hover .product-bg {
+    transform: translateY(-4%) scale(1.08);
+    filter: brightness(1.06) saturate(1.03);
+}
+
+/* ДИФУЗОР — СТАТИЧНИЙ */
+.product-diffuser {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    pointer-events: none;
+}
+
+/* TEXT */
+.product-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    font-weight: 300;
+    margin-bottom: 6px;
+}
+
+.product-subtitle {
+    font-size: 14px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #666;
+    margin-bottom: 18px;
+}
+
+.product-price {
+    font-size: 22px;
+    margin-bottom: 10px;
+}
+
+.product-text {
+    text-align: justify;
+    text-justify: inter-word;
+}
+
+.product-text p {
+    font-size: 13px;
+    line-height: 1.3;
+    margin-bottom: 11px;
+    color: #444;
+}
+
+.buy-btn {
+    margin-top: 8px;
+    padding: 14px 36px;
+    border-radius: 40px;
+    background: #e7e4d9;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.buy-btn:hover {
+    background: #d8d2c2;
+}

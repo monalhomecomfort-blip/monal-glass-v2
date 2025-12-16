@@ -291,11 +291,10 @@ footer {
 
 
 /* ===== PAGE HEADER ===== */
-
 .page-header {
     display: flex;
-    align-items: center;
-    gap: 20px;
+    align-items: baseline;
+    justify-content: space-between;
     margin-bottom: 24px;
 }
 

@@ -282,3 +282,33 @@ footer {
 .buy-btn:hover {
     background: #d8d2c2;
 }
+
+
+
+
+
+
+
+
+/* ===== PAGE HEADER ===== */
+
+.page-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 24px;
+}
+
+.page-back {
+    font-size: 14px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #333;
+    text-decoration: none;
+    opacity: 0.65;
+    transition: opacity 0.25s;
+}
+
+.page-back:hover {
+    opacity: 1;
+}

@@ -144,11 +144,8 @@ nav {
 
 /* ===================== FOOTER ===================== */
 footer {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-
+    position: relative; /* або взагалі без position */
+    
     height: 70px;
 
     display: flex;

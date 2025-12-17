@@ -331,4 +331,15 @@ footer {
     opacity: 1;
 }
 
+/* ===== Автопритискання футера до низу ===== */
+
+.page-wrap {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.page-wrap .container {
+    flex: 1;
+}
 

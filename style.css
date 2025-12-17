@@ -308,3 +308,10 @@ footer {
 .page-back:hover {
     opacity: 1;
 }
+
+.page-header {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* відстань між "Назад" і "Дім" */
+    margin-bottom: 24px;
+}

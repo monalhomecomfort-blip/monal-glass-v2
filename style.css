@@ -112,6 +112,7 @@ nav {
     border-radius: 14px;
     overflow: hidden;
 
+    
     background: rgba(18, 18, 18, 0.78);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
@@ -279,6 +280,13 @@ footer {
     background: #d8d2c2;
 }
 
+
+
+
+
+
+
+
 /* ===== PAGE HEADER ===== */
 .page-header {
     display: flex;
@@ -323,42 +331,15 @@ footer {
     opacity: 1;
 }
 
-/* === РЯД КАТАЛОГУ (експериментальна логіка зі стрілкою) === */
-.catalog-row {
+/* ===== Автопритискання футера до низу ===== */
+
+.page-wrap {
+    min-height: 100vh;
     display: flex;
-    align-items: center;
-    gap: 24px;
-    margin-bottom: 40px;
-    overflow: visible;
+    flex-direction: column;
+    align-items: stretch; /* ← КЛЮЧОВЕ */
 }
 
-/* ОСНОВНА КАТЕГОРІЯ */
-.subcategory.main {
-    width: 240px;
-    flex-shrink: 0;
-}
-
-/* СТРІЛКА */
-.catalog-arrow {
-    font-size: 32px;
-    font-weight: 300;
-    color: #cfc7bb;
-    flex-shrink: 0;
-}
-
-/* ПІДКАТЕГОРІЇ */
-.subcategories-inline {
-    display: flex;
-    gap: 18px;
-    overflow: visible;
-}
-
-/* МЕНШІ ПЛИТКИ */
-.subcategory.small {
-    width: 170px;
-    flex-shrink: 0;
-}
-
-.subcategory.small img {
-    height: 150px;
+.page-wrap .container {
+    flex: 1;
 }

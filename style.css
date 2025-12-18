@@ -5,13 +5,13 @@ html, body {
     margin: 0;
     padding: 0;
     width: 100%;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
     overflow-x: hidden;
     background: #f4efe6;
     color: #333;
     font-family: 'Montserrat', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 * {
@@ -148,16 +148,18 @@ nav {
 
 /* ===================== FOOTER ===================== */
 footer {
+    position: relative;
     height: 70px;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-
     background: rgba(18, 18, 18, 0.78);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     color: #e8e1d6;
     font-size: 13px;
+    z-index: 100;
     margin-top: auto;
 }
 

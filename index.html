@@ -9,8 +9,6 @@
 
 <body>
     
-<div class="page-wrap">
-    
 <!-- НАВІГАЦІЯ -->
 <nav>
     <div class="nav-left">
@@ -41,56 +39,57 @@
     </div>
 </nav>
 
-<!-- КАТАЛОГ -->
+
+<!-- КОНТЕНТ -->
 <main class="container">
 
     <h1 class="page-title">Каталог Mōnal</h1>
 
-    <div class="subgrid">
+    <!-- БЛОК “ДІМ” (ФЛЕКС, НЕ GRID) -->
+    <div class="catalog-row">
 
-        <!-- НОВА КАТЕГОРІЯ “ДІМ” -->
-        <div class="catalog-row">
+        <!-- ОСНОВНА КАТЕГОРІЯ -->
+        <a class="subcategory main" href="#">
+            <img src="images/1дім_каталог.jpg" alt="">
+            <div class="subcategory-title">Дім</div>
+        </a>
 
-            <!-- ОСНОВНА КАТЕГОРІЯ -->
-            <a class="subcategory main" href="#">
-                <img src="images/1дім_каталог.jpg" alt="">
-                <div class="subcategory-title">Дім</div>
+        <!-- СТРІЛКА -->
+        <div class="catalog-arrow">→</div>
+
+        <!-- ПІДКАТЕГОРІЇ -->
+        <div class="subcategories-inline">
+
+            <a class="subcategory small" href="#">
+                <img src="images/2_дім_дифузор_каталог.jpg">
+                <div class="subcategory-title">Аромадифузори</div>
             </a>
 
-            <!-- СТРІЛКА -->
-            <div class="catalog-arrow">→</div>
+            <a class="subcategory small" href="#">
+                <img src="images/2_дім_парфуми_каталог.jpg">
+                <div class="subcategory-title">Парфуми</div>
+            </a>
 
-            <!-- ПІДКАТЕГОРІЇ -->
-            <div class="subcategories-inline">
+            <a class="subcategory small" href="#">
+                <img src="images/2_дім_свічки_каталог.jpg">
+                <div class="subcategory-title">Свічки</div>
+            </a>
 
-                <a class="subcategory small" href="#">
-                    <img src="images/2_дім_дифузор_каталог.jpg">
-                    <div class="subcategory-title">Аромадифузори</div>
-                </a>
+            <a class="subcategory small" href="#">
+                <img src="images/2_дім_рефіли_каталог.jpg">
+                <div class="subcategory-title">Рефіли</div>
+            </a>
 
-                <a class="subcategory small" href="#">
-                    <img src="images/2_дім_парфуми_каталог.jpg">
-                    <div class="subcategory-title">Парфуми</div>
-                </a>
+            <a class="subcategory small" href="#">
+                <img src="images/2_дім_діскавері_каталог.jpg">
+                <div class="subcategory-title">Discovery</div>
+            </a>
 
-                <a class="subcategory small" href="#">
-                    <img src="images/2_дім_свічки_каталог.jpg">
-                    <div class="subcategory-title">Свічки</div>
-                </a>
-
-                <a class="subcategory small" href="#">
-                    <img src="images/2_дім_рефіли_каталог.jpg">
-                    <div class="subcategory-title">Рефіли</div>
-                </a>
-
-                <a class="subcategory small" href="#">
-                    <img src="images/2_дім_діскавері_каталог.jpg">
-                    <div class="subcategory-title">Discovery</div>
-                </a>
-
-            </div>
         </div>
+    </div>
+
 </main>
+
 
 <!-- ФУТЕР -->
 <footer>
@@ -100,6 +99,5 @@
     © 2025 Ароматика для дому
 </footer>
 
-</div>    
 </body>
 </html>

@@ -382,7 +382,7 @@ a.sub-mini {
 }
 
 .about-block {
-    padding: 20px 22px;
+    padding: 18px 20px;
     border-radius: 16px;
     background: rgba(18,18,18,0.78);
     backdrop-filter: blur(10px);
@@ -403,7 +403,7 @@ a.sub-mini {
 }
 
 .about-block p {
-    font-size: 13px;
+    font-size: 14px;
     line-height: 1.38;
 }
 

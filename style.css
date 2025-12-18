@@ -344,3 +344,45 @@ footer {
     flex: 1;
 }
 
+
+
+
+/* === РЯД КАТАЛОГУ === */
+.catalog-row {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    margin-bottom: 40px;
+    overflow: visible; /* КЛЮЧ */
+}
+
+/* ОСНОВНА КАТЕГОРІЯ */
+.subcategory.main {
+    width: 240px;
+    flex-shrink: 0;
+}
+
+/* СТРІЛКА */
+.catalog-arrow {
+    font-size: 32px;
+    font-weight: 300;
+    color: #cfc7bb; /* кремово-бежевий */
+    flex-shrink: 0;
+}
+
+/* ПІДКАТЕГОРІЇ */
+.subcategories-inline {
+    display: flex;
+    gap: 18px;
+    overflow: visible;
+}
+
+/* МЕНШІ ПЛИТКИ */
+.subcategory.small {
+    width: 170px;
+    flex-shrink: 0; /* ЩОБ НЕ СТИСКАЛИСЬ */
+}
+
+.subcategory.small img {
+    height: 150px;
+}

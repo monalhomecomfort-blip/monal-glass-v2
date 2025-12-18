@@ -372,7 +372,6 @@ a.sub-mini {
 }
 
 /* ===== ABOUT PAGE CLEANUP ===== */
-
 .about-container {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -383,8 +382,8 @@ a.sub-mini {
 }
 
 .about-block {
-    padding: 28px;
-    border-radius: 18px;
+    padding: 20px 22px;
+    border-radius: 16px;
     background: rgba(18,18,18,0.78);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
@@ -398,14 +397,14 @@ a.sub-mini {
 .about-block h2 {
     font-family: 'Playfair Display', serif;
     font-weight: 300;
-    font-size: 30px;
-    margin-bottom: 14px;
+    font-size: 24px;
+    margin-bottom: 10px;
     color: #e8e1d6;
 }
 
 .about-block p {
-    font-size: 14px;
-    line-height: 1.45;
+    font-size: 13px;
+    line-height: 1.38;
 }
 
 /* адаптив дві колонки → одна */
@@ -418,3 +417,5 @@ a.sub-mini {
         grid-column: span 1;
     }
 }
+
+

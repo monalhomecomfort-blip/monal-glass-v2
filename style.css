@@ -395,6 +395,20 @@ a.sub-mini {
     align-items: center;
 }
 
+/* стиль підкатегорій у стилі категорій */
+.sub-mini {
+    background: rgba(18, 18, 18, 0.78) !important;
+    color: #e8e1d6 !important;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+}
+
+/* текст назви кремово-бежевий */
+.sub-mini .mini-title {
+    color: #e8e1d6 !important;
+}
+
 /* ===== ABOUT PAGE CLEANUP ===== */
 .about-container {
     display: grid;

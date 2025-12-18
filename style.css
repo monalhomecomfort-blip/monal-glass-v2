@@ -340,35 +340,30 @@ footer {
     white-space: nowrap;
 }
 
+/* Фіксація реальних розмірів міні-плиток */
 .sub-mini {
-    width: 140px;
-    border-radius: 12px;
-    overflow: hidden;
-    background: rgba(18, 18, 18, 0.78);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
-    text-decoration: none;
-    cursor: pointer;
-    transition: transform 0.3s;
+    width: 140px !important;
+    height: auto;
+    flex: 0 0 140px;
 }
 
-.sub-mini:hover {
-    transform: translateY(-4px);
-}
-
+/* Фіксація висоти фото всередині */
 .sub-mini img {
     width: 100%;
-    height: 120px;
+    height: 120px !important;
     object-fit: cover;
 }
 
+/* Текст не розтягує плитку */
 .mini-title {
-    padding: 10px;
     font-size: 13px;
-    text-align: center;
-    color: #e8e1d6;
-    font-weight: 300;
+    padding: 8px 6px;
+    white-space: normal;
+}
+
+
+.sub-mini:hover {
+    transform: translateY(-4px);
 }
 
 /* коли це <a> */

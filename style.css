@@ -562,10 +562,10 @@ a.sub-mini {
 
 /* підтягнути Доставку ближче до заголовка */
 .delivery-columns {
-    margin-top: 30px !important;
+    margin-top: 50px !important;
 }
 
 /* підтягнути Контакти ближче до заголовка */
 .contact-columns {
-    margin-top: 30px !important;
+    margin-top: 50px !important;
 }

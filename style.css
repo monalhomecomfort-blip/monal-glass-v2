@@ -165,6 +165,13 @@ footer {
     z-index: 100;
 }
 
+/* Пэддинг-заглушка для коротких сторінок */
+body::after {
+    content: "";
+    display: block;
+    height: 120px; /* запас для футера */
+}
+
 .footer-logo img {
     width: 120px;
     filter: brightness(0) invert(0.92);

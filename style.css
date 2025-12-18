@@ -464,3 +464,49 @@ a.sub-mini {
     }
 }
 
+/* ===== DELIVERY PAGE CLEANUP ===== */
+
+.delivery-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 42px;
+    margin: 140px auto 100px;
+    max-width: 1200px;
+    padding: 0 40px;
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+}
+
+.delivery-block {
+    padding: 22px 24px;
+    border-radius: 16px;
+    background: rgba(18, 18, 18, 0.78);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color: #e8e1d6; /* кремово-бежевий */
+}
+
+.delivery-block h2 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 300;
+    font-size: 24px;
+    margin-bottom: 10px;
+    color: #e8e1d6;
+}
+
+.delivery-block p {
+    font-size: 14px;
+    line-height: 1.42;
+    color: #e8e1d6;
+}
+
+/* мобільний режим */
+@media(max-width: 900px) {
+    .delivery-columns {
+        grid-template-columns: 1fr;
+    }
+}

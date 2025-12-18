@@ -371,3 +371,50 @@ a.sub-mini {
     color: inherit;
 }
 
+/* ===== ABOUT PAGE CLEANUP ===== */
+
+.about-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 42px;
+    margin: 140px auto 100px;
+    max-width: 1200px;
+    padding: 0 40px;
+}
+
+.about-block {
+    padding: 28px;
+    border-radius: 18px;
+    background: rgba(18,18,18,0.78);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color: #e8e1d6;
+}
+
+.about-block.big {
+    grid-column: span 2;
+}
+
+.about-block h2 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 300;
+    font-size: 30px;
+    margin-bottom: 14px;
+    color: #e8e1d6;
+}
+
+.about-block p {
+    font-size: 14px;
+    line-height: 1.45;
+}
+
+/* адаптив дві колонки → одна */
+@media (max-width: 900px) {
+    .about-container {
+        grid-template-columns: 1fr;
+    }
+
+    .about-block.big {
+        grid-column: span 1;
+    }
+}

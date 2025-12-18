@@ -592,3 +592,30 @@ a.sub-mini {
     color: #e8e1d6;
     cursor: pointer;
 }
+
+.cart-item {
+    display: grid;
+    grid-template-columns: 1fr 90px 24px; /* назва | ціна | X */
+    align-items: center;
+    gap: 12px;
+    margin: 6px 0;
+    font-size: 15px;
+}
+
+.cart-item span:nth-child(2) {
+    text-align: right;
+    font-weight: 300;
+}
+
+.cart-remove {
+    background: none;
+    border: none;
+    color: #e8e1d6;
+    opacity: 0.6;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.cart-remove:hover {
+    opacity: 1;
+}

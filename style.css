@@ -281,19 +281,17 @@ footer {
 .page-header {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;  /* Заголовок ліворуч */
     gap: 6px;
     margin-bottom: 24px;
 }
 
 /* Кнопка Назад */
 .page-back {
-    align-self: flex-end;     /* Кнопка справа */
+    align-self: flex-end;       /* ← СПРАВА */
     font-size: 13px;
     letter-spacing: 1px;
     text-decoration: none;
-    text-transform: uppercase;
-    color: #cfc7b8;           /* кремово-бежевий */
+    color: #cfc7b8;             /* кремово-бежевий */
     opacity: 0.75;
     transition: opacity 0.25s;
 }

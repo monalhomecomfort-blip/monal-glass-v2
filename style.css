@@ -359,6 +359,12 @@ footer {
     font-size: 13px;
     padding: 8px 6px;
     white-space: normal;
+    height: 34px; /* фіксує під два рядки */
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
 }
 
 .sub-mini:hover {
@@ -375,6 +381,8 @@ a.sub-mini {
     width: 160px !important;
     flex: 0 0 160px;
     border-radius: 18px !important;
+    display: flex;
+    flex-direction: column;
 }
 
 .sub-mini img {

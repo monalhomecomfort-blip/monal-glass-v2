@@ -43,18 +43,61 @@
 <div class="page-wrap">
 
     <div class="container">
-        
+
+
         <h1 class="page-title">Кошик</h1>
 
-        <p style="text-align:center; font-size:18px; color:#555; margin-top:20px;">
-            Ваш кошик порожній — але це легко виправити 🌿<br>
-            Перейдіть у 
-            <a href="catalog.html" style="color:#333; text-decoration:underline;">
-                каталог
-            </a>
-            і оберіть щось красиве.
-        </p>
+        <div class="delivery-columns">
 
+            <!-- Ліва колонка — список товарів -->
+            <div class="delivery-block">
+
+                <h2>Ваші товари</h2>
+                <div id="cart-list" style="margin-bottom:14px;"></div>
+
+                <h2>Сума</h2>
+                <div id="cart-total" style="font-size:20px; margin-bottom:18px;"></div>
+
+                <button class="buy-btn" onclick="clearCart()" style="margin-right:10px;">
+                    Очистити
+                </button>
+
+                <button class="buy-btn" onclick="showCheckout()">
+                    Оформити
+                </button>
+
+            </div>
+
+            <!-- Права колонка — форма оформлення -->
+            <div class="delivery-block" id="checkout" style="display:none;">
+
+                <h2>Оформлення</h2>
+
+                <input id="inp-name" placeholder="ПІБ" class="input">
+                <input id="inp-phone" placeholder="Телефон" class="input">
+                <input id="inp-city" placeholder="Місто" class="input">
+                <input id="inp-np" placeholder="Номер відділення/поштомату" class="input">
+
+                <div style="margin-top:12px;">
+                    <label style="display:block; margin-bottom:4px;">
+                        <input type="radio" name="pay" value="Картка онлайн">
+                        Картка онлайн
+                    </label>
+
+                    <label style="display:block;">
+                        <input type="radio" name="pay" value="Післяплата 150 грн">
+                        Післяплата
+                    </label>
+                </div>
+
+                <button class="buy-btn" style="margin-top:14px;" onclick="submitOrder()">
+                    Надіслати замовлення
+                </button>
+
+            </div>
+
+        </div>
+       
     </div>
 
     <!-- FOOTER -->

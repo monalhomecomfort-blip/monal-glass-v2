@@ -5,7 +5,9 @@ html, body {
     margin: 0;
     padding: 0;
     width: 100%;
-    height: 100%;          /* ← ДОДАЛИ ЦЕ */
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
     overflow-x: hidden;
     background: #f4efe6;
     color: #333;
@@ -146,23 +148,17 @@ nav {
 
 /* ===================== FOOTER ===================== */
 footer {
-    position: relative; /* або взагалі без position */
-    
     height: 70px;
-
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
 
     background: rgba(18, 18, 18, 0.78);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-   
     color: #e8e1d6;
     font-size: 13px;
-
-    z-index: 100;
+    margin-top: auto;
 }
 
 /* Пэддинг-заглушка для коротких сторінок */

@@ -382,6 +382,18 @@ a.sub-mini {
     border-radius: 18px 18px 0 0 !important;
 }
 
+/* не дозволяємо міні-шляхті зменшувати категорію */
+.catalog-row > .subcategory {
+    flex: 0 0 240px;
+}
+
+/* міні плитки не ростуть і не штовхають */
+.catalog-row .mini-line {
+    flex: 1 1 auto;
+    display: flex;
+    gap: 18px;
+    align-items: center;
+}
 
 /* ===== ABOUT PAGE CLEANUP ===== */
 .about-container {

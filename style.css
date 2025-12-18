@@ -281,49 +281,23 @@ footer {
     background: #d8d2c2;
 }
 
-
-
-
-
-
-
-
 /* ===== PAGE HEADER ===== */
 .page-header {
     display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    margin-bottom: 24px;
-}
-
-.page-back {
-    font-size: 14px;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: #333;
-    text-decoration: none;
-    opacity: 0.65;
-    transition: opacity 0.25s;
-}
-
-.page-back:hover {
-    opacity: 1;
-}
-
-.page-header {
-    display: flex;
     flex-direction: column;
+    align-items: flex-start;  /* Заголовок ліворуч */
     gap: 6px;
     margin-bottom: 24px;
 }
 
 /* Кнопка Назад */
 .page-back {
-    align-self: flex-end;       /* ← СПРАВА */
+    align-self: flex-end;     /* Кнопка справа */
     font-size: 13px;
     letter-spacing: 1px;
     text-decoration: none;
-    color: #cfc7b8;             /* кремово-бежевий */
+    text-transform: uppercase;
+    color: #cfc7b8;           /* кремово-бежевий */
     opacity: 0.75;
     transition: opacity 0.25s;
 }

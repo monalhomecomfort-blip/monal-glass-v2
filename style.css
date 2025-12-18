@@ -306,25 +306,5 @@ footer {
     opacity: 1;
 }
 
-/* ===== Автопритискання футера до низу ===== */
-.page-wrap {
-    min-height: 100vh;       /* сторінка не нижча за 100% висоти */
-    display: grid;           /* НЕ flex */
-    grid-template-rows: auto 1fr auto;
-}
-
-.page-wrap > nav {
-    grid-row: 1;
-}
-
-.page-wrap > .container,
-.page-wrap > main.container {
-    grid-row: 2;            /* контент росте */
-}
-
-.page-wrap > footer {
-    grid-row: 3;            /* футер притиснутий до низу */
-}
-
 
 

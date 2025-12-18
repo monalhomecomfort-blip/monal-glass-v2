@@ -569,3 +569,26 @@ a.sub-mini {
 .contact-columns {
     margin-top: 50px !important;
 }
+
+/* Оформлення кошика */
+.input {
+    width: 100%;
+    padding: 12px 14px;
+    margin: 6px 0;
+    border-radius: 10px;
+    border: none;
+    background: #f4efe6;
+    font-size: 14px;
+    color: #333;
+}
+.cart-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 6px;
+}
+.cart-remove {
+    background: none;
+    border: none;
+    color: #e8e1d6;
+    cursor: pointer;
+}

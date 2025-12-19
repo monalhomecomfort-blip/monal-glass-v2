@@ -69,23 +69,30 @@ function showCheckout() {
     window.scrollTo(0, document.body.scrollHeight);
 }
 
-
 function submitOrder() {
     const cart = JSON.parse(localStorage.getItem("cart")) || [];
-    if (cart.length === 0) return alert("Кошик порожній");
+    if (cart.length === 0) {
+        alert("Кошик порожній");
+        return;
+    }
 
-    const name = document.getElementById("inp-name").value;
-    const phone = document.getElementById("inp-phone").value;
-    const city = document.getElementById("inp-city").value;
-    const np = document.getElementById("inp-np").value;
+    const name = document.getElementById("inp-name").value.trim();
+    const phone = document.getElementById("inp-phone").value.trim();
+    const city = document.getElementById("inp-city").value.trim();
+    const np = document.getElementById("inp-np").value.trim();
     const pay = document.querySelector("input[name='pay']:checked");
 
     if (!name || !phone || !city || !np || !pay) {
-        return alert("Заповніть всі поля");
+        alert("Заповніть всі поля");
+        return;
     }
 
     const orderId = Date.now().toString().slice(-6);
     const total = cart.reduce((sum, i) => sum + i.price, 0);
+
+    const itemsText = cart
+        .map(i => `• ${i.name} — ${i.price} грн`)
+        .join('\n');
 
     const text =
 `🧾 *Нове замовлення №${orderId}*
@@ -96,7 +103,7 @@ function submitOrder() {
 💳 Оплата: ${pay.value}
 
 🛒 Товари:
-${cart.map(i => `• ${i.name} — ${i.price} грн`).join("\n")}
+${itemsText}
 
 💰 Сума: ${total} грн
 `;
@@ -116,7 +123,6 @@ ${cart.map(i => `• ${i.name} — ${i.price} грн`).join("\n")}
          <p>Очікуйте дзвінок оператора.</p>`;
     });
 }
-
 
 document.addEventListener("DOMContentLoaded", updateCartCount);
 document.addEventListener("DOMContentLoaded", renderCart);

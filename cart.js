@@ -13,14 +13,12 @@ function updateCartCount() {
 
 updateCartCount();
 
-
-function addToCart(name, price) {
+function addToCart(name, price, label) {
     const cart = JSON.parse(localStorage.getItem("cart")) || [];
-    cart.push({ name, price });
+    cart.push({ name, price, label });
     localStorage.setItem("cart", JSON.stringify(cart));
     updateCartCount();
 }
-
 
 function renderCart() {
     const cart = JSON.parse(localStorage.getItem("cart")) || [];

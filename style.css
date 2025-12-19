@@ -634,3 +634,18 @@ a.sub-mini {
     opacity: 0.85;
     color: #e8e1d6;
 }
+
+.delivery-columns {
+    display: flex;
+    justify-content: center; /* центрує два блоки разом */
+    gap: 40px;
+    width: 100%;
+}
+
+.delivery-columns .delivery-block:first-child {
+    flex: 1.5; /* лівий більший */
+}
+
+.delivery-columns .delivery-block:nth-child(2) {
+    flex: 1; /* правий менший */
+}

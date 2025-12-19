@@ -35,7 +35,7 @@ function renderCart() {
 
     list.innerHTML = cart.map((item, index) => `
         <div class="cart-item">
-            <span>${item.label ? `[${item.label}] ` : ""}${item.name}</span>
+            <span>${item.label ? item.label + " " : ""}${item.name}</span>
             <span>${item.price} грн</span>
             <button onclick="removeFromCart(${index})">X</button>
         </div>

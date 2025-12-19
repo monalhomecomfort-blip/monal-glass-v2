@@ -12,8 +12,7 @@ function saveCart(cart) {
 function addToCart(name, price) {
   const cart = getCart();
   cart.push({ name, price });
-  saveCart(cart);
-  alert("Додано в кошик");
+  saveCart(cart);  
 }
 
 function removeItem(index) {

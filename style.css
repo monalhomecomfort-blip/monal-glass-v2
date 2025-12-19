@@ -628,3 +628,9 @@ a.sub-mini {
 .delivery-columns {
     justify-content: center;
 }
+
+#cart-count {
+    font-size: 13px;
+    opacity: 0.85;
+    color: #e8e1d6;
+}

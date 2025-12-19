@@ -9,11 +9,28 @@ function saveCart(cart) {
   localStorage.setItem("monal_cart", JSON.stringify(cart));
 }
 
+function updateCartCount() {
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    const count = cart.length;
+    const el = document.getElementById("cart-count");
+    if (el) {
+        el.textContent = count > 0 ? `(${count})` : "";
+    }
+}
+
 function addToCart(name, price) {
   const cart = getCart();
   cart.push({ name, price });
   saveCart(cart);
   // alert("Додано в кошик!");
+}
+
+function addToCart(name, price) {
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    cart.push({ name, price });
+    localStorage.setItem("cart", JSON.stringify(cart));
+
+    updateCartCount(); // ← ДОДАНО
 }
 
 function removeItem(index) {
@@ -105,5 +122,8 @@ ${cart.map(i => `• ${i.name} — ${i.price} грн`).join("\n")}
        <p>Очікуйте дзвінок оператора.</p>`;
   });
 }
+
+document.addEventListener("DOMContentLoaded", updateCartCount);
+
 
 document.addEventListener("DOMContentLoaded", renderCart);

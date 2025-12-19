@@ -91,7 +91,7 @@ function submitOrder() {
     const total = cart.reduce((sum, i) => sum + i.price, 0);
 
     const itemsText = cart
-        .map(i => `• ${i.name} — ${i.price} грн`)
+        .map(i => `• ${i.label ? `[${i.label}] ` : ""}${i.name} — ${i.price} грн`)
         .join('\n');
 
     const text =

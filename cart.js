@@ -18,20 +18,15 @@ function updateCartCount() {
     }
 }
 
-function addToCart(name, price) {
-  const cart = getCart();
-  cart.push({ name, price });
-  saveCart(cart);
-  // alert("Додано в кошик!");
-}
+updateCartCount();
 
 function addToCart(name, price) {
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
     cart.push({ name, price });
     localStorage.setItem("cart", JSON.stringify(cart));
-
-    updateCartCount(); // ← ДОДАНО
+    updateCartCount();
 }
+
 
 function removeItem(index) {
   const cart = getCart();

@@ -649,3 +649,23 @@ a.sub-mini {
 .delivery-columns .delivery-block:nth-child(2) {
     flex: 1; /* правий менший */
 }
+
+/* Кошик: відразу ширший блок товарів */
+.delivery-columns {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    width: 100%;
+}
+
+/* Лівий блок завжди ширший */
+.delivery-columns .delivery-block:first-child {
+    flex: 1.4;
+    min-width: 420px; /* ОСНОВНЕ — одразу розширює блок */
+}
+
+/* Правий блок компактний */
+.delivery-columns .delivery-block:nth-child(2) {
+    flex: 1;
+    min-width: 300px;
+}

@@ -13,6 +13,7 @@ function updateCartCount() {
 
 updateCartCount();
 
+
 function addToCart(name, price) {
     const cart = JSON.parse(localStorage.getItem("cart")) || [];
     cart.push({ name, price });
@@ -20,23 +21,6 @@ function addToCart(name, price) {
     updateCartCount();
 }
 
-
-function removeItem(index) {
-  const cart = getCart();
-  cart.splice(index, 1);
-  saveCart(cart);
-  renderCart();
-}
-
-function clearCart() {
-    localStorage.removeItem("cart");
-    renderCart();
-    updateCartCount();
-}
-
-function totalPrice() {
-  return getCart().reduce((sum, item) => sum + item.price, 0);
-}
 
 function renderCart() {
     const cart = JSON.parse(localStorage.getItem("cart")) || [];
@@ -63,6 +47,7 @@ function renderCart() {
     totalEl.textContent = total + " грн";
 }
 
+
 function removeFromCart(index) {
     let cart = JSON.parse(localStorage.getItem("cart")) || [];
     cart.splice(index, 1);
@@ -72,28 +57,37 @@ function removeFromCart(index) {
 }
 
 
-function showCheckout() {
-  document.getElementById("checkout").style.display = "block";
-  window.scrollTo(0, document.body.scrollHeight);
+function clearCart() {
+    localStorage.removeItem("cart");
+    renderCart();
+    updateCartCount();
 }
 
+
+function showCheckout() {
+    document.getElementById("checkout").style.display = "block";
+    window.scrollTo(0, document.body.scrollHeight);
+}
+
+
 function submitOrder() {
-  const cart = getCart();
-  if (cart.length === 0) return alert("Кошик порожній");
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    if (cart.length === 0) return alert("Кошик порожній");
 
-  const name = document.getElementById("inp-name").value;
-  const phone = document.getElementById("inp-phone").value;
-  const city = document.getElementById("inp-city").value;
-  const np = document.getElementById("inp-np").value;
-  const pay = document.querySelector("input[name='pay']:checked");
+    const name = document.getElementById("inp-name").value;
+    const phone = document.getElementById("inp-phone").value;
+    const city = document.getElementById("inp-city").value;
+    const np = document.getElementById("inp-np").value;
+    const pay = document.querySelector("input[name='pay']:checked");
 
-  if (!name || !phone || !city || !np || !pay) {
-    return alert("Заповніть всі поля");
-  }
+    if (!name || !phone || !city || !np || !pay) {
+        return alert("Заповніть всі поля");
+    }
 
-  const orderId = Date.now().toString().slice(-6);
+    const orderId = Date.now().toString().slice(-6);
+    const total = cart.reduce((sum, i) => sum + i.price, 0);
 
-  const text =
+    const text =
 `🧾 *Нове замовлення №${orderId}*
 👤 ${name}
 📞 ${phone}
@@ -104,26 +98,25 @@ function submitOrder() {
 🛒 Товари:
 ${cart.map(i => `• ${i.name} — ${i.price} грн`).join("\n")}
 
-💰 Сума: ${totalPrice()} грн
+💰 Сума: ${total} грн
 `;
 
-  fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-    method: "POST",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify({
-      chat_id: CHAT_ID,
-      text,
-      parse_mode: "Markdown"
-    })
-  }).then(() => {
-    clearCart();
-    document.getElementById("checkout").innerHTML =
-      `<h2>Ваше замовлення №${orderId} оформлено.</h2>
-       <p>Очікуйте дзвінок оператора.</p>`;
-  });
+    fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            chat_id: CHAT_ID,
+            text,
+            parse_mode: "Markdown"
+        })
+    }).then(() => {
+        clearCart();
+        document.getElementById("checkout").innerHTML =
+        `<h2>Ваше замовлення №${orderId} оформлено.</h2>
+         <p>Очікуйте дзвінок оператора.</p>`;
+    });
 }
 
+
 document.addEventListener("DOMContentLoaded", updateCartCount);
-
-
 document.addEventListener("DOMContentLoaded", renderCart);

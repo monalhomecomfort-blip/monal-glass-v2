@@ -1,13 +1,6 @@
 const BOT_TOKEN = "8231909798:AAH_lirUkv9a35yQSuXGzThAQhw6kXANAIw";
 const CHAT_ID = "957205871";
 
-function getCart() {
-  return JSON.parse(localStorage.getItem("monal_cart")) || [];
-}
-
-function saveCart(cart) {
-  localStorage.setItem("monal_cart", JSON.stringify(cart));
-}
 
 function updateCartCount() {
     const cart = JSON.parse(localStorage.getItem("cart")) || [];
@@ -36,8 +29,9 @@ function removeItem(index) {
 }
 
 function clearCart() {
-  saveCart([]);
-  renderCart();
+    localStorage.removeItem("cart");
+    renderCart();
+    updateCartCount();
 }
 
 function totalPrice() {
@@ -45,27 +39,38 @@ function totalPrice() {
 }
 
 function renderCart() {
-  const cart = getCart();
-  const list = document.getElementById("cart-list");
-  const total = document.getElementById("cart-total");
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    const list = document.getElementById("cart-list");
+    const totalEl = document.getElementById("cart-total");
 
-  if (!list) return;
-  if (cart.length === 0) {
-    list.innerHTML = "<p>Кошик порожній</p>";
-    total.textContent = "0 грн";
-    return;
-  }
+    if (!list || !totalEl) return;
 
-  list.innerHTML = cart.map((item, i) => `
-    <div class="cart-item">
-      <span>${item.name}</span>
-      <span>${item.price} грн</span>
-      <button class="cart-remove" onclick="removeItem(${i})">X</button>
-    </div>
-  `).join("");
+    if (cart.length === 0) {
+        list.innerHTML = "<p>Кошик порожній</p>";
+        totalEl.textContent = "0 грн";
+        return;
+    }
 
-  total.textContent = totalPrice() + " грн";
+    list.innerHTML = cart.map((item, index) => `
+        <div class="cart-item">
+            <span>${item.name}</span>
+            <span>${item.price} грн</span>
+            <button onclick="removeFromCart(${index})">X</button>
+        </div>
+    `).join("");
+
+    const total = cart.reduce((sum, i) => sum + i.price, 0);
+    totalEl.textContent = total + " грн";
 }
+
+function removeFromCart(index) {
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    cart.splice(index, 1);
+    localStorage.setItem("cart", JSON.stringify(cart));
+    renderCart();
+    updateCartCount();
+}
+
 
 function showCheckout() {
   document.getElementById("checkout").style.display = "block";

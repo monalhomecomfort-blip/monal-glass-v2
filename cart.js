@@ -1,5 +1,5 @@
-const BOT_TOKEN = "8231909798:AAH_lirUkv9a35yQSuXGzThAQhw6kXANAIw";
-const CHAT_ID = "957205871";
+const BOT_TOKEN = "8077484017:AAHesSbIXkI-G-ZoHpgPQgRma03P31tqkWU";
+const CHAT_ID = "883840916";
 
 
 function updateCartCount() {

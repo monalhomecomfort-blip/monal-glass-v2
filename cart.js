@@ -141,9 +141,12 @@ async function searchCity() {
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({
             apiKey: NP_KEY,
-            modelName: "Address",
-            calledMethod: "getCities",
-            methodProperties: { FindByString: query }
+            modelName: "AddressGeneral",
+            calledMethod: "getSettlements",
+            methodProperties: {
+                FindByString: query,
+                Limit: 20
+            }
         })
     });
 
@@ -152,9 +155,15 @@ async function searchCity() {
 
     box.innerHTML = list
         .slice(0, 10)
-        .map(c => `<div class="np-item" onclick="selectCity('${c.Ref}','${c.Description}')">${c.Description}</div>`)
+        .map(c => `
+            <div class="np-item"
+                 onclick="selectCity('${c.Ref}','${c.Description}')">
+                 ${c.Description} (${c.AreaDescription})
+            </div>
+        `)
         .join("");
 }
+
 
 function selectCity(ref, name) {
     document.getElementById("city-input").value = name;

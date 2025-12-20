@@ -72,30 +72,51 @@
             
             <div class="delivery-block" id="checkout" style="display:none;">
 
-                <h2>Оформлення</h2>                              
+<h2>Оформлення</h2>
 
-                <input id="inp-last" placeholder="Прізвище" class="input" required>
-                <input id="inp-first" placeholder="Ім'я" class="input" required>
-                <input id="inp-phone" placeholder="Телефон" class="input" oninput="maskPhone(this)">
-                <input id="inp-city" placeholder="Місто" class="input" required>
-                <input id="inp-np" placeholder="Відділення НП" class="input" required>
+<input id="inp-last" class="input" placeholder="Прізвище" required>
+<input id="inp-first" class="input" placeholder="Ім'я" required>
 
+<input id="inp-phone"
+       class="input"
+       type="tel"
+       placeholder="38(0XX)XXX-XX-XX"
+       oninput="maskPhone(this)"
+       maxlength="16"
+       required>
 
-                <div style="margin-top:12px;">
-                    <label style="display:block; margin-bottom:4px;">
-                        <input type="radio" name="pay" value="Картка онлайн">
-                        Картка онлайн
-                    </label>
+<input id="city-input"
+       class="input"
+       placeholder="Місто"
+       oninput="searchCity()"
+       autocomplete="off"
+       required>
 
-                    <label style="display:block;">
-                        <input type="radio" name="pay" value="Передплата 150 грн">
-                        Передплата
-                    </label>
-                </div>
+<div id="city-results" class="np-list"></div>
 
-                <button class="buy-btn" style="margin-top:14px;" onclick="submitOrder()">
-                    Надіслати замовлення
-                </button>
+<select id="warehouse-select"
+        class="input"
+        style="margin-top:10px;"
+        required>
+    <option value="">Спочатку обери місто…</option>
+</select>
+
+<div style="margin-top:12px;">
+    <label style="display:block; margin-bottom:4px;">
+        <input type="radio" name="pay" value="Картка онлайн" required>
+        Картка онлайн
+    </label>
+
+    <label style="display:block;">
+        <input type="radio" name="pay" value="Передплата 150 грн" required>
+        Передплата
+    </label>
+</div>
+
+<button class="buy-btn" style="margin-top:14px;" onclick="submitOrder()">
+    Надіслати замовлення
+</button>
+
 
             </div>
 

@@ -430,7 +430,7 @@ a.sub-mini {
 .about-block {
     padding: 16px 18px;
     border-radius: 16px;
-    background: rgba(18,18,18,0.78);
+    background: rgba(4, 4, 4, 0.85);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     color: #e8e1d6;

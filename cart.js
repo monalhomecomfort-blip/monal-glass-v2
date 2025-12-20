@@ -67,51 +67,66 @@ function showCheckout() {
     window.scrollTo(0, document.body.scrollHeight);
 }
 
-function submitOrder() {
-    
-    function maskPhone(input) {
-    let value = input.value.replace(/\D/g, ""); // лишаємо тільки цифри
+function maskPhone(input) {
+    let value = input.value.replace(/\D/g, "");
 
-    if (value.startsWith("38") === false) {
-        value = "38" + value; 
+    // Примусово починаємо з 380
+    if (!value.startsWith("380")) {
+        value = "380" + value.replace(/^38/, "");
     }
 
-    if (value.length > 12) {
-        value = value.slice(0, 12);
+    // Обрізаємо максимум 12 цифр (380XXXXXXXX)
+    value = value.slice(0, 12);
+
+    // Формуємо формат 38(0XX) XXX-XX-XX
+    let formatted = "38(";
+
+    if (value.length >= 3) {
+        formatted += value.slice(2, 3); 
     }
-
-    let formatted = "38";
-
-    if (value.length > 2) formatted += "(" + value.slice(2, 5);
-    if (value.length > 5) formatted += ") " + value.slice(5, 8);
-    if (value.length > 8) formatted += "-" + value.slice(8, 10);
-    if (value.length > 10) formatted += "-" + value.slice(10, 12);
+    if (value.length >= 4) {
+        formatted += value.slice(3, 5); 
+    }
+    if (value.length >= 5) {
+        formatted += ")";
+    }
+    if (value.length >= 6) {
+        formatted += " " + value.slice(5, 8);
+    }
+    if (value.length >= 9) {
+        formatted += "-" + value.slice(8, 10);
+    }
+    if (value.length >= 11) {
+        formatted += "-" + value.slice(10, 12);
+    }
 
     input.value = formatted;
 }
 
-    
+
+function submitOrder() {
     const cart = JSON.parse(localStorage.getItem("cart")) || [];
     if (cart.length === 0) {
         alert("Кошик порожній");
         return;
     }
-    
+
     const last = document.getElementById("inp-last").value.trim();
     const first = document.getElementById("inp-first").value.trim();
     const phone = document.getElementById("inp-phone").value.trim();
-    const city = document.getElementById("inp-city").value.trim();
-    const np = document.getElementById("inp-np").value.trim();
+    const city = document.getElementById("city-input").value.trim();
+    const np = document.getElementById("warehouse-select").value;
     const pay = document.querySelector("input[name='pay']:checked");
 
     if (!last || !first || !phone || !city || !np || !pay) {
         return alert("Заповніть всі поля");
     }
 
+    // Перевірка телефону
     if (!/^38\(0\d{2}\) \d{3}-\d{2}-\d{2}$/.test(phone)) {
-    return alert("Телефон у форматі 38(0XX) XXX-XX-XX");
-    }   
-    
+        return alert("Телефон у форматі 38(0XX) XXX-XX-XX");
+    }
+
     const orderId = Date.now().toString().slice(-6);
     const total = cart.reduce((sum, i) => sum + i.price, 0);
 
@@ -148,6 +163,7 @@ ${itemsText}
          <p>Очікуйте дзвінок оператора.</p>`;
     });
 }
+
 
 document.addEventListener("DOMContentLoaded", updateCartCount);
 document.addEventListener("DOMContentLoaded", renderCart);

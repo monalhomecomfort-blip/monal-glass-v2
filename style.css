@@ -674,3 +674,20 @@ a.sub-mini {
     width: 520px;      /* робимо ширшим блок товарів */
     max-width: 520px;
 }
+
+.np-list {
+    background: rgba(20,20,20,0.9);
+    border: 1px solid #555;
+    max-height: 200px;
+    overflow-y: auto;
+    color: #eee;
+    font-size: 14px;
+}
+
+.np-item {
+    padding: 6px 10px;
+    cursor: pointer;
+}
+.np-item:hover {
+    background: #383838;
+}

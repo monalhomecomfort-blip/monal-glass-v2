@@ -84,7 +84,11 @@ function submitOrder() {
     if (!last || !first || !phone || !city || !np || !pay) {
         return alert("Заповніть всі поля");
     }
-    
+
+    if (phone.length < 16) { 
+    return alert("Введіть коректний номер телефону у форматі 38(0XX) XXX-XX-XX");
+    }
+
     const orderId = Date.now().toString().slice(-6);
     const total = cart.reduce((sum, i) => sum + i.price, 0);
 
@@ -125,3 +129,24 @@ ${itemsText}
 document.addEventListener("DOMContentLoaded", updateCartCount);
 document.addEventListener("DOMContentLoaded", renderCart);
 
+const phoneInput = document.getElementById("inp-phone");
+
+phoneInput.addEventListener("input", formatPhone);
+
+function formatPhone(e) {
+    let v = e.target.value.replace(/\D/g, ""); // тільки цифри
+
+    if (!v.startsWith("38")) v = "38" + v; // фіксуємо префікс
+
+    if (v.length > 12) v = v.slice(0, 12); // максимум 12 цифр
+
+    // Формуємо маску: 38(0XX) XXX-XX-XX
+    let formatted = "38";
+    if (v.length > 2) formatted += "(" + v.substring(2, 5);
+    if (v.length >= 5) formatted += ")";
+    if (v.length > 5) formatted += " " + v.substring(5, 8);
+    if (v.length > 8) formatted += "-" + v.substring(8, 10);
+    if (v.length > 10) formatted += "-" + v.substring(10, 12);
+
+    e.target.value = formatted;
+}

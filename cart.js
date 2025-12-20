@@ -74,17 +74,17 @@ function submitOrder() {
         return;
     }
 
-    const name = document.getElementById("inp-name").value.trim();
+    const last = document.getElementById("inp-last").value.trim();
+    const first = document.getElementById("inp-first").value.trim();
     const phone = document.getElementById("inp-phone").value.trim();
-    const city = document.getElementById("inp-city").value.trim();
-    const np = document.getElementById("inp-np").value.trim();
+    const city = document.getElementById("city-input").value.trim();
+    const np = document.getElementById("warehouse-select").value;
     const pay = document.querySelector("input[name='pay']:checked");
 
-    if (!name || !phone || !city || !np || !pay) {
-        alert("Заповніть всі поля");
-        return;
+    if (!last || !first || !phone || !city || !np || !pay) {
+        return alert("Заповніть всі поля");
     }
-
+    
     const orderId = Date.now().toString().slice(-6);
     const total = cart.reduce((sum, i) => sum + i.price, 0);
 
@@ -94,7 +94,7 @@ function submitOrder() {
 
     const text =
 `🧾 *Нове замовлення №${orderId}*
-👤 ${name}
+👤 ${last} ${first}
 📞 ${phone}
 🏙 ${city}
 📦 НП: ${np}
@@ -124,3 +124,63 @@ ${itemsText}
 
 document.addEventListener("DOMContentLoaded", updateCartCount);
 document.addEventListener("DOMContentLoaded", renderCart);
+
+const NP_KEY = "0447e2217cd16e6fabda5e3536506922323aff2c";
+
+async function searchCity() {
+    const query = document.getElementById("city-input").value.trim();
+    const box = document.getElementById("city-results");
+
+    if (query.length < 3) {
+        box.innerHTML = "";
+        return;
+    }
+
+    const res = await fetch("https://api.novaposhta.ua/v2.0/json/", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            apiKey: NP_KEY,
+            modelName: "Address",
+            calledMethod: "getCities",
+            methodProperties: { FindByString: query }
+        })
+    });
+
+    const data = await res.json();
+    const list = data?.data || [];
+
+    box.innerHTML = list
+        .slice(0, 10)
+        .map(c => `<div class="np-item" onclick="selectCity('${c.Ref}','${c.Description}')">${c.Description}</div>`)
+        .join("");
+}
+
+function selectCity(ref, name) {
+    document.getElementById("city-input").value = name;
+    document.getElementById("city-results").innerHTML = "";
+    loadWarehouses(ref);
+}
+
+async function loadWarehouses(cityRef) {
+    const sel = document.getElementById("warehouse-select");
+    sel.innerHTML = `<option>Завантаження…</option>`;
+
+    const res = await fetch("https://api.novaposhta.ua/v2.0/json/", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            apiKey: NP_KEY,
+            modelName: "Address",
+            calledMethod: "getWarehouses",
+            methodProperties: { CityRef: cityRef }
+        })
+    });
+
+    const data = await res.json();
+    const list = data?.data || [];
+
+    sel.innerHTML = list.length
+        ? list.map(w => `<option value="${w.Description}">${w.Description}</option>`).join("")
+        : `<option>Немає відділень</option>`;
+}

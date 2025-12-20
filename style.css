@@ -168,7 +168,7 @@ footer {
 /* ===== ABOUT — dark glass version ===== */
 
 .about-block {
-    background: rgba(18, 18, 18, 0.78);
+    background: rgba(4, 4, 4, 0.85);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
 

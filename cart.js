@@ -68,6 +68,29 @@ function showCheckout() {
 }
 
 function submitOrder() {
+    
+    function maskPhone(input) {
+    let value = input.value.replace(/\D/g, ""); // лишаємо тільки цифри
+
+    if (value.startsWith("38") === false) {
+        value = "38" + value; 
+    }
+
+    if (value.length > 12) {
+        value = value.slice(0, 12);
+    }
+
+    let formatted = "38";
+
+    if (value.length > 2) formatted += "(" + value.slice(2, 5);
+    if (value.length > 5) formatted += ") " + value.slice(5, 8);
+    if (value.length > 8) formatted += "-" + value.slice(8, 10);
+    if (value.length > 10) formatted += "-" + value.slice(10, 12);
+
+    input.value = formatted;
+}
+
+    
     const cart = JSON.parse(localStorage.getItem("cart")) || [];
     if (cart.length === 0) {
         alert("Кошик порожній");
@@ -85,10 +108,10 @@ function submitOrder() {
         return alert("Заповніть всі поля");
     }
 
-    if (phone.length < 16) { 
-    return alert("Введіть коректний номер телефону у форматі 38(0XX) XXX-XX-XX");
-    }
-
+    if (!/^38\(0\d{2}\) \d{3}-\d{2}-\d{2}$/.test(phone)) {
+    return alert("Телефон у форматі 38(0XX) XXX-XX-XX");
+    }   
+    
     const orderId = Date.now().toString().slice(-6);
     const total = cart.reduce((sum, i) => sum + i.price, 0);
 

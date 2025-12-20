@@ -29,7 +29,7 @@ nav {
     align-items: center;
     justify-content: space-between;
 
-    background: rgba(14, 14, 14, 0.78);
+    background: rgba(10, 10, 10, 0.78);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px); 
     

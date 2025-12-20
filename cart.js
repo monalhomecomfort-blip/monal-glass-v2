@@ -113,7 +113,7 @@ function submitOrder() {
 
     const last = document.getElementById("inp-last").value.trim();
     const first = document.getElementById("inp-first").value.trim();
-    const phone = document.getElementById("inp-phone").value.trim();
+    const phone = document.getElementById("inp-phone").value.replace(/\s/g,"").trim();
     const city = document.getElementById("city-input").value.trim();
     const np = document.getElementById("warehouse-select").value;
     const pay = document.querySelector("input[name='pay']:checked");
@@ -122,9 +122,15 @@ function submitOrder() {
         return alert("Заповніть всі поля");
     }
 
-    // Перевірка телефону
-    if (!/^38\(0\d{2}\) \d{3}-\d{2}-\d{2}$/.test(phone)) {
-        return alert("Телефон у форматі 38(0XX) XXX-XX-XX");
+    // Перевіряємо місто та відділення
+    if (!city.length) return alert("Обери місто");
+    if (!np.length) return alert("Обери відділення");
+
+    maskPhone(document.getElementById("inp-phone"));
+
+    const phonePattern = /^38\(0\d{2}\)\d{3}-\d{2}-\d{2}$/;
+    if (!phonePattern.test(phone)) {
+    return alert("Телефон у форматі 38(0XX) XXX-XX-XX");
     }
 
     const orderId = Date.now().toString().slice(-6);

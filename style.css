@@ -93,7 +93,7 @@ nav {
 
 /* ===================== ЗАГОЛОВОК ===================== */
 .page-title {
-    font-family: 'Playfair Display', serif;
+    font-family: 'Montserrat', serif;
     font-weight: 300;
     font-size: 36px;
     margin-bottom: 28px;
@@ -231,7 +231,7 @@ footer {
 
 /* TEXT */
 .product-title {
-    font-family: 'Playfair Display', serif;
+    font-family: 'Montserrat', serif;
     font-size: 32px;
     font-weight: 300;
     margin-bottom: 6px;
@@ -491,7 +491,7 @@ a.sub-mini {
 }
 
 .delivery-block h2 {
-    font-family: 'Playfair Display', serif;
+    font-family: 'Montserrat', serif;
     font-weight: 300;
     font-size: 24px;
     margin-bottom: 10px;

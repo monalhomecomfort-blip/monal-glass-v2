@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Парфуми для дому — Mōnal</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<!-- МЕНЮ -->
+<nav>
+    <div class="nav-left">
+        <img src="images/logo.svg" alt="Mōnal" class="nav-logo">
+
+        <div class="nav-social">
+            <a href="https://www.tiktok.com/@monalofficial?is_from_webapp=1&sender_device=pc" target="_blank">
+                <img src="images/social/tiktok.png" alt="TikTok">
+            </a>
+            <a href="https://www.instagram.com/monal.official/" target="_blank">
+                <img src="images/social/instagram.png" alt="Instagram">
+            </a>
+            <a href="https://www.facebook.com/people/Monal/61552030280894/" target="_blank">
+                <img src="images/social/facebook.png" alt="Facebook">
+            </a>
+        </div>
+    </div>
+
+    <div class="nav-center">
+        <a href="index.html">Головна</a>
+        <a href="about.html">Про бренд</a>
+        <a href="contacts.html">Контакти</a>
+    </div>
+
+    <div class="nav-right">
+        <a href="delivery.html">Доставка</a>
+        <a href="cart.html">Кошик <span id="cart-count"></span></a>
+    </div>
+</nav>
+
+<!-- КОНТЕНТ -->
+<main class="container">
+
+    <div class="page-header">
+        <a href="home.html" class="page-back">Назад</a>
+        <h1 class="page-title">Парфуми для дому</h1>
+    </div>
+
+    <!-- ТУТ ПІДУТЬ АРОМАТИ (вставлятимеш блоки) -->
+    <div id="perfumes-list">
+  
+      <!-- PARFUME 1 -->
+<div class="product-row">
+
+    <!-- MEDIA -->
+    <div class="product-media micro-animate">
+
+        <div class="product-bg"
+            style="background-image: url('images/parfums/GOLDEN RUM_bg.jpg');">
+        </div>
+
+        <img
+            src="images/parfums/флокон_парфуми_2.png"
+            alt="GOLDEN RUM"
+            class="product-diffuser">
+    </div>
+
+    <!-- TEXT -->
+    <div class="product-text">
+
+        <h2 class="product-title">GOLDEN RUM</h2>
+        <div class="product-subtitle">Золотий ром · 100 ml</div>
+
+        <div class="product-price">990 грн</div>
+
+        <button class="buy-btn" onclick="addToCart('GOLDEN RUM', 990, 'Парфуми для дому')">
+            Купити
+        </button>
+
+        <p><strong>Склад:</strong><br>
+        Верхні ноти: ром, кориця<br>
+        Серце: мускатний горіх, ваніль<br>
+        База: кедр, сандал</p>
+
+        <p><strong>Відчуття аромату:</strong><br>
+        Глибокий і затишний аромат із пряно-ромовим стартом, де тепло рому поєднується з м’якою деревною
+        солодкістю кориці. У серці звучать мускатний горіх і ваніль: округлі, кремові, теплі відтінки, що
+        створюють комфортне звучання без різкості.</p>
+
+        <p>Фінал переходить у кедр і сандал, формуючи спокійну деревну основу з теплим шлейфом. Аромат
+        заспокоює простір і створює відчуття вечірнього розслаблення.</p>
+
+        <p><strong>Характер і настрій:</strong><br>
+        Атмосфера спокою, комфорту й м’якого вечірнього затишку. Підійде для вітальні, спальні, кухні,
+        кабінету, лаунж-зони або зони відпочинку.
+        </p>
+
+    </div>
+</div>
+
+        
+      
+      
+      
+      
+      
+      <!-- вставляємо сюди один за одним: див. приклад GOLDEN RUM -->
+    </div>
+
+</main>
+
+<!-- ФУТЕР -->
+<footer>
+    <div class="footer-logo">
+        <img src="images/logo.svg" alt="Mōnal">
+    </div>
+    © 2025 Ароматика для дому
+</footer>
+
+<script src="cart.js"></script>
+</body>
+</html>

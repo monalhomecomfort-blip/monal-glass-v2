@@ -676,3 +676,38 @@ a.sub-mini {
     max-width: 520px;
 }
 
+/* ===== AUTOCOMPLETE МІСТ (як select відділення НП) ===== */
+
+.autocomplete-list {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+
+    background: #f6f2ee;           /* 👈 нюдовий фон */
+    border: 1px solid #cfc7be;
+    border-top: none;
+
+    max-height: 240px;
+    overflow-y: auto;
+
+    z-index: 1000;
+    display: none;
+
+    font-family: Montserrat;
+    font-size: 14px;               /* 👈 як у select */
+    color: #000;                   /* 👈 чорний текст */
+}
+
+.autocomplete-item {
+    padding: 8px 10px;
+    font-size: 14px;
+    line-height: 1.1;   /* 👈 ОЦЕ */
+    color: #000;
+    background: #f6f2ee;
+    cursor: pointer;
+}
+
+.autocomplete-item:hover {
+    background: #f6f2ee;           /* 👈 hover як у select */
+}

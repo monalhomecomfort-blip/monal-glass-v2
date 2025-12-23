@@ -1,6 +1,8 @@
 const BOT_TOKEN = "8077484017:AAHesSbIXkI-G-ZoHpgPQgRma03P31tqkWU";
 const CHAT_ID = "883840916";
 
+let PAYMENT_CONTEXT = null;
+
 /* ===================== КОШИК ===================== */
 
 function updateCartCount() {
@@ -211,34 +213,54 @@ function toggleManualNP() {
 
 
 /* ===================== ОФОРМЛЕННЯ ЗАМОВЛЕННЯ ===================== */
-
 function submitOrder() {
     const cart = JSON.parse(localStorage.getItem("cart")) || [];
-    if (!cart.length) return alert("Кошик порожній");
+    if (!cart.length) {
+        alert("Кошик порожній");
+        return;
+    }
 
-    const last  = document.getElementById("inp-last").value.trim();
-    const first = document.getElementById("inp-first").value.trim();
-    const phone = document.getElementById("inp-phone").value.trim();
-    const city  = document.getElementById("np-city-input").value.trim();
-    const npSelect = document.getElementById("np-warehouse").value;
-    const npManual = document.getElementById("np-manual").value.trim();
+    const last  = document.getElementById("inp-last")?.value.trim() || "";
+    const first = document.getElementById("inp-first")?.value.trim() || "";
+    const phone = document.getElementById("inp-phone")?.value.trim() || "";
+    const city  = document.getElementById("np-city-input")?.value.trim() || "";
+
+    const npSelectEl = document.getElementById("np-warehouse");
+    const npManualEl = document.getElementById("np-manual");
+
+    const npSelect = npSelectEl ? npSelectEl.value : "";
+    const npManual = npManualEl ? npManualEl.value.trim() : "";
 
     const np = npManual
         ? `✍️ ВРУЧНУ: ${npManual}`
         : npSelect;
-   
+
     const pay = document.querySelector("input[name='pay']:checked");
 
     if (!last || !first || !phone || !city || !np || !pay) {
-        return alert("Заповніть всі поля");
+        alert("Заповніть всі поля");
+        return;
     }
 
     if (!/^38\(0\d{2}\)\s?\d{3}-\d{2}-\d{2}$/.test(phone)) {
-        return alert("Телефон у форматі 38(0XX)XXX-XX-XX");
+        alert("Телефон у форматі 38(0XX)XXX-XX-XX");
+        return;
     }
 
     const orderId = Date.now().toString().slice(-6);
     const total = cart.reduce((s, i) => s + i.price, 0);
+
+    let payNow = total;
+    let paymentLabel = "100% оплата";
+
+    if (pay.value === "Передплата 150 грн") {
+        payNow = 150;
+        paymentLabel = "Передплата 150 грн, решта при отриманні";
+    }
+
+    const itemsText = cart
+        .map(i => `• ${i.label ? `[${i.label}] ` : ""}${i.name} — ${i.price} грн`)
+        .join("\n");
 
     const text =
 `🧾 *Нове замовлення №${orderId}*
@@ -246,17 +268,75 @@ function submitOrder() {
 📞 ${phone}
 🏙 ${city}
 📦 НП: ${np}
-💳 Оплата: ${pay.value}
 
-💰 Сума: ${total} грн`;
+💳 Оплата: ${paymentLabel}
+💸 До оплати зараз: ${payNow} грн
 
+🛒 Товари:
+${itemsText}
+
+💰 Загальна сума: ${total} грн
+`;
+
+    // ⛔ НЕ відправляємо одразу
+    PAYMENT_CONTEXT = {
+        orderId,
+        text
+    };
+
+    // ✅ ВІДКРИВАЄМО МОДАЛКУ
+    openPaymentModal(orderId, payNow);
+}
+
+
+
+/* ===================== МОДАЛКА ОПЛАТИ ===================== */
+function openPaymentModal(orderId, payNow) {
+    const modal = document.getElementById("payment-modal");
+    const orderEl = document.getElementById("pay-order-id");
+    const amountEl = document.getElementById("pay-amount");
+
+    if (!modal || !orderEl || !amountEl) {
+        alert("Помилка: вікно оплати не знайдено");
+        return;
+    }
+
+    orderEl.textContent = orderId;
+    amountEl.textContent = payNow;
+
+    modal.style.display = "flex";
+}
+
+function closePaymentModal() {
+    const modal = document.getElementById("payment-modal");
+    if (modal) modal.style.display = "none";
+}
+
+function confirmPayment() {
+    if (!PAYMENT_CONTEXT) return;
+
+    sendOrderToTelegram(PAYMENT_CONTEXT);
+    PAYMENT_CONTEXT = null;
+
+    closePaymentModal();
+}
+
+
+/* ===================== ОПЛАТА ЗАМОВЛЕННЯ ===================== */
+function sendOrderToTelegram(ctx) {
     fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ chat_id: CHAT_ID, text, parse_mode: "Markdown" })
+        body: JSON.stringify({
+            chat_id: CHAT_ID,
+            text: ctx.text,
+            parse_mode: "Markdown"
+        })
     }).then(() => {
         clearCart();
-        checkout.innerHTML = `<h2>Замовлення №${orderId} оформлено</h2>`;
+        document.getElementById("checkout").innerHTML =
+            `<h2>Ваше замовлення №${ctx.orderId} оформлено.</h2>
+             <p>Очікуйте дзвінок оператора.</p>`;
     });
 }
 

@@ -350,3 +350,57 @@ document.addEventListener("DOMContentLoaded", () => {
     const phoneInput = document.getElementById("inp-phone");
     if (phoneInput) phoneInput.addEventListener("input", formatPhone);
 });
+
+/* ===================== ДІСКАВЕРІ СЕТ ===================== */
+let discoverySet = [];
+
+const DISCOVERY_PRICE = 395;
+
+document.querySelectorAll(".add-to-set").forEach(btn => {
+    btn.addEventListener("click", () => {
+        const product = btn.closest(".product-text");
+        const name = product.querySelector(".product-title").innerText;
+
+        if (discoverySet.includes(name)) {
+            alert("Цей аромат вже додано в сет");
+            return;
+        }
+
+        discoverySet.push(name);
+        updateDiscoveryUI();
+    });
+});
+
+function updateDiscoveryUI() {
+    const list = document.getElementById("discovery-list");
+    const count = document.getElementById("discovery-count");
+    const hint = document.getElementById("discovery-hint");
+    const buyBtn = document.getElementById("buy-discovery-btn");
+
+    list.innerHTML = "";
+    discoverySet.forEach(name => {
+        const li = document.createElement("li");
+        li.textContent = name;
+        list.appendChild(li);
+    });
+
+    count.textContent = discoverySet.length;
+
+    if (discoverySet.length === 0) {
+        hint.textContent = "Оберіть 4 аромати для формування сету";
+        buyBtn.disabled = true;
+        return;
+    }
+
+    if (discoverySet.length % 4 !== 0) {
+        const remain = 4 - (discoverySet.length % 4);
+        hint.textContent = `Оберіть ще ${remain} аромат(и)`;
+        buyBtn.disabled = true;
+        return;
+    }
+
+    const sets = discoverySet.length / 4;
+    hint.textContent = `Сформовано ${sets} сет(и)`;
+    buyBtn.disabled = false;
+    buyBtn.innerText = `Купити ${sets} сет · ${sets * DISCOVERY_PRICE} грн`;
+}

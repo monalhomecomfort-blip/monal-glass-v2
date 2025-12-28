@@ -828,3 +828,107 @@ a.sub-mini {
     cursor: pointer;
     font-size: 14px;
 }
+
+/* Discovery — порожній стан */
+.inline-discovery-list:empty::after {
+    content: "Аромати ще не обрані";
+    display: block;
+    opacity: 0.4;
+    font-size: 13px;
+    padding: 4px 0;
+}
+
+/* ===== INLINE DISCOVERY SET (quiet UI) ===== */
+
+.inline-discovery {
+    margin-top: 12px;
+    padding: 12px 0;
+
+    border-top: 1px solid rgba(214, 205, 191, 0.15);
+
+    font-size: 14px;
+    color: #d6cdbf;
+}
+
+/* Заголовок */
+.inline-discovery-header {
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    opacity: 0.6;
+    margin-bottom: 6px;
+}
+
+/* Список ароматів */
+.inline-discovery-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 8px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+/* Один аромат у сеті */
+.inline-discovery-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+/* Кнопка видалення */
+.inline-discovery-list button {
+    background: none;
+    border: none;
+    color: #d6cdbf;
+    opacity: 0.4;
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 1;
+}
+
+.inline-discovery-list button:hover {
+    opacity: 0.8;
+}
+
+/* Нижня частина */
+.inline-discovery-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+/* Підказка */
+.inline-discovery-hint {
+    font-size: 12px;
+    opacity: 0.5;
+}
+
+/* Кнопка */
+.inline-discovery-buy {
+    align-self: flex-start;
+
+    background: transparent;
+    border: 1px solid rgba(214, 205, 191, 0.35);
+    color: #d6cdbf;
+
+    font-size: 13px;
+    padding: 6px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+
+    transition: all 0.25s ease;
+}
+
+.inline-discovery-buy:disabled {
+    opacity: 0.35;
+    cursor: default;
+}
+
+.inline-discovery-buy:not(:disabled):hover {
+    background: rgba(214, 205, 191, 0.12);
+    border-color: rgba(214, 205, 191, 0.6);
+}

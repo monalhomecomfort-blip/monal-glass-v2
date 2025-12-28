@@ -426,3 +426,83 @@ document.getElementById("buy-discovery-btn")?.addEventListener("click", () => {
     discoverySet = [];
     updateDiscoveryUI();
 });
+
+/* ===================== INLINE DISCOVERY SET ===================== */
+
+const DISCOVERY_PRICE = 395;
+const MAX_ITEMS = 8;
+
+/* Ініціалізація для кожного товару */
+document.querySelectorAll(".product-row").forEach(row => {
+    const addBtn = row.querySelector(".add-to-set");
+    const panel = row.querySelector(".inline-discovery");
+
+    if (!addBtn || !panel) return;
+
+    const list = panel.querySelector(".inline-discovery-list");
+    const hint = panel.querySelector(".inline-discovery-hint");
+    const buyBtn = panel.querySelector(".inline-discovery-buy");
+
+    let items = [];
+
+    addBtn.addEventListener("click", () => {
+        if (items.length >= MAX_ITEMS) {
+            hint.textContent = "Максимум 2 сети (8 ароматів)";
+            hint.style.opacity = "0.7";
+            return;
+        }
+
+        const name = row.querySelector(".product-title").innerText;
+        items.push(name);
+        render();
+    });
+
+    function render() {
+        list.innerHTML = "";
+
+        items.forEach((name, index) => {
+            const li = document.createElement("li");
+            li.innerHTML = `
+                <span>${name}</span>
+                <button data-index="${index}">×</button>
+            `;
+            list.appendChild(li);
+        });
+
+        list.querySelectorAll("button").forEach(btn => {
+            btn.addEventListener("click", e => {
+                const i = e.target.dataset.index;
+                items.splice(i, 1);
+                render();
+            });
+        });
+
+        if (items.length === 0) {
+            hint.textContent = "Сет містить 4 аромати";
+            buyBtn.disabled = true;
+            return;
+        }
+
+        if (items.length % 4 !== 0) {
+            hint.textContent = "Сет містить 4 аромати — додайте або видаліть";
+            hint.style.color = "#b46a6a";
+            buyBtn.disabled = true;
+            return;
+        }
+
+        const sets = items.length / 4;
+        hint.textContent = `Готово: ${sets} сет(и)`;
+        hint.style.color = "#d6cdbf";
+
+        buyBtn.disabled = false;
+        buyBtn.innerText = `Додати ${sets} сет · ${sets * DISCOVERY_PRICE} грн`;
+
+        buyBtn.onclick = () => {
+            addToCart("Discovery set", sets * DISCOVERY_PRICE, `${sets} сет(и)`);
+            items = [];
+            render();
+        };
+    }
+
+    render();
+});

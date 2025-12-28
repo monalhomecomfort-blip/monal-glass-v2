@@ -1,21 +1,288 @@
-<div class="disc-row">
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Discovery Set · Mōnal</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+</head>
 
-    <!-- Ліва колонка: анімаційний фон + флакон 3мл -->
-    <div class="disc-media micro-animate">
-        <div class="disc-bg" style="background-image:url('images/discovery/SHADOW_bg.jpg');"></div>
-        <img src="images/discovery/mini.png" class="disc-mini">
+<body>
+
+<nav>
+    <div class="nav-left">
+        <img src="images/logo.svg" class="nav-logo">
     </div>
 
-    <!-- Права колонка: текст + кнопка -->
-    <div class="disc-text">
-        <h2 class="disc-title">SHADOW OF FIG</h2>
-        <div class="disc-info">
-            Верхні: озон, фрезія<br>
-            Серце: інжир, бамбук<br>
-            База: пудра, пачулі
+    <div class="nav-center">
+        <a href="index.html">Головна</a>
+        <a href="about.html">Про бренд</a>
+        <a href="contacts.html">Контакти</a>
+    </div>
+
+    <div class="nav-right">
+        <a href="cart.html">Кошик <span id="cart-count"></span></a>
+    </div>
+</nav>
+
+<main class="container">
+
+    <h1 class="page-title">Discovery set</h1>
+    <p class="page-intro">
+        Оберіть 4 аромати з колекції Mōnal та сформуйте власний discovery set.
+        Вартість одного сету — <strong>395 грн</strong>.
+    </p>
+
+    <!-- PRODUCT: VESPER -->
+    <div class="product-row">
+        <div class="product-media micro-animate">
+            <div class="product-bg" style="background-image:url('images/discovery/VESPER_bg.jpg');"></div>
+            <img src="images/discovery/vesper mini.PNG" alt="VESPER" class="product-diffuser">
         </div>
-        <div class="disc-mood">чистий холод, пудра</div>
-        <button class="disc-btn" onclick="addToSet('SHADOW OF FIG')">Додати в сет</button>
+        <div class="product-text">
+            <h2 class="product-title">VESPER</h2>
+            <div class="product-subtitle">Вечірня зоря · 3 ml</div>
+
+            <p><strong>Склад:</strong><br>
+            Верхні ноти: лаванда, бергамот<br>
+            Ноти серця: перець, кедр, тютюн<br>
+            Базові ноти: ветивер, пачулі, сандал, мускус, дерево</p>
+
+            <p>
+            Глибокий деревно-пряний аромат із чистим лавандово-цитрусовим стартом і теплим, зібраним серцем.
+            Оксамитова деревна база створює спокійний, врівноважений шлейф.
+            </p>
+
+            <button class="buy-btn add-to-set">Додати в сет</button>
+        </div>
     </div>
 
-</div>
+    <!-- PRODUCT: NOCTURNE -->
+    <div class="product-row">
+        <div class="product-media micro-animate">
+            <div class="product-bg" style="background-image:url('images/discovery/NOCTURNE_bg.jpg');"></div>
+            <img src="images/discovery/nocturne mini.PNG" alt="NOCTURNE" class="product-diffuser">
+        </div>
+        <div class="product-text">
+            <h2 class="product-title">NOCTURNE</h2>
+            <div class="product-subtitle">Полотно ночі · 3 ml</div>
+
+            <p><strong>Склад:</strong><br>
+            Верхні ноти: мандарин, червоне яблуко<br>
+            Ноти серця: шавлія, бурбонський перець<br>
+            Базові ноти: деревина, тютюн, пачулі</p>
+
+            <p>
+            Динамічний аромат із соковитим фруктовим стартом і пряним, сухим серцем.
+            Деревно-тютюновий фінал із пачулі додає тепла та глибини.
+            </p>
+
+            <button class="buy-btn add-to-set">Додати в сет</button>
+        </div>
+    </div>
+
+    <!-- PRODUCT: ROSALYA -->
+    <div class="product-row">
+        <div class="product-media micro-animate">
+            <div class="product-bg" style="background-image:url('images/discovery/ROSALYA_bg.jpg');"></div>
+            <img src="images/diskovery/rosalya mini.PNG" alt="ROSALYA" class="product-diffuser">
+        </div>
+        <div class="product-text">
+            <h2 class="product-title">ROSALYA</h2>
+            <div class="product-subtitle">Розалія · 3 ml</div>
+
+            <p><strong>Склад:</strong><br>
+            Верхні ноти: рожевий перець, бергамот<br>
+            Ноти серця: троянда, жасмин<br>
+            Базові ноти: ваніль, амбра</p>
+
+            <p>
+            Витончений квітковий аромат із легкою пряністю на старті та теплим серцем троянди й жасмину.
+            Ванільно-амбровий шлейф м’яко огортає простір.
+            </p>
+
+            <button class="buy-btn add-to-set">Додати в сет</button>
+        </div>
+    </div>
+
+    <!-- PRODUCT: DRIFT -->
+    <div class="product-row">
+        <div class="product-media micro-animate">
+            <div class="product-bg" style="background-image:url('images/discovery/DRIFT_bg.jpg');"></div>
+            <img src="images/discovery/drift mini.PNG" alt="DRIFT" class="product-diffuser">
+        </div>
+        <div class="product-text">
+            <h2 class="product-title">DRIFT</h2>
+            <div class="product-subtitle">Дрифтинг · 3 ml</div>
+
+            <p><strong>Склад:</strong><br>
+            Верхні ноти: морські ноти, бергамот<br>
+            Ноти серця: розмарин, шавлія, герань<br>
+            Базові ноти: ладан, пачулі</p>
+
+            <p>
+            Густий, глибокий аромат із виразним ладаном у центрі звучання.
+            Смолисто-трав’яний характер створює відчуття тиші та зосередженості.
+            </p>
+
+            <button class="buy-btn add-to-set">Додати в сет</button>
+        </div>
+    </div>
+
+    <!-- PRODUCT: STONE & SALT -->
+    <div class="product-row">
+        <div class="product-media micro-animate">
+            <div class="product-bg" style="background-image:url('images/discovery/STONE & SALT_bg.jpg');"></div>
+            <img src="images/discovery/stone&salt mini.PNG" alt="STONE & SALT" class="product-diffuser">
+        </div>
+        <div class="product-text">
+            <h2 class="product-title">STONE & SALT</h2>
+            <div class="product-subtitle">Камінь і сіль · 3 ml</div>
+
+            <p><strong>Склад:</strong><br>
+            Верхні ноти: морська сіль, грейпфрут<br>
+            Ноти серця: цитруси, шавлія<br>
+            Базові ноти: морські водорості</p>
+
+            <p>
+            Свіжий морський аромат із солонуватими акордами та чистою цитрусовою прохолодою.
+            Прозорий, стриманий шлейф.
+            </p>
+
+            <button class="buy-btn add-to-set">Додати в сет</button>
+        </div>
+    </div>
+
+    <!-- PRODUCT: FREEDOM -->
+    <div class="product-row">
+        <div class="product-media micro-animate">
+            <div class="product-bg" style="background-image:url('images/discovery/FREEDOM_bg.jpg');"></div>
+            <img src="images/discovery/freedom mini.PNG" alt="FREEDOM" class="product-diffuser">
+        </div>
+        <div class="product-text">
+            <h2 class="product-title">FREEDOM</h2>
+            <div class="product-subtitle">Свобода · 3 ml</div>
+
+            <p><strong>Склад:</strong><br>
+            Верхні ноти: фісташки, бергамот, кардамон<br>
+            Ноти серця: рожевий перець, тубероз<br>
+            Базові ноти: іланг-іланг, жасмин, боби тонка</p>
+
+            <p>
+            Кремово-ніжний аромат із теплою горіхово-пряною текстурою та м’яким квітковим серцем.
+            Створює відчуття спокою й гармонії.
+            </p>
+
+            <button class="buy-btn add-to-set">Додати в сет</button>
+        </div>
+    </div>
+
+    <!-- PRODUCT: CROWN OF OLIVE -->
+    <div class="product-row">
+        <div class="product-media micro-animate">
+            <div class="product-bg" style="background-image:url('images/discovery/CROWN OF OLIVE_bg.jpg');"></div>
+            <img src="images/discovery/crown of oliv mini.png" alt="CROWN OF OLIVE" class="product-diffuser">
+        </div>
+        <div class="product-text">
+            <h2 class="product-title">CROWN OF OLIVE</h2>
+            <div class="product-subtitle">Крона оливи · 3 ml</div>
+
+            <p><strong>Склад:</strong><br>
+            Верхні ноти: жасмин, персик, кедр, груша, аніс<br>
+            Ноти серця: лаванда, лимон, троянда<br>
+            Базові ноти: олива, фіалка, деревні ноти</p>
+
+            <p>
+            Квітково-фруктова свіжість із тонким пряним рухом.
+            Теплий деревний фінал додає м’якості та світла.
+            </p>
+
+            <button class="buy-btn add-to-set">Додати в сет</button>
+        </div>
+    </div>
+
+    <!-- PRODUCT: SHADOW OF FIG -->
+    <div class="product-row">
+        <div class="product-media micro-animate">
+            <div class="product-bg" style="background-image:url('images/discovery/SHADOW OF FIG_bg.png');"></div>
+            <img src="images/discovery/shadow of fig mini.PNG" alt="SHADOW OF FIG" class="product-diffuser">
+        </div>
+        <div class="product-text">
+            <h2 class="product-title">SHADOW OF FIG</h2>
+            <div class="product-subtitle">Тінь смоковниці · 3 ml</div>
+
+            <p><strong>Склад:</strong><br>
+            Верхні ноти: озон, фрезія<br>
+            Ноти серця: жасмин, герань, вишневий цвіт, інжир, бамбук<br>
+            Базові ноти: пудра, пачулі, деревні ноти</p>
+
+            <p>
+            Легкий квітково-зелений аромат із прозорою свіжістю та м’якою фруктовою ноткою.
+            Створює відчуття чистоти й спокою.
+            </p>
+
+            <button class="buy-btn add-to-set">Додати в сет</button>
+        </div>
+    </div>
+
+    <!-- PRODUCT: GOLDEN RUM -->
+    <div class="product-row">
+        <div class="product-media micro-animate">
+            <div class="product-bg" style="background-image:url('images/discovery/GOLDEN RUM_bg.jpg');"></div>
+            <img src="images/discovery/golden rum mini.PNG" alt="GOLDEN RUM" class="product-diffuser">
+        </div>
+        <div class="product-text">
+            <h2 class="product-title">GOLDEN RUM</h2>
+            <div class="product-subtitle">Золотий ром · 3 ml</div>
+
+            <p><strong>Склад:</strong><br>
+            Верхні ноти: ром, кориця<br>
+            Ноти серця: мускатний горіх, ваніль<br>
+            Базові ноти: кедр, сандал</p>
+
+            <p>
+            Теплий, затишний аромат із пряно-ромовим стартом і кремовим серцем.
+            М’яке вечірнє тепло в просторі.
+            </p>
+
+            <button class="buy-btn add-to-set">Додати в сет</button>
+        </div>
+    </div>
+
+    <!-- PRODUCT: GREEN HAVEN -->
+    <div class="product-row">
+        <div class="product-media micro-animate">
+            <div class="product-bg" style="background-image:url('images/discovery/GREEN HAVEN_bg.jpg');"></div>
+            <img src="images/discovery/grin haven mini.PNG" alt="GREEN HAVEN" class="product-diffuser">
+        </div>
+        <div class="product-text">
+            <h2 class="product-title">GREEN HAVEN</h2>
+            <div class="product-subtitle">Трав’яне плесо · 3 ml</div>
+
+            <p><strong>Склад:</strong><br>
+            Верхні ноти: мандарин, лимон<br>
+            Ноти серця: бергамот, імбир<br>
+            Базові ноти: жасмин, білий чай</p>
+
+            <p>
+            Свіжий цитрусовий аромат із легкою пряністю та чистим чайно-квітковим шлейфом.
+            Наповнює простір світлом і природною гармонією.
+            </p>
+
+            <button class="buy-btn add-to-set">Додати в сет</button>
+        </div>
+    </div>
+
+</main>
+
+<footer>
+    <div class="footer-logo">
+        <img src="images/logo.svg">
+    </div>
+    © 2025 Mōnal
+</footer>
+
+<script src="cart.js"></script>
+
+</body>
+</html>

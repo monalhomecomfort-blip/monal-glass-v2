@@ -2,6 +2,7 @@ const BOT_TOKEN = "8077484017:AAHesSbIXkI-G-ZoHpgPQgRma03P31tqkWU";
 const CHAT_ID = "883840916";
 
 let PAYMENT_CONTEXT = null;
+let PAY_NOW_AMOUNT = 0;
 
 /* ===================== КОШИК ===================== */
 
@@ -281,8 +282,12 @@ ${itemsText}
     // ⛔ НЕ відправляємо одразу
     PAYMENT_CONTEXT = {
         orderId,
-        text
+        text,
+        payNow
     };
+
+    PAY_NOW_AMOUNT = payNow;
+
 
     // ✅ ВІДКРИВАЄМО МОДАЛКУ
     openPaymentModal(orderId, payNow);

@@ -252,8 +252,8 @@ function submitOrder() {
     let paymentLabel = "100% оплата";
 
     if (pay.value === "Передплата 150 грн") {
-        payNow = 150;
-        paymentLabel = "Передплата 150 грн, решта при отриманні";
+        payNow = 1; // тест
+        paymentLabel = "Тестова оплата 1 грн";
     }
 
     const itemsText = cart

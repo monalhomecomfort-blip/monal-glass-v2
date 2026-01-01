@@ -178,3 +178,116 @@ document.addEventListener("click", e => {
 
 /* ===== init ===== */
 renderAllBoxes();
+
+/* ===================== DISCOVERY SET (for your HTML) ===================== */
+
+const SET_PRICE = 395;
+const SET_SIZE = 4;
+
+let discoverySet = [];
+
+// Делегований клік по "Додати в сет"
+document.addEventListener("click", (e) => {
+  const addBtn = e.target.closest(".add-to-set");
+  if (!addBtn) return;
+
+  const row = addBtn.closest(".product-row");
+  if (!row) return;
+
+  const title = row.querySelector(".product-title");
+  if (!title) return;
+
+  const name = title.innerText.trim();
+
+  // ОДНАКОВІ МОЖНА → просто пушимо
+  discoverySet.push(name);
+
+  renderAllDiscoveryBoxes();
+});
+
+function renderAllDiscoveryBoxes() {
+  // Оновлюємо всі 10 вікон одночасно
+  document.querySelectorAll(".discovery-box").forEach((box) => {
+    const list = box.querySelector(".discovery-items");
+    const hint = box.querySelector(".discovery-hint");
+    const buyBtn = box.querySelector(".buy-discovery-btn");
+
+    if (!list || !hint || !buyBtn) return;
+
+    // Рендер списку
+    list.innerHTML = "";
+    discoverySet.forEach((name, index) => {
+      const li = document.createElement("li");
+      li.className = "discovery-item";
+      li.innerHTML = `
+        <span class="discovery-name">${escapeHtml(name)}</span>
+        <button type="button" class="discovery-remove" data-index="${index}">×</button>
+      `;
+      list.appendChild(li);
+    });
+
+    // Видалення по хрестику (делеговано всередині бокса)
+    list.querySelectorAll(".discovery-remove").forEach((btn) => {
+      btn.onclick = () => {
+        const i = Number(btn.dataset.index);
+        if (!Number.isNaN(i)) {
+          discoverySet.splice(i, 1);
+          renderAllDiscoveryBoxes();
+        }
+      };
+    });
+
+    // Логіка підказки + активності кнопки
+    if (discoverySet.length === 0) {
+      hint.textContent = "Сет містить 4 аромати";
+      hint.classList.remove("error");
+      buyBtn.disabled = true;
+      buyBtn.onclick = null;
+      return;
+    }
+
+    if (discoverySet.length % SET_SIZE !== 0) {
+      hint.textContent = "Сет містить 4 аромати — додайте або видаліть";
+      hint.classList.add("error");
+      buyBtn.disabled = true;
+      buyBtn.onclick = null;
+      return;
+    }
+
+    const sets = discoverySet.length / SET_SIZE;
+    hint.textContent = `Готово: ${sets} сет(и)`;
+    hint.classList.remove("error");
+    buyBtn.disabled = false;
+
+    buyBtn.onclick = () => {
+      // додаємо в кошик
+      addToCart(`Discovery set (${sets}×4 мініатюри)`, sets * SET_PRICE, "Discovery set");
+
+      // очищаємо і оновлюємо всі вікна
+      discoverySet = [];
+      renderAllDiscoveryBoxes();
+
+      // НЕ alert: просто тихо міняємо підказку на секунду
+      document.querySelectorAll(".discovery-box .discovery-hint").forEach(h => {
+        h.textContent = "Додано в кошик ✓";
+        h.classList.remove("error");
+        setTimeout(() => {
+          if (discoverySet.length === 0) h.textContent = "Сет містить 4 аромати";
+        }, 900);
+      });
+    };
+  });
+}
+
+// щоб назви не ламали html
+function escapeHtml(str) {
+  return str
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+// первинний рендер (щоб кнопка точно була disabled зразу)
+renderAllDiscoveryBoxes();

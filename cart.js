@@ -342,6 +342,15 @@ function closePaymentModal() {
     if (modal) modal.style.display = "none";
 }
 
+function goToPayment() {
+    if (!PAYMENT_CONTEXT) return;
+
+    // тут ДАЛІ буде mono
+    // зараз — просто точка входу
+
+    console.log("GO TO PAYMENT", PAYMENT_CONTEXT);
+}
+
 /* ===================== ПЕРЕХІД ДО ОНЛАЙН-ОПЛАТИ ===================== */
 function goToPayment() {
     if (!PAYMENT_CONTEXT) {

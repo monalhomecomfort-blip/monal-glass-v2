@@ -351,18 +351,6 @@ function goToPayment() {
     console.log("GO TO PAYMENT", PAYMENT_CONTEXT);
 }
 
-/* ===================== ПЕРЕХІД ДО ОНЛАЙН-ОПЛАТИ ===================== */
-function goToPayment() {
-    if (!PAYMENT_CONTEXT) {
-        alert("Помилка: немає даних замовлення");
-        return;
-    }
-
-    // ТУТ ПОКИ ЗАГЛУШКА — далі замінимо на mono
-    startOnlinePayment(PAYMENT_CONTEXT.orderId, PAY_NOW_AMOUNT);
-}
-
-
 /* ===================== ОПЛАТА ЗАМОВЛЕННЯ ===================== */
 function sendOrderToTelegram(ctx) {
     fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {

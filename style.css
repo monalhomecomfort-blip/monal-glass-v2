@@ -759,265 +759,89 @@ a.sub-mini {
   cursor: pointer;
 }
 
-/* ===== ДІСКАВЕРІ СЕТ ===== */
-.discovery-panel {
+/* ===================== DISCOVERY SET ===================== */
+
+/* GRID одного аромату */
+.discovery-row {
+    display: grid;
+    grid-template-columns: 380px 1fr 300px;
+    gap: 32px;
+    align-items: flex-start;
+    margin-bottom: 48px;
+}
+
+/* Правий блок — фіксований */
+.discovery-side {
     position: sticky;
     top: 120px;
-    margin-left: auto;
-    width: 300px;
-
-    background: rgba(0,0,0,0.35);
-    border: 1px solid rgba(255,255,255,0.08);
-    padding: 18px;
 }
 
-.discovery-panel h3 {
-    margin-bottom: 12px;
-    font-size: 16px;
-}
-
-#discovery-list {
-    list-style: none;
-    padding: 0;
-    margin: 0 0 12px 0;
-}
-
-#discovery-list li {
-    font-size: 13px;
-    margin-bottom: 6px;
-    opacity: 0.85;
-}
-
-.discovery-counter {
-    font-size: 13px;
-    margin-bottom: 8px;
-}
-
-.discovery-hint {
-    font-size: 12px;
-    opacity: 0.6;
-    margin-bottom: 12px;
-}
-
-.discovery-content {
-    width: 68%;
-}
-
-.discovery-panel {
-    width: 300px;
-    position: sticky;
-    top: 120px;
-
-    background: rgba(0,0,0,0.35);
-    border: 1px solid rgba(255,255,255,0.08);
-    padding: 18px;
-}
-
-.add-to-set {
-    margin-top: 14px;
-    background: transparent;
-    border: 1px solid rgba(0,0,0,0.3);
-    padding: 6px 14px;
-    border-radius: 20px;
-    cursor: pointer;
-    font-size: 14px;
-}
-
-/* Discovery — порожній стан */
-.inline-discovery-list:empty::after {
-    content: "Аромати ще не обрані";
-    display: block;
-    opacity: 0.4;
-    font-size: 13px;
-    padding: 4px 0;
-}
-
-/* ===== INLINE DISCOVERY SET (quiet UI) ===== */
-
-.inline-discovery {
-    margin-top: 12px;
-    padding: 12px 0;
-
-    border-top: 1px solid rgba(214, 205, 191, 0.15);
+/* Вікно сету */
+.discovery-box {
+    background: rgba(20, 20, 20, 0.6); /* як меню і футер */
+    border: 1px solid rgba(214, 205, 191, 0.25);
+    border-radius: 18px;
+    padding: 16px;
 
     font-size: 14px;
     color: #d6cdbf;
 }
 
 /* Заголовок */
-.inline-discovery-header {
+.discovery-title {
     font-size: 13px;
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    opacity: 0.6;
-    margin-bottom: 6px;
+    opacity: 0.7;
+    margin-bottom: 10px;
 }
 
 /* Список ароматів */
-.inline-discovery-list {
+.discovery-items {
     list-style: none;
     padding: 0;
-    margin: 0 0 8px 0;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
+    margin: 0 0 10px 0;
 }
 
-/* Один аромат у сеті */
-.inline-discovery-list li {
+.discovery-items li {
     display: flex;
     justify-content: space-between;
     align-items: center;
 
     font-size: 14px;
     line-height: 1.4;
-}
-
-/* Кнопка видалення */
-.inline-discovery-list button {
-    background: none;
-    border: none;
-    color: #d6cdbf;
-    opacity: 0.4;
-    cursor: pointer;
-    font-size: 14px;
-    line-height: 1;
-}
-
-.inline-discovery-list button:hover {
-    opacity: 0.8;
-}
-
-/* Нижня частина */
-.inline-discovery-footer {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
+    padding: 2px 0;
 }
 
 /* Підказка */
-.inline-discovery-hint {
+.discovery-hint {
     font-size: 12px;
-    opacity: 0.5;
+    opacity: 0.65;
+    margin-bottom: 10px;
 }
 
 /* Кнопка */
-.inline-discovery-buy {
-    align-self: flex-start;
+.buy-discovery-btn {
+    width: 100%;
+    padding: 8px 14px;
 
     background: transparent;
     border: 1px solid rgba(214, 205, 191, 0.35);
     color: #d6cdbf;
 
     font-size: 13px;
-    padding: 6px 16px;
     border-radius: 20px;
     cursor: pointer;
 
     transition: all 0.25s ease;
 }
 
-.inline-discovery-buy:disabled {
+.buy-discovery-btn:disabled {
     opacity: 0.35;
     cursor: default;
 }
 
-.inline-discovery-buy:not(:disabled):hover {
+.buy-discovery-btn:not(:disabled):hover {
     background: rgba(214, 205, 191, 0.12);
     border-color: rgba(214, 205, 191, 0.6);
-}
-
-.product-text-layout {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 32px;
-    align-items: start;
-}
-
-.discovery-box {
-    background: rgba(160,155,145,0.85); /* як меню/футер */
-    padding: 18px;
-    border-radius: 18px;
-    font-size: 14px;
-}
-
-.discovery-title {
-    font-size: 14px;
-    margin-bottom: 10px;
-    opacity: 0.8;
-}
-
-.discovery-list {
-    list-style: none;
-    padding: 0;
-    margin: 0 0 10px 0;
-}
-
-.discovery-list li {
-    display: flex;
-    justify-content: space-between;
-    padding: 4px 0;
-}
-
-.discovery-hint {
-    font-size: 13px;
-    opacity: 0.7;
-    margin-bottom: 10px;
-}
-
-.discovery-row {
-    display: grid;
-    grid-template-columns: 380px 1fr 300px;
-    gap: 32px;
-    align-items: flex-start;
-}
-
-.discovery-side {
-    position: sticky;
-    top: 120px; /* нижче хедера */
-}
-
-.discovery-box {
-    background: rgba(20, 20, 20, 0.6);
-    border: 1px solid rgba(214, 205, 191, 0.2);
-    padding: 16px;
-    font-size: 14px;
-    color: #d6cdbf;
-}
-
-.discovery-title {
-    font-weight: 500;
-    margin-bottom: 8px;
-}
-
-.discovery-box ul {
-    list-style: none;
-    padding: 0;
-    margin: 0 0 8px;
-}
-
-.discovery-box li {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 4px;
-}
-
-.discovery-hint {
-    font-size: 12px;
-    opacity: 0.75;
-    margin-bottom: 8px;
-}
-
-.buy-discovery-btn {
-    width: 100%;
-    padding: 8px;
-    background: transparent;
-    border: 1px solid rgba(214, 205, 191, 0.4);
-    color: #d6cdbf;
-    cursor: pointer;
-}
-
-.buy-discovery-btn:disabled {
-    opacity: 0.4;
-    cursor: default;
 }

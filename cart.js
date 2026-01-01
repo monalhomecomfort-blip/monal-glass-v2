@@ -1,6 +1,3 @@
-const BOT_TOKEN = "8077484017:AAHesSbIXkI-G-ZoHpgPQgRma03P31tqkWU";
-const CHAT_ID = "883840916";
-
 let PAYMENT_CONTEXT = null;
 let PAY_NOW_AMOUNT = 0;
 

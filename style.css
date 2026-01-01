@@ -872,7 +872,10 @@ a.sub-mini {
 /* ===== BACK BUTTON — як BUY / ADD ===== */
 
 .back-btn {
-    display: inline-block;
+    display: inline-flex;          /* ← ключове */
+    width: fit-content;            /* ← не розтягуйся */
+    align-self: flex-start;        /* ← якщо в flex */
+
     margin-bottom: 20px;
     padding: 14px 36px;
     border-radius: 40px;

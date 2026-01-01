@@ -821,32 +821,29 @@ a.sub-mini {
 }
 
 .buy-discovery-btn {
-    width: 100%;
-    padding: 10px 16px;
+    margin-top: 8px;
+    padding: 14px 36px;
+    border-radius: 40px;
 
-    background: transparent;
-    border: 1px solid rgba(214, 205, 191, 0.45);
-    color: #d6cdbf;
+    background: #e7e4d9;
+    border: none;
 
-    font-size: 14px;
-    border-radius: 24px;
+    font-size: 16px;
+    color: #000;              /* ТЕКСТ ЧОРНИЙ ЗАВЖДИ */
     cursor: pointer;
 
-    transition: 
-        background 0.25s ease,
-        color 0.25s ease,
-        border-color 0.25s ease;
+    transition: background 0.3s ease;
 }
 
-/* ACTIVE HOVER — ЯК У КНОПКИ "КУПИТИ" */
-.buy-discovery-btn:not(:disabled):hover {
-    background: rgba(214, 205, 191, 0.9); /* ВІДЧУТНО */
-    color: #111;                          /* ЧОРНИЙ ТЕКСТ */
-    border-color: rgba(214, 205, 191, 0.9);
+.buy-discovery-btn:hover {
+    background: #d8d2c2;      /* плавне затемнення, як у Купити */
 }
 
-/* DISABLED */
 .buy-discovery-btn:disabled {
-    opacity: 0.35;
+    opacity: 0.4;
     cursor: default;
+}
+
+.buy-discovery-btn:disabled:hover {
+    background: #e7e4d9;      /* без ховера якщо disabled */
 }

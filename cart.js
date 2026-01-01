@@ -343,13 +343,20 @@ function closePaymentModal() {
 }
 
 function goToPayment() {
-    if (!PAYMENT_CONTEXT) return;
+  if (!PAYMENT_CONTEXT) return;
 
-    // тут ДАЛІ буде mono
-    // зараз — просто точка входу
+  fetch("https://monal-mono-pay-production.up.railway.app/register-order", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      orderId: PAYMENT_CONTEXT.orderId,
+      text: PAYMENT_CONTEXT.text
+    })
+  });
 
-    startOnlinePayment(PAYMENT_CONTEXT.orderId, PAY_NOW_AMOUNT);
+  startOnlinePayment(PAYMENT_CONTEXT.orderId, PAY_NOW_AMOUNT);
 }
+
 
 /* ===================== MONO ONLINE PAYMENT ===================== */
 function startOnlinePayment(orderId, amount) {

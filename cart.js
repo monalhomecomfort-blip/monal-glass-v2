@@ -348,7 +348,33 @@ function goToPayment() {
     // тут ДАЛІ буде mono
     // зараз — просто точка входу
 
-    console.log("GO TO PAYMENT", PAYMENT_CONTEXT);
+    startOnlinePayment(PAYMENT_CONTEXT.orderId, PAY_NOW_AMOUNT);
+}
+
+/* ===================== MONO ONLINE PAYMENT ===================== */
+function startOnlinePayment(orderId, amount) {
+    fetch("https://monal-mono-pay-production.up.railway.app/create-payment", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            orderId: orderId,
+            amount: amount
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data && data.paymentUrl) {
+            // 🔗 редірект клієнта на mono
+            window.location.href = data.paymentUrl;
+        } else {
+            console.error("Mono response error:", data);
+        }
+    })
+    .catch(err => {
+        console.error("Payment request failed:", err);
+    });
 }
 
 /* ===================== ОПЛАТА ЗАМОВЛЕННЯ ===================== */

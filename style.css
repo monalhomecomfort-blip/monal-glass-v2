@@ -778,13 +778,13 @@ a.sub-mini {
 
 /* Вікно сету */
 .discovery-box {
-    background: rgba(20, 20, 20, 0.6); /* як меню і футер */
+    background: rgba(4, 4, 4, 0.85); /* як меню і футер */
     border: 1px solid rgba(214, 205, 191, 0.25);
     border-radius: 18px;
     padding: 16px;
 
     font-size: 14px;
-    color: #d6cdbf;
+    color: #e8e1d6;
 }
 
 /* Заголовок */

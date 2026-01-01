@@ -290,19 +290,44 @@ ${itemsText}
 
 
 
-/* ===================== МОДАЛКА ОПЛАТИ ===================== */
+/* ===================== МОДАЛКА ПЕРЕВІРКИ ЗАМОВЛЕННЯ ===================== */
 function openPaymentModal(orderId, payNow) {
-    const modal = document.getElementById("payment-modal");
+    const modal   = document.getElementById("payment-modal");
     const orderEl = document.getElementById("pay-order-id");
     const amountEl = document.getElementById("pay-amount");
 
     if (!modal || !orderEl || !amountEl) {
-        alert("Помилка: вікно оплати не знайдено");
+        alert("Помилка: вікно перевірки не знайдено");
         return;
     }
 
+    // номер замовлення і сума
     orderEl.textContent = orderId;
     amountEl.textContent = payNow;
+
+    // ПІБ
+    document.getElementById("check-name").textContent =
+        document.getElementById("inp-last").value + " " +
+        document.getElementById("inp-first").value;
+
+    // телефон
+    document.getElementById("check-phone").textContent =
+        document.getElementById("inp-phone").value;
+
+    // місто
+    document.getElementById("check-city").textContent =
+        document.getElementById("np-city-input").value;
+
+    // Нова пошта
+    const npManual = document.getElementById("np-manual").value;
+    const npSelect = document.getElementById("np-warehouse").value;
+
+    document.getElementById("check-np").textContent =
+        npManual ? npManual : npSelect;
+
+    // тип оплати
+    document.getElementById("check-pay-type").textContent =
+        document.querySelector("input[name='pay']:checked").value;
 
     modal.style.display = "flex";
 }
@@ -312,13 +337,15 @@ function closePaymentModal() {
     if (modal) modal.style.display = "none";
 }
 
-function confirmPayment() {
-    if (!PAYMENT_CONTEXT) return;
+/* ===================== ПЕРЕХІД ДО ОНЛАЙН-ОПЛАТИ ===================== */
+function goToPayment() {
+    if (!PAYMENT_CONTEXT) {
+        alert("Помилка: немає даних замовлення");
+        return;
+    }
 
-    sendOrderToTelegram(PAYMENT_CONTEXT);
-    PAYMENT_CONTEXT = null;
-
-    closePaymentModal();
+    // ТУТ ПОКИ ЗАГЛУШКА — далі замінимо на mono
+    startOnlinePayment(PAYMENT_CONTEXT.orderId, PAY_NOW_AMOUNT);
 }
 
 

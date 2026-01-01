@@ -169,5 +169,15 @@
 </footer>
   
 <script src="cart.js"></script>
+<script>
+  document.addEventListener("click", function (e) {
+    const mainTile = e.target.closest("a.subcategory");
+    if (!mainTile) return;
+
+    // блокуємо перехід ТІЛЬКИ для великих плиток
+    e.preventDefault();
+  });
+</script>
+
 </body>
 </html>

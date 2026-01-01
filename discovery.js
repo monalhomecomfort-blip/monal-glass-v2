@@ -81,3 +81,100 @@ document.getElementById("buy-discovery-btn")?.addEventListener("click", () => {
     discoverySet = [];
     updateDiscoveryUI();
 });
+
+/* ===================== DISCOVERY SET (GLOBAL, SYNCED) ===================== */
+
+const SET_PRICE = 395;
+let discoverySet = [];
+
+/* ===== helpers ===== */
+
+function getAllBoxes() {
+    return document.querySelectorAll(".discovery-box");
+}
+
+function renderAllBoxes() {
+    getAllBoxes().forEach(box => {
+        const list = box.querySelector(".discovery-items");
+        const hint = box.querySelector(".discovery-hint");
+        const buyBtn = box.querySelector(".buy-discovery-btn");
+
+        // список
+        list.innerHTML = "";
+        discoverySet.forEach((name, index) => {
+            const li = document.createElement("li");
+
+            li.innerHTML = `
+                <span>${name}</span>
+                <button data-index="${index}">×</button>
+            `;
+
+            list.appendChild(li);
+        });
+
+        // видалення
+        list.querySelectorAll("button").forEach(btn => {
+            btn.addEventListener("click", () => {
+                const i = Number(btn.dataset.index);
+                discoverySet.splice(i, 1);
+                renderAllBoxes();
+            });
+        });
+
+        // підказка + кнопка
+        if (discoverySet.length === 0) {
+            hint.textContent = "Сет містить 4 аромати";
+            buyBtn.disabled = true;
+            return;
+        }
+
+        if (discoverySet.length % 4 !== 0) {
+            hint.textContent =
+                "Сет містить 4 аромати — зробіть ще вибір або видаліть";
+            buyBtn.disabled = true;
+            return;
+        }
+
+        const sets = discoverySet.length / 4;
+        hint.textContent = `Готово: ${sets} сет(и)`;
+        buyBtn.disabled = false;
+    });
+}
+
+/* ===== add to set ===== */
+
+document.addEventListener("click", e => {
+    if (!e.target.classList.contains("add-to-set")) return;
+
+    const product = e.target.closest(".product-text");
+    if (!product) return;
+
+    const name = product.querySelector(".product-title")?.innerText;
+    if (!name) return;
+
+    discoverySet.push(name);
+    renderAllBoxes();
+});
+
+/* ===== buy discovery set ===== */
+
+document.addEventListener("click", e => {
+    if (!e.target.classList.contains("buy-discovery-btn")) return;
+
+    if (discoverySet.length === 0 || discoverySet.length % 4 !== 0) return;
+
+    const sets = discoverySet.length / 4;
+    const total = sets * SET_PRICE;
+
+    addToCart(
+        `Discovery set (${sets}×4 ml)`,
+        total,
+        discoverySet.join(", ")
+    );
+
+    discoverySet = [];
+    renderAllBoxes();
+});
+
+/* ===== init ===== */
+renderAllBoxes();

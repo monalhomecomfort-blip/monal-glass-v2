@@ -799,12 +799,6 @@ a.sub-mini {
     margin-bottom: 12px;
 }
 
-.discovery-layout {
-    display: flex;
-    gap: 40px;
-    align-items: flex-start;
-}
-
 .discovery-content {
     width: 68%;
 }

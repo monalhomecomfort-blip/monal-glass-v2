@@ -98,8 +98,7 @@ document.addEventListener("click", e => {
     for (let i = 0; i < setsCount; i++) {
         addToCart(
             "Discovery set (4 × 3 ml)",
-            395,
-            "discovery"
+            395
         );
     }
 

@@ -847,3 +847,24 @@ a.sub-mini {
 .buy-discovery-btn:disabled:hover {
     background: #e7e4d9;      /* без ховера якщо disabled */
 }
+
+/* ===== ADD TO SET — як BUY ===== */
+
+.add-to-set {
+    margin-top: 8px;
+    padding: 14px 36px;
+    border-radius: 40px;
+
+    background: #e7e4d9;
+    border: none;
+
+    font-size: 16px;
+    color: #000;              /* текст ЧОРНИЙ завжди */
+    cursor: pointer;
+
+    transition: background 0.3s;
+}
+
+.add-to-set:hover {
+    background: #d8d2c2;      /* затемнення як у Купити */
+}

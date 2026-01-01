@@ -820,28 +820,33 @@ a.sub-mini {
     margin-bottom: 10px;
 }
 
-/* Кнопка */
 .buy-discovery-btn {
     width: 100%;
-    padding: 8px 14px;
+    padding: 10px 16px;
 
     background: transparent;
-    border: 1px solid rgba(214, 205, 191, 0.35);
+    border: 1px solid rgba(214, 205, 191, 0.45);
     color: #d6cdbf;
 
     font-size: 14px;
-    border-radius: 20px;
+    border-radius: 24px;
     cursor: pointer;
 
-    transition: all 0.25s ease;
+    transition: 
+        background 0.25s ease,
+        color 0.25s ease,
+        border-color 0.25s ease;
 }
 
+/* ACTIVE HOVER — ЯК У КНОПКИ "КУПИТИ" */
+.buy-discovery-btn:not(:disabled):hover {
+    background: rgba(214, 205, 191, 0.9); /* ВІДЧУТНО */
+    color: #111;                          /* ЧОРНИЙ ТЕКСТ */
+    border-color: rgba(214, 205, 191, 0.9);
+}
+
+/* DISABLED */
 .buy-discovery-btn:disabled {
     opacity: 0.35;
     cursor: default;
-}
-
-.buy-discovery-btn:not(:disabled):hover {
-    background: rgba(214, 205, 191, 0.12);
-    border-color: rgba(214, 205, 191, 0.6);
 }

@@ -173,52 +173,58 @@
 </div>
 
 <script src="cart.js"></script>
-<!-- МОДАЛЬНЕ ВІКНО ПЕРЕВІРКА ДАНИХ КЛІЄНТА -->
-<div class="modal-content">
 
-  <h3>Перевірте дані замовлення</h3>
+<!-- МОДАЛЬНЕ ВІКНО ПЕРЕВІРКИ ДАНИХ -->
+<div id="payment-modal" class="modal" style="display:none;">
+  <div class="modal-content">
 
-  <p><strong>Номер замовлення:</strong> <span id="pay-order-id"></span></p>
+    <h3>Перевірте дані замовлення</h3>
 
-  <hr>
+    <p><strong>Номер замовлення:</strong>
+      <span id="pay-order-id"></span>
+    </p>
 
-  <p><strong>Отримувач:</strong><br>
-    <span id="check-name"></span>
-  </p>
+    <hr>
 
-  <p><strong>Телефон:</strong><br>
-    <span id="check-phone"></span>
-  </p>
+    <p><strong>Отримувач:</strong><br>
+      <span id="check-name"></span>
+    </p>
 
-  <p><strong>Місто:</strong><br>
-    <span id="check-city"></span>
-  </p>
+    <p><strong>Телефон:</strong><br>
+      <span id="check-phone"></span>
+    </p>
 
-  <p><strong>Доставка (НП):</strong><br>
-    <span id="check-np"></span>
-  </p>
+    <p><strong>Місто:</strong><br>
+      <span id="check-city"></span>
+    </p>
 
-  <hr>
+    <p><strong>Доставка (НП):</strong><br>
+      <span id="check-np"></span>
+    </p>
 
-  <p><strong>Оплата:</strong><br>
-    <span id="check-pay-type"></span>
-  </p>
+    <hr>
 
-  <p><strong>Сума до оплати зараз:</strong>
-    <span id="pay-amount"></span> грн
-  </p>
+    <p><strong>Оплата:</strong><br>
+      <span id="check-pay-type"></span>
+    </p>
 
-  <div style="margin-top:20px;">
-    <button class="buy-btn" onclick="goToPayment()">
-      Перейти до оплати
-    </button>
+    <p><strong>Сума до оплати зараз:</strong>
+      <span id="pay-amount"></span> грн
+    </p>
 
-    <button class="close-btn" onclick="closePaymentModal()" style="margin-top:8px;">
-      Редагувати дані
-    </button>
+    <div style="margin-top:20px;">
+      <button class="buy-btn" onclick="goToPayment()">
+        Перейти до оплати
+      </button>
+
+      <button class="close-btn" onclick="closePaymentModal()" style="margin-top:8px;">
+        Редагувати дані
+      </button>
+    </div>
+
   </div>
-
 </div>
+
 
 </body>
 </html>

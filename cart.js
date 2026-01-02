@@ -256,9 +256,24 @@ function submitOrder() {
         paymentLabel = "Тестова оплата 1 грн";
     }
 
+    let dueAmount = 0;
+
+    if (pay.value === "Передплата 150 грн") {
+        dueAmount = total - payNow;
+    }
+
     const itemsText = cart
-        .map(i => `• ${i.label ? `[${i.label}] ` : ""}${i.name} — ${i.price} грн`)
+        .map(i => {
+            let line = `• ${i.label ? `[${i.label}] ` : ""}${i.name} — ${i.price} грн`;
+
+            if (i.details) {
+                line += `\n   ↳ ${i.details}`;
+            }
+
+            return line;
+        })
         .join("\n");
+
 
     const text =
 `🧾 *Нове замовлення №${orderId}*
@@ -267,14 +282,13 @@ function submitOrder() {
 🏙 ${city}
 📦 НП: ${np}
 
-💳 Оплата: ${paymentLabel}
-💸 До оплати зараз: ${payNow} грн
+💰 Загальна сума: ${total} грн
+💳 Сплачено: ${paymentLabel}
+💸 До оплати: ${dueAmount} грн
 
 🛒 Товари:
 ${itemsText}
-
-💰 Загальна сума: ${total} грн
-`;
+;
 
     // ⛔ НЕ відправляємо одразу
     PAYMENT_CONTEXT = {

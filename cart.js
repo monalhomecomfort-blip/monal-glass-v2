@@ -1,5 +1,8 @@
 let PAYMENT_CONTEXT = null;
 let PAY_NOW_AMOUNT = 0;
+let CERT_APPLIED_AMOUNT = 0;
+let CERT_CODE_USED = null;
+
 
 /* ===================== КОШИК ===================== */
 
@@ -214,6 +217,49 @@ function toggleManualNP() {
     }
 }
 
+function applyCertificate() {
+    const codeInput = document.getElementById("cert-code");
+    const infoEl = document.getElementById("cert-info");
+
+    if (!codeInput || !infoEl) return;
+
+    const code = codeInput.value.trim();
+    if (!code) {
+        infoEl.textContent = "Введіть код сертифіката";
+        return;
+    }
+
+    // 🔴 ЗАГЛУШКА (тимчасово)
+    // пізніше тут буде запит на сервер
+    const FAKE_CERT_VALUE = 1000;
+
+    CERT_APPLIED_AMOUNT = FAKE_CERT_VALUE;
+    CERT_CODE_USED = code;
+
+    infoEl.innerHTML = `
+        Сертифікат <strong>${code}</strong> застосовано.<br>
+        Покриває: <strong>${FAKE_CERT_VALUE} грн</strong>
+    `;
+
+    recalcAfterCertificate();
+}
+
+function recalcAfterCertificate() {
+    const totalEl = document.getElementById("cart-total");
+    if (!totalEl) return;
+
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    const total = cart.reduce((s, i) => s + i.price, 0);
+
+    const remaining = Math.max(0, total - CERT_APPLIED_AMOUNT);
+
+    totalEl.innerHTML = `
+        Загальна сума: ${total} грн<br>
+        Сертифікат: −${CERT_APPLIED_AMOUNT} грн<br>
+        <strong>До оплати: ${remaining} грн</strong>
+    `;
+}
+
 
 /* ===================== ОФОРМЛЕННЯ ЗАМОВЛЕННЯ ===================== */
 function submitOrder() {
@@ -252,6 +298,8 @@ function submitOrder() {
 
     const orderId = Date.now().toString().slice(-6);
     const total = cart.reduce((s, i) => s + i.price, 0);
+    const remainingToPay = Math.max(0, total - CERT_APPLIED_AMOUNT);
+
 
     const discoveryItemsRaw = localStorage.getItem("discoverySetItems");
         let discoveryItems = [];
@@ -264,7 +312,7 @@ function submitOrder() {
             }
         }
 
-    let payNow = total;
+    let payNow = remainingToPay;
     let paymentLabel = "100% оплата";
 
     if (pay.value === "Передплата 150 грн") {
@@ -301,6 +349,7 @@ function submitOrder() {
 📦 НП: ${np}
 
 💰 Загальна сума: ${total} грн
+${CERT_CODE_USED ? `🎟 Сертифікат: ${CERT_CODE_USED} (−${CERT_APPLIED_AMOUNT} грн)\n` : ""}
 💳 Сплачено: ${paymentLabel}
 💸 До оплати: ${dueAmount} грн
 

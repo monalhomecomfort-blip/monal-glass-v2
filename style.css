@@ -895,6 +895,10 @@ a.sub-mini {
     background: #d8d2c2;
 }
 
+.certificate-option {
+    pointer-events: auto;
+}
+
 .certificate-option.active {
-    background: #d8d2c2; /* той самий hover, що у buy-btn */
+    background: #d8d2c2;
 }

@@ -83,9 +83,9 @@
                 <strong>Оберіть номінал:</strong>
 
                 <div class="nominal-row" style="margin-top:10px;">
-                    <button class="certificate-option" data-price="1000">1000 грн</button>
-                    <button class="certificate-option" data-price="2000">2000 грн</button>
-                    <button class="certificate-option" data-price="3000">3000 грн</button>                                         
+                        <button type="button" class="certificate-option" data-price="1000">1000 грн</button>
+                        <button type="button" class="certificate-option" data-price="2000">2000 грн</button>
+                        <button type="button" class="certificate-option" data-price="3000">3000 грн</button>                                      
                 </div>
             </div>
 
@@ -116,34 +116,34 @@
 
 let selectedNominal = null;
 
-const nominalButtons = document.querySelectorAll(".nominal-btn");
+const nominalButtons = document.querySelectorAll(".certificate-option");
 const buyBtn = document.getElementById("buy-certificate");
 const priceEl = document.getElementById("cert-price");
 
 nominalButtons.forEach(btn => {
-    btn.addEventListener("click", () => {
+  btn.addEventListener("click", () => {
+    nominalButtons.forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
 
-        nominalButtons.forEach(b => b.classList.remove("active"));
-        btn.classList.add("active");
+    selectedNominal = Number(btn.dataset.price); // <-- data-price
+    priceEl.textContent = `${selectedNominal} грн`;
 
-        selectedNominal = Number(btn.dataset.value);
-        priceEl.textContent = `${selectedNominal} грн`;
-
-        buyBtn.disabled = false;
-    });
+    buyBtn.disabled = false;
+  });
 });
 
 buyBtn.addEventListener("click", () => {
-    if (!selectedNominal) return;
+  if (!selectedNominal) return;
 
-    addToCart(
-        "Подарунковий сертифікат Mōnal",
-        selectedNominal,
-        "Сертифікат",
-        `Номінал: ${selectedNominal} грн`
-    );
+  addToCart(
+    "Подарунковий сертифікат Mōnal",
+    selectedNominal,
+    "Сертифікат",
+    `Номінал: ${selectedNominal} грн`
+  );
 });
 </script>
+
 
 </body>
 </html>

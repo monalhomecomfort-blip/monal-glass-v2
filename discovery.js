@@ -101,10 +101,11 @@ document.addEventListener("click", e => {
     for (let i = 0; i < setsCount; i++) {
         addToCart(
             "Discovery set (4 × 3 ml)",
-            395,
-            setItems
+            395            
         );
     }
+
+  localStorage.setItem("discoverySetItems", JSON.stringify(discoverySet));
 
     // очистка
     discoverySet = [];

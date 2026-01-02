@@ -173,9 +173,16 @@
 
 <!-- ✅ ОЧИСТКА КОШИКА ПІСЛЯ УСПІШНОЇ ОПЛАТИ -->
 <script>
-  // ✅ ГАРАНТОВАНА ОЧИСТКА КОШИКА ПІСЛЯ ОПЛАТИ
-  localStorage.removeItem("cart");
-  localStorage.removeItem("discoverySetItems");
+  const params = new URLSearchParams(window.location.search);
+
+  if (
+    params.get("status") === "success" ||
+    params.get("invoiceId") || 
+    params.get("reference")
+  ) {
+    localStorage.removeItem("cart");
+    localStorage.removeItem("discoverySetItems");
+  }
 </script>
 
 <script>

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Подарункові сертифікати — Mōnal</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<!-- NAV -->
+<nav>
+    <div class="nav-left">
+        <a href="index.html" class="nav-logo-link">
+            <img src="images/logo.svg" alt="Mōnal" class="nav-logo">
+        </a>
+    </div>
+
+    <div class="nav-center">
+        <a href="index.html">Головна</a>
+        <a href="about.html">Про бренд</a>
+        <a href="contacts.html">Контакти</a>
+    </div>
+
+    <div class="nav-right">
+        <a href="delivery.html">Доставка</a>
+        <a href="cart.html">Кошик <span id="cart-count"></span></a>
+    </div>
+</nav>
+
+<!-- CONTENT -->
+<div class="container">
+
+    <a href="index.html" class="back-btn">← Назад</a>
+
+    <h1 class="page-title">Подарункові сертифікати</h1>
+
+    <div class="product-row">
+
+        <!-- MEDIA -->
+        <div class="product-media micro-animate">
+            <div class="product-bg"
+                 style="background-image: url('images/certificates/bg.jpg');">
+            </div>
+
+            <img
+                src="images/certificates/certificate.png"
+                alt="Подарунковий сертифікат Mōnal"
+                class="product-diffuser">
+        </div>
+
+        <!-- TEXT -->
+        <div class="product-text">
+
+            <h2 class="product-title">Подарунковий сертифікат Mōnal</h2>
+
+            <p>
+                Витончений спосіб подарувати атмосферу.
+                Сертифікат Mōnal — це можливість обрати аромат для дому,
+                який стане частиною простору, настрою і спогадів.
+            </p>
+
+            <p>
+                Сертифікат електронний, дійсний для використання на сайті.
+                Після оплати унікальний код надходить адміністратору
+                та активується вручну.
+            </p>
+
+            <!-- NOMINALS -->
+            <div style="margin:20px 0;">
+                <strong>Оберіть номінал:</strong>
+
+                <div class="nominal-row" style="margin-top:10px;">
+                    <button class="nominal-btn" data-value="1000">1000 грн</button>
+                    <button class="nominal-btn" data-value="2000">2000 грн</button>
+                    <button class="nominal-btn" data-value="3000">3000 грн</button>
+                </div>
+            </div>
+
+            <div class="product-price" id="cert-price">
+                —
+            </div>
+
+            <button class="buy-btn" id="buy-certificate" disabled>
+                Купити
+            </button>
+
+        </div>
+    </div>
+
+</div>
+
+<footer>
+    <div class="footer-logo">
+        <img src="images/logo.svg" alt="Mōnal">
+    </div>
+    © 2026 Ароматика для дому
+</footer>
+
+<script src="cart.js"></script>
+
+<script>
+/* ===================== CERTIFICATE LOGIC ===================== */
+
+let selectedNominal = null;
+
+const nominalButtons = document.querySelectorAll(".nominal-btn");
+const buyBtn = document.getElementById("buy-certificate");
+const priceEl = document.getElementById("cert-price");
+
+nominalButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+
+        nominalButtons.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+
+        selectedNominal = Number(btn.dataset.value);
+        priceEl.textContent = `${selectedNominal} грн`;
+
+        buyBtn.disabled = false;
+    });
+});
+
+buyBtn.addEventListener("click", () => {
+    if (!selectedNominal) return;
+
+    addToCart(
+        "Подарунковий сертифікат Mōnal",
+        selectedNominal,
+        "Сертифікат",
+        `Номінал: ${selectedNominal} грн`
+    );
+});
+</script>
+
+</body>
+</html>

@@ -894,3 +894,7 @@ a.sub-mini {
 .back-btn:hover {
     background: #d8d2c2;
 }
+
+.certificate-option.active {
+    background: #d8d2c2; /* той самий hover, що у buy-btn */
+}

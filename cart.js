@@ -263,7 +263,15 @@ function submitOrder() {
     }
 
     const itemsText = cart
-        .map(i => `• ${i.label ? `[${i.label}] ` : ""}${i.name} — ${i.price} грн`)
+        .map(i => {
+            let line = `• ${i.label ? `[${i.label}] ` : ""}${i.name} — ${i.price} грн`;
+
+            if (i.details) {
+                line += `\n   ↳ ${i.details}`;
+            }
+
+            return line;
+        })
         .join("\n");
 
     const text =
@@ -279,7 +287,7 @@ function submitOrder() {
 
 🛒 Товари:
 ${itemsText}
-;
+`;
 
     // ⛔ НЕ відправляємо одразу
     PAYMENT_CONTEXT = {

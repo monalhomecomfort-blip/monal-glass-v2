@@ -395,9 +395,11 @@ function startOnlinePayment(orderId, amount) {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
-            orderId: orderId,
-            amount: amount
+            orderId,
+            amount,
+            text: PAYMENT_CONTEXT.text
         })
+
     })
     .then(res => res.json())
     .then(data => {

@@ -11,10 +11,15 @@ function updateCartCount() {
     }
 }
 
-function addToCart(name, price, label) {
+function addToCart(name, price, label = "", items = null) {
     const cart = JSON.parse(localStorage.getItem("cart")) || [];
-    cart.push({ name, price, label });
+
+    const item = { name, price, label };
+    if (items) item.items = items;
+
+    cart.push(item);
     localStorage.setItem("cart", JSON.stringify(cart));
+
     updateCartCount();
 }
 

@@ -263,17 +263,8 @@ function submitOrder() {
     }
 
     const itemsText = cart
-        .map(i => {
-            let line = `• ${i.label ? `[${i.label}] ` : ""}${i.name} — ${i.price} грн`;
-
-            if (i.details) {
-                line += `\n   ↳ ${i.details}`;
-            }
-
-            return line;
-        })
+        .map(i => `• ${i.label ? `[${i.label}] ` : ""}${i.name} — ${i.price} грн`)
         .join("\n");
-
 
     const text =
 `🧾 *Нове замовлення №${orderId}*

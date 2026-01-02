@@ -910,10 +910,7 @@ a.sub-mini {
     transition: background 0.3s ease;
 }
 
-.certificate-option:hover {
-    background: #d8d2c2;
-}
-
+.certificate-option:hover,
 .certificate-option.active {
     background: #d8d2c2;
 }

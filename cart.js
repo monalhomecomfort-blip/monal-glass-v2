@@ -253,6 +253,17 @@ function submitOrder() {
     const orderId = Date.now().toString().slice(-6);
     const total = cart.reduce((s, i) => s + i.price, 0);
 
+    const discoveryItemsRaw = localStorage.getItem("discoverySetItems");
+        let discoveryItems = [];
+
+        if (discoveryItemsRaw) {
+            try {
+                discoveryItems = JSON.parse(discoveryItemsRaw);
+            } catch (e) {
+                discoveryItems = [];
+            }
+        }
+
     let payNow = total;
     let paymentLabel = "100% оплата";
 
@@ -269,13 +280,16 @@ function submitOrder() {
 
     const itemsText = cart
         .map(i => {
-            let line = `• ${i.label ? `[${i.label}] ` : ""}${i.name} — ${i.price} грн`;
-
-            if (i.details) {
-                line += `\n   ↳ ${i.details}`;
+            // DISCOVERY SET
+            if (i.name.startsWith("Discovery set") && discoveryItems.length) {
+                return (
+                    `• ${i.name} — ${i.price} грн\n` +
+                    discoveryItems.map(a => `   ↳ ${a}`).join("\n")
+                );
             }
 
-            return line;
+            // ЗВИЧАЙНІ ТОВАРИ
+            return `• ${i.name} — ${i.price} грн`;
         })
         .join("\n");
 

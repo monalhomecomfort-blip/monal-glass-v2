@@ -102,7 +102,6 @@ document.addEventListener("click", e => {
         addToCart(
             "Discovery set (4 × 3 ml)",
             395,
-            "Discovery set",
             setItems
         );
     }

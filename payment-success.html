@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <title>Оплата успішна</title>
+</head>
+<body>
+
+<script>
+  // ✅ очищаємо кошик ТІЛЬКИ після оплати
+  localStorage.removeItem("cart");
+  localStorage.removeItem("discoverySetItems");
+
+  // повертаємо на головну
+  window.location.href =
+    "https://monalhomecomfort-blip.github.io/monal-glass-v2/index.html";
+</script>
+
+</body>
+</html>

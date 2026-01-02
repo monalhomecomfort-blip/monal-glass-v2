@@ -170,6 +170,21 @@
 </footer>
   
 <script src="cart.js"></script>
+
+<!-- ✅ ОЧИСТКА КОШИКА ПІСЛЯ УСПІШНОЇ ОПЛАТИ -->
+<script>
+  const params = new URLSearchParams(window.location.search);
+
+  if (
+    params.get("status") === "success" ||
+    params.get("invoiceId") || 
+    params.get("reference")
+  ) {
+    localStorage.removeItem("cart");
+    localStorage.removeItem("discoverySetItems");
+  }
+</script>
+
 <script>
   document.addEventListener("click", function (e) {
     const mainTile = e.target.closest("a.subcategory");
@@ -182,3 +197,4 @@
 
 </body>
 </html>
+

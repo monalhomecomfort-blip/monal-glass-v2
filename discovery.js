@@ -95,10 +95,15 @@ document.addEventListener("click", e => {
     const setsCount = discoverySet.length / 4;
     if (setsCount <= 0) return;
 
+    // ✅ склад ОДНОГО сету (4 аромати)
+    const setItems = discoverySet.slice(0, 4);
+
     for (let i = 0; i < setsCount; i++) {
         addToCart(
             "Discovery set (4 × 3 ml)",
-            395
+            395,
+            "Discovery set",
+            setItems
         );
     }
 
@@ -106,6 +111,7 @@ document.addEventListener("click", e => {
     discoverySet = [];
     renderDiscovery();
 });
+
 
 /* ---------- INIT ---------- */
 

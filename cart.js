@@ -444,3 +444,19 @@ document.addEventListener("DOMContentLoaded", () => {
     if (phoneInput) phoneInput.addEventListener("input", formatPhone);
 });
 
+/* ===== CLEAR CART AFTER MONO PAYMENT ===== */
+
+document.addEventListener("DOMContentLoaded", () => {
+    const params = new URLSearchParams(window.location.search);
+    const status = params.get("status");
+
+    if (status === "success") {
+        localStorage.removeItem("cart");
+
+        if (typeof updateCartCount === "function") {
+            updateCartCount();
+        }
+
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
+});

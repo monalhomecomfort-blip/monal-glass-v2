@@ -441,6 +441,7 @@ function closePaymentModal() {
 function goToPayment() {
     if (!PAYMENT_CONTEXT) return;
 
+    // 1. Реєструємо замовлення (як і раніше)
     fetch("https://monal-mono-pay-production.up.railway.app/register-order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -450,32 +451,26 @@ function goToPayment() {
             certificate: PAYMENT_CONTEXT.certificate || null
         })
     })
-    .then(res => {
-        if (!res.ok) {
-            throw new Error("register-order failed");
-        }
+    .then(() => {
 
-        // 🔹 Є сума до оплати → mono
+        // 2. Якщо є сума до оплати → mono
         if (PAY_NOW_AMOUNT > 0) {
             startOnlinePayment(PAYMENT_CONTEXT.orderId, PAY_NOW_AMOUNT);
             return;
         }
 
-        // 🔹 0 грн (сертифікат 100%) → напряму
+        // 3. Якщо 0 грн (сертифікат 100%) → шлемо ТЕКСТ напряму
         return fetch("https://monal-mono-pay-production.up.railway.app/send-free-order", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-                orderId: PAYMENT_CONTEXT.orderId
+                orderId: PAYMENT_CONTEXT.orderId,
+                text: PAYMENT_CONTEXT.text
             })
-        })
-        .then(res => {
-            if (!res.ok) {
-                throw new Error("send-free-order failed");
-            }
         })
         .then(() => {
             clearCart();
+            closePaymentModal();
 
             const checkout = document.getElementById("checkout");
             if (checkout) {
@@ -483,14 +478,13 @@ function goToPayment() {
                     `<h2>Ваше замовлення №${PAYMENT_CONTEXT.orderId} оформлено.</h2>
                      <p>Оплачено сертифікатом ✅</p>`;
             }
-
-            closePaymentModal();
         });
     })
     .catch(() => {
-        alert("Помилка: не вдалося надіслати замовлення. Спробуй ще раз.");
+        alert("Помилка: не вдалося надіслати замовлення.");
     });
 }
+
 
 /* ===================== MONO ONLINE PAYMENT ===================== */
 function startOnlinePayment(orderId, amount) {

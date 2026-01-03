@@ -296,10 +296,14 @@ function submitOrder() {
 
     const pay = document.querySelector("input[name='pay']:checked");
 
-    if (!last || !first || !phone || !city || !np || !pay) {
+    const remainingToPay = Math.max(0, total - CERT_APPLIED_AMOUNT);
+
+    // ❗ якщо 0 грн — спосіб оплати не обовʼязковий
+    if (!last || !first || !phone || !city || !np || (remainingToPay > 0 && !pay)) {
         alert("Заповніть всі поля");
         return;
     }
+
 
     if (!/^38\(0\d{2}\)\s?\d{3}-\d{2}-\d{2}$/.test(phone)) {
         alert("Телефон у форматі 38(0XX)XXX-XX-XX");

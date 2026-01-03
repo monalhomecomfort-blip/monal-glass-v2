@@ -359,11 +359,21 @@ ${(typeof CERT_CODE_USED === "string" && CERT_CODE_USED)
 ${itemsText}
 `;
 
+const isCertificate = cart.some(i => i.label === "Сертифікат");
+
+const certificateData = isCertificate
+  ? {
+      nominal: cart.find(i => i.label === "Сертифікат")?.price || 0
+    }
+  : null;
+
 PAYMENT_CONTEXT = {
     orderId,
     text,
-    payNow
+    payNow,
+    certificate: certificateData
 };
+
 
 
     PAY_NOW_AMOUNT = payNow;
@@ -430,7 +440,8 @@ function goToPayment() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
             orderId: PAYMENT_CONTEXT.orderId,
-            text: PAYMENT_CONTEXT.text
+            text: PAYMENT_CONTEXT.text,
+            certificate: PAYMENT_CONTEXT.certificate || null
         })
     });
 

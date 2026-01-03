@@ -460,8 +460,20 @@ function goToPayment() {
     if (PAY_NOW_AMOUNT > 0) {
         startOnlinePayment(PAYMENT_CONTEXT.orderId, PAY_NOW_AMOUNT);
     } else {
-        // ✅ 0 грн — відправляємо замовлення одразу
-        sendOrderToTelegram(PAYMENT_CONTEXT);
+        fetch("https://monal-mono-pay-production.up.railway.app/send-free-order", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                orderId: PAYMENT_CONTEXT.orderId
+            })
+        })
+        .then(() => {
+            clearCart();
+            document.getElementById("checkout").innerHTML =
+                `<h2>Ваше замовлення №${PAYMENT_CONTEXT.orderId} оформлено.</h2>
+                 <p>Оплачено сертифікатом ✅</p>`;
+            closePaymentModal();
+        });
     }
 
 }

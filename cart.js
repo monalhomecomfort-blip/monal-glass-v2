@@ -324,12 +324,7 @@ function submitOrder() {
         }
     }
 
-    let payNow = remainingToPay;
-
-    // ⚠️ ТИМЧАСОВО: якщо 0 грн — все одно шлемо 1 грн для webhook
-    if (payNow === 0) {
-        payNow = 1;
-    }
+    let payNow = remainingToPay;  
 
     let paymentLabel = "100% оплата";
 

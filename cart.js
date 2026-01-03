@@ -1,7 +1,6 @@
 let PAYMENT_CONTEXT = null;
 let PAY_NOW_AMOUNT = 0;
-let CERT_APPLIED_AMOUNT = 0;
-let CERT_CODE_USED = null;
+
 
 
 /* ===================== КОШИК ===================== */

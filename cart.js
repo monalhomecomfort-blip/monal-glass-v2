@@ -357,20 +357,12 @@ ${CERT_CODE_USED ? `🎟 Сертифікат: ${CERT_CODE_USED} (−${CERT_APPL
 ${itemsText}
 `;
 
-const isCertificate = cart.some(i => i.label === "Сертифікат");
-
-const certificateData = isCertificate
-  ? {
-      nominal: cart.find(i => i.label === "Сертифікат")?.price || 0
-    }
-  : null;
-
 PAYMENT_CONTEXT = {
     orderId,
     text,
-    payNow,
-    certificate: certificateData
+    payNow
 };
+
 
     PAY_NOW_AMOUNT = payNow;
 

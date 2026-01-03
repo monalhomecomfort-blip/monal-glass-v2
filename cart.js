@@ -455,13 +455,13 @@ function goToPayment() {
             throw new Error("register-order failed");
         }
 
-        // ✅ ПІСЛЯ успішного register-order
+        // 🔹 Є сума до оплати → mono
         if (PAY_NOW_AMOUNT > 0) {
             startOnlinePayment(PAYMENT_CONTEXT.orderId, PAY_NOW_AMOUNT);
             return;
         }
 
-        // ✅ 0 грн — відправляємо без mono
+        // 🔹 0 грн (сертифікат 100%) → напряму
         return fetch("https://monal-mono-pay-production.up.railway.app/send-free-order", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -491,7 +491,6 @@ function goToPayment() {
         alert("Помилка: не вдалося надіслати замовлення. Спробуй ще раз.");
     });
 }
-
 
 /* ===================== MONO ONLINE PAYMENT ===================== */
 function startOnlinePayment(orderId, amount) {

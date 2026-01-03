@@ -223,26 +223,36 @@ function applyCertificate() {
 
     if (!codeInput || !infoEl) return;
 
-    const code = codeInput.value.trim();
+    const code = codeInput.value.trim().toUpperCase();
     if (!code) {
         infoEl.textContent = "Введіть код сертифіката";
         return;
     }
 
-    // 🔴 ЗАГЛУШКА (тимчасово)
-    // пізніше тут буде запит на сервер
-    const FAKE_CERT_VALUE = 1000;
+    // ✅ ТИМЧАСОВА ВАЛІДАЦІЯ (v1)
+    // сюди вручну вставляєш СВІЙ тестовий сертифікат
+    const TEST_CERTS = {
+        "MONAL-1TPR-568271": 1000
+        // приклад:
+        // "MONAL-ABCD-123456": 2000
+    };
 
-    CERT_APPLIED_AMOUNT = FAKE_CERT_VALUE;
+    if (!TEST_CERTS[code]) {
+        infoEl.textContent = "Сертифікат не знайдено або недійсний";
+        return;
+    }
+
+    CERT_APPLIED_AMOUNT = TEST_CERTS[code];
     CERT_CODE_USED = code;
 
     infoEl.innerHTML = `
         Сертифікат <strong>${code}</strong> застосовано.<br>
-        Покриває: <strong>${FAKE_CERT_VALUE} грн</strong>
+        Покриває: <strong>${CERT_APPLIED_AMOUNT} грн</strong>
     `;
 
     recalcAfterCertificate();
 }
+
 
 function recalcAfterCertificate() {
     const totalEl = document.getElementById("cart-total");
@@ -445,7 +455,12 @@ function goToPayment() {
         })
     });
 
+    if (PAY_NOW_AMOUNT > 0) {
     startOnlinePayment(PAYMENT_CONTEXT.orderId, PAY_NOW_AMOUNT);
+} else {
+    alert("Замовлення повністю оплачено сертифікатом ✅");
+}
+
 }
 
 

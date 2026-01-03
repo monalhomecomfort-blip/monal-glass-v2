@@ -439,9 +439,15 @@ function closePaymentModal() {
 }
 
 function goToPayment() {
-    if (!PAYMENT_CONTEXT) return;
+    alert("1) goToPayment старт");
 
-    // 1. Реєструємо замовлення (як і раніше)
+    if (!PAYMENT_CONTEXT) {
+        alert("❌ PAYMENT_CONTEXT порожній");
+        return;
+    }
+
+    alert("2) PAYMENT_CONTEXT є, orderId = " + PAYMENT_CONTEXT.orderId);
+
     fetch("https://monal-mono-pay-production.up.railway.app/register-order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -451,15 +457,21 @@ function goToPayment() {
             certificate: PAYMENT_CONTEXT.certificate || null
         })
     })
-    .then(() => {
+    .then(res => {
+        alert("3) register-order status = " + res.status);
 
-        // 2. Якщо є сума до оплати → mono
+        if (!res.ok) throw new Error("register-order failed");
+
+        // Є сума до оплати → mono
         if (PAY_NOW_AMOUNT > 0) {
+            alert("4) PAY_NOW_AMOUNT > 0, йду в mono: " + PAY_NOW_AMOUNT);
             startOnlinePayment(PAYMENT_CONTEXT.orderId, PAY_NOW_AMOUNT);
             return;
         }
 
-        // 3. Якщо 0 грн (сертифікат 100%) → шлемо ТЕКСТ напряму
+        // 0 грн → free order
+        alert("4) PAY_NOW_AMOUNT = 0, викликаю send-free-order");
+
         return fetch("https://monal-mono-pay-production.up.railway.app/send-free-order", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -468,7 +480,11 @@ function goToPayment() {
                 text: PAYMENT_CONTEXT.text
             })
         })
-        .then(() => {
+        .then(res2 => {
+            alert("5) send-free-order status = " + res2.status);
+            if (!res2.ok) throw new Error("send-free-order failed");
+
+            alert("6) FREE ORDER OK ✅ очищаю кошик");
             clearCart();
             closePaymentModal();
 
@@ -480,10 +496,11 @@ function goToPayment() {
             }
         });
     })
-    .catch(() => {
-        alert("Помилка: не вдалося надіслати замовлення.");
+    .catch(err => {
+        alert("❌ ПОМИЛКА: " + (err?.message || err));
     });
 }
+
 
 
 /* ===================== MONO ONLINE PAYMENT ===================== */

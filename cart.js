@@ -436,8 +436,7 @@ function goToPayment() {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       orderId: PAYMENT_CONTEXT.orderId,
-      text: PAYMENT_CONTEXT.text,
-      certificate: PAYMENT_CONTEXT.certificate || null
+      text: PAYMENT_CONTEXT.text      
     })
   });
 }

@@ -326,12 +326,16 @@ function submitOrder() {
 
     let payNow = remainingToPay;  
 
-    let paymentLabel = "100% оплата";
+    let paymentLabel =
+        remainingToPay === 0
+            ? "Оплачено сертифікатом"
+            : "100% оплата";
 
     if (pay && pay.value === "Передплата 150 грн") {
         payNow = 1; // тест
         paymentLabel = "Тестова оплата 1 грн";
     }
+
 
     let dueAmount = 0;
 
@@ -427,8 +431,12 @@ function openPaymentModal(orderId, payNow) {
         npManual ? npManual : npSelect;
 
     // тип оплати
+    const payChecked = document.querySelector("input[name='pay']:checked");
+
     document.getElementById("check-pay-type").textContent =
-        document.querySelector("input[name='pay']:checked").value;
+        payChecked
+            ? payChecked.value
+            : "Оплачено сертифікатом";
 
     modal.style.display = "flex";
 }

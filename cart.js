@@ -489,11 +489,17 @@ function sendOrderToTelegram(ctx) {
 document.addEventListener("DOMContentLoaded", () => {
     updateCartCount();
     renderCart();
-    loadNPFromJSON();
+
+    if (typeof loadNPFromJSON === "function") {
+        loadNPFromJSON();
+    }
 
     const phoneInput = document.getElementById("inp-phone");
-    if (phoneInput) phoneInput.addEventListener("input", formatPhone);
+    if (phoneInput && typeof formatPhone === "function") {
+        phoneInput.addEventListener("input", formatPhone);
+    }
 });
+
 
 /* ===== CLEAR CART AFTER MONO PAYMENT ===== */
 

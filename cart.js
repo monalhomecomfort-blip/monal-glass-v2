@@ -296,8 +296,6 @@ function submitOrder() {
 
     const pay = document.querySelector("input[name='pay']:checked");
 
-    const remainingToPay = Math.max(0, total - CERT_APPLIED_AMOUNT);
-
     // ❗ якщо 0 грн — спосіб оплати не обовʼязковий
     if (!last || !first || !phone || !city || !np || (remainingToPay > 0 && !pay)) {
         alert("Заповніть всі поля");

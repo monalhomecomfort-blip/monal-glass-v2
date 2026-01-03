@@ -519,3 +519,16 @@ document.addEventListener("DOMContentLoaded", () => {
         window.history.replaceState({}, document.title, window.location.pathname);
     }
 });
+
+/* ===== MAKE CART FUNCTIONS GLOBAL (for onclick="...") ===== */
+window.addToCart = addToCart;
+window.removeFromCart = removeFromCart;
+window.clearCart = clearCart;
+window.showCheckout = showCheckout;
+window.submitOrder = submitOrder;
+
+window.openPaymentModal = typeof openPaymentModal === "function" ? openPaymentModal : undefined;
+window.closePaymentModal = typeof closePaymentModal === "function" ? closePaymentModal : undefined;
+window.goToPayment = typeof goToPayment === "function" ? goToPayment : undefined;
+
+window.applyCertificate = typeof applyCertificate === "function" ? applyCertificate : undefined;

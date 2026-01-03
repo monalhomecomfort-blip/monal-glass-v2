@@ -458,10 +458,11 @@ function goToPayment() {
     });
 
     if (PAY_NOW_AMOUNT > 0) {
-    startOnlinePayment(PAYMENT_CONTEXT.orderId, PAY_NOW_AMOUNT);
-} else {
-    alert("Замовлення повністю оплачено сертифікатом ✅");
-}
+        startOnlinePayment(PAYMENT_CONTEXT.orderId, PAY_NOW_AMOUNT);
+    } else {
+        // ✅ 0 грн — відправляємо замовлення одразу
+        sendOrderToTelegram(PAYMENT_CONTEXT);
+    }
 
 }
 

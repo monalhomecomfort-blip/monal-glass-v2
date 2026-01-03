@@ -294,6 +294,10 @@ function submitOrder() {
         ? `✍️ ВРУЧНУ: ${npManual}`
         : npSelect;
 
+    // ===== ЄДИНЕ місце розрахунку сум =====
+    const total = cart.reduce((s, i) => s + i.price, 0);
+    const remainingToPay = Math.max(0, total - CERT_APPLIED_AMOUNT);
+
     const pay = document.querySelector("input[name='pay']:checked");
 
     // ❗ якщо 0 грн — спосіб оплати не обовʼязковий
@@ -302,45 +306,41 @@ function submitOrder() {
         return;
     }
 
-
     if (!/^38\(0\d{2}\)\s?\d{3}-\d{2}-\d{2}$/.test(phone)) {
         alert("Телефон у форматі 38(0XX)XXX-XX-XX");
         return;
     }
 
     const orderId = Date.now().toString().slice(-6);
-    const total = cart.reduce((s, i) => s + i.price, 0);
-    const remainingToPay = Math.max(0, total - CERT_APPLIED_AMOUNT);
-
 
     const discoveryItemsRaw = localStorage.getItem("discoverySetItems");
-        let discoveryItems = [];
+    let discoveryItems = [];
 
-        if (discoveryItemsRaw) {
-            try {
-                discoveryItems = JSON.parse(discoveryItemsRaw);
-            } catch (e) {
-                discoveryItems = [];
-            }
+    if (discoveryItemsRaw) {
+        try {
+            discoveryItems = JSON.parse(discoveryItemsRaw);
+        } catch (e) {
+            discoveryItems = [];
         }
+    }
 
     let payNow = remainingToPay;
 
-// ⚠️ ТИМЧАСОВО: якщо 0 грн — все одно шлемо 1 грн для webhook
-if (payNow === 0) {
-    payNow = 1;
-}
+    // ⚠️ ТИМЧАСОВО: якщо 0 грн — все одно шлемо 1 грн для webhook
+    if (payNow === 0) {
+        payNow = 1;
+    }
 
     let paymentLabel = "100% оплата";
 
-    if (pay.value === "Передплата 150 грн") {
+    if (pay && pay.value === "Передплата 150 грн") {
         payNow = 1; // тест
         paymentLabel = "Тестова оплата 1 грн";
     }
 
     let dueAmount = 0;
 
-    if (pay.value === "Передплата 150 грн") {
+    if (pay && pay.value === "Передплата 150 грн") {
         dueAmount = total - payNow;
     }
 
@@ -377,31 +377,24 @@ ${(typeof CERT_CODE_USED === "string" && CERT_CODE_USED)
 ${itemsText}
 `;
 
-const isCertificate = cart.some(i => i.label === "Сертифікат");
+    const isCertificate = cart.some(i => i.label === "Сертифікат");
 
-const certificateData = isCertificate
-  ? {
-      nominal: cart.find(i => i.label === "Сертифікат")?.price || 0
-    }
-  : null;
+    const certificateData = isCertificate
+        ? { nominal: cart.find(i => i.label === "Сертифікат")?.price || 0 }
+        : null;
 
-PAYMENT_CONTEXT = {
-    orderId,
-    text,
-    payNow,
-    certificate: certificateData
-};
-
-
+    PAYMENT_CONTEXT = {
+        orderId,
+        text,
+        payNow,
+        certificate: certificateData
+    };
 
     PAY_NOW_AMOUNT = payNow;
-
 
     // ✅ ВІДКРИВАЄМО МОДАЛКУ
     openPaymentModal(orderId, payNow);
 }
-
-
 
 /* ===================== МОДАЛКА ПЕРЕВІРКИ ЗАМОВЛЕННЯ ===================== */
 function openPaymentModal(orderId, payNow) {

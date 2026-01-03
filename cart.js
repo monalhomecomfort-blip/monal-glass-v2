@@ -274,8 +274,7 @@ function recalcAfterCertificate() {
 /* ===================== ОФОРМЛЕННЯ ЗАМОВЛЕННЯ ===================== */
 function submitOrder() {
     const cart = JSON.parse(localStorage.getItem("cart")) || [];
-    if (!cart.length) {
-        alert("Кошик порожній");
+    if (!cart.length) {        
         return;
     }
 
@@ -447,15 +446,12 @@ function closePaymentModal() {
 }
 
 function goToPayment() {
-    alert("1) goToPayment старт");
-
-    if (!PAYMENT_CONTEXT) {
-        alert("❌ PAYMENT_CONTEXT порожній");
+    
+    if (!PAYMENT_CONTEXT) {        
         return;
     }
 
-    alert("2) PAYMENT_CONTEXT є, orderId = " + PAYMENT_CONTEXT.orderId);
-
+    
     fetch("https://monal-mono-pay-production.up.railway.app/register-order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -465,21 +461,17 @@ function goToPayment() {
             certificate: PAYMENT_CONTEXT.certificate || null
         })
     })
-    .then(res => {
-        alert("3) register-order status = " + res.status);
+    .then(res => {       
 
         if (!res.ok) throw new Error("register-order failed");
 
         // Є сума до оплати → mono
-        if (PAY_NOW_AMOUNT > 0) {
-            alert("4) PAY_NOW_AMOUNT > 0, йду в mono: " + PAY_NOW_AMOUNT);
+        if (PAY_NOW_AMOUNT > 0) {            
             startOnlinePayment(PAYMENT_CONTEXT.orderId, PAY_NOW_AMOUNT);
             return;
         }
 
-        // 0 грн → free order
-        alert("4) PAY_NOW_AMOUNT = 0, викликаю send-free-order");
-
+        // 0 грн → free order        
         return fetch("https://monal-mono-pay-production.up.railway.app/send-free-order", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -488,11 +480,9 @@ function goToPayment() {
                 text: PAYMENT_CONTEXT.text
             })
         })
-        .then(res2 => {
-            alert("5) send-free-order status = " + res2.status);
+        .then(res2 => {            
             if (!res2.ok) throw new Error("send-free-order failed");
 
-            alert("6) FREE ORDER OK ✅ очищаю кошик");
             clearCart();
             closePaymentModal();
 
@@ -504,8 +494,7 @@ function goToPayment() {
             }
         });
     })
-    .catch(err => {
-        alert("❌ ПОМИЛКА: " + (err?.message || err));
+    .catch(err => {        
     });
 }
 

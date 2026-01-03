@@ -357,12 +357,20 @@ ${CERT_CODE_USED ? `🎟 Сертифікат: ${CERT_CODE_USED} (−${CERT_APPL
 ${itemsText}
 `;
 
-    // ⛔ НЕ відправляємо одразу
-    PAYMENT_CONTEXT = {
-        orderId,
-        text,
-        payNow
-    };
+const isCertificate = cart.some(i => i.label === "Сертифікат");
+
+const certificateData = isCertificate
+  ? {
+      nominal: cart.find(i => i.label === "Сертифікат")?.price || 0
+    }
+  : null;
+
+PAYMENT_CONTEXT = {
+    orderId,
+    text,
+    payNow,
+    certificate: certificateData
+};
 
     PAY_NOW_AMOUNT = payNow;
 
@@ -428,9 +436,12 @@ function goToPayment() {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       orderId: PAYMENT_CONTEXT.orderId,
-      text: PAYMENT_CONTEXT.text
+      text: PAYMENT_CONTEXT.text,
+      certificate: PAYMENT_CONTEXT.certificate || null
     })
   });
+}
+
 
   startOnlinePayment(PAYMENT_CONTEXT.orderId, PAY_NOW_AMOUNT);
 }

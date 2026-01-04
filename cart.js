@@ -494,60 +494,49 @@ function closePaymentModal() {
 }
 
 function goToPayment() {
-    
-    if (!PAYMENT_CONTEXT) {        
-        return;
+  if (!PAYMENT_CONTEXT) return;
+
+  // 1️⃣ Реєструємо замовлення (це завжди)
+  fetch("https://monal-mono-pay-production.up.railway.app/register-order", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      orderId: PAYMENT_CONTEXT.orderId,
+      text: PAYMENT_CONTEXT.text,
+      certificates: PAYMENT_CONTEXT.certificates || null
+    })
+  })
+  .then(() => {
+
+    // 2️⃣ Є що платити → mono
+    if (PAY_NOW_AMOUNT > 0) {
+      startOnlinePayment(PAYMENT_CONTEXT.orderId, PAY_NOW_AMOUNT);
+      return;
     }
 
-    
-    fetch("https://monal-mono-pay-production.up.railway.app/register-order", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            orderId: PAYMENT_CONTEXT.orderId,
-            text: PAYMENT_CONTEXT.text,
-            certificates: PAYMENT_CONTEXT.certificates || null
-
-        })
+    // 3️⃣ 0 грн → СЕРТИФІКАТ 100%
+    return fetch("https://monal-mono-pay-production.up.railway.app/send-free-order", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        orderId: PAYMENT_CONTEXT.orderId,
+        text: PAYMENT_CONTEXT.text
+      })
     })
-    .then(res => {       
+    .then(() => {
+      clearCart();
+      closePaymentModal();
 
-        if (!res.ok) throw new Error("register-order failed");
-
-        // Є сума до оплати → mono
-        if (PAY_NOW_AMOUNT > 0) {            
-            startOnlinePayment(PAYMENT_CONTEXT.orderId, PAY_NOW_AMOUNT);
-            return;
-        }
-
-        // 0 грн → free order        
-        return fetch("https://monal-mono-pay-production.up.railway.app/send-free-order", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                orderId: PAYMENT_CONTEXT.orderId,
-                text: PAYMENT_CONTEXT.text
-            })
-        })
-        .then(res2 => {            
-            if (!res2.ok) throw new Error("send-free-order failed");
-
-            clearCart();
-            closePaymentModal();
-
-            const checkout = document.getElementById("checkout");
-            if (checkout) {
-                checkout.innerHTML =
-                    `<h2>Ваше замовлення №${PAYMENT_CONTEXT.orderId} оформлено.</h2>
-                     <p>Оплачено сертифікатом ✅</p>`;
-            }
-        });
-    })
-    .catch(err => {        
+      const checkout = document.getElementById("checkout");
+      if (checkout) {
+        checkout.innerHTML = `
+          <h2>Ваше замовлення №${PAYMENT_CONTEXT.orderId} оформлено.</h2>
+          <p>Оплачено сертифікатом ✅</p>
+        `;
+      }
     });
+  });
 }
-
-
 
 /* ===================== MONO ONLINE PAYMENT ===================== */
 function startOnlinePayment(orderId, amount) {

@@ -221,17 +221,6 @@ function toggleManualNP() {
     alert("applyCertificate OK");
 }
 
-    const codeInput = document.getElementById("cert-code");
-    const infoEl = document.getElementById("cert-info");
-
-    if (!codeInput || !infoEl) return;
-
-    const code = codeInput.value.trim().toUpperCase();
-    if (!code) {
-        infoEl.textContent = "Введіть код сертифіката";
-        return;
-    }
-
     // ✅ ТИМЧАСОВА ВАЛІДАЦІЯ (v1)
     // ⛔ БЕЗ ХАРДКОДУ
     // ⛔ БЕЗ ПЕРЕВІРКИ

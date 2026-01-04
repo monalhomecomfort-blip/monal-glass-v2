@@ -230,20 +230,22 @@ function applyCertificate() {
     }
 
     // ✅ ТИМЧАСОВА ВАЛІДАЦІЯ (v1)
-    // сюди вручну вставляєш СВІЙ тестовий сертифікат
-    const TEST_CERTS = {
-        "MONAL-1TPR-568271": 1000
-        // приклад:
-        // "MONAL-ABCD-123456": 2000
-    };
+    // ⛔ БЕЗ ХАРДКОДУ
+    // ⛔ БЕЗ ПЕРЕВІРКИ
+    // ✅ ТИМЧАСОВО ПРИЙМАЄМО БУДЬ-ЯКИЙ КОД
 
-    if (!TEST_CERTS[code]) {
-        infoEl.textContent = "Сертифікат не знайдено або недійсний";
+    CERT_CODE_USED = code;
+
+    // ⚠️ ТИМЧАСОВО: вручну вводиш номінал сертифіката
+    // щоб тестити реальні сценарії
+    const manualAmount = prompt("Введи номінал сертифіката (грн):");
+
+    if (!manualAmount || isNaN(manualAmount)) {
+        infoEl.textContent = "Номінал сертифіката не задано";
         return;
     }
 
-    CERT_APPLIED_AMOUNT = TEST_CERTS[code];
-    CERT_CODE_USED = code;
+    CERT_APPLIED_AMOUNT = Number(manualAmount);
 
     infoEl.innerHTML = `
         Сертифікат <strong>${code}</strong> застосовано.<br>
@@ -251,8 +253,6 @@ function applyCertificate() {
     `;
 
     recalcAfterCertificate();
-}
-
 
 function recalcAfterCertificate() {
     const totalEl = document.getElementById("cart-total");

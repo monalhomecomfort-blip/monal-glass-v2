@@ -388,18 +388,21 @@ ${(typeof CERT_CODE_USED === "string" && CERT_CODE_USED)
 ${itemsText}
 `;
 
-    const isCertificate = cart.some(i => i.label === "Сертифікат");
+// ✅ Збираємо ВСІ сертифікати з кошика
+const certificatesData = cart
+  .filter(i => i.label === "Сертифікат")
+  .map(i => ({
+    nominal: i.price
+    // type: ""  // додамо пізніше, коли зробиш вибір електронний/фізичний
+  }));
 
-    const certificateData = isCertificate
-        ? { nominal: cart.find(i => i.label === "Сертифікат")?.price || 0 }
-        : null;
+PAYMENT_CONTEXT = {
+  orderId,
+  text,
+  payNow,
+  certificates: certificatesData.length ? certificatesData : null
+};
 
-    PAYMENT_CONTEXT = {
-        orderId,
-        text,
-        payNow,
-        certificate: certificateData
-    };
 
     PAY_NOW_AMOUNT = payNow;
 
@@ -471,7 +474,8 @@ function goToPayment() {
         body: JSON.stringify({
             orderId: PAYMENT_CONTEXT.orderId,
             text: PAYMENT_CONTEXT.text,
-            certificate: PAYMENT_CONTEXT.certificate || null
+            certificates: PAYMENT_CONTEXT.certificates || null
+
         })
     })
     .then(res => {       

@@ -268,6 +268,20 @@ function recalcAfterCertificate() {
         Сертифікат: −${CERT_APPLIED_AMOUNT} грн<br>
         <strong>До оплати: ${remaining} грн</strong>
     `;
+
+    // 🔒 UX: якщо 0 грн — блокуємо вибір оплати
+    const payInputs = document.querySelectorAll('input[name="pay"]');
+
+    if (remaining === 0) {
+        payInputs.forEach(input => {
+            input.checked = false;
+            input.disabled = true;
+        });
+    } else {
+        payInputs.forEach(input => {
+            input.disabled = false;
+        });
+    }
 }
 
 

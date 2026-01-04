@@ -336,11 +336,10 @@ function submitOrder() {
     }
 
 
-    let dueAmount = 0;
+    const remainingAfterCertificate = Math.max(0, total - CERT_APPLIED_AMOUNT);
 
-    if (pay && pay.value === "Передплата 150 грн") {
-        dueAmount = total - payNow;
-    }
+    let dueAmount = Math.max(0, remainingAfterCertificate - payNow);
+
 
     const itemsText = cart
         .map(i => {

@@ -229,23 +229,10 @@ function applyCertificate() {
         return;
     }
 
-    // ❗ ТУТ ПОКИ НІЯКОЇ ЛОГІКИ
-    // тільки перевіряємо, що кнопка жива
-    infoEl.textContent = "Код введено: " + code;
-}
-
-
-    // ✅ ТИМЧАСОВА ВАЛІДАЦІЯ (v1)
-    // ⛔ БЕЗ ХАРДКОДУ
-    // ⛔ БЕЗ ПЕРЕВІРКИ
-    // ✅ ТИМЧАСОВО ПРИЙМАЄМО БУДЬ-ЯКИЙ КОД
-
+    // ✅ ТИМЧАСОВО приймаємо будь-який код
     CERT_CODE_USED = code;
 
-    // ⚠️ ТИМЧАСОВО: вручну вводиш номінал сертифіката
-    // щоб тестити реальні сценарії
     const manualAmount = prompt("Введи номінал сертифіката (грн):");
-
     if (!manualAmount || isNaN(manualAmount)) {
         infoEl.textContent = "Номінал сертифіката не задано";
         return;
@@ -259,6 +246,8 @@ function applyCertificate() {
     `;
 
     recalcAfterCertificate();
+}
+
 
 function recalcAfterCertificate() {
     const totalEl = document.getElementById("cart-total");

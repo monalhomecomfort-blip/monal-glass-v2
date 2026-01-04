@@ -312,12 +312,39 @@ function submitOrder() {
         ? `✍️ ВРУЧНУ: ${npManual}`
         : npSelect;
 
+    // 🎁 Повідомлення покупцю, якщо в кошику є сертифікат
+    const hasCertificate = cart.some(i => i.label === "Сертифікат");
+
+    if (hasCertificate) {
+        const infoEl = document.getElementById("cert-info");
+        if (infoEl) {
+            infoEl.innerHTML += `
+                <div style="margin-top:10px; color:#b00; font-size:14px;">
+                    🎁 У кошику є подарунковий сертифікат.<br>
+                    Оплата можлива лише 100%.
+                </div>
+            `;
+        }
+    }
+
     // ===== ЄДИНЕ місце розрахунку сум =====
     const total = cart.reduce((s, i) => s + i.price, 0);
     const remainingToPay = Math.max(0, total - CERT_APPLIED_AMOUNT);
 
     const pay = document.querySelector("input[name='pay']:checked");
 
+    // 🎁 Якщо є сертифікат — тільки 100% оплата
+    if (hasCertificate) {
+        const prepayRadio = document.querySelector(
+            "input[name='pay'][value='Передплата 150 грн']"
+        );
+
+        if (prepayRadio) {
+            prepayRadio.checked = false;
+            prepayRadio.disabled = true;
+        }
+    }
+    
     // ❗ якщо 0 грн — спосіб оплати не обовʼязковий
     if (!last || !first || !phone || !city || !np || (remainingToPay > 0 && !pay)) {
         alert("Заповніть всі поля");

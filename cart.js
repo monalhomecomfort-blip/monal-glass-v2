@@ -217,9 +217,23 @@ function toggleManualNP() {
     }
 }
 
-    function applyCertificate() {
-    alert("applyCertificate OK");
+function applyCertificate() {
+    const codeInput = document.getElementById("cert-code");
+    const infoEl = document.getElementById("cert-info");
+
+    if (!codeInput || !infoEl) return;
+
+    const code = codeInput.value.trim().toUpperCase();
+    if (!code) {
+        infoEl.textContent = "Введіть код сертифіката";
+        return;
+    }
+
+    // ❗ ТУТ ПОКИ НІЯКОЇ ЛОГІКИ
+    // тільки перевіряємо, що кнопка жива
+    infoEl.textContent = "Код введено: " + code;
 }
+
 
     // ✅ ТИМЧАСОВА ВАЛІДАЦІЯ (v1)
     // ⛔ БЕЗ ХАРДКОДУ

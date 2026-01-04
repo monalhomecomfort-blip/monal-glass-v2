@@ -229,23 +229,33 @@ function applyCertificate() {
         return;
     }
 
-    // ✅ ТИМЧАСОВО приймаємо будь-який код
-    CERT_CODE_USED = code;
+    infoEl.textContent = "Перевірка сертифіката…";
 
-    const manualAmount = prompt("Введи номінал сертифіката (грн):");
-    if (!manualAmount || isNaN(manualAmount)) {
-        infoEl.textContent = "Номінал сертифіката не задано";
-        return;
-    }
+    fetch("https://monal-mono-pay-production.up.railway.app/check-certificate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (!data.valid) {
+            infoEl.textContent = "Сертифікат недійсний або вже використаний";
+            return;
+        }
 
-    CERT_APPLIED_AMOUNT = Number(manualAmount);
+        CERT_CODE_USED = code;
+        CERT_APPLIED_AMOUNT = data.nominal;
 
-    infoEl.innerHTML = `
-        Сертифікат <strong>${code}</strong> застосовано.<br>
-        Покриває: <strong>${CERT_APPLIED_AMOUNT} грн</strong>
-    `;
+        infoEl.innerHTML = `
+            Сертифікат <strong>${code}</strong> застосовано.<br>
+            Покриває: <strong>${data.nominal} грн</strong>
+        `;
 
-    recalcAfterCertificate();
+        recalcAfterCertificate();
+    })
+    .catch(() => {
+        infoEl.textContent = "Помилка перевірки сертифіката";
+    });
 }
 
 

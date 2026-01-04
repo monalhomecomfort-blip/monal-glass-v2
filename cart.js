@@ -217,7 +217,10 @@ function toggleManualNP() {
     }
 }
 
-function applyCertificate() {
+    function applyCertificate() {
+    alert("applyCertificate OK");
+}
+
     const codeInput = document.getElementById("cert-code");
     const infoEl = document.getElementById("cert-info");
 

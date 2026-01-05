@@ -432,7 +432,8 @@ PAYMENT_CONTEXT = {
   orderId,
   text,
   payNow,
-  certificates: certificatesData.length ? certificatesData : null
+  certificates: certificatesData.length ? certificatesData : null, // якщо купують сертифікати
+  usedCertificates: CERT_CODE_USED ? [CERT_CODE_USED] : []          // ✅ ось це
 };
 
 

@@ -437,10 +437,6 @@ const certificatesData = cart
     // type: ""  // додамо пізніше, коли зробиш вибір електронний/фізичний
   }));
 
-const certTypeInput = document.querySelector('input[name="certType"]:checked');
-const certificateType = certTypeInput ? certTypeInput.value : "електронний";
-    
-
 PAYMENT_CONTEXT = {
   orderId,
   text,
@@ -449,8 +445,6 @@ PAYMENT_CONTEXT = {
   usedCertificates: CERT_CODE_USED ? [CERT_CODE_USED] : [],
   certificateType
 };
-
-
 
     PAY_NOW_AMOUNT = payNow;
 

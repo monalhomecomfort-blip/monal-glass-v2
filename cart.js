@@ -504,8 +504,10 @@ function goToPayment() {
     body: JSON.stringify({
       orderId: PAYMENT_CONTEXT.orderId,
       text: PAYMENT_CONTEXT.text,
-      certificates: PAYMENT_CONTEXT.certificates || null
+      certificates: PAYMENT_CONTEXT.certificates || null,
+      usedCertificates: CERT_CODE_USED ? [CERT_CODE_USED] : []
     })
+
   })
   .then(() => {
 

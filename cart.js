@@ -315,6 +315,15 @@ function submitOrder() {
     // 🎁 Повідомлення покупцю, якщо в кошику є сертифікат
     const hasCertificate = cart.some(i => i.label === "Сертифікат");
 
+    // 🎁 Тип сертифікату (електронний / фізичний)
+    let certificateType = null;
+
+    if (hasCertificate) {
+        const certTypeInput = document.querySelector('input[name="certType"]:checked');
+        certificateType = certTypeInput ? certTypeInput.value : "електронний";
+    }
+
+
     if (hasCertificate) {
         const infoEl = document.getElementById("cert-info");
         if (infoEl) {
@@ -511,7 +520,8 @@ fetch("https://monal-mono-pay-production.up.railway.app/register-order", {
     orderId: PAYMENT_CONTEXT.orderId,
     text: PAYMENT_CONTEXT.text,
     certificates: PAYMENT_CONTEXT.certificates || null,
-    usedCertificates: CERT_CODE_USED ? [CERT_CODE_USED] : []
+    usedCertificates: CERT_CODE_USED ? [CERT_CODE_USED] : [],
+    certificateType: PAYMENT_CONTEXT.certificateType
   })
 })
 

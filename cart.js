@@ -512,7 +512,7 @@ function closePaymentModal() {
 function goToPayment() {
   if (!PAYMENT_CONTEXT) return;
 
-  // 1️⃣ Реєструємо замовлення (це завжди)
+  // 1) реєструємо замовлення
   fetch("https://monal-mono-pay-production.up.railway.app/register-order", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -520,23 +520,27 @@ function goToPayment() {
       orderId: PAYMENT_CONTEXT.orderId,
       text: PAYMENT_CONTEXT.text,
       certificates: PAYMENT_CONTEXT.certificates || null,
-      usedCertificates: CERT_CODE_USED ? [CERT_CODE_USED] : [],
-      certificateType: PAYMENT_CONTEXT.certificateType
+      usedCertificates: PAYMENT_CONTEXT.usedCertificates || [],
+      certificateType: PAYMENT_CONTEXT.certificateType || "електронний"
     })
   })
-  .then(() => {
+  .then(res => {
+    if (!res.ok) throw new Error("register-order failed");
 
-    // 2️⃣ Є що платити → mono
+    // 2) є що платити → mono
     if (PAY_NOW_AMOUNT > 0) {
       startOnlinePayment(PAYMENT_CONTEXT.orderId, PAY_NOW_AMOUNT);
       return;
     }
 
-    // 3️⃣ 0 грн → СЕРТИФІКАТ 100%
+    // 3) 0 грн → free order
     return fetch("https://monal-mono-pay-production.up.railway.app/send-free-order", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ orderId: PAYMENT_CONTEXT.orderId })
+    })
+    .then(res2 => {
+      if (!res2.ok) throw new Error("send-free-order failed");
     })
     .then(() => {
       clearCart();
@@ -550,6 +554,10 @@ function goToPayment() {
         `;
       }
     });
+  })
+  .catch(err => {
+    console.error(err);
+    alert("Помилка оплати/відправки. Перевір консоль.");
   });
 }
 

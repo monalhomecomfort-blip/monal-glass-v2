@@ -513,19 +513,18 @@ function goToPayment() {
   if (!PAYMENT_CONTEXT) return;
 
   // 1️⃣ Реєструємо замовлення (це завжди)
-fetch("https://monal-mono-pay-production.up.railway.app/register-order", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({
-    orderId: PAYMENT_CONTEXT.orderId,
-    text: PAYMENT_CONTEXT.text,
-    certificates: PAYMENT_CONTEXT.certificates || null,
-    usedCertificates: CERT_CODE_USED ? [CERT_CODE_USED] : [],
-    certificateType: PAYMENT_CONTEXT.certificateType
+  fetch("https://monal-mono-pay-production.up.railway.app/register-order", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      orderId: PAYMENT_CONTEXT.orderId,
+      text: PAYMENT_CONTEXT.text,
+      certificates: PAYMENT_CONTEXT.certificates || null,
+      usedCertificates: CERT_CODE_USED ? [CERT_CODE_USED] : [],
+      certificateType: PAYMENT_CONTEXT.certificateType
+    })
   })
-})
-
-    .then(() => {
+  .then(() => {
 
     // 2️⃣ Є що платити → mono
     if (PAY_NOW_AMOUNT > 0) {

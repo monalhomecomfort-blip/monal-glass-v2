@@ -498,15 +498,17 @@ function goToPayment() {
   if (!PAYMENT_CONTEXT) return;
 
   // 1️⃣ Реєструємо замовлення (це завжди)
-  fetch("https://monal-mono-pay-production.up.railway.app/register-order", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      orderId: PAYMENT_CONTEXT.orderId,
-      text: PAYMENT_CONTEXT.text,
-      certificates: PAYMENT_CONTEXT.certificates || null,
-      usedCertificates: CERT_CODE_USED ? [CERT_CODE_USED] : []
-    })
+fetch("https://monal-mono-pay-production.up.railway.app/register-order", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    orderId: PAYMENT_CONTEXT.orderId,
+    text: PAYMENT_CONTEXT.text,
+    certificates: PAYMENT_CONTEXT.certificates || null,
+    usedCertificates: CERT_CODE_USED ? [CERT_CODE_USED] : []
+  })
+})
+
 
   })
   .then(() => {
@@ -521,10 +523,7 @@ function goToPayment() {
     return fetch("https://monal-mono-pay-production.up.railway.app/send-free-order", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        orderId: PAYMENT_CONTEXT.orderId,
-        text: PAYMENT_CONTEXT.text
-      })
+      body: JSON.stringify({ orderId: PAYMENT_CONTEXT.orderId })
     })
     .then(() => {
       clearCart();

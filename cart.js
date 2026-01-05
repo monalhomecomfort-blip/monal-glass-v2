@@ -509,9 +509,7 @@ fetch("https://monal-mono-pay-production.up.railway.app/register-order", {
   })
 })
 
-
-  })
-  .then(() => {
+    .then(() => {
 
     // 2️⃣ Є що платити → mono
     if (PAY_NOW_AMOUNT > 0) {

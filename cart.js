@@ -386,8 +386,8 @@ function submitOrder() {
             : "100% оплата";
 
     if (pay && pay.value === "Передплата 150 грн") {
-        payNow = 1; // тест
-        paymentLabel = "Тестова оплата 1 грн";
+        payNow = 150; 
+        paymentLabel = "Передплата 150 грн";
     }
 
 

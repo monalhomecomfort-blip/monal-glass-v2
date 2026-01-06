@@ -16,6 +16,11 @@ html, body {
     box-sizing: border-box;
 }
 
+img {
+  max-width: 100%;
+  height: auto;
+}
+
 /* ===================== НАВІГАЦІЯ ===================== */
 nav {
     position: fixed;
@@ -913,4 +918,84 @@ a.sub-mini {
 .certificate-option:hover,
 .certificate-option.active {
     background: #d8d2c2;
+}
+
+/* ===================== RESPONSIVE (АДАПТАЦІЯ) ===================== */
+
+/* 1) Планшети і менше */
+@media (max-width: 900px) {
+
+  .container {
+    padding: 110px 24px 90px;
+  }
+
+  .product-row {
+    grid-template-columns: 1fr;
+    gap: 28px;
+    margin: 50px 0;
+  }
+
+  .about-container,
+  .contact-columns {
+    grid-template-columns: 1fr;
+  }
+
+  .delivery-columns {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+
+/* 2) Телефони і менше */
+@media (max-width: 600px) {
+
+  /* 1) Контейнер: менші бокові відступи */
+  .container {
+    padding: 110px 16px 80px;
+  }
+
+  /* 2) Навігація: менше відступів */
+  nav {
+    padding: 0 16px;
+  }
+
+  /* 3) Сітки з 2 колонок → в 1 колонку */
+  .about-container,
+  .contact-columns,
+  .delivery-columns {
+    grid-template-columns: 1fr !important;
+    display: grid; /* на випадок якщо десь flex */
+  }
+
+  /* 4) Product page: 2 колонки → 1 */
+  .product-row {
+    grid-template-columns: 1fr;
+    gap: 22px;
+    margin: 40px 0;
+  }
+
+  /* 5) Фіксовані ширини кошика/блоків → 100% */
+  .cart-box {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .delivery-columns .delivery-block:first-child,
+  .delivery-columns .delivery-block:nth-child(2) {
+    min-width: unset;
+    width: 100%;
+  }
+
+  /* 6) Модальне вікно оплати: щоб влазило */
+  .modal-content {
+    width: calc(100% - 24px);
+    max-width: 420px;
+  }
+
+}
+
+
+/* 3) Дуже маленькі телефони */
+@media (max-width: 380px) {
 }

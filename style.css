@@ -1122,3 +1122,16 @@ a.sub-mini {
     max-width: 100%;
   }
 }
+/* ===== CART ITEMS MOBILE FIX ===== */
+@media (max-width: 600px) {
+  .cart-item {
+    grid-template-columns: 1fr auto auto; /* текст | ціна | X */
+    gap: 8px;
+  }
+  .cart-item span {
+    font-size: 14px;
+  }
+  .cart-remove {
+    font-size: 18px;
+  }
+}

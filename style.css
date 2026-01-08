@@ -958,7 +958,7 @@ a.sub-mini {
 .mobile-menu {
   position: fixed;
   top: 70px;
-  right: 0;
+  right: 10px;
 
   max-height: calc(100vh - 70px);
   overflow-y: auto;
@@ -1078,6 +1078,8 @@ a.sub-mini {
     flex-direction: row;
     gap: 12px;
     justify-content: flex-start;
+    border-radius: 18px;          /* ← округлення як у блоків сайту */
+    padding: 8px 6px;             /* щоб плитки не впирались у край */  
 
     width: 100%;
     margin: 0;

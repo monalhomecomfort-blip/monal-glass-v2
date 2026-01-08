@@ -1025,7 +1025,7 @@ a.sub-mini {
   right: 0;
   max-height: calc(100vh - 70px);
   overflow-y: auto;
-  width: 280px;
+  width: 240px;
 
   background: rgba(4, 4, 4, 0.95);
   backdrop-filter: blur(12px);

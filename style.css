@@ -1139,15 +1139,15 @@ a.sub-mini {
 @media (max-width: 600px) {
   /* головний контейнер */
   .container {
-    padding-left: 12px;
-    padding-right: 12px;
+    padding-left: 10px;
+    padding-right: 10px;
   }
   /* сторінки з колонками */
   .delivery-columns,
   .about-container,
   .contact-columns {
-    padding-left: 12px;
-    padding-right: 12px;
+    padding-left: 10px;
+    padding-right: 10px;
   }
   /* картки і блоки */
   .delivery-block,

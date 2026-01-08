@@ -1090,16 +1090,16 @@ a.sub-mini {
     align-items: center;
   }
 
-  /* велика плитка категорії */
-  .subcategory {
-    display: flex;
-    flex-direction: column;
-    height: auto;
+/* ===== BIG CATEGORY CARD (MOBILE) ===== */
+.subcategory {
+  display: flex;
+  flex-direction: column;
+  height: auto;
 
-    width: 100%;
-    max-width: 520px;          /* ← КЛЮЧ: однакова ширина */
-    margin: 0 auto 16px;
-  }
+  width: 82%;              /* ← ОСНОВНЕ */
+  max-width: 420px;        /* ← ЩОБ НЕ РОЗДУВАЛОСЬ */
+  margin: 0 auto 14px;
+}
 
   .subcategory img {
     height: 160px;
@@ -1122,18 +1122,30 @@ a.sub-mini {
     overflow: visible;
   }
 
-  /* підкатегорії — ОСЬ ГОЛОВНЕ */
-  .mini-line {
-    width: 100%;
-    max-width: 520px;          /* ← ТА САМА ШИРИНА */
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-  }
+/* ===== SUBCATEGORIES HORIZONTAL SCROLL (MOBILE) ===== */
+.mini-line {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
 
-  .sub-mini {
-    width: 100%;
-  }
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  padding-bottom: 6px;   /* щоб не різався скрол */
+  scroll-snap-type: x mandatory;
+
+  -webkit-overflow-scrolling: touch;
+}
+
+.mini-line::-webkit-scrollbar {
+  display: none;         /* прибираємо скролбар */
+}
+
+.sub-mini {
+  flex: 0 0 150px;       /* ширина плитки */
+  scroll-snap-align: start;
+}
+
 
   /* ===================== CART ===================== */
 

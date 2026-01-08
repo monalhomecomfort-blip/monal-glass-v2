@@ -1021,9 +1021,10 @@ a.sub-mini {
 /* мобільне меню — БОКОВА ПАНЕЛЬ */
 .mobile-menu {
   position: fixed;
-  top: 0;
+  top: 70px;              /* висота твого nav */
   right: 0;
-  height: 100vh;
+  max-height: calc(100vh - 70px);
+  overflow-y: auto;
   width: 280px;
 
   background: rgba(4, 4, 4, 0.95);
@@ -1061,15 +1062,21 @@ a.sub-mini {
 
 /* ===== ТІЛЬКИ НА МОБІЛЬНОМУ ===== */
 @media (max-width: 600px) {
-
   /* ховаємо старе меню */
   .nav-center,
   .nav-right {
     display: none;
   }
-
   /* показуємо бургер */
   .burger-btn {
     display: block;
   }
+  /* ===== BIG CATEGORY TITLES MOBILE ===== */
+  .subcategory-title {
+  font-size: 16px;
+  line-height: 1.2;
+  padding: 12px 10px;
+  white-space: normal;
+  height: auto;
+  }  
 }

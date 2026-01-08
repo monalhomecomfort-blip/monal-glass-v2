@@ -1127,6 +1127,7 @@ a.sub-mini {
     display: flex;
     flex-direction: row;
     gap: 12px;
+    justify-content: flex-start; /* ← ОСЬ КЛЮЧ */      
 
     overflow-x: auto;
     overflow-y: hidden;

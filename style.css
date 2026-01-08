@@ -1036,6 +1036,14 @@ a.sub-mini {
   }
 
   /* ===================== CATALOG (MOBILE) ===================== */
+  .arrow {
+    margin: 2px 0 4px;   /* нормальний компактний відступ */
+    line-height: 1;
+    height: auto;
+
+    font-size: 20px;     /* не громіздка */
+    opacity: 0.5;        /* візуально другорядна */
+  }
 
   .catalog-row {
     display: flex;

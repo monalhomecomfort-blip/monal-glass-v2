@@ -1099,3 +1099,16 @@ a.sub-mini {
   height: 160px;        /* менше фото → більше місця тексту */
   }
 }
+/* ===== DELIVERY + CART MOBILE FIX ===== */
+@media (max-width: 900px) {
+  .delivery-columns {
+    flex-direction: column;   /* ← СТАЮТЬ ОДНА ПІД ОДНОЮ */
+    gap: 24px;
+  }
+  .delivery-columns .delivery-block,
+  .delivery-columns .cart-box {
+    width: 100%;
+    max-width: 100%;
+    min-width: unset;
+  }
+}

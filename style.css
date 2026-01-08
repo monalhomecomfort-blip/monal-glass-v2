@@ -922,7 +922,7 @@ a.sub-mini {
 
 /* ===================== RESPONSIVE (АДАПТАЦІЯ) ===================== */
 
-/* 1) Планшети і менше */
+/* ---------- TABLET & DOWN ---------- */
 @media (max-width: 900px) {
 
   .container {
@@ -936,20 +936,16 @@ a.sub-mini {
   }
 
   .about-container,
-  .contact-columns {
-    grid-template-columns: 1fr;
-  }
-
+  .contact-columns,
   .delivery-columns {
     grid-template-columns: 1fr;
   }
-
 }
 
-
+/* ===================== MOBILE (≤600px) ===================== */
 @media (max-width: 600px) {
 
-  /* ===== NAV MOBILE ===== */
+  /* ---------- NAV ---------- */
   nav {
     padding: 0 14px;
     height: 60px;
@@ -960,6 +956,10 @@ a.sub-mini {
     display: none;
   }
 
+  .burger-btn {
+    display: block;
+  }
+
   .nav-logo {
     height: 28px;
   }
@@ -968,141 +968,35 @@ a.sub-mini {
     height: 22px;
   }
 
-  /* ===== CATALOG MOBILE ===== */
-
-  .catalog-row {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 18px;
-  }
-
-  .mini-line {
-    display: grid;                          /* ← КЛЮЧОВЕ */
-    grid-template-columns: repeat(2, 1fr);  /* 2 в ряд */
-    gap: 12px;
-
-    white-space: normal;
-  }
-
-  .sub-mini {
-    flex: 0 0 calc(50% - 6px);
-    width: calc(50% - 6px) !important;
-  }
-
-  .subcategory {
-    width: 100%;
-  }
-  /* ===== GLOBAL MOBILE ===== */
-
+  /* ---------- GLOBAL ---------- */
   .container {
-    padding: 90px 16px 80px;
+    padding: 90px 10px 80px;
   }
 
   .page-title {
     font-size: 26px;
   }
-    
-}
-
-/* 3) Дуже маленькі телефони */
-@media (max-width: 380px) {
-}
-
-/* ===================== BURGER MENU ===================== */
-
-/* кнопка ☰ */
-.burger-btn {
-  display: none;
-  background: none;
-  border: none;
-  font-size: 28px;
-  color: #e8e1d6;
-  cursor: pointer;
-}
-
-/* мобільне меню — БОКОВА ПАНЕЛЬ */
-.mobile-menu {
-  position: fixed;
-  top: 70px;              /* висота твого nav */
-  right: 0;
-  max-height: calc(100vh - 70px);
-  overflow-y: auto;
-  width: 180px;
-  border-radius: 18px;
-  overflow: hidden;  
-
-  background: rgba(4, 4, 4, 0.95);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-
-  display: none;                 /* закрито за замовчуванням */
-  flex-direction: column;
-  gap: 18px;
-
-  padding: 80px 24px 24px;
-  z-index: 10000;
-}
-
-/* посилання */
-.mobile-menu a {
-  color: #e8e1d6;
-  font-size: 16px;
-  text-decoration: none;
-  letter-spacing: 1px;
-}
-
-/* кнопка закриття */
-.mobile-close {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-
-  background: none;
-  border: none;
-  font-size: 24px;
-  color: #e8e1d6;
-  cursor: pointer;
-}
-
-/* ===================== MOBILE FIXES ===================== */
-@media (max-width: 600px) {
-
-  /* ---------- NAV / BURGER ---------- */
-  .nav-center,
-  .nav-right {
-    display: none;
-  }
-
-  .burger-btn {
-    display: block;
-  }
-
-  /* ---------- GLOBAL WIDTH ---------- */
-  .container {
-    padding-left: 8px;
-    padding-right: 8px;
-  }
 
   /* ===================== CATALOG ===================== */
 
+  /* рамка: ОДНА для категорії + підкатегорій */
   .catalog-row {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    overflow: visible; /* НЕ hidden */
+    width: 82%;
+    max-width: 420px;
+    margin: 0 auto 18px;
+    align-items: stretch;
+    overflow: visible;
   }
 
-  /* ----- BIG CATEGORY CARD ----- */
+  /* велика плитка категорії */
   .subcategory {
     display: flex;
     flex-direction: column;
+    width: 100%;
+    margin-bottom: 14px;
     height: auto;
-
-    width: 82%;
-    max-width: 420px;
-    margin: 0 auto 14px;
-
-    overflow: visible; /* дозволяємо дітям жити */
   }
 
   .subcategory img {
@@ -1113,36 +1007,29 @@ a.sub-mini {
     display: flex;
     align-items: center;
     justify-content: center;
-
     font-size: 16px;
     line-height: 1.2;
     text-align: center;
-
     padding: 12px 10px;
     white-space: normal;
-
-    height: auto;
   }
 
-  /* ----- SUBCATEGORIES: ONE ROW SCROLL ----- */
+  /* підкатегорії — ОДИН РЯД + СКРОЛ */
   .mini-line {
     display: flex;
     flex-direction: row;
     gap: 12px;
-    justify-content: flex-start; /* ← ОСЬ КЛЮЧ */
-    background: transparent;   
-    padding: 0px;                  
-    margin: 0 auto;               /* та сама центровка, що й у .subcategory */  
+    justify-content: flex-start;
+
+    width: 100%;
+    margin: 0;
+    padding-bottom: 6px;
 
     overflow-x: auto;
     overflow-y: hidden;
-
-    padding-bottom: 6px;
-
     -webkit-overflow-scrolling: touch;
 
-    width: 100%;
-    max-width: 100%;
+    background: transparent;
   }
 
   .mini-line::-webkit-scrollbar {
@@ -1190,38 +1077,7 @@ a.sub-mini {
 
   .about-container,
   .contact-columns {
-    padding-left: 8px;
-    padding-right: 8px;
-  }
-}
-@media (max-width: 600px) {
-
-  /* 1) РАМКА для категорії + підкатегорій */
-  .catalog-row{
-    width: 82%;
-    max-width: 420px;
-    margin: 0 auto 18px;
-    align-items: stretch; /* не center */
-  }
-
-  /* 2) Велика плитка тепер 100% від рамки */
-  .subcategory{
-    width: 100%;
-    margin: 0 0 14px;
-  }
-
-  /* 3) Підкатегорії теж 100% від рамки */
-  .mini-line{
-    width: 100%;
-    margin: 0;
-    justify-content: flex-start;
-
-    overflow-x: auto;
-    overflow-y: hidden;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  .mini-line::-webkit-scrollbar{
-    display:none;
+    padding-left: 10px;
+    padding-right: 10px;
   }
 }

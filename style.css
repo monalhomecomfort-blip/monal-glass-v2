@@ -1091,6 +1091,9 @@ a.sub-mini {
   /* ===== BIG CATEGORY CARD MOBILE FIX ===== */
   .subcategory {
   height: auto;
+  /* робимо картку колонкою, щоб текст мав свій простір */
+  display: flex;
+  flex-direction: column;
   }
   .subcategory img {
   height: 160px;        /* менше фото → більше місця тексту */

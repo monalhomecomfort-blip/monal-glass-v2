@@ -218,6 +218,26 @@
   });
 </script>
 
+<script>
+  const burgerBtn = document.querySelector('.burger-btn');
+  const mobileMenu = document.querySelector('.mobile-menu');
+  const closeBtn = document.querySelector('.mobile-close');
+
+  burgerBtn.addEventListener('click', () => {
+    mobileMenu.style.display = 'flex';
+  });
+
+  closeBtn.addEventListener('click', () => {
+    mobileMenu.style.display = 'none';
+  });
+
+  mobileMenu.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      mobileMenu.style.display = 'none';
+    });
+  });
+</script>
+    
 </body>
 </html>
 

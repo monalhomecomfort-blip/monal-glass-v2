@@ -60,7 +60,7 @@
   <a href="about.html">Про бренд</a>
   <a href="delivery.html">Доставка</a>
   <a href="contacts.html">Контакти</a>
-  <a href="cart.html">Кошик</a>
+  <a href="cart.html">Кошик <span class="burger-cart-count"></span></a>
 </div>    
     
 <!-- КАТАЛОГ -->
@@ -196,7 +196,6 @@
 <!-- ✅ ОЧИСТКА КОШИКА ПІСЛЯ УСПІШНОЇ ОПЛАТИ -->
 <script>
   const params = new URLSearchParams(window.location.search);
-
   if (
     params.get("status") === "success" ||
     params.get("invoiceId") || 
@@ -211,7 +210,6 @@
   document.addEventListener("click", function (e) {
     const mainTile = e.target.closest("a.subcategory");
     if (!mainTile) return;
-
     // блокуємо перехід ТІЛЬКИ для великих плиток
     e.preventDefault();
   });
@@ -221,22 +219,29 @@
   const burgerBtn = document.querySelector('.burger-btn');
   const mobileMenu = document.querySelector('.mobile-menu');
   const closeBtn = document.querySelector('.mobile-close');
-
-  burgerBtn.addEventListener('click', () => {
-    mobileMenu.style.display = 'flex';
-  });
-
-  closeBtn.addEventListener('click', () => {
-    mobileMenu.style.display = 'none';
-  });
-
-  mobileMenu.querySelectorAll('a').forEach(link => {
-    link.addEventListener('click', () => {
+  const burgerCartCount = document.querySelector('.burger-cart-count');
+  function updateBurgerCartCount() {
+    if (!burgerCartCount) return;
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    burgerCartCount.textContent = cart.length ? `(${cart.length})` : "";
+  }
+  if (burgerBtn && mobileMenu && closeBtn) {
+    burgerBtn.addEventListener('click', () => {
+      updateBurgerCartCount();          // ← оновлюємо при відкритті
+      mobileMenu.style.display = 'flex';
+    });
+    closeBtn.addEventListener('click', () => {
       mobileMenu.style.display = 'none';
     });
-  });
+    mobileMenu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileMenu.style.display = 'none';
+      });
+    });
+  }
+  // первинне оновлення при завантаженні сторінки
+  updateBurgerCartCount();
 </script>
     
 </body>
 </html>
-

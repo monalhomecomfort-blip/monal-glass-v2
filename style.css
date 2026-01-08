@@ -977,9 +977,11 @@ a.sub-mini {
   }
 
   .mini-line {
-    flex-wrap: wrap;
-    white-space: normal;
+    display: grid;                          /* ← КЛЮЧОВЕ */
+    grid-template-columns: repeat(2, 1fr);  /* 2 в ряд */
     gap: 12px;
+
+    white-space: normal;
   }
 
   .sub-mini {
@@ -1089,12 +1091,15 @@ a.sub-mini {
   overflow: visible;
   }
   /* ===== BIG CATEGORY CARD MOBILE FIX ===== */
-  .subcategory {
+.subcategory {
   height: auto;
   /* робимо картку колонкою, щоб текст мав свій простір */
   display: flex;
   flex-direction: column;
-  }
+  /* ширина = 2 підкатегорії + gap */
+  width: calc(100% - 12px);
+  margin: 0 auto 16px;
+}
   .subcategory img {
   height: 160px;        /* менше фото → більше місця тексту */
   }

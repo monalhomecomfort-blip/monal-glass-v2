@@ -1062,103 +1062,117 @@ a.sub-mini {
   cursor: pointer;
 }
 
-/* ===== ТІЛЬКИ НА МОБІЛЬНОМУ ===== */
+/* ===================== MOBILE FIXES ===================== */
 @media (max-width: 600px) {
-  /* ховаємо старе меню */
+
+  /* --- NAV / BURGER --- */
   .nav-center,
   .nav-right {
     display: none;
   }
-  /* показуємо бургер */
+
   .burger-btn {
     display: block;
   }
-  /* ===== BIG CATEGORY TITLES MOBILE ===== */
-  .subcategory-title {
-  display: flex;
-  align-items: center;      /* вертикальне центрування */
-  justify-content: center;  /* горизонтальне центрування */
 
-  font-size: 16px;
-  line-height: 1.2;
-  text-align: center;
-
-  padding: 12px 10px;
-  white-space: normal;
-
-  height: auto;
-  min-height: unset;
-  overflow: visible;
+  /* --- GLOBAL CONTAINER WIDTH --- */
+  .container {
+    padding-left: 10px;
+    padding-right: 10px;
   }
-  /* ===== BIG CATEGORY CARD MOBILE FIX ===== */
-.subcategory {
-  height: auto;
-  /* робимо картку колонкою, щоб текст мав свій простір */
-  display: flex;
-  flex-direction: column;
-  /* ширина = 2 підкатегорії + gap */
-  width: calc(100% - 12px);
-  margin: 0 auto 16px;
-}
+
+  /* ===================== CATALOG (MAIN) ===================== */
+
+  /* ряд категорії + підкатегорій */
+  .catalog-row {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* велика плитка категорії */
+  .subcategory {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+
+    width: 100%;
+    max-width: 520px;          /* ← КЛЮЧ: однакова ширина */
+    margin: 0 auto 16px;
+  }
+
   .subcategory img {
-  height: 160px;        /* менше фото → більше місця тексту */
+    height: 160px;
+  }
+
+  /* назва категорії */
+  .subcategory-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 16px;
+    line-height: 1.2;
+    text-align: center;
+
+    padding: 12px 10px;
+    white-space: normal;
+
+    height: auto;
+    overflow: visible;
+  }
+
+  /* підкатегорії — ОСЬ ГОЛОВНЕ */
+  .mini-line {
+    width: 100%;
+    max-width: 520px;          /* ← ТА САМА ШИРИНА */
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .sub-mini {
+    width: 100%;
+  }
+
+  /* ===================== CART ===================== */
+
+  .cart-item {
+    grid-template-columns: 1fr auto auto;
+    gap: 8px;
+  }
+
+  .cart-item span {
+    font-size: 14px;
+  }
+
+  .cart-remove {
+    font-size: 18px;
   }
 }
-/* ===== DELIVERY + CART MOBILE FINAL FIX ===== */
+
+/* ===================== DELIVERY + CART (TABLET & MOBILE) ===================== */
 @media (max-width: 900px) {
+
   .delivery-columns {
     flex-direction: column;
     gap: 24px;
     width: 100%;
   }
+
   .delivery-columns .delivery-block,
-  .delivery-columns .cart-box {
+  .delivery-columns .cart-box,
+  .delivery-block,
+  .cart-box {
     width: 100%;
     max-width: 100%;
-    min-width: 0;        /* ← КЛЮЧОВЕ */
+    min-width: 0;
     box-sizing: border-box;
   }
-  /* прибираємо ЖОРСТКІ фіксації */
-  .delivery-columns .delivery-block:first-child,
-  .delivery-columns .delivery-block:nth-child(2),
-  .cart-box {
-    min-width: 0;
-    width: 100%;
-    max-width: 100%;
-  }
-}
-/* ===== CART ITEMS MOBILE FIX ===== */
-@media (max-width: 600px) {
-  .cart-item {
-    grid-template-columns: 1fr auto auto; /* текст | ціна | X */
-    gap: 8px;
-  }
-  .cart-item span {
-    font-size: 14px;
-  }
-  .cart-remove {
-    font-size: 18px;
-  }
-}
-/* ===== GLOBAL MOBILE WIDTH TUNING ===== */
-@media (max-width: 600px) {
-  /* головний контейнер */
-  .container {
-    padding-left: 10px;
-    padding-right: 10px;
-  }
-  /* сторінки з колонками */
-  .delivery-columns,
+
   .about-container,
   .contact-columns {
     padding-left: 10px;
     padding-right: 10px;
-  }
-  /* картки і блоки */
-  .delivery-block,
-  .cart-box,
-  .about-block,
-  .contact-col {
-    width: 100%;
   }
 }

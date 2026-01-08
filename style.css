@@ -1135,3 +1135,25 @@ a.sub-mini {
     font-size: 18px;
   }
 }
+/* ===== GLOBAL MOBILE WIDTH TUNING ===== */
+@media (max-width: 600px) {
+  /* головний контейнер */
+  .container {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+  /* сторінки з колонками */
+  .delivery-columns,
+  .about-container,
+  .contact-columns {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+  /* картки і блоки */
+  .delivery-block,
+  .cart-box,
+  .about-block,
+  .contact-col {
+    width: 100%;
+  }
+}

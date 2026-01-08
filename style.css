@@ -1099,16 +1099,26 @@ a.sub-mini {
   height: 160px;        /* менше фото → більше місця тексту */
   }
 }
-/* ===== DELIVERY + CART MOBILE FIX ===== */
+/* ===== DELIVERY + CART MOBILE FINAL FIX ===== */
 @media (max-width: 900px) {
   .delivery-columns {
-    flex-direction: column;   /* ← СТАЮТЬ ОДНА ПІД ОДНОЮ */
+    flex-direction: column;
     gap: 24px;
+    width: 100%;
   }
   .delivery-columns .delivery-block,
   .delivery-columns .cart-box {
     width: 100%;
     max-width: 100%;
-    min-width: unset;
+    min-width: 0;        /* ← КЛЮЧОВЕ */
+    box-sizing: border-box;
+  }
+  /* прибираємо ЖОРСТКІ фіксації */
+  .delivery-columns .delivery-block:first-child,
+  .delivery-columns .delivery-block:nth-child(2),
+  .cart-box {
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
   }
 }

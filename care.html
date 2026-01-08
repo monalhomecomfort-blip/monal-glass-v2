@@ -49,8 +49,22 @@
         <a href="delivery.html">Доставка</a>
         <a href="cart.html">Кошик <span id="cart-count"></span></a>
     </div>
+    <!-- BURGER BUTTON -->
+<button class="burger-btn" aria-label="Відкрити меню">
+  ☰
+</button>
 
 </nav>
+<!-- MOBILE MENU -->
+<div class="mobile-menu">
+  <button class="mobile-close">✕</button>
+
+  <a href="index.html">Головна</a>
+  <a href="about.html">Про бренд</a>
+  <a href="delivery.html">Доставка</a>
+  <a href="contacts.html">Контакти</a>
+  <a href="cart.html">Кошик <span class="burger-cart-count"></span></a>
+</div>
 
 <!-- Контент -->
 <div class="container">
@@ -95,5 +109,32 @@
 </footer>
 
 <script src="cart.js"></script>
+<script>
+  const burgerBtn = document.querySelector('.burger-btn');
+  const mobileMenu = document.querySelector('.mobile-menu');
+  const closeBtn = document.querySelector('.mobile-close');
+  const burgerCartCount = document.querySelector('.burger-cart-count');
+  function updateBurgerCartCount() {
+    if (!burgerCartCount) return;
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    burgerCartCount.textContent = cart.length ? `(${cart.length})` : "";
+  }
+  if (burgerBtn && mobileMenu && closeBtn) {
+    burgerBtn.addEventListener('click', () => {
+      updateBurgerCartCount();          // ← оновлюємо при відкритті
+      mobileMenu.style.display = 'flex';
+    });
+    closeBtn.addEventListener('click', () => {
+      mobileMenu.style.display = 'none';
+    });
+    mobileMenu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileMenu.style.display = 'none';
+      });
+    });
+  }
+  // первинне оновлення при завантаженні сторінки
+  updateBurgerCartCount();
+</script>
 </body>
 </html>

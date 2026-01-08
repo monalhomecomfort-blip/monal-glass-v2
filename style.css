@@ -1042,7 +1042,7 @@ a.sub-mini {
     flex-direction: column;
     width: 82%;
     max-width: 420px;
-    margin: 0 auto 18px;
+    margin: 0 auto 28px;
     align-items: stretch;
     overflow: visible;
   }
@@ -1051,7 +1051,7 @@ a.sub-mini {
     display: flex;
     flex-direction: column;
     width: 100%;
-    margin: 0 0 14px;
+    margin: 0 0 6px;
     height: auto;
     overflow: visible;
   }

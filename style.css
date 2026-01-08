@@ -1065,7 +1065,7 @@ a.sub-mini {
 /* ===================== MOBILE FIXES ===================== */
 @media (max-width: 600px) {
 
-  /* --- NAV / BURGER --- */
+  /* ---------- NAV / BURGER ---------- */
   .nav-center,
   .nav-right {
     display: none;
@@ -1075,37 +1075,38 @@ a.sub-mini {
     display: block;
   }
 
-  /* --- GLOBAL CONTAINER WIDTH --- */
+  /* ---------- GLOBAL WIDTH ---------- */
   .container {
-    padding-left: 10px;
-    padding-right: 10px;
+    padding-left: 8px;
+    padding-right: 8px;
   }
 
-  /* ===================== CATALOG (MAIN) ===================== */
+  /* ===================== CATALOG ===================== */
 
-  /* ряд категорії + підкатегорій */
   .catalog-row {
     display: flex;
     flex-direction: column;
     align-items: center;
+    overflow: visible; /* НЕ hidden */
   }
 
-/* ===== BIG CATEGORY CARD (MOBILE) ===== */
-.subcategory {
-  display: flex;
-  flex-direction: column;
-  height: auto;
+  /* ----- BIG CATEGORY CARD ----- */
+  .subcategory {
+    display: flex;
+    flex-direction: column;
+    height: auto;
 
-  width: 82%;              /* ← ОСНОВНЕ */
-  max-width: 420px;        /* ← ЩОБ НЕ РОЗДУВАЛОСЬ */
-  margin: 0 auto 14px;
-}
+    width: 82%;
+    max-width: 420px;
+    margin: 0 auto 14px;
+
+    overflow: visible; /* дозволяємо дітям жити */
+  }
 
   .subcategory img {
     height: 160px;
   }
 
-  /* назва категорії */
   .subcategory-title {
     display: flex;
     align-items: center;
@@ -1119,33 +1120,32 @@ a.sub-mini {
     white-space: normal;
 
     height: auto;
-    overflow: visible;
   }
 
-/* ===== SUBCATEGORIES HORIZONTAL SCROLL (MOBILE) ===== */
-.mini-line {
-  display: flex;
-  flex-direction: row;
-  gap: 12px;
+  /* ----- SUBCATEGORIES: ONE ROW SCROLL ----- */
+  .mini-line {
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
 
-  overflow-x: auto;
-  overflow-y: hidden;
+    overflow-x: auto;
+    overflow-y: hidden;
 
-  padding-bottom: 6px;   /* щоб не різався скрол */
-  scroll-snap-type: x mandatory;
+    padding-bottom: 6px;
 
-  -webkit-overflow-scrolling: touch;
-}
+    -webkit-overflow-scrolling: touch;
 
-.mini-line::-webkit-scrollbar {
-  display: none;         /* прибираємо скролбар */
-}
+    width: 100%;
+    max-width: 100%;
+  }
 
-.sub-mini {
-  flex: 0 0 150px;       /* ширина плитки */
-  scroll-snap-align: start;
-}
+  .mini-line::-webkit-scrollbar {
+    display: none;
+  }
 
+  .sub-mini {
+    flex: 0 0 150px;
+  }
 
   /* ===================== CART ===================== */
 
@@ -1184,16 +1184,7 @@ a.sub-mini {
 
   .about-container,
   .contact-columns {
-    padding-left: 10px;
-    padding-right: 10px;
+    padding-left: 8px;
+    padding-right: 8px;
   }
-}
-
-/* ===== FIX SUBCATEGORY ROWS CUTTING ===== */
-.catalog-row,
-.subcategory,
-.mini-line {
-  height: auto !important;
-  max-height: none !important;
-  overflow: visible !important;
 }

@@ -1002,7 +1002,69 @@ a.sub-mini {
     
 }
 
-
 /* 3) Дуже маленькі телефони */
 @media (max-width: 380px) {
+}
+
+/* ===================== BURGER MENU ===================== */
+
+/* кнопка ☰ */
+.burger-btn {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 28px;
+  color: #e8e1d6;
+  cursor: pointer;
+}
+
+/* мобільне меню */
+.mobile-menu {
+  position: fixed;
+  inset: 0;
+  background: rgba(4, 4, 4, 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
+
+  z-index: 9999;
+}
+
+.mobile-menu a {
+  color: #e8e1d6;
+  font-size: 18px;
+  text-decoration: none;
+  letter-spacing: 1px;
+}
+
+.mobile-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+
+  background: none;
+  border: none;
+  font-size: 26px;
+  color: #e8e1d6;
+  cursor: pointer;
+}
+
+/* ===== ТІЛЬКИ НА МОБІЛЬНОМУ ===== */
+@media (max-width: 600px) {
+
+  /* ховаємо старе меню */
+  .nav-center,
+  .nav-right {
+    display: none;
+  }
+
+  /* показуємо бургер */
+  .burger-btn {
+    display: block;
+  }
 }

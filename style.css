@@ -1130,9 +1130,8 @@ a.sub-mini {
     flex-direction: row;
     gap: 12px;
     justify-content: flex-start; /* ← ОСЬ КЛЮЧ */
-    background: rgba(0, 0, 0, 0.04);   /* дуже легкий фон */
-    border-radius: 16px;               /* округлення */
-    padding: 10px;                     /* повітря навколо плиток */
+    background: transparent;   
+    padding: 0px;                  
     margin: 0 auto;               /* та сама центровка, що й у .subcategory */  
 
     overflow-x: auto;
@@ -1193,5 +1192,36 @@ a.sub-mini {
   .contact-columns {
     padding-left: 8px;
     padding-right: 8px;
+  }
+}
+@media (max-width: 600px) {
+
+  /* 1) РАМКА для категорії + підкатегорій */
+  .catalog-row{
+    width: 82%;
+    max-width: 420px;
+    margin: 0 auto 18px;
+    align-items: stretch; /* не center */
+  }
+
+  /* 2) Велика плитка тепер 100% від рамки */
+  .subcategory{
+    width: 100%;
+    margin: 0 0 14px;
+  }
+
+  /* 3) Підкатегорії теж 100% від рамки */
+  .mini-line{
+    width: 100%;
+    margin: 0;
+    justify-content: flex-start;
+
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .mini-line::-webkit-scrollbar{
+    display:none;
   }
 }

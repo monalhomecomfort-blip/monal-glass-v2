@@ -1073,26 +1073,26 @@ a.sub-mini {
   }
   /* ===== BIG CATEGORY TITLES MOBILE ===== */
   .subcategory-title {
+  display: flex;
+  align-items: center;      /* вертикальне центрування */
+  justify-content: center;  /* горизонтальне центрування */
+
   font-size: 16px;
   line-height: 1.2;
+  text-align: center;
+
   padding: 12px 10px;
   white-space: normal;
-  height: auto;
-  }
-  /* ===== BIG CATEGORY CARD MOBILE FIX ===== */
 
-  .subcategory {
-  height: auto;
-  }
-
-  .subcategory img {
-  height: 160px;        /* менше фото → більше місця тексту */
-  }
-
-  .subcategory-title {
-  display: block;
   height: auto;
   min-height: unset;
   overflow: visible;
-  }  
+  }
+  /* ===== BIG CATEGORY CARD MOBILE FIX ===== */
+  .subcategory {
+  height: auto;
+  }
+  .subcategory img {
+  height: 160px;        /* менше фото → більше місця тексту */
+  }
 }

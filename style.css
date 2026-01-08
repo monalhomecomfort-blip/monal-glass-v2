@@ -1028,6 +1028,8 @@ a.sub-mini {
   max-height: calc(100vh - 70px);
   overflow-y: auto;
   width: 180px;
+  border-radius: 18px;
+  overflow: hidden;  
 
   background: rgba(4, 4, 4, 0.95);
   backdrop-filter: blur(12px);
@@ -1086,7 +1088,7 @@ a.sub-mini {
   .catalog-row {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
     overflow: visible; /* НЕ hidden */
   }
 
@@ -1127,7 +1129,11 @@ a.sub-mini {
     display: flex;
     flex-direction: row;
     gap: 12px;
-    justify-content: flex-start; /* ← ОСЬ КЛЮЧ */      
+    justify-content: flex-start; /* ← ОСЬ КЛЮЧ */
+    background: rgba(0, 0, 0, 0.04);   /* дуже легкий фон */
+    border-radius: 16px;               /* округлення */
+    padding: 10px;                     /* повітря навколо плиток */
+    margin: 0 auto;               /* та сама центровка, що й у .subcategory */  
 
     overflow-x: auto;
     overflow-y: hidden;

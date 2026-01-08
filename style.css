@@ -1176,3 +1176,12 @@ a.sub-mini {
     padding-right: 10px;
   }
 }
+
+/* ===== FIX SUBCATEGORY ROWS CUTTING ===== */
+.catalog-row,
+.subcategory,
+.mini-line {
+  height: auto !important;
+  max-height: none !important;
+  overflow: visible !important;
+}

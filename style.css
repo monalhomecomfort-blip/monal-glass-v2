@@ -921,6 +921,27 @@ a.sub-mini {
 }
 
 /* ===================== RESPONSIVE (АДАПТАЦІЯ) ===================== */
+
+/* 1) Планшети і менше */
+@media (max-width: 900px) {
+
+  .container {
+    padding: 110px 24px 90px;
+  }
+
+  .product-row {
+    grid-template-columns: 1fr;
+    gap: 28px;
+    margin: 50px 0;
+  }
+
+  .about-container,
+  .contact-columns,
+  .delivery-columns {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* ===================== BURGER MENU ===================== */
 
 /* кнопка ☰ */
@@ -936,19 +957,21 @@ a.sub-mini {
 /* мобільне меню — БОКОВА ПАНЕЛЬ */
 .mobile-menu {
   position: fixed;
-  top: 70px;              /* висота твого nav */
+  top: 70px;
   right: 0;
+
   max-height: calc(100vh - 70px);
   overflow-y: auto;
+
   width: 180px;
   border-radius: 18px;
-  overflow: hidden;  
+  overflow: hidden;
 
   background: rgba(4, 4, 4, 0.95);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 
-  display: none;                 /* закрито за замовчуванням */
+  display: none;
   flex-direction: column;
   gap: 18px;
 
@@ -976,30 +999,11 @@ a.sub-mini {
   color: #e8e1d6;
   cursor: pointer;
 }
-/* ---------- TABLET & DOWN ---------- */
-@media (max-width: 900px) {
 
-  .container {
-    padding: 110px 24px 90px;
-  }
-
-  .product-row {
-    grid-template-columns: 1fr;
-    gap: 28px;
-    margin: 50px 0;
-  }
-
-  .about-container,
-  .contact-columns,
-  .delivery-columns {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* ===================== MOBILE (≤600px) ===================== */
+/* ===================== MOBILE FIXES (≤600px) ===================== */
 @media (max-width: 600px) {
 
-  /* ---------- NAV ---------- */
+  /* ----- NAV (mobile sizing) ----- */
   nav {
     padding: 0 14px;
     height: 60px;
@@ -1011,7 +1015,7 @@ a.sub-mini {
   }
 
   .burger-btn {
-    display: block;
+    display: block; /* ← ВАЖЛИВО: включаємо ☰ */
   }
 
   .nav-logo {
@@ -1022,7 +1026,7 @@ a.sub-mini {
     height: 22px;
   }
 
-  /* ---------- GLOBAL ---------- */
+  /* ----- GLOBAL ----- */
   .container {
     padding: 90px 10px 80px;
   }
@@ -1031,9 +1035,8 @@ a.sub-mini {
     font-size: 26px;
   }
 
-  /* ===================== CATALOG ===================== */
+  /* ===================== CATALOG (MOBILE) ===================== */
 
-  /* рамка: ОДНА для категорії + підкатегорій */
   .catalog-row {
     display: flex;
     flex-direction: column;
@@ -1044,13 +1047,13 @@ a.sub-mini {
     overflow: visible;
   }
 
-  /* велика плитка категорії */
   .subcategory {
     display: flex;
     flex-direction: column;
     width: 100%;
-    margin-bottom: 14px;
+    margin: 0 0 14px;
     height: auto;
+    overflow: visible;
   }
 
   .subcategory img {
@@ -1066,9 +1069,10 @@ a.sub-mini {
     text-align: center;
     padding: 12px 10px;
     white-space: normal;
+    height: auto;
   }
 
-  /* підкатегорії — ОДИН РЯД + СКРОЛ */
+  /* підкатегорії: один ряд + скрол */
   .mini-line {
     display: flex;
     flex-direction: row;
@@ -1094,8 +1098,7 @@ a.sub-mini {
     flex: 0 0 150px;
   }
 
-  /* ===================== CART ===================== */
-
+  /* ===================== CART (MOBILE) ===================== */
   .cart-item {
     grid-template-columns: 1fr auto auto;
     gap: 8px;

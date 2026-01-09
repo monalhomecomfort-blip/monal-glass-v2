@@ -1172,11 +1172,15 @@ a.sub-mini {
   }
 
   .cart-box {
-    width: var(--cart-width);
-    max-width: var(--cart-max);
+    width: calc(100vw - 24px);   /* ← РЕАЛЬНО ширше */
+    max-width: 560px;            /* ← контроль */
+    margin: 0 auto;
 
-    margin: 0 auto;        /* ЦЕНТРУЄ */
+    padding: 18px 20px;          /* ← повітря */
     box-sizing: border-box;
+
     overflow: visible;
   }
+
 }
+

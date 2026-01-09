@@ -1168,3 +1168,40 @@ a.sub-mini {
     flex-direction: column;
   }
 }
+/* ===================== DELIVERY & CART — FINAL CONTROLLED MOBILE ===================== */
+@media (max-width: 900px) {
+
+  /* 🔧 КЕРУЄМО ШИРИНОЮ ТУТ */
+  :root {
+    --mobile-block-width: 94%;   /* ← МІНЯЙ: 90% / 92% / 96% */
+    --mobile-block-max: 520px;   /* ← МІНЯЙ: 480 / 500 / 540 */
+  }
+
+  /* контейнер сторінки */
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* колонки доставки / кошика */
+  .delivery-columns {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    width: 100%;
+  }
+
+  /* 🔥 САМІ БЛОКИ */
+  .delivery-columns .delivery-block,
+  .delivery-columns .cart-box {
+    width: var(--mobile-block-width);
+    max-width: var(--mobile-block-max);
+
+    margin: 0 auto;
+    box-sizing: border-box;
+    overflow: visible;
+  }
+}
+

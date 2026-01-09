@@ -1050,7 +1050,7 @@ a.sub-mini {
     flex-direction: column;
     width: 82%;
     max-width: 420px;
-    margin: 0 auto 28px;
+    margin: 0 auto 40px;
     align-items: stretch;
     overflow: visible;
     gap: 6px;   /* було 18px */  
@@ -1109,19 +1109,22 @@ a.sub-mini {
     flex: 0 0 150px;
   }
 
-  /* ===================== CART (MOBILE) ===================== */
-  .cart-item {
-    grid-template-columns: 1fr auto auto;
-    gap: 8px;
-  }
+/* ===================== CART (MOBILE) ===================== */
+.cart-item {
+  grid-template-columns: 1fr auto auto;
+  gap: 8px;
+}
 
-  .cart-item span {
-    font-size: 14px;
-  }
+.cart-item span {
+  font-size: 14px;
+}
 
-  .cart-remove {
-    font-size: 18px;
-  }
+.cart-remove {
+  font-size: 18px;
+}
+
+.cart-box {
+  overflow: visible;
 }
 
 /* ===================== DELIVERY + CART (TABLET & MOBILE) ===================== */
@@ -1133,15 +1136,14 @@ a.sub-mini {
     width: 100%;
   }
 
-  .delivery-columns .delivery-block,
-  .delivery-columns .cart-box,
-  .delivery-block,
-  .cart-box {
-    width: 100%;
-    max-width: 100%;
-    min-width: 0;
-    box-sizing: border-box;
-  }
+.delivery-columns .delivery-block,
+.delivery-columns .cart-box {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
 
   .about-container,
   .contact-columns {
@@ -1149,3 +1151,4 @@ a.sub-mini {
     padding-right: 10px;
   }
 }
+

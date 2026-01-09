@@ -1144,7 +1144,6 @@ a.sub-mini {
   box-sizing: border-box;
 }
 
-
   .about-container,
   .contact-columns {
     padding-left: 10px;
@@ -1152,3 +1151,28 @@ a.sub-mini {
   }
 }
 
+/* ===================== CART — HARD MOBILE FIX ===================== */
+@media (max-width: 900px) {
+
+  /* фіксуємо контейнер кошика */
+  .cart-box {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+
+    box-sizing: border-box;
+    overflow: visible;
+  }
+
+  /* фіксуємо рядок товару */
+  .cart-item {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* гарантуємо, що хрестик не обрізається */
+  .cart-remove {
+    margin-left: 6px;
+    flex-shrink: 0;
+  }
+}

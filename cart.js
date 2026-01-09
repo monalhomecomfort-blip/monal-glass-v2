@@ -570,14 +570,16 @@ function startOnlinePayment(orderId, amount) {
 
     })
     .then(res => res.json())
-    .then(data => {
-        if (data && data.paymentUrl) {
-            // 🔗 редірект клієнта на mono
-            window.location.href = data.pageUrl;
-        } else {
-            console.error("Mono response error:", data);
-        }
-    })
+.then(data => {
+    const url = data?.pageUrl || data?.paymentUrl; // на всяк випадок
+    if (url) {
+        window.location.href = url;
+        return;
+    }
+    console.error("Mono create-payment failed:", data);
+    alert("Помилка створення оплати");
+})
+
     .catch(err => {
         console.error("Payment request failed:", err);
     });

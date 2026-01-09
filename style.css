@@ -1053,6 +1053,7 @@ a.sub-mini {
     margin: 0 auto 28px;
     align-items: stretch;
     overflow: visible;
+    gap: 6px;   /* було 18px */  
   }
 
   .subcategory {

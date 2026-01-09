@@ -1110,9 +1110,12 @@ a.sub-mini {
   }
 
 /* ===================== CART (MOBILE) ===================== */
+
 .cart-item {
   grid-template-columns: 1fr auto auto;
-  gap: 8px;
+  gap: 10px;                 /* трохи більше повітря */
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .cart-item span {
@@ -1121,58 +1124,51 @@ a.sub-mini {
 
 .cart-remove {
   font-size: 18px;
+  margin-left: 6px;
+  flex-shrink: 0;
 }
 
+/* сам контейнер кошика */
 .cart-box {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+
+  box-sizing: border-box;
   overflow: visible;
+
+  padding: 20px 14px;        /* ← ОЦЕ ТИ ТЕПЕР ПОБАЧИШ */
 }
+
 
 /* ===================== DELIVERY + CART (TABLET & MOBILE) ===================== */
 @media (max-width: 900px) {
 
   .delivery-columns {
+    display: flex;
     flex-direction: column;
     gap: 24px;
     width: 100%;
+    max-width: 100%;
   }
 
-.delivery-columns .delivery-block,
-.delivery-columns .cart-box {
-  width: 100%;
-  max-width: 100%;
-  min-width: 0;
-  box-sizing: border-box;
-}
+  /* ТІЛЬКИ блоки доставки і кошика */
+  .delivery-columns .delivery-block,
+  .delivery-columns .cart-box {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
 
+    box-sizing: border-box;
+    overflow: visible;
+
+    padding: 20px 14px;      /* ← ТЕ Ж САМЕ, ЩО В КОШИКУ */
+  }
+
+  /* не чіпаємо інші сторінки */
   .about-container,
   .contact-columns {
     padding-left: 10px;
     padding-right: 10px;
-  }
-}
-
-/* ===================== CART — HARD MOBILE FIX ===================== */
-@media (max-width: 900px) {
-
-  /* фіксуємо контейнер кошика */
-  .cart-box {
-    width: 100% !important;
-    max-width: 100% !important;
-    min-width: 0 !important;
-
-    box-sizing: border-box;
-    overflow: visible;
-  }
-
-  /* фіксуємо рядок товару */
-  .cart-item {
-    width: 100%;
-    box-sizing: border-box;
-  }
-
-  /* гарантуємо, що хрестик не обрізається */
-  .cart-remove {
-    margin-left: 6px;
-    flex-shrink: 0;
   }
 }

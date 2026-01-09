@@ -1109,99 +1109,44 @@ a.sub-mini {
     flex: 0 0 150px;
   }
 
-/* ===================== CART & DELIVERY — FINAL CLEAN FIX ===================== */
-
-/* ----- CART ----- */
-.cart-item {
-  display: grid;
-  grid-template-columns: 1fr auto auto;
-  gap: 10px;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.cart-item span {
-  font-size: 14px;
-}
-
-.cart-remove {
-  font-size: 18px;
-  margin-left: 6px;
-  flex-shrink: 0;
-}
-
-.cart-box {
-  width: 100%;
-  max-width: 100%;
-  min-width: 0;
-  box-sizing: border-box;
-  overflow: visible;
-}
-
-/* ----- DELIVERY + CART MOBILE ----- */
+/* ===================== DELIVERY + CART (STABLE MOBILE FIX) ===================== */
 @media (max-width: 900px) {
-
-  .container {
-    padding-left: 12px;
-    padding-right: 12px;
-  }
 
   .delivery-columns {
     display: flex;
     flex-direction: column;
     gap: 24px;
+
     width: 100%;
     max-width: 100%;
+    box-sizing: border-box;
   }
 
-  .delivery-columns > * {
+  .delivery-columns .delivery-block,
+  .delivery-columns .cart-box {
     width: 100%;
     max-width: 100%;
     min-width: 0;
+
     box-sizing: border-box;
-    overflow: visible;
   }
 
-  /* кошик: все вертикально */
   .cart-box {
-    display: flex;
-    flex-direction: column;
-  }
-}
-/* ===================== DELIVERY & CART — FINAL CONTROLLED MOBILE ===================== */
-@media (max-width: 900px) {
-
-  /* 🔧 КЕРУЄМО ШИРИНОЮ ТУТ */
-  :root {
-    --mobile-block-width: 94%;   /* ← МІНЯЙ: 90% / 92% / 96% */
-    --mobile-block-max: 520px;   /* ← МІНЯЙ: 480 / 500 / 540 */
+    padding-left: 16px;
+    padding-right: 16px;
   }
 
-  /* контейнер сторінки */
-  .container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
+  .cart-item {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 10px;
 
-  /* колонки доставки / кошика */
-  .delivery-columns {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 24px;
     width: 100%;
+    box-sizing: border-box;
   }
 
-  /* 🔥 САМІ БЛОКИ */
-  .delivery-columns .delivery-block,
-  .delivery-columns .cart-box {
-    width: var(--mobile-block-width);
-    max-width: var(--mobile-block-max);
-
-    margin: 0 auto;
-    box-sizing: border-box;
-    overflow: visible;
+  .cart-remove {
+    flex-shrink: 0;
+    margin-left: 6px;
   }
 }
-

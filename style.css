@@ -1109,11 +1109,13 @@ a.sub-mini {
     flex: 0 0 150px;
   }
 
-/* ===================== CART (MOBILE) ===================== */
+/* ===================== CART & DELIVERY — FINAL CLEAN FIX ===================== */
 
+/* ----- CART ----- */
 .cart-item {
+  display: grid;
   grid-template-columns: 1fr auto auto;
-  gap: 10px;                 /* трохи більше повітря */
+  gap: 10px;
   width: 100%;
   box-sizing: border-box;
 }
@@ -1128,17 +1130,21 @@ a.sub-mini {
   flex-shrink: 0;
 }
 
-/* сам контейнер кошика */
 .cart-box {
   width: 100%;
   max-width: 100%;
   min-width: 0;
-
   box-sizing: border-box;
   overflow: visible;
-  
-/* ===================== DELIVERY + CART (TABLET & MOBILE) ===================== */
+}
+
+/* ----- DELIVERY + CART MOBILE ----- */
 @media (max-width: 900px) {
+
+  .container {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
 
   .delivery-columns {
     display: flex;
@@ -1148,62 +1154,17 @@ a.sub-mini {
     max-width: 100%;
   }
 
-  /* ТІЛЬКИ блоки доставки і кошика */
-  .delivery-columns .delivery-block,
-  .delivery-columns .cart-box {
+  .delivery-columns > * {
     width: 100%;
     max-width: 100%;
     min-width: 0;
-
     box-sizing: border-box;
     overflow: visible;
-
-    
-  /* не чіпаємо інші сторінки */
-  .about-container,
-  .contact-columns {
-    padding-left: 10px;
-    padding-right: 10px;
-  }
-}
-/* ===================== CART & DELIVERY — FINAL MOBILE FIX ===================== */
-@media (max-width: 900px) {
-
-  /* контейнер сторінок */
-  .container {
-    padding-left: 12px;
-    padding-right: 12px;
   }
 
-  /* колонки доставки / кошика */
-  .delivery-columns {
-    width: 100%;
-    max-width: 100%;
+  /* кошик: все вертикально */
+  .cart-box {
+    display: flex;
     flex-direction: column;
-    gap: 24px;
-  }
-
-  /* самі блоки */
-  .delivery-columns .delivery-block,
-  .delivery-columns .cart-box {
-    width: 100%;
-    max-width: 100%;
-    min-width: 0;
-    box-sizing: border-box;
-    overflow: visible;
-  }
-
-  /* рядок товару */
-  .cart-item {
-    width: 100%;
-    box-sizing: border-box;
-    grid-template-columns: 1fr auto auto;
-    gap: 8px;
-  }
-
-  /* хрестик */
-  .cart-remove {
-    flex-shrink: 0;
-    margin-left: 6px;
   }
 }

@@ -1122,14 +1122,15 @@ a.sub-mini {
     box-sizing: border-box;
   }
 
-  .delivery-columns .delivery-block,
-  .delivery-columns .cart-box {
-    width: 100%;
-    max-width: 100%;
-    min-width: 0;
+.delivery-columns .delivery-block,
+.delivery-columns .cart-box {
+  width: 96%;          /* ← ОЦЕ МІНЯЄШ */
+  max-width: 520px;    /* ← І ОЦЕ МІНЯЄШ */
+  min-width: 0;
 
-    box-sizing: border-box;
-  }
+  margin: 0 auto;      /* ← ЦЕНТРУЄ */
+  box-sizing: border-box;
+}
 
   .cart-box {
     padding-left: 22px;
@@ -1160,4 +1161,22 @@ a.sub-mini {
     width: 100% !important;
   }
 
+}
+/* ===================== CART — CONTROLLED WIDTH (MOBILE) ===================== */
+@media (max-width: 900px) {
+
+  /* 🔧 ТУТ КЕРУЄШ ШИРИНОЮ КОШИКА */
+  :root {
+    --cart-width: 96%;     /* міняй: 94 / 96 / 98 */
+    --cart-max: 560px;     /* міняй: 520 / 540 / 580 */
+  }
+
+  .cart-box {
+    width: var(--cart-width);
+    max-width: var(--cart-max);
+
+    margin: 0 auto;        /* ЦЕНТРУЄ */
+    box-sizing: border-box;
+    overflow: visible;
+  }
 }

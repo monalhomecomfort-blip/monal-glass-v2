@@ -573,7 +573,7 @@ function startOnlinePayment(orderId, amount) {
     .then(data => {
         if (data && data.paymentUrl) {
             // 🔗 редірект клієнта на mono
-            window.location.href = data.paymentUrl;
+            window.location.href = data.pageUrl;
         } else {
             console.error("Mono response error:", data);
         }

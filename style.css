@@ -1160,3 +1160,48 @@ a.sub-mini {
     margin-left: 6px;
   }
 }
+/* ===================== MOBILE — UNIFIED INNER PAGES WIDTH ===================== */
+@media (max-width: 900px) {
+
+  /* ❗ НЕ index: всі внутрішні сторінки */
+  .about-container,
+  .contact-columns,
+  .delivery-columns {
+    width: 100%;
+    max-width: 100%;
+    padding-left: 0;
+    padding-right: 0;
+    margin: 0;
+    box-sizing: border-box;
+  }
+
+  /* ЄДИНА ширина для всіх логічних блоків */
+  .about-block,
+  .contact-col,
+  .delivery-block,
+  .cart-box {
+    width: 92%;              /* 🔧 один контролер */
+    max-width: 560px;        /* 🔒 одна межа */
+    min-width: 0;
+
+    margin: 0 auto 20px;
+    box-sizing: border-box;
+  }
+
+  /* Кошик — внутрішній комфорт */
+  .cart-box {
+    padding: 20px 22px;
+  }
+
+  /* Рядок товару */
+  .cart-item {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .cart-remove {
+    flex-shrink: 0;
+  }
+}

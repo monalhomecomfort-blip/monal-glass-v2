@@ -1109,9 +1109,10 @@ a.sub-mini {
     flex: 0 0 150px;
   }
 
-/* ===================== DELIVERY + CART (STABLE MOBILE FIX) ===================== */
+/* ===================== DELIVERY + CART — MOBILE FINAL FIX ===================== */
 @media (max-width: 900px) {
 
+  /* Контейнер доставки + кошика */
   .delivery-columns {
     display: flex;
     flex-direction: column;
@@ -1119,24 +1120,30 @@ a.sub-mini {
 
     width: 100%;
     max-width: 100%;
+    margin: 0;
+    padding: 0;
+
     box-sizing: border-box;
   }
 
-.delivery-columns .delivery-block,
-.delivery-columns .cart-box {
-  width: 96%;          /* ← ОЦЕ МІНЯЄШ */
-  max-width: 520px;    /* ← І ОЦЕ МІНЯЄШ */
-  min-width: 0;
-
-  margin: 0 auto;      /* ← ЦЕНТРУЄ */
-  box-sizing: border-box;
-}
-
+  /* Обидва блоки: доставка і кошик */
+  .delivery-block,
   .cart-box {
-    padding-left: 22px;
-    padding-right: 22px;
+    width: 94%;            /* ← можеш змінити: 92 / 94 / 96 */
+    max-width: 560px;      /* ← верхня межа */
+    min-width: 0;
+
+    margin: 0 auto;
+    box-sizing: border-box;
   }
 
+  /* Кошик — комфортні внутрішні відступи */
+  .cart-box {
+    padding: 20px 22px;
+    overflow: visible;
+  }
+
+  /* Рядок товару */
   .cart-item {
     display: grid;
     grid-template-columns: 1fr auto auto;
@@ -1146,41 +1153,10 @@ a.sub-mini {
     box-sizing: border-box;
   }
 
+  /* Кнопка X не стискається */
   .cart-remove {
     flex-shrink: 0;
     margin-left: 6px;
   }
-}
-/* 🔥 MOBILE OVERRIDE — HARD STOP FOR WIDTH LEAK */
-@media (max-width: 900px) {
-
-  .delivery-block,
-  .cart-box {
-    min-width: 0 !important;
-    max-width: 100% !important;
-    width: 100% !important;
-  }
-
-}
-/* ===================== CART — CONTROLLED WIDTH (MOBILE) ===================== */
-@media (max-width: 900px) {
-
-  /* 🔧 ТУТ КЕРУЄШ ШИРИНОЮ КОШИКА */
-  :root {
-    --cart-width: 96%;     /* міняй: 94 / 96 / 98 */
-    --cart-max: 560px;     /* міняй: 520 / 540 / 580 */
-  }
-
-  .cart-box {
-    width: calc(100vw - 24px);   /* ← РЕАЛЬНО ширше */
-    max-width: 560px;            /* ← контроль */
-    margin: 0 auto;
-
-    padding: 18px 20px;          /* ← повітря */
-    box-sizing: border-box;
-
-    overflow: visible;
-  }
-
 }
 

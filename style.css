@@ -1109,10 +1109,10 @@ a.sub-mini {
     flex: 0 0 150px;
   }
 
-/* ===================== DELIVERY + CART — MOBILE FINAL FIX ===================== */
+/* ===================== DELIVERY + CART — MOBILE ALIGN FIX ===================== */
 @media (max-width: 900px) {
 
-  /* Контейнер доставки + кошика */
+  /* контейнер */
   .delivery-columns {
     display: flex;
     flex-direction: column;
@@ -1126,24 +1126,26 @@ a.sub-mini {
     box-sizing: border-box;
   }
 
-  /* Обидва блоки: доставка і кошик */
+  /* доставка + кошик */
   .delivery-block,
   .cart-box {
-    width: 94%;            /* ← можеш змінити: 92 / 94 / 96 */
-    max-width: 560px;      /* ← верхня межа */
+    width: calc(100% - 20px);  /* ⬅️ КОМПЕНСУЄ padding container */
+    max-width: 560px;
     min-width: 0;
 
-    margin: 0 auto;
+    margin-left: auto;
+    margin-right: auto;
+
     box-sizing: border-box;
   }
 
-  /* Кошик — комфортні внутрішні відступи */
+  /* кошик */
   .cart-box {
     padding: 20px 22px;
     overflow: visible;
   }
 
-  /* Рядок товару */
+  /* рядок товару */
   .cart-item {
     display: grid;
     grid-template-columns: 1fr auto auto;
@@ -1153,10 +1155,8 @@ a.sub-mini {
     box-sizing: border-box;
   }
 
-  /* Кнопка X не стискається */
   .cart-remove {
     flex-shrink: 0;
     margin-left: 6px;
   }
 }
-

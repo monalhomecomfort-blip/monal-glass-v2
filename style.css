@@ -1109,52 +1109,51 @@ a.sub-mini {
     flex: 0 0 150px;
   }
 
-/* ===================== MOBILE — UNIFIED WIDTH AS CART (FINAL) ===================== */
+/* ===================== MOBILE — MATCH CART GEOMETRY (KEEP THIS ONE) ===================== */
 @media (max-width: 900px) {
 
-  html, body {
-    overflow-x: hidden;
-  }
+  html, body { overflow-x: hidden; }
 
-  /* універсальний відступ під fixed nav */
-  .container,
-  .about-container,
-  .contact-columns,
-  .delivery-columns {
-    margin-top: 90px !important;
-    padding-left: 0 !important;
-    padding-right: 0 !important;
+  /* ABOUT: прибираємо десктопний відступ 140px, бо він їсть верх під nav */
+  .about-container {
+    margin-top: 0 !important;
+    padding: 0 10px !important;     /* як у контейнера на мобільному */
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
   }
 
-  /* delivery + cart завжди вертикально */
+  /* DELIVERY + CART: на мобільному завжди стовпчик */
   .delivery-columns {
     display: flex !important;
     flex-direction: column !important;
-    align-items: center;
     gap: 20px;
-  }
-
-  /* 🔑 ЄДИНИЙ ЕТАЛОН — ЯК У КОШИКУ */
-  .about-block,
-  .contact-col,
-  .delivery-block {
-    width: 100% !important;
-    max-width: 460px !important;   /* ← ЯК У КОШИКУ */
-    margin: 0 auto 20px !important;
-
-    min-width: 0 !important;
-    flex: 0 0 auto !important;
+    width: 100%;
+    max-width: 100%;
     box-sizing: border-box;
   }
 
-  /* кошик — без змін, лише внутрішній комфорт */
+  /* Всі чорні блоки мають бути як у кошика (тобто в межах контейнера) */
+  .about-block,
+  .contact-col,
+  .delivery-block {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 0 20px 0;
+    box-sizing: border-box;
+  }
+
+  /* прибиваємо десктопні min-width/flex, які можуть виштовхувати вправо */
+  .delivery-columns .delivery-block {
+    min-width: 0 !important;
+    flex: none !important;
+  }
+
+  /* Кошик: внутрішні відступи */
   .cart-box {
-    width: 100% !important;
-    max-width: 100% !important;
-    margin: 0 !important;
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
     padding: 20px 22px;
     box-sizing: border-box;
   }

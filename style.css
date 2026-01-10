@@ -1260,3 +1260,24 @@ a.sub-mini {
     flex-shrink: 0;
   }
 }
+
+/* ===================== MOBILE — FIX SHIFT FOR CART + DELIVERY ===================== */
+@media (max-width: 900px) {
+
+  /* контейнер ТІЛЬКИ для сторінок з delivery-columns */
+  .container:has(.delivery-columns) {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  /* чорні блоки */
+  .container:has(.delivery-columns) 
+  .delivery-block,
+  .container:has(.delivery-columns) 
+  .cart-box {
+    width: 92%;
+    max-width: 560px;
+    margin: 0 auto 20px;
+    box-sizing: border-box;
+  }
+}

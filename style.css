@@ -1109,52 +1109,55 @@ a.sub-mini {
     flex: 0 0 150px;
   }
 
-/* ===================== MOBILE — MATCH CART GEOMETRY (KEEP THIS ONE) ===================== */
+/* ===================== MOBILE — FINAL SINGLE BLOCK (CART IS CANON) ===================== */
 @media (max-width: 900px) {
 
   html, body { overflow-x: hidden; }
 
-  /* ABOUT: прибираємо десктопний відступ 140px, бо він їсть верх під nav */
+  /* 1) ПРО БРЕНД — верх ок, геометрія як у кошика */
   .about-container {
-    margin-top: 0 !important;
-    padding: 0 10px !important;     /* як у контейнера на мобільному */
+    margin: 90px auto 80px !important;
+    padding: 0 10px !important;
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
   }
 
-  /* DELIVERY + CART: на мобільному завжди стовпчик */
+  /* 2) ДОСТАВКА + КОШИК — вертикально */
   .delivery-columns {
+    margin: 90px 0 80px !important;
+    padding: 0 10px !important;
+
     display: flex !important;
     flex-direction: column !important;
+    align-items: stretch;   /* ← КЛЮЧ */
     gap: 20px;
+
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
   }
 
-  /* Всі чорні блоки мають бути як у кошика (тобто в межах контейнера) */
+  /* 3) ВСІ ЧОРНІ БЛОКИ = ЯК КОШИК */
   .about-block,
   .contact-col,
-  .delivery-block {
-    width: 100%;
-    max-width: 100%;
-    margin: 0 0 20px 0;
+  .delivery-columns > .delivery-block {
+    width: 100% !important;
+    max-width: 100% !important;   /* ❗ ПРИБРАЛИ 480px */
+    margin: 0 0 20px 0 !important;
+
+    min-width: 0 !important;
+    flex: 0 0 auto !important;
     box-sizing: border-box;
   }
 
-  /* прибиваємо десктопні min-width/flex, які можуть виштовхувати вправо */
-  .delivery-columns .delivery-block {
-    min-width: 0 !important;
-    flex: none !important;
-  }
-
-  /* Кошик: внутрішні відступи */
-  .cart-box {
-    width: 100%;
-    max-width: 100%;
-    margin: 0;
+  /* 4) КОШИК — ЕТАЛОН, НЕ ЧІПАЄМО */
+  .delivery-columns .cart-box {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
     padding: 20px 22px;
     box-sizing: border-box;
   }
 }
+

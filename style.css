@@ -1096,55 +1096,91 @@ a.sub-mini {
     flex: 0 0 150px;
   }
 
-/* ===================== MOBILE — FINAL SINGLE BLOCK (CART IS CANON) ===================== */
+/* ===================== MOBILE — FIX ALL INNER PAGES ===================== */
 @media (max-width: 900px) {
 
-  html, body { overflow-x: hidden; }
-
-  /* 1) ПРО БРЕНД — верх ок, геометрія як у кошика */
-  .about-container {
-    margin: 90px auto 80px !important;
-    padding: 0 10px !important;
-    width: 100%;
-    max-width: 100%;
-    box-sizing: border-box;
+  html, body {
+    overflow-x: hidden;
   }
 
-  /* 2) ДОСТАВКА + КОШИК — вертикально */
-  .delivery-columns {
+  /* ---------- ПРО БРЕНД ---------- */
+  .about-container {
+    display: flex !important;          /* ❗ НЕ GRID */
+    flex-direction: column;
+    gap: 20px;
+
     margin: 90px 0 80px !important;
     padding: 0 10px !important;
 
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .about-block,
+  .about-block.big {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+  }
+
+  /* ---------- ДОСТАВКА + КОШИК ---------- */
+  .delivery-columns {
     display: flex !important;
     flex-direction: column !important;
-    align-items: stretch;   /* ← КЛЮЧ */
+    align-items: stretch;
     gap: 20px;
+
+    margin: 90px 0 80px !important;
+    padding: 0 10px !important;
 
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
   }
 
-  /* 3) ВСІ ЧОРНІ БЛОКИ = ЯК КОШИК */
-  .about-block,
-  .contact-col,
-  .delivery-columns > .delivery-block {
-    width: 100% !important;
-    max-width: 100% !important;   /* ❗ ПРИБРАЛИ 480px */
-    margin: 0 0 20px 0 !important;
-
+  /* прибиваємо desktop min-width / flex */
+  .delivery-columns .delivery-block {
     min-width: 0 !important;
-    flex: 0 0 auto !important;
+    flex: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
     box-sizing: border-box;
   }
 
-  /* 4) КОШИК — ЕТАЛОН, НЕ ЧІПАЄМО */
-  .delivery-columns .cart-box {
-    width: 100% !important;
+  /* ---------- КОНТАКТИ ---------- */
+  .contact-columns {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    margin: 90px 0 80px !important;
+    padding: 0 10px !important;
+
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .contact-col {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* ---------- КОШИК (СТАБІЛЬНА ШИРИНА) ---------- */
+  .cart-box {
+    width: 100% !important;            /* ❗ НЕ залежить від контенту */
     max-width: 100% !important;
-    margin: 0 !important;
+    min-width: 0 !important;
+
     padding: 20px 22px;
     box-sizing: border-box;
   }
-}
 
+  /* рядок товару не може розширювати блок */
+  .cart-item {
+    grid-template-columns: 1fr auto auto;
+    min-width: 0;
+  }
+}

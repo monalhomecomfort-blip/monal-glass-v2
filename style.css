@@ -1329,3 +1329,25 @@ a.sub-mini {
     padding-right: 22px;
   }
 }
+/* ===================== CART — STABLE WIDTH (CSS ONLY) ===================== */
+@media (max-width: 900px) {
+
+  /* flex-контейнер */
+  .delivery-columns {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* ВСІ блоки в delivery-columns — фіксована геометрія */
+  .delivery-columns > .delivery-block {
+    flex: 0 0 520px;        /* ⬅️ КЛЮЧ */
+    max-width: 520px;
+    width: 100%;
+
+    margin-left: auto;
+    margin-right: auto;
+
+    box-sizing: border-box;
+  }
+}

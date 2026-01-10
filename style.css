@@ -459,17 +459,6 @@ a.sub-mini {
     line-height: 1.38;
 }
 
-/* адаптив дві колонки → одна */
-@media (max-width: 900px) {
-    .about-container {
-        grid-template-columns: 1fr;
-    }
-
-    .about-block.big {
-        grid-column: span 1;
-    }
-}
-
 /* ===== DELIVERY PAGE CLEANUP ===== */
 
 .delivery-columns {
@@ -482,8 +471,8 @@ a.sub-mini {
 }
 
 .column {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-rows: 1fr 1fr;
     gap: 28px;
 }
 
@@ -509,12 +498,10 @@ a.sub-mini {
     line-height: 1.42;
     color: #e8e1d6;
 }
-
-/* мобільний режим */
-@media(max-width: 900px) {
-    .delivery-columns {
-        grid-template-columns: 1fr;
-    }
+.delivery-block {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 /* ===== CONTACTS PAGE ===== */

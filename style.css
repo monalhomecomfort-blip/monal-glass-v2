@@ -1304,3 +1304,28 @@ a.sub-mini {
     padding: 20px 22px;
   }
 }
+
+/* ===================== MOBILE — HARD ALIGN ALL BLOCKS ===================== */
+@media (max-width: 900px) {
+
+  /* скидаємо будь-які внутрішні розтягування */
+  .about-block,
+  .contact-col,
+  .delivery-block,
+  .cart-box {
+    width: auto;
+    max-width: 520px;
+
+    margin-left: auto;
+    margin-right: auto;
+
+    box-sizing: border-box;
+  }
+
+  /* кошик і форма — однакова геометрія */
+  .cart-box,
+  .delivery-block {
+    padding-left: 22px;
+    padding-right: 22px;
+  }
+}

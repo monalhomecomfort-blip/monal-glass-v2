@@ -1183,4 +1183,15 @@ a.sub-mini {
     grid-template-columns: 1fr auto auto;
     min-width: 0;
   }
+  /* 🔧 MOBILE — unify inner padding (visual width fix) */
+  .about-block,
+  .contact-col,
+  .delivery-block {
+  padding-left: 22px;
+  padding-right: 22px;
+  }
+  /* 🔧 MOBILE — cart width stable even when empty */
+  .cart-box {
+  min-width: 100%;
+  }
 }

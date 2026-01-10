@@ -1109,49 +1109,49 @@ a.sub-mini {
     flex: 0 0 150px;
   }
 
-/* ===================== MOBILE — FINAL SINGLE BLOCK (KEEP ONLY THIS) ===================== */
+/* ===================== MOBILE — UNIFIED WIDTH AS CART (FINAL) ===================== */
 @media (max-width: 900px) {
 
-  html, body { overflow-x: hidden; }
+  html, body {
+    overflow-x: hidden;
+  }
 
-  /* 1) ПРО БРЕНД: прибираємо десктопний відступ 140px, робимо норм під fixed nav */
-  .about-container {
-    margin: 90px auto 80px !important;
-    padding: 0 10px !important;
+  /* універсальний відступ під fixed nav */
+  .container,
+  .about-container,
+  .contact-columns,
+  .delivery-columns {
+    margin-top: 90px !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
   }
 
-  /* 2) ДОСТАВКА + КОШИК: у тебе обидві сторінки використовують .delivery-columns */
+  /* delivery + cart завжди вертикально */
   .delivery-columns {
-    margin: 90px 0 80px !important;
-    padding: 0 10px !important;
-
     display: flex !important;
     flex-direction: column !important;
     align-items: center;
     gap: 20px;
-
-    width: 100%;
-    max-width: 100%;
-    box-sizing: border-box;
   }
 
-  /* 3) ЄДИНА ширина чорних блоків */
+  /* 🔑 ЄДИНИЙ ЕТАЛОН — ЯК У КОШИКУ */
   .about-block,
   .contact-col,
-  .delivery-columns > .delivery-block {
+  .delivery-block {
     width: 100% !important;
-    max-width: 480px !important;     /* еталон як у контактів */
+    max-width: 460px !important;   /* ← ЯК У КОШИКУ */
     margin: 0 auto 20px !important;
-    min-width: 0 !important;         /* прибиває виліт вправо */
-    flex: 0 0 auto !important;       /* прибиває десктопні flex-частки */
+
+    min-width: 0 !important;
+    flex: 0 0 auto !important;
     box-sizing: border-box;
   }
 
-  /* 4) КОШИК: cart-box не керує шириною сторінки */
-  .delivery-columns .cart-box {
+  /* кошик — без змін, лише внутрішній комфорт */
+  .cart-box {
     width: 100% !important;
     max-width: 100% !important;
     margin: 0 !important;

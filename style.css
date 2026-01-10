@@ -1109,60 +1109,53 @@ a.sub-mini {
     flex: 0 0 150px;
   }
 
-/* ===================== MOBILE — INNER PAGES (FINAL, FIXED) ===================== */
+/* ===================== MOBILE — FINAL SINGLE BLOCK (KEEP ONLY THIS) ===================== */
 @media (max-width: 900px) {
 
-  /* 1️⃣ СТАБІЛЬНИЙ ВЕРХ ПІД FIXED NAV */
-  .page-wrap > .container {
-    padding-top: 110px;
-  }
+  html, body { overflow-x: hidden; }
 
-  /* прибираємо зайві зовнішні відступи, які тягнуть верх */
-  .container > h1,
-  .container > .page-title {
-    margin-top: 0;
-  }
-
-  /* 2️⃣ КОНТЕЙНЕРИ ВНУТРІШНІХ СТОРІНОК */
-  .about-container,
-  .contact-columns,
-  .delivery-columns {
+  /* 1) ПРО БРЕНД: прибираємо десктопний відступ 140px, робимо норм під fixed nav */
+  .about-container {
+    margin: 90px auto 80px !important;
+    padding: 0 10px !important;
     width: 100%;
     max-width: 100%;
-    margin: 0;
-    padding: 0;
     box-sizing: border-box;
   }
 
-  /* delivery / cart — завжди вертикально */
+  /* 2) ДОСТАВКА + КОШИК: у тебе обидві сторінки використовують .delivery-columns */
   .delivery-columns {
-    display: flex;
-    flex-direction: column;
+    margin: 90px 0 80px !important;
+    padding: 0 10px !important;
+
+    display: flex !important;
+    flex-direction: column !important;
     align-items: center;
-    gap: 20px;               /* ← ВІДСТУП МІЖ БЛОКАМИ */
+    gap: 20px;
+
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
   }
 
-  /* 3️⃣ ЄДИНИЙ КОРИДОР ЯК У CONTACTS / ABOUT */
+  /* 3) ЄДИНА ширина чорних блоків */
   .about-block,
   .contact-col,
-  .delivery-block {
-    width: calc(100% - 20px);   /* ← БОКОВІ ВІДСТУПИ */
-    max-width: 480px;
-    margin: 0 auto 20px;        /* ← ВІДСТУП МІЖ БЛОКАМИ */
+  .delivery-columns > .delivery-block {
+    width: 100% !important;
+    max-width: 480px !important;     /* еталон як у контактів */
+    margin: 0 auto 20px !important;
+    min-width: 0 !important;         /* прибиває виліт вправо */
+    flex: 0 0 auto !important;       /* прибиває десктопні flex-частки */
     box-sizing: border-box;
   }
 
-  /* 4️⃣ КОШИК — ВНУТРІШНІЙ, АЛЕ З БОКОВИМ ПОВІТРЯМ */
-  .cart-box {
-    width: 100%;
-    max-width: 100%;
-    margin: 0;
+  /* 4) КОШИК: cart-box не керує шириною сторінки */
+  .delivery-columns .cart-box {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
     padding: 20px 22px;
     box-sizing: border-box;
-  }
-
-  /* 5️⃣ СТРАХОВКА */
-  body {
-    overflow-x: hidden;
   }
 }

@@ -1161,3 +1161,45 @@ a.sub-mini {
     flex-shrink: 0;
   }
 }
+/* ===================== MOBILE — STABILITY FIX ===================== */
+@media (max-width: 900px) {
+
+  /* 1️⃣ ФІКС ПІД FIXED NAV */
+  .page-wrap > .container {
+    padding-top: 110px; /* було у тебе на mobile */
+  }
+
+  /* 2️⃣ DELIVERY / CART — ЗАВЖДИ СТОВПЧИК */
+  .delivery-columns {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center;
+    gap: 20px;
+
+    width: 100%;
+    max-width: 100%;
+  }
+
+  /* 3️⃣ ЄДИНА ШИРИНА ЯК У CONTACTS */
+  .delivery-block,
+  .about-block,
+  .contact-col {
+    width: 100%;
+    max-width: 480px; /* ⬅️ ОЦЕ ТВОЯ “ЕТАЛОННА” ШИРИНА */
+    margin: 0 auto;
+    box-sizing: border-box;
+  }
+
+  /* 4️⃣ КОШИК НЕ КЕРУЄ LAYOUT */
+  .cart-box {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    box-sizing: border-box;
+  }
+
+  /* 5️⃣ СТРАХОВКА ВІД ВИЛЬОТУ ВПРАВО */
+  body {
+    overflow-x: hidden;
+  }
+}

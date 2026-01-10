@@ -1109,245 +1109,55 @@ a.sub-mini {
     flex: 0 0 150px;
   }
 
-/* ===================== DELIVERY + CART — MOBILE ALIGN FIX ===================== */
+/* ===================== MOBILE — INNER PAGES FINAL ===================== */
 @media (max-width: 900px) {
 
-  /* контейнер */
-  .delivery-columns {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
+  /* 1️⃣ ВІДСТУП ПІД FIXED NAV */
+  .container {
+    padding-top: 90px;          /* nav + повітря */
+    padding-left: 10px;
+    padding-right: 10px;
+  }
 
+  /* 2️⃣ КОНТЕЙНЕРИ ВНУТРІШНІХ СТОРІНОК */
+  .about-container,
+  .contact-columns,
+  .delivery-columns {
     width: 100%;
     max-width: 100%;
     margin: 0;
     padding: 0;
-
     box-sizing: border-box;
   }
 
-  /* доставка + кошик */
-  .delivery-block,
-  .cart-box {
-    width: calc(100% - 20px);  /* ⬅️ КОМПЕНСУЄ padding container */
-    max-width: 560px;
-    min-width: 0;
-
-    margin-left: auto;
-    margin-right: auto;
-
-    box-sizing: border-box;
-  }
-
-  /* кошик */
-  .cart-box {
-    padding: 20px 22px;
-    overflow: visible;
-  }
-
-  /* рядок товару */
-  .cart-item {
-    display: grid;
-    grid-template-columns: 1fr auto auto;
-    gap: 10px;
-
-    width: 100%;
-    box-sizing: border-box;
-  }
-
-  .cart-remove {
-    flex-shrink: 0;
-    margin-left: 6px;
-  }
-}
-/* ===================== MOBILE — UNIFIED INNER PAGES WIDTH ===================== */
-@media (max-width: 900px) {
-
-  /* ❗ НЕ index: всі внутрішні сторінки */
-  .about-container,
-  .contact-columns,
-  .delivery-columns {
-    width: 100%;
-    max-width: 100%;
-    padding-left: 0;
-    padding-right: 0;
-    margin: 0;
-    box-sizing: border-box;
-  }
-
-  /* ЄДИНА ширина для всіх логічних блоків */
+  /* 3️⃣ ЄДИНИЙ КОНТЕНТНИЙ КОРИДОР */
   .about-block,
   .contact-col,
-  .delivery-block,
-  .cart-box {
-    width: 92%;              /* 🔧 один контролер */
-    max-width: 560px;        /* 🔒 одна межа */
-    min-width: 0;
-
-    margin: 0 auto 20px;
-    box-sizing: border-box;
-  }
-
-  /* Кошик — внутрішній комфорт */
-  .cart-box {
-    padding: 20px 22px;
-  }
-
-  /* Рядок товару */
-  .cart-item {
-    display: grid;
-    grid-template-columns: 1fr auto auto;
-    gap: 10px;
-    width: 100%;
-  }
-
-  .cart-remove {
-    flex-shrink: 0;
-  }
-}
-
-/* ===================== MOBILE — INNER PAGES NORMALIZATION ===================== */
-@media (max-width: 900px) {
-
-  /* 1️⃣ ЄДИНИЙ ВЕРХНІЙ ВІДСТУП ПІД NAV */
-  .about-container,
-  .delivery-columns,
-  .contact-columns,
-  .container {
-    margin-top: 0 !important;
-    padding-top: 90px;   /* ← ВИСОТА NAV + повітря */
-  }
-
-  /* 2️⃣ ВИРІВНЮЄМО КОНТЕНТНІ КОНТЕЙНЕРИ */
-  .about-container,
-  .delivery-columns,
-  .contact-columns {
-    width: 100%;
-    max-width: 100%;
-    padding-left: 0;
-    padding-right: 0;
-    margin-left: 0;
-    margin-right: 0;
-    box-sizing: border-box;
-  }
-
-  /* 3️⃣ ЄДИНА ШИРИНА ДЛЯ ВСІХ ЧОРНИХ БЛОКІВ */
-  .about-block,
-  .delivery-block,
-  .contact-col,
-  .cart-box {
-    width: calc(100% - 20px); /* ⬅️ компенсує padding container */
-    max-width: 560px;
-    min-width: 0;
-
-    margin: 0 auto 20px;
-    box-sizing: border-box;
-  }
-
-  /* 4️⃣ КОШИК */
-  .cart-box {
-    padding: 20px 22px;
-  }
-
-  .cart-item {
-    display: grid;
-    grid-template-columns: 1fr auto auto;
-    gap: 10px;
-    width: 100%;
-  }
-
-  .cart-remove {
-    flex-shrink: 0;
-  }
-}
-
-/* ===================== MOBILE — FIX SHIFT FOR CART + DELIVERY ===================== */
-@media (max-width: 900px) {
-
-  /* контейнер ТІЛЬКИ для сторінок з delivery-columns */
-  .container:has(.delivery-columns) {
-    padding-left: 0;
-    padding-right: 0;
-  }
-
-  /* чорні блоки */
-  .container:has(.delivery-columns) 
-  .delivery-block,
-  .container:has(.delivery-columns) 
-  .cart-box {
-    width: 92%;
-    max-width: 560px;
-    margin: 0 auto 20px;
-    box-sizing: border-box;
-  }
-}
-/* ===================== MOBILE — UNIFY BLOCK WIDTH ===================== */
-@media (max-width: 900px) {
-
-  /* ЄДИНИЙ КОНТЕНТНИЙ КОРИДОР */
-  .about-block,
-  .contact-col,
-  .delivery-block,
-  .cart-box {
-    width: 92% !important;     /* ← ЯК У ВУЖЧОГО БЛОКУ */
-    max-width: 520px !important;
-    min-width: 0;
-
-    margin-left: auto;
-    margin-right: auto;
-
-    box-sizing: border-box;
-  }
-
-  /* кошик — внутрішній комфорт */
-  .cart-box {
-    padding: 20px 22px;
-  }
-}
-
-/* ===================== MOBILE — HARD ALIGN ALL BLOCKS ===================== */
-@media (max-width: 900px) {
-
-  /* скидаємо будь-які внутрішні розтягування */
-  .about-block,
-  .contact-col,
-  .delivery-block,
-  .cart-box {
-    width: auto;
-    max-width: 520px;
-
-    margin-left: auto;
-    margin-right: auto;
-
-    box-sizing: border-box;
-  }
-
-  /* кошик і форма — однакова геометрія */
-  .cart-box,
   .delivery-block {
-    padding-left: 22px;
-    padding-right: 22px;
-  }
-}
-/* ===================== CART — STABLE WIDTH (CSS ONLY) ===================== */
-@media (max-width: 900px) {
-
-  /* flex-контейнер */
-  .delivery-columns {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  /* ВСІ блоки в delivery-columns — фіксована геометрія */
-  .delivery-columns > .delivery-block {
-    flex: 0 0 520px;        /* ⬅️ КЛЮЧ */
-    max-width: 520px;
     width: 100%;
-
-    margin-left: auto;
-    margin-right: auto;
-
+    max-width: 520px;           /* ⬅️ еталон ширини */
+    margin: 0 auto 20px;
     box-sizing: border-box;
+  }
+
+  /* 4️⃣ КОШИК — ВНУТРІШНІЙ БЛОК */
+  .cart-box {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 20px 22px;
+    box-sizing: border-box;
+  }
+
+  /* 5️⃣ РЯДОК ТОВАРУ */
+  .cart-item {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .cart-remove {
+    flex-shrink: 0;
   }
 }

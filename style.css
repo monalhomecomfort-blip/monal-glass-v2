@@ -1205,3 +1205,58 @@ a.sub-mini {
     flex-shrink: 0;
   }
 }
+
+/* ===================== MOBILE — INNER PAGES NORMALIZATION ===================== */
+@media (max-width: 900px) {
+
+  /* 1️⃣ ЄДИНИЙ ВЕРХНІЙ ВІДСТУП ПІД NAV */
+  .about-container,
+  .delivery-columns,
+  .contact-columns,
+  .container {
+    margin-top: 0 !important;
+    padding-top: 90px;   /* ← ВИСОТА NAV + повітря */
+  }
+
+  /* 2️⃣ ВИРІВНЮЄМО КОНТЕНТНІ КОНТЕЙНЕРИ */
+  .about-container,
+  .delivery-columns,
+  .contact-columns {
+    width: 100%;
+    max-width: 100%;
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: 0;
+    margin-right: 0;
+    box-sizing: border-box;
+  }
+
+  /* 3️⃣ ЄДИНА ШИРИНА ДЛЯ ВСІХ ЧОРНИХ БЛОКІВ */
+  .about-block,
+  .delivery-block,
+  .contact-col,
+  .cart-box {
+    width: calc(100% - 20px); /* ⬅️ компенсує padding container */
+    max-width: 560px;
+    min-width: 0;
+
+    margin: 0 auto 20px;
+    box-sizing: border-box;
+  }
+
+  /* 4️⃣ КОШИК */
+  .cart-box {
+    padding: 20px 22px;
+  }
+
+  .cart-item {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .cart-remove {
+    flex-shrink: 0;
+  }
+}

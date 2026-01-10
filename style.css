@@ -1109,20 +1109,19 @@ a.sub-mini {
     flex: 0 0 150px;
   }
 
-/* ===================== MOBILE — INNER PAGES FINAL ===================== */
+/* ===================== MOBILE — INNER PAGES (FINAL, CLEAN) ===================== */
 @media (max-width: 900px) {
 
-  /* 1️⃣ ВІДСТУП ПІД FIXED NAV */
-  .container {
-    padding-top: 90px;          /* nav + повітря */
-    padding-left: 10px;
-    padding-right: 10px;
+  /* 1️⃣ ВІДСТУП ПІД FIXED NAV — ЯК БУЛО */
+  .page-wrap > .container {
+    padding-top: 110px;   /* твій робочий варіант */
   }
 
-  /* 2️⃣ КОНТЕЙНЕРИ ВНУТРІШНІХ СТОРІНОК */
+  /* 2️⃣ ВСІ ВНУТРІШНІ СТОРІНКИ — НОРМАЛІЗАЦІЯ КОНТЕЙНЕРА */
   .about-container,
   .contact-columns,
   .delivery-columns {
+    display: block;
     width: 100%;
     max-width: 100%;
     margin: 0;
@@ -1130,17 +1129,25 @@ a.sub-mini {
     box-sizing: border-box;
   }
 
-  /* 3️⃣ ЄДИНИЙ КОНТЕНТНИЙ КОРИДОР */
+  /* 3️⃣ DELIVERY / CART — ЗАВЖДИ В СТОВПЧИК */
+  .delivery-columns {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+
+  /* 4️⃣ ЄДИНИЙ КОНТЕНТНИЙ КОРИДОР (ЯК CONTACTS / ABOUT) */
   .about-block,
   .contact-col,
   .delivery-block {
     width: 100%;
-    max-width: 520px;           /* ⬅️ еталон ширини */
-    margin: 0 auto 20px;
+    max-width: 480px;   /* ← ЕТАЛОН, ЯКИЙ ТИ СХВАЛИЛА */
+    margin: 0 auto;
     box-sizing: border-box;
   }
 
-  /* 4️⃣ КОШИК — ВНУТРІШНІЙ БЛОК */
+  /* 5️⃣ КОШИК — ВНУТРІШНІЙ, НЕ КЕРУЄ ШИРИНОЮ */
   .cart-box {
     width: 100%;
     max-width: 100%;
@@ -1149,56 +1156,7 @@ a.sub-mini {
     box-sizing: border-box;
   }
 
-  /* 5️⃣ РЯДОК ТОВАРУ */
-  .cart-item {
-    display: grid;
-    grid-template-columns: 1fr auto auto;
-    gap: 10px;
-    width: 100%;
-  }
-
-  .cart-remove {
-    flex-shrink: 0;
-  }
-}
-/* ===================== MOBILE — STABILITY FIX ===================== */
-@media (max-width: 900px) {
-
-  /* 1️⃣ ФІКС ПІД FIXED NAV */
-  .page-wrap > .container {
-    padding-top: 110px; /* було у тебе на mobile */
-  }
-
-  /* 2️⃣ DELIVERY / CART — ЗАВЖДИ СТОВПЧИК */
-  .delivery-columns {
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center;
-    gap: 20px;
-
-    width: 100%;
-    max-width: 100%;
-  }
-
-  /* 3️⃣ ЄДИНА ШИРИНА ЯК У CONTACTS */
-  .delivery-block,
-  .about-block,
-  .contact-col {
-    width: 100%;
-    max-width: 480px; /* ⬅️ ОЦЕ ТВОЯ “ЕТАЛОННА” ШИРИНА */
-    margin: 0 auto;
-    box-sizing: border-box;
-  }
-
-  /* 4️⃣ КОШИК НЕ КЕРУЄ LAYOUT */
-  .cart-box {
-    width: 100%;
-    max-width: 100%;
-    margin: 0;
-    box-sizing: border-box;
-  }
-
-  /* 5️⃣ СТРАХОВКА ВІД ВИЛЬОТУ ВПРАВО */
+  /* 6️⃣ СТРАХОВКА ВІД ВИЛЬОТУ */
   body {
     overflow-x: hidden;
   }

@@ -1281,3 +1281,26 @@ a.sub-mini {
     box-sizing: border-box;
   }
 }
+/* ===================== MOBILE — UNIFY BLOCK WIDTH ===================== */
+@media (max-width: 900px) {
+
+  /* ЄДИНИЙ КОНТЕНТНИЙ КОРИДОР */
+  .about-block,
+  .contact-col,
+  .delivery-block,
+  .cart-box {
+    width: 92% !important;     /* ← ЯК У ВУЖЧОГО БЛОКУ */
+    max-width: 520px !important;
+    min-width: 0;
+
+    margin-left: auto;
+    margin-right: auto;
+
+    box-sizing: border-box;
+  }
+
+  /* кошик — внутрішній комфорт */
+  .cart-box {
+    padding: 20px 22px;
+  }
+}

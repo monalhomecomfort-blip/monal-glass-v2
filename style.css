@@ -900,6 +900,28 @@ a.sub-mini {
   color: #e8e1d6;
   cursor: pointer;
 }
+/* ===================== MOBILE CART ICON ===================== */
+.mobile-cart {
+  display: none;
+  align-items: center;
+  gap: 4px;
+  text-decoration: none;
+  color: #e8e1d6;
+}
+.mobile-cart img {
+  width: 22px;
+  height: auto;
+}
+.mobile-cart-count {
+  font-size: 12px;
+  opacity: 0.85;
+}
+/* показуємо тільки на моб */
+@media (max-width: 600px) {
+  .mobile-cart {
+    display: flex;
+  }
+}
 /* ===================== MOBILE FIXES (≤600px) ===================== */
 @media (max-width: 600px) {
   /* ----- NAV (mobile sizing) ----- */

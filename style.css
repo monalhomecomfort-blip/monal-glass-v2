@@ -962,7 +962,21 @@ a.sub-mini {
 
   opacity: 0.85;
 }
-
+  /* ЛІВИЙ КОНТЕЙНЕР */
+  .nav-left {
+    display: flex;
+    align-items: center;   /* 🔒 КЛЮЧ */
+  }
+  /* ЛОГО */
+  .nav-logo {
+    display: block;        /* 🔒 прибирає baseline */
+  }
+  /* БУРГЕР */
+  .burger-btn {
+    display: flex;         /* ❗ не block */
+    align-items: center;   /* 🔒 */
+    height: 22px;          /* = іконкам */
+  }
   /* ----- GLOBAL ----- */
   .container {
     padding: 90px 10px 80px;

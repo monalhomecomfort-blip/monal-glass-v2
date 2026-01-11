@@ -1190,18 +1190,6 @@ a.sub-mini {
   footer {
     font-size: 12px;
   }
-  footer::after {
-    content: "© 2026 Ароматика для дому";
-    grid-column: 1 / -1;
-    grid-row: 2;
+}
 
-    margin-top: 2px;
-    opacity: 0.65;
-  }
-}
-@media (max-width: 600px) {
-  footer > :not(.footer-policy):not(.footer-logo):not(.footer-payments) {
-    display: none;
-  }
-}
 

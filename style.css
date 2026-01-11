@@ -1190,8 +1190,32 @@ a.sub-mini {
   padding-left: 22px;
   padding-right: 22px;
   }
+   
   /* 🔧 MOBILE — cart width stable even when empty */
   .cart-box {
   min-width: 100%;
+  }       
+}
+  /* ===================== MOBILE — FINAL PIXEL FIX ===================== */
+@media (max-width: 900px) {
+
+  .delivery-columns,
+  .about-container,
+  .contact-columns {
+    align-items: stretch !important;
+  }
+
+  .about-block,
+  .delivery-block,
+  .contact-col,
+  .cart-box {
+    inline-size: 100%;
+    max-inline-size: 100%;
+  }
+
+  .cart-box {
+    flex-shrink: 0 !important;
   }
 }
+
+

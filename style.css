@@ -1199,4 +1199,9 @@ a.sub-mini {
     opacity: 0.65;
   }
 }
+@media (max-width: 600px) {
+  footer > :not(.footer-policy):not(.footer-logo):not(.footer-payments) {
+    display: none;
+  }
+}
 

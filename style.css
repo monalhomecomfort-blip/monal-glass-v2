@@ -1196,5 +1196,16 @@ a.sub-mini {
     justify-items: center;
   }
 }
+@media (max-width: 600px) {
+  .footer-copy {
+    grid-column: 1 / -1;   /* другий ряд */
+    grid-row: 2;
+
+    text-align: center;
+    font-size: 12px;
+    opacity: 0.65;
+    margin-top: 2px;
+  }
+}
 
 

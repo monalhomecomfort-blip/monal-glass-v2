@@ -221,16 +221,16 @@ footer {
     opacity: 0.85;
     display: block;
 }
+
 /* ===================== PRIVACY POLICY ===================== */
 
 .policy-text {
-    max-width: 720px;          /* ❗ ключове — звужує текст */
     margin-top: 40px;
 }
 
 .policy-text h2 {
-    font-size: 18px;           /* було ~24 */
-    font-weight: 400;          /* знімаємо жир */
+    font-size: 18px;
+    font-weight: 400;
     margin-top: 36px;
     margin-bottom: 12px;
 }

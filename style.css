@@ -1036,6 +1036,7 @@ a.sub-mini {
   .sub-mini {
     flex: 0 0 150px;
   }
+}  
 /* ===================== MOBILE — FIX ALL INNER PAGES ===================== */
 @media (max-width: 900px) {
   html, body {

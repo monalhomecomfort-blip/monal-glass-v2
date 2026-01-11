@@ -103,7 +103,6 @@ nav {
     width: 240px;
     border-radius: 14px;
     overflow: hidden;
-
     
     background: rgba(4, 4, 4, 0.85);
     backdrop-filter: blur(10px);
@@ -193,7 +192,6 @@ footer {
     opacity: 0.85;
     display: block;
 }
-
 /* ===================== PRIVACY POLICY ===================== */
 .policy-text {
     margin-top: 24px;
@@ -212,7 +210,6 @@ footer {
     text-justify: inter-word;
 }
 /* ===== ABOUT — dark glass version ===== */
-
 .about-block {
     background: rgba(4, 4, 4, 0.85);
     backdrop-filter: blur(10px);
@@ -220,13 +217,10 @@ footer {
 
     color: #e8e1d6; /* кремово-бежевий */
 }
-
 .about-block h2 {
     color: #e8e1d6; /* заголовки також кремові */
 }
-
 /* ===================== PRODUCT PAGE ===================== */
-
 .product-row {
     display: grid;
     grid-template-columns: 420px 1fr;
@@ -234,7 +228,6 @@ footer {
     align-items: center;
     margin: 80px 0;
 }
-
 /* MEDIA */
 .product-media {
     position: relative;
@@ -242,7 +235,6 @@ footer {
     border-radius: 20px;
     height: 520px;
 }
-
 /* ФОН */
 .product-bg {
     position: absolute;
@@ -257,13 +249,11 @@ footer {
         transform 2.2s ease-out,
         filter 2.2s ease-out;
 }
-
 /* LEVEL 1 — ГЛИБОКА МІКРОАНІМАЦІЯ */
 .micro-animate:hover .product-bg {
     transform: translateY(-4%) scale(1.08);
     filter: brightness(1.06) saturate(1.03);
 }
-
 /* ДИФУЗОР — СТАТИЧНИЙ */
 .product-diffuser {
     position: relative;
@@ -274,7 +264,6 @@ footer {
     display: block;
     pointer-events: none;
 }
-
 /* TEXT */
 .product-title {
     font-family: 'Montserrat', serif;
@@ -282,7 +271,6 @@ footer {
     font-weight: 300;
     margin-bottom: 6px;
 }
-
 .product-subtitle {
     font-size: 14px;
     letter-spacing: 1.5px;
@@ -290,24 +278,20 @@ footer {
     color: #666;
     margin-bottom: 18px;
 }
-
 .product-price {
     font-size: 22px;
     margin-bottom: 10px;
 }
-
 .product-text {
     text-align: justify;
     text-justify: inter-word;
 }
-
 .product-text p {
     font-size: 13px;
     line-height: 1.3;
     margin-bottom: 11px;
     color: #444;
 }
-
 .buy-btn {
     margin-top: 8px;
     padding: 14px 36px;
@@ -318,11 +302,9 @@ footer {
     cursor: pointer;
     transition: 0.3s;
 }
-
 .buy-btn:hover {
     background: #d8d2c2;
 }
-
 /* ===== PAGE HEADER ===== */
 .page-header {
     display: flex;
@@ -330,7 +312,6 @@ footer {
     gap: 6px;
     margin-bottom: 24px;
 }
-
 /* Кнопка Назад */
 .page-back {
     align-self: flex-end;       /* ← СПРАВА */
@@ -341,12 +322,10 @@ footer {
     opacity: 0.75;
     transition: opacity 0.25s;
 }
-
 .page-back:hover {
     opacity: 1;
 }
 /* ===== Модифікація каталогу ===== */
-
 .catalog-row {
     width: 100%;
     display: flex;
@@ -354,13 +333,11 @@ footer {
     gap: 32px;
     margin-bottom: 42px;
 }
-
 .arrow {
     font-size: 28px;
     opacity: 0.65;
     color: #000;
 }
-
 .mini-line {
     display: flex;
     gap: 18px;
@@ -368,21 +345,18 @@ footer {
     flex-wrap: nowrap;
     white-space: nowrap;
 }
-
 /* Фіксація реальних розмірів міні-плиток */
 .sub-mini {
     width: 160px !important;
     height: auto;
     flex: 0 0 140px;
 }
-
 /* Фіксація висоти фото всередині */
 .sub-mini img {
     width: 100%;
     height: 140px !important;
     object-fit: cover;
 }
-
 /* Текст не розтягує плитку */
 .mini-title {
     font-size: 13px;
@@ -395,16 +369,13 @@ footer {
     justify-content: center;
     text-align: center;
 }
-
 .sub-mini:hover {
     transform: translateY(-4px);
 }
-
 /* коли це <a> */
 a.sub-mini {
     color: inherit;
 }
-
 /* збільшені і округлені плитки підкатегорій */
 .sub-mini {
     width: 160px !important;
@@ -413,17 +384,14 @@ a.sub-mini {
     display: flex;
     flex-direction: column;
 }
-
 .sub-mini img {
     height: 140px !important;
     border-radius: 18px 18px 0 0 !important;
 }
-
 /* не дозволяємо міні-шляхті зменшувати категорію */
 .catalog-row > .subcategory {
     flex: 0 0 240px;
 }
-
 /* міні плитки не ростуть і не штовхають */
 .catalog-row .mini-line {
     flex: 1 1 auto;
@@ -431,7 +399,6 @@ a.sub-mini {
     gap: 18px;
     align-items: center;
 }
-
 /* стиль підкатегорій у стилі категорій */
 .sub-mini {
     background: rgba(4, 4, 4, 0.85) !important;
@@ -440,12 +407,10 @@ a.sub-mini {
     -webkit-backdrop-filter: blur(10px);
     box-shadow: 0 8px 24px rgba(0,0,0,0.4);
 }
-
 /* текст назви кремово-бежевий */
 .sub-mini .mini-title {
     color: #e8e1d6 !important;
 }
-
 /* ===== ABOUT PAGE CLEANUP ===== */
 .about-container {
     display: grid;
@@ -455,7 +420,6 @@ a.sub-mini {
     max-width: 1200px;
     padding: 0 40px;
 }
-
 .about-block {
     padding: 16px 18px;
     border-radius: 16px;
@@ -464,11 +428,9 @@ a.sub-mini {
     -webkit-backdrop-filter: blur(10px);
     color: #e8e1d6;
 }
-
 .about-block.big {
     grid-column: span 2;
 }
-
 .about-block h2 {
     font-family: 'Montserrat', serif;
     font-weight: 300;
@@ -476,14 +438,11 @@ a.sub-mini {
     margin-bottom: 10px;
     color: #e8e1d6;
 }
-
 .about-block p {
     font-size: 14px;
     line-height: 1.38;
 }
-
 /* ===== DELIVERY PAGE CLEANUP ===== */
-
 .delivery-columns {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -492,13 +451,11 @@ a.sub-mini {
     max-width: 1200px;
     padding: 0 40px;
 }
-
 .column {
     display: grid;
     grid-template-rows: 1fr 1fr;
     gap: 28px;
 }
-
 .delivery-block {
     padding: 22px 24px;
     border-radius: 16px;
@@ -507,7 +464,6 @@ a.sub-mini {
     -webkit-backdrop-filter: blur(10px);
     color: #e8e1d6; /* кремово-бежевий */
 }
-
 .delivery-block h2 {
     font-family: 'Montserrat', serif;
     font-weight: 300;
@@ -515,7 +471,6 @@ a.sub-mini {
     margin-bottom: 10px;
     color: #e8e1d6;
 }
-
 .delivery-block p {
     font-size: 14px;
     line-height: 1.42;
@@ -526,9 +481,7 @@ a.sub-mini {
     display: flex;
     flex-direction: column;
 }
-
 /* ===== CONTACTS PAGE ===== */
-
 .contact-columns {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -537,7 +490,6 @@ a.sub-mini {
     max-width: 1200px;
     padding: 0 40px;
 }
-
 .contact-col {
     background: rgba(4, 4, 4, 0.85);
     backdrop-filter: blur(10px);
@@ -548,7 +500,6 @@ a.sub-mini {
     font-size: 14px;
     line-height: 1.45;
 }
-
 /* стилізація заголовків всередині */
 .contact-col strong {
     font-family: 'Montserrat', serif;
@@ -556,7 +507,6 @@ a.sub-mini {
     font-size: 20px;
     color: #e8e1d6;
 }
-
 /* посилання в кремовій палітрі */
 .contact-col a {
     color: #e8e1d6;
@@ -564,28 +514,23 @@ a.sub-mini {
     border-bottom: 1px solid transparent;
     transition: 0.25s;
 }
-
 .contact-col a:hover {
     border-bottom: 1px solid #e8e1d6;
 }
-
 /* мобільний перехід */
 @media (max-width: 900px) {
     .contact-columns {
         grid-template-columns: 1fr;
     }
 }
-
 /* підтягнути Доставку ближче до заголовка */
 .delivery-columns {
     margin-top: 50px !important;
 }
-
 /* підтягнути Контакти ближче до заголовка */
 .contact-columns {
     margin-top: 50px !important;
 }
-
 /* Оформлення кошика */
 .input {
     width: 100%;
@@ -608,7 +553,6 @@ a.sub-mini {
     color: #e8e1d6;
     cursor: pointer;
 }
-
 .cart-item {
     display: grid;
     grid-template-columns: 1fr 90px 24px; /* назва | ціна | X */
@@ -617,12 +561,10 @@ a.sub-mini {
     margin: 6px 0;
     font-size: 15px;
 }
-
 .cart-item span:nth-child(2) {
     text-align: right;
     font-weight: 300;
 }
-
 .cart-remove {
     background: none;
     border: none;
@@ -631,41 +573,33 @@ a.sub-mini {
     cursor: pointer;
     font-size: 16px;
 }
-
 .cart-remove:hover {
     opacity: 1;
 }
-
 .cart-box {
     width: 460px;
     padding: 32px 36px;
 }
-
 .delivery-columns {
     justify-content: center;
 }
-
 #cart-count {
     font-size: 13px;
     opacity: 0.85;
     color: #e8e1d6;
 }
-
 .delivery-columns {
     display: flex;
     justify-content: center; /* центрує два блоки разом */
     gap: 40px;
     width: 100%;
 }
-
 .delivery-columns .delivery-block:first-child {
     flex: 1.5; /* лівий більший */
 }
-
 .delivery-columns .delivery-block:nth-child(2) {
     flex: 1; /* правий менший */
 }
-
 /* Кошик: відразу ширший блок товарів */
 .delivery-columns {
     display: flex;
@@ -673,26 +607,21 @@ a.sub-mini {
     gap: 40px;
     width: 100%;
 }
-
 /* Лівий блок завжди ширший */
 .delivery-columns .delivery-block:first-child {
     flex: 1.4;
     min-width: 420px; /* ОСНОВНЕ — одразу розширює блок */
 }
-
 /* Правий блок компактний */
 .delivery-columns .delivery-block:nth-child(2) {
     flex: 1;
     min-width: 300px;
 }
-
 .cart-box {
     width: 520px;      /* робимо ширшим блок товарів */
     max-width: 520px;
 }
-
 /* ===== AUTOCOMPLETE МІСТ (як select відділення НП) ===== */
-
 .autocomplete-list {
     position: absolute;
     top: 100%;
@@ -713,7 +642,6 @@ a.sub-mini {
     font-size: 14px;               /* 👈 як у select */
     color: #000;                   /* 👈 чорний текст */
 }
-
 .autocomplete-item {
     padding: 8px 10px;
     font-size: 14px;
@@ -722,12 +650,9 @@ a.sub-mini {
     background: #f6f2ee;
     cursor: pointer;
 }
-
 .autocomplete-item:hover {
     background: #f6f2ee;           /* 👈 hover як у select */
 }
-
-
 /* ===== ВІКНО ОПЛАТИ ===== */
 .modal {
   position: fixed;
@@ -738,7 +663,6 @@ a.sub-mini {
   justify-content: center;
   z-index: 9999;
 }
-
 .modal-content {
   background: #f6f2ee;
   padding: 22px;
@@ -747,7 +671,6 @@ a.sub-mini {
   border-radius: 12px;
   color: #111;
 }
-
 .card-box {
   display: flex;
   justify-content: space-between;
@@ -758,14 +681,12 @@ a.sub-mini {
   margin: 10px 0;
   font-family: Montserrat;
 }
-
 .card-box button {
   background: none;
   border: none;
   cursor: pointer;
   font-size: 13px;
 }
-
 .close-btn {
   margin-top: 8px;
   background: transparent;
@@ -773,9 +694,7 @@ a.sub-mini {
   opacity: 0.6;
   cursor: pointer;
 }
-
 /* ===================== DISCOVERY SET ===================== */
-
 /* GRID одного аромату */
 .discovery-row {
     display: grid;
@@ -784,13 +703,11 @@ a.sub-mini {
     align-items: flex-start;
     margin-bottom: 48px;
 }
-
 /* Правий блок — фіксований */
 .discovery-side {
     position: sticky;
     top: 120px;
 }
-
 /* Вікно сету */
 .discovery-box {
     background: rgba(4, 4, 4, 0.85); /* як меню і футер */
@@ -801,7 +718,6 @@ a.sub-mini {
     font-size: 15px;
     color: #e8e1d6;
 }
-
 /* Заголовок */
 .discovery-title {
     font-size: 15px;
@@ -810,14 +726,12 @@ a.sub-mini {
     opacity: 0.7;
     margin-bottom: 10px;
 }
-
 /* Список ароматів */
 .discovery-items {
     list-style: none;
     padding: 0;
     margin: 0 0 10px 0;
 }
-
 .discovery-items li {
     display: flex;
     justify-content: space-between;
@@ -827,14 +741,12 @@ a.sub-mini {
     line-height: 1.4;
     padding: 2px 0;
 }
-
 /* Підказка */
 .discovery-hint {
     font-size: 14px;
     opacity: 0.65;
     margin-bottom: 10px;
 }
-
 .buy-discovery-btn {
     margin-top: 8px;
     padding: 14px 36px;
@@ -849,22 +761,17 @@ a.sub-mini {
 
     transition: background 0.3s ease;
 }
-
 .buy-discovery-btn:hover {
     background: #d8d2c2;      /* плавне затемнення, як у Купити */
 }
-
 .buy-discovery-btn:disabled {
     opacity: 0.4;
     cursor: default;
 }
-
 .buy-discovery-btn:disabled:hover {
     background: #e7e4d9;      /* без ховера якщо disabled */
 }
-
 /* ===== ADD TO SET — як BUY ===== */
-
 .add-to-set {
     margin-top: 8px;
     padding: 14px 36px;
@@ -879,13 +786,10 @@ a.sub-mini {
 
     transition: background 0.3s;
 }
-
 .add-to-set:hover {
     background: #d8d2c2;      /* затемнення як у Купити */
 }
-
 /* ===== BACK BUTTON — як BUY / ADD ===== */
-
 .back-btn {
     display: inline-flex;          /* ← ключове */
     width: fit-content;            /* ← не розтягуйся */
@@ -905,11 +809,9 @@ a.sub-mini {
 
     transition: background 0.3s ease;
 }
-
 .back-btn:hover {
     background: #d8d2c2;
 }
-
 .certificate-option {
     margin-top: 8px;
     padding: 14px 36px;
@@ -924,36 +826,28 @@ a.sub-mini {
 
     transition: background 0.3s ease;
 }
-
 .certificate-option:hover,
 .certificate-option.active {
     background: #d8d2c2;
 }
-
 /* ===================== RESPONSIVE (АДАПТАЦІЯ) ===================== */
-
 /* 1) Планшети і менше */
 @media (max-width: 900px) {
-
   .container {
     padding: 110px 24px 90px;
   }
-
   .product-row {
     grid-template-columns: 1fr;
     gap: 28px;
     margin: 50px 0;
   }
-
   .about-container,
   .contact-columns,
   .delivery-columns {
     grid-template-columns: 1fr;
   }
 }
-
 /* ===================== BURGER MENU ===================== */
-
 /* кнопка ☰ */
 .burger-btn {
   display: none;
@@ -963,7 +857,6 @@ a.sub-mini {
   color: #e8e1d6;
   cursor: pointer;
 }
-
 /* мобільне меню — БОКОВА ПАНЕЛЬ */
 .mobile-menu {
   position: fixed;
@@ -988,7 +881,6 @@ a.sub-mini {
   padding: 80px 24px 24px;
   z-index: 10000;
 }
-
 /* посилання */
 .mobile-menu a {
   color: #e8e1d6;
@@ -996,7 +888,6 @@ a.sub-mini {
   text-decoration: none;
   letter-spacing: 1px;
 }
-
 /* кнопка закриття */
 .mobile-close {
   position: absolute;
@@ -1009,42 +900,33 @@ a.sub-mini {
   color: #e8e1d6;
   cursor: pointer;
 }
-
 /* ===================== MOBILE FIXES (≤600px) ===================== */
 @media (max-width: 600px) {
-
   /* ----- NAV (mobile sizing) ----- */
   nav {
     padding: 0 14px;
     height: 60px;
   }
-
   .nav-center,
   .nav-right {
     display: none;
   }
-
   .burger-btn {
     display: block; /* ← ВАЖЛИВО: включаємо ☰ */
   }
-
   .nav-logo {
     height: 28px;
   }
-
   .nav-social img {
     height: 22px;
   }
-
   /* ----- GLOBAL ----- */
   .container {
     padding: 90px 10px 80px;
   }
-
   .page-title {
     font-size: 26px;
   }
-
   /* ===================== CATALOG (MOBILE) ===================== */
   .arrow {
     margin: 2px 0 4px;   /* нормальний компактний відступ */
@@ -1054,7 +936,6 @@ a.sub-mini {
     font-size: 20px;     /* не громіздка */
     opacity: 0.5;        /* візуально другорядна */
   }
-
   .catalog-row {
     display: flex;
     flex-direction: column;
@@ -1065,7 +946,6 @@ a.sub-mini {
     overflow: visible;
     gap: 6px;   /* було 18px */  
   }
-
   .subcategory {
     display: flex;
     flex-direction: column;
@@ -1074,11 +954,9 @@ a.sub-mini {
     height: auto;
     overflow: visible;
   }
-
   .subcategory img {
     height: 160px;
   }
-
   .subcategory-title {
     display: flex;
     align-items: center;
@@ -1090,7 +968,6 @@ a.sub-mini {
     white-space: normal;
     height: auto;
   }
-
   /* підкатегорії: один ряд + скрол */
   .mini-line {
     display: flex;
@@ -1110,22 +987,17 @@ a.sub-mini {
 
     background: transparent;
   }
-
   .mini-line::-webkit-scrollbar {
     display: none;
   }
-
   .sub-mini {
     flex: 0 0 150px;
   }
-
 /* ===================== MOBILE — FIX ALL INNER PAGES ===================== */
 @media (max-width: 900px) {
-
   html, body {
     overflow-x: hidden;
   }
-
   /* ---------- ПРО БРЕНД ---------- */
   .about-container {
     display: flex !important;          /* ❗ НЕ GRID */
@@ -1139,14 +1011,12 @@ a.sub-mini {
     max-width: 100%;
     box-sizing: border-box;
   }
-
   .about-block,
   .about-block.big {
     width: 100%;
     max-width: 100%;
     margin: 0;
   }
-
   /* ---------- ДОСТАВКА + КОШИК ---------- */
   .delivery-columns {
     display: flex !important;
@@ -1161,7 +1031,6 @@ a.sub-mini {
     max-width: 100%;
     box-sizing: border-box;
   }
-
   /* прибиваємо desktop min-width / flex */
   .delivery-columns .delivery-block {
     min-width: 0 !important;
@@ -1170,7 +1039,6 @@ a.sub-mini {
     max-width: 100% !important;
     box-sizing: border-box;
   }
-
   /* ---------- КОНТАКТИ ---------- */
   .contact-columns {
     display: flex;
@@ -1184,13 +1052,11 @@ a.sub-mini {
     max-width: 100%;
     box-sizing: border-box;
   }
-
   .contact-col {
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
   }
-
   /* ---------- КОШИК (СТАБІЛЬНА ШИРИНА) ---------- */
   .cart-box {
     width: 100% !important;            /* ❗ НЕ залежить від контенту */
@@ -1200,7 +1066,6 @@ a.sub-mini {
     padding: 20px 22px;
     box-sizing: border-box;
   }
-
   /* рядок товару не може розширювати блок */
   .cart-item {
     grid-template-columns: 1fr auto auto;
@@ -1212,8 +1077,7 @@ a.sub-mini {
   .delivery-block {
   padding-left: 22px;
   padding-right: 22px;
-  }
-   
+  }   
   /* 🔧 MOBILE — cart width stable even when empty */
   .cart-box {
   min-width: 100%;
@@ -1221,13 +1085,11 @@ a.sub-mini {
 }
   /* ===================== MOBILE — FINAL PIXEL FIX ===================== */
 @media (max-width: 900px) {
-
   .delivery-columns,
   .about-container,
   .contact-columns {
     align-items: stretch !important;
   }
-
   .about-block,
   .delivery-block,
   .contact-col,
@@ -1235,14 +1097,12 @@ a.sub-mini {
     inline-size: 100%;
     max-inline-size: 100%;
   }
-
   .cart-box {
     flex-shrink: 0 !important;
   }
 }
 /* ===================== MOBILE — ABOUT + CART (REPLACE LAST TWO BLOCKS) ===================== */
 @media (max-width: 900px) {
-
   /* ABOUT: прибираємо grid і повертаємо відступи між блоками */
   .about-container {
     display: flex !important;
@@ -1256,7 +1116,6 @@ a.sub-mini {
     max-width: 100% !important;
     box-sizing: border-box;
   }
-
   .about-block,
   .about-block.big {
     width: 100% !important;
@@ -1264,7 +1123,6 @@ a.sub-mini {
     margin: 0 !important;
     box-sizing: border-box;
   }
-
   /* CART: ширина не залежить від того, пустий кошик чи ні */
   .cart-box {
     width: calc(100% - 0px) !important;   /* = 100% батька, без “вьюпорт магії” */
@@ -1277,5 +1135,54 @@ a.sub-mini {
     flex: 0 0 auto !important;           /* ❗ заборона стискання у flex */
   }
 }
+/* ===================== FOOTER — MOBILE FIX ===================== */
+@media (max-width: 600px) {
 
+  footer {
+    height: auto;                 /* було 70px — тепер росте */
+    padding: 14px 12px;           /* компактно */
+    gap: 10px;
 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  /* прибираємо абсолютне позиціювання */
+  .footer-policy,
+  .footer-payments {
+    position: static;
+    left: auto;
+    right: auto;
+    top: auto;
+    transform: none;
+  }
+  .footer-policy {
+    order: 1;
+    font-size: 12px;
+    opacity: 0.85;
+    white-space: normal;          /* можна перенос */
+    text-align: center;
+  }
+  .footer-logo {
+    order: 2;
+  }
+  .footer-logo img {
+    width: 110px;                 /* трохи менше */
+  }
+  /* текст © ... робимо окремим рядком (він у тебе просто текст у footer) */
+  footer {
+    text-align: center;
+  }
+  .footer-payments {
+    order: 3;
+    display: flex;
+    flex-wrap: wrap;              /* якщо не влазить в 1 ряд */
+    justify-content: center;
+    gap: 10px;
+  }
+  .footer-payments img {
+    height: 16px;
+    opacity: 0.9;
+  }
+}

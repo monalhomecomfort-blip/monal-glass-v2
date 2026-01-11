@@ -8,10 +8,15 @@ let CERT_CODE_USED = null;
 
 function updateCartCount() {
     const cart = JSON.parse(localStorage.getItem("cart")) || [];
-    const el = document.getElementById("cart-count");
-    if (el) {
-        el.textContent = cart.length > 0 ? `(${cart.length})` : "";
-    }
+    const text = cart.length > 0 ? `(${cart.length})` : "";
+
+    // лічильник у десктоп-меню
+    const navCount = document.getElementById("cart-count");
+    if (navCount) navCount.textContent = text;
+
+    // лічильник у мобільній іконці
+    const mobileCount = document.querySelector(".mobile-cart-count");
+    if (mobileCount) mobileCount.textContent = text;
 }
 
 function addToCart(name, price, label = "", items = null) {

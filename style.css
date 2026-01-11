@@ -184,7 +184,7 @@ footer {
 
 .footer-policy {
     position: absolute;
-    left: 140px;
+    left: 180px;
     top: 50%;
     transform: translateY(-50%);
 
@@ -206,7 +206,7 @@ footer {
 
 .footer-payments {
     position: absolute;
-    right: 140px;
+    right: 180px;
     top: 50%;
     transform: translateY(-50%);
 

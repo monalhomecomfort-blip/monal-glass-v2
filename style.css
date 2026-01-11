@@ -1135,54 +1135,68 @@ a.sub-mini {
     flex: 0 0 auto !important;           /* ❗ заборона стискання у flex */
   }
 }
-/* ===================== FOOTER — MOBILE FIX ===================== */
+/* ===================== FOOTER — MOBILE SAME AS DESKTOP ===================== */
 @media (max-width: 600px) {
-
   footer {
-    height: auto;                 /* було 70px — тепер росте */
-    padding: 14px 12px;           /* компактно */
-    gap: 10px;
+    height: auto;
+    padding: 12px 12px 10px;
 
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    grid-template-rows: auto auto;
+    row-gap: 6px;
+    column-gap: 8px;
+
     align-items: center;
-    justify-content: center;
+    text-align: center;
   }
-  /* прибираємо абсолютне позиціювання */
+  /* прибираємо absolute */
   .footer-policy,
   .footer-payments {
     position: static;
-    left: auto;
-    right: auto;
-    top: auto;
     transform: none;
   }
+  /* 1 ряд */
   .footer-policy {
-    order: 1;
+    grid-column: 1;
+    grid-row: 1;
+    justify-self: start;
+
     font-size: 12px;
-    opacity: 0.85;
-    white-space: normal;          /* можна перенос */
-    text-align: center;
+    opacity: 0.75;
+    white-space: normal;      /* ← ключ: дозволяємо перенос */
+    text-align: left;
   }
   .footer-logo {
-    order: 2;
+    grid-column: 2;
+    grid-row: 1;
   }
   .footer-logo img {
-    width: 110px;                 /* трохи менше */
-  }
-  /* текст © ... робимо окремим рядком (він у тебе просто текст у footer) */
-  footer {
-    text-align: center;
+    width: 96px;
   }
   .footer-payments {
-    order: 3;
+    grid-column: 3;
+    grid-row: 1;
+    justify-self: end;
+
     display: flex;
-    flex-wrap: wrap;              /* якщо не влазить в 1 ряд */
-    justify-content: center;
-    gap: 10px;
+    gap: 8px;
   }
   .footer-payments img {
-    height: 16px;
-    opacity: 0.9;
+    height: 14px;
+    opacity: 0.85;
+  }
+  /* 2 ряд — копірайт */
+  footer {
+    font-size: 12px;
+  }
+  footer::after {
+    content: "© 2026 Ароматика для дому";
+    grid-column: 1 / -1;
+    grid-row: 2;
+
+    margin-top: 2px;
+    opacity: 0.65;
   }
 }
+

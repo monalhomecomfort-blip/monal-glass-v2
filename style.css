@@ -927,7 +927,21 @@ a.sub-mini {
   display: flex;
   align-items: center;   /* ⬅️ ОЦЕ */
   }
-  
+  nav img {
+  display: block;
+  vertical-align: middle;
+}
+.nav-social,
+.mobile-cart,
+.burger-btn {
+  display: flex;
+  align-items: center;
+  height: 22px;
+}
+.burger-btn {
+  padding: 0;
+  line-height: 1;
+}
 /* ----- MOBILE CART FINAL ALIGN FIX ----- */
 .mobile-cart {
   display: flex;

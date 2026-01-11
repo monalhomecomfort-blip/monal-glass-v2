@@ -1217,21 +1217,41 @@ a.sub-mini {
     flex-shrink: 0 !important;
   }
 }
+/* ===================== MOBILE — ABOUT + CART (REPLACE LAST TWO BLOCKS) ===================== */
 @media (max-width: 900px) {
+
+  /* ABOUT: прибираємо grid і повертаємо відступи між блоками */
   .about-container {
-    display: block !important;   /* ❗ вбиває grid остаточно */
-    padding-left: 10px !important;
-    padding-right: 10px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 20px !important;
+
+    margin: 90px auto 80px !important;
+    padding: 0 10px !important;
+
+    width: 100% !important;
     max-width: 100% !important;
+    box-sizing: border-box;
   }
-}
-@media (max-width: 900px) {
+
+  .about-block,
+  .about-block.big {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    box-sizing: border-box;
+  }
+
+  /* CART: ширина не залежить від того, пустий кошик чи ні */
   .cart-box {
-    width: calc(100vw - 20px) !important;   /* 🔒 фіксована ширина екрану */
-    max-width: calc(100vw - 20px) !important;
-    min-width: calc(100vw - 20px) !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
+    width: calc(100% - 0px) !important;   /* = 100% батька, без “вьюпорт магії” */
+    max-width: 100% !important;
+    min-width: 100% !important;
+
+    margin: 0 !important;
+    box-sizing: border-box;
+
+    flex: 0 0 auto !important;           /* ❗ заборона стискання у flex */
   }
 }
 

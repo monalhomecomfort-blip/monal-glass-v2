@@ -909,8 +909,10 @@ a.sub-mini {
   color: #e8e1d6;
 }
 .mobile-cart img {
-  width: 22px;
-  height: auto;
+  width: 20px;
+  height: 20px;
+  max-width: 20px;
+  display: block;
 }
 .mobile-cart-count {
   font-size: 12px;

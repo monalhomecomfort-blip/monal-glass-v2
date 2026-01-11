@@ -11,16 +11,13 @@ html, body {
     color: #333;
     font-family: 'Montserrat', sans-serif;    
 }
-
 * {
     box-sizing: border-box;
 }
-
 img {
   max-width: 100%;
   height: auto;
 }
-
 /* ===================== НАВІГАЦІЯ ===================== */
 nav {
     position: fixed;
@@ -41,23 +38,19 @@ nav {
     
     z-index: 100;
 }
-
 .nav-left {
     display: flex;
     align-items: center;
     gap: 16px;
 }
-
 .nav-logo {
     height: 32px;
     filter: brightness(0) invert(0.92);
 }
-
 .nav-social {
     display: flex;
     gap: 14px;
 }
-
 .nav-social img {
     height: 24px;
     width: auto;
@@ -65,17 +58,14 @@ nav {
     filter: none;             /* ← щоб нічого не мутніло */
     transition: transform 0.25s ease;
 }
-
 .nav-social img:hover {
     transform: scale(1.08);
 }
-
 .nav-center,
 .nav-right {
     display: flex;
     gap: 28px;
 }
-
 .nav-center a,
 .nav-right a {
     text-decoration: none;
@@ -84,19 +74,16 @@ nav {
     text-transform: uppercase;
     color: #e8e1d6;
 }
-
 .nav-center a:hover,
 .nav-right a:hover {
     color: #ffffff;
 }
-
 /* ===================== КОНТЕЙНЕР ===================== */
 .container {
     padding: 110px 40px 110px;
     max-width: 1200px;
     margin: auto;
 }
-
 /* ===================== ЗАГОЛОВОК ===================== */
 .page-title {
     font-family: 'Montserrat', serif;
@@ -104,7 +91,6 @@ nav {
     font-size: 36px;
     margin-bottom: 28px;
 }
-
 /* ===================== КАТАЛОГ ===================== */
 .subgrid {
     display: grid;
@@ -113,7 +99,6 @@ nav {
     gap: 28px;
     justify-items: center;
 }
-
 .subcategory {
     width: 240px;
     border-radius: 14px;
@@ -130,17 +115,14 @@ nav {
     box-shadow: 0 8px 24px rgba(0,0,0,0.4);
     transition: 0.3s;
 }
-
 .subcategory:hover {
     transform: translateY(-6px);
 }
-
 .subcategory img {
     width: 100%;
     height: 210px;
     object-fit: cover;
 }
-
 .subcategory-title {
     padding: 16px;
     font-size: 18px;
@@ -148,9 +130,7 @@ nav {
     font-weight: 300;
     color: #e8e1d6;
 }
-
 /* ===================== FOOTER ===================== */
-
 footer {
     position: relative;
     height: 70px;
@@ -173,15 +153,12 @@ footer {
 
     padding: 0 40px;
 }
-
 /* логотип по центру */
 .footer-logo img {
     width: 120px;
     filter: brightness(0) invert(0.92);
 }
-
 /* ===== ЛІВО: Політика конфіденційності ===== */
-
 .footer-policy {
     position: absolute;
     left: 180px;
@@ -192,18 +169,14 @@ footer {
     opacity: 0.7;
     white-space: nowrap;
 }
-
 .footer-policy a {
     color: #e8e1d6;
     text-decoration: none;
 }
-
 .footer-policy a:hover {
     opacity: 1;
 }
-
 /* ===== ПРАВО: Платіжні системи ===== */
-
 .footer-payments {
     position: absolute;
     right: 180px;
@@ -214,7 +187,6 @@ footer {
     gap: 14px;
     align-items: center;
 }
-
 .footer-payments img {
     height: 18px;
     width: auto;
@@ -223,24 +195,22 @@ footer {
 }
 
 /* ===================== PRIVACY POLICY ===================== */
-
 .policy-text {
-    margin-top: 40px;
+    margin-top: 24px;
 }
-
 .policy-text h2 {
     font-size: 18px;
     font-weight: 400;
-    margin-top: 36px;
-    margin-bottom: 12px;
+    margin-top: 28px;
+    margin-bottom: 8px;
 }
-
 .policy-text p {
     font-size: 14px;
     line-height: 1.6;
-    margin-bottom: 16px;
+    margin-bottom: 12px;
+    text-align: justify;
+    text-justify: inter-word;
 }
-
 /* ===== ABOUT — dark glass version ===== */
 
 .about-block {

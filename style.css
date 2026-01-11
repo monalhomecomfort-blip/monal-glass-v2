@@ -1243,3 +1243,7 @@ a.sub-mini {
     margin-top: 2px;
   }
 }
+/* 🚑 DESKTOP EMERGENCY: hide mobile cart */
+@media (min-width: 601px) {
+  .mobile-cart { display: none !important; }
+}

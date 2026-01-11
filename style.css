@@ -939,17 +939,22 @@ a.sub-mini {
 }
 /* ЛІЧИЛЬНИК — ЯК ІКОНКА */
 .mobile-cart-count {
-  display: flex;              /* ⬅️ прибиває baseline */
+  display: inline-flex;
   align-items: center;
   justify-content: center;
 
-  height: 22px;               /* ⬅️ ТОЙ САМИЙ РОЗМІР */
-  min-width: 18px;
+  height: 22px;          /* = іконці */
+  min-width: 22px;
 
-  font-size: 14px;            /* ⬅️ трохи більша */
+  font-size: 15px;       /* ⬅️ БІЛЬША */
+  font-weight: 400;
+
   line-height: 1;
+  margin-left: 2px;
+
   opacity: 0.85;
 }
+
   /* ----- GLOBAL ----- */
   .container {
     padding: 90px 10px 80px;

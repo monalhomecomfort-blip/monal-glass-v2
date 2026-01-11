@@ -906,13 +906,16 @@ a.sub-mini {
   nav {
     padding: 0 14px;
     height: 60px;
+
+    display: flex;        /* ← якщо раптом не було */
+    align-items: center;  /* ← ❗ ОЦЕ ДОДАЙ */
   }
   .nav-center,
   .nav-right {
     display: none;
   }
   .burger-btn {
-    display: block; /* ← ВАЖЛИВО: включаємо ☰ */
+    display: block; /* ← ☰ */
   }
   .nav-logo {
     height: 28px;

@@ -920,10 +920,10 @@ a.sub-mini {
   .nav-social img {
     height: 22px;
   }
-/* ----- MOBILE CART (FINAL, SINGLE SOURCE) ----- */
+/* ----- MOBILE CART FINAL ALIGN FIX ----- */
 .mobile-cart {
   display: flex;
-  align-items: center;
+  align-items: center;        /* ⬅️ ключ */
   gap: 6px;
 
   margin-left: auto;
@@ -932,19 +932,24 @@ a.sub-mini {
   text-decoration: none;
   color: #e8e1d6;
 }
-
 .mobile-cart img {
-  height: 22px;      /* ⬅️ ЯК СОЦ-ІКОНКИ */
+  height: 22px;               /* як соц-іконки */
   width: auto;
   display: block;
 }
-
+/* ЛІЧИЛЬНИК — ЯК ІКОНКА */
 .mobile-cart-count {
-  font-size: 12px;
+  display: flex;              /* ⬅️ прибиває baseline */
+  align-items: center;
+  justify-content: center;
+
+  height: 22px;               /* ⬅️ ТОЙ САМИЙ РОЗМІР */
+  min-width: 18px;
+
+  font-size: 14px;            /* ⬅️ трохи більша */
   line-height: 1;
   opacity: 0.85;
 }
-
   /* ----- GLOBAL ----- */
   .container {
     padding: 90px 10px 80px;

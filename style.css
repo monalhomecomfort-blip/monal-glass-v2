@@ -150,38 +150,47 @@ nav {
 }
 
 /* ===================== FOOTER ===================== */
+
 footer {
     position: relative;
     height: 70px;
+
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+
     background: rgba(4, 4, 4, 0.85);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
+
     color: #e8e1d6;
     font-size: 13px;
+
     z-index: 100;
     margin-top: auto;
+    flex-shrink: 0;
+
+    padding: 0 40px;
 }
 
+/* логотип по центру */
 .footer-logo img {
     width: 120px;
     filter: brightness(0) invert(0.92);
 }
-/* ===== FOOTER EXTENSIONS ===== */
 
-footer {
-    padding: 0 40px;
-}
+/* ===== ЛІВО: Політика конфіденційності ===== */
 
 .footer-policy {
     position: absolute;
     left: 40px;
-    bottom: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+
     font-size: 12px;
     opacity: 0.7;
+    white-space: nowrap;
 }
 
 .footer-policy a {
@@ -193,10 +202,14 @@ footer {
     opacity: 1;
 }
 
+/* ===== ПРАВО: Платіжні системи ===== */
+
 .footer-payments {
     position: absolute;
     right: 40px;
-    bottom: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+
     display: flex;
     gap: 14px;
     align-items: center;
@@ -206,8 +219,8 @@ footer {
     height: 18px;
     width: auto;
     opacity: 0.85;
+    display: block;
 }
-
 /* ===== ABOUT — dark glass version ===== */
 
 .about-block {
@@ -342,23 +355,6 @@ footer {
 .page-back:hover {
     opacity: 1;
 }
-
-/* ===== Автопритискання футера до низу ===== */
-
-.page-wrap {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-}
-
-.page-wrap > .container {
-    flex: 1 0 auto;
-}
-
-footer {
-    flex-shrink: 0;
-}
-
 /* ===== Модифікація каталогу ===== */
 
 .catalog-row {

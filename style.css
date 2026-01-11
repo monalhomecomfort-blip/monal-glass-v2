@@ -1217,5 +1217,22 @@ a.sub-mini {
     flex-shrink: 0 !important;
   }
 }
+@media (max-width: 900px) {
+  .about-container {
+    display: block !important;   /* ❗ вбиває grid остаточно */
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+    max-width: 100% !important;
+  }
+}
+@media (max-width: 900px) {
+  .cart-box {
+    width: calc(100vw - 20px) !important;   /* 🔒 фіксована ширина екрану */
+    max-width: calc(100vw - 20px) !important;
+    min-width: calc(100vw - 20px) !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+}
 
 

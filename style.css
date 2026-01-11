@@ -923,6 +923,11 @@ a.sub-mini {
   .nav-social img {
     height: 22px;
   }
+  .nav-social {
+  display: flex;
+  align-items: center;   /* ⬅️ ОЦЕ */
+  }
+  
 /* ----- MOBILE CART FINAL ALIGN FIX ----- */
 .mobile-cart {
   display: flex;

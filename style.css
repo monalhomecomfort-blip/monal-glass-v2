@@ -1135,7 +1135,7 @@ a.sub-mini {
     flex: 0 0 auto !important;           /* ❗ заборона стискання у flex */
   }
 }
-/* ===================== FOOTER — MOBILE SAME AS DESKTOP ===================== */
+/* ===================== FOOTER — MOBILE SAME AS DESKTOP (COMBINED) ===================== */
 @media (max-width: 600px) {
   footer {
     height: auto;
@@ -1148,15 +1148,18 @@ a.sub-mini {
     column-gap: 8px;
 
     align-items: center;
+    justify-items: center;   /* ← центр для копірайту */
     text-align: center;
+
+    font-size: 12px;
   }
-  /* прибираємо absolute */
+  /* прибираємо absolute з десктопу */
   .footer-policy,
   .footer-payments {
     position: static;
     transform: none;
   }
-  /* 1 ряд */
+  /* ===== 1 РЯД ===== */
   .footer-policy {
     grid-column: 1;
     grid-row: 1;
@@ -1164,7 +1167,7 @@ a.sub-mini {
 
     font-size: 12px;
     opacity: 0.75;
-    white-space: normal;      /* ← ключ: дозволяємо перенос */
+    white-space: normal;
     text-align: left;
   }
   .footer-logo {
@@ -1186,19 +1189,9 @@ a.sub-mini {
     height: 14px;
     opacity: 0.85;
   }
-  /* 2 ряд — копірайт */
-  footer {
-    font-size: 12px;
-  }
-}
-@media (max-width: 600px) {
-  footer {
-    justify-items: center;
-  }
-}
-@media (max-width: 600px) {
+  /* ===== 2 РЯД — КОПІРАЙТ ===== */
   .footer-copy {
-    grid-column: 1 / -1;   /* другий ряд */
+    grid-column: 1 / -1;
     grid-row: 2;
 
     text-align: center;
@@ -1207,5 +1200,3 @@ a.sub-mini {
     margin-top: 2px;
   }
 }
-
-

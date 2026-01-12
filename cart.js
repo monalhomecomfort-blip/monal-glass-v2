@@ -448,7 +448,16 @@ PAYMENT_CONTEXT = {
   payNow,
   certificates: certificatesData.length ? certificatesData : null,
   usedCertificates: CERT_CODE_USED ? [CERT_CODE_USED] : [],
-  certificateType
+  certificateType,
+
+  buyerName: last + " " + first,
+  buyerPhone: phone,
+  delivery: np,
+  itemsText: itemsText,
+  totalAmount: total,
+  paidAmount: payNow,
+  dueAmount: dueAmount,
+  paymentLabel: paymentLabel
 };
 
     PAY_NOW_AMOUNT = payNow;
@@ -520,7 +529,16 @@ fetch("https://monal-mono-pay-production.up.railway.app/register-order", {
     text: PAYMENT_CONTEXT.text,
     certificates: PAYMENT_CONTEXT.certificates || null,
     usedCertificates: PAYMENT_CONTEXT.usedCertificates || [],
-    certificateType: PAYMENT_CONTEXT.certificateType || "електронний"    
+    certificateType: PAYMENT_CONTEXT.certificateType || "електронний",
+
+    buyerName: PAYMENT_CONTEXT.buyerName || "",
+    buyerPhone: PAYMENT_CONTEXT.buyerPhone || "",
+    delivery: PAYMENT_CONTEXT.delivery || "",
+    itemsText: PAYMENT_CONTEXT.itemsText || "",
+    totalAmount: PAYMENT_CONTEXT.totalAmount || "",
+    paidAmount: PAYMENT_CONTEXT.paidAmount || "",
+    dueAmount: PAYMENT_CONTEXT.dueAmount || "",
+    paymentLabel: PAYMENT_CONTEXT.paymentLabel || ""
   })
 })
 

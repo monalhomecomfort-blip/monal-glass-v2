@@ -520,17 +520,7 @@ fetch("https://monal-mono-pay-production.up.railway.app/register-order", {
     text: PAYMENT_CONTEXT.text,
     certificates: PAYMENT_CONTEXT.certificates || null,
     usedCertificates: PAYMENT_CONTEXT.usedCertificates || [],
-    certificateType: PAYMENT_CONTEXT.certificateType || "електронний",
-
-    // 👇 ДОДАЄМО ОЦЕ
-    buyerName: last + " " + first,
-    buyerPhone: phone,
-    delivery: np,
-    itemsText: itemsText,
-    totalAmount: total,
-    paidAmount: payNow,
-    dueAmount: dueAmount,
-    paymentLabel: paymentLabel
+    certificateType: PAYMENT_CONTEXT.certificateType || "електронний"    
   })
 })
 

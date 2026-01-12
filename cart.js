@@ -511,18 +511,29 @@ function closePaymentModal() {
 function goToPayment() {
   if (!PAYMENT_CONTEXT) return;
 
-  // 1) реєструємо замовлення
-  fetch("https://monal-mono-pay-production.up.railway.app/register-order", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      orderId: PAYMENT_CONTEXT.orderId,
-      text: PAYMENT_CONTEXT.text,
-      certificates: PAYMENT_CONTEXT.certificates || null,
-      usedCertificates: PAYMENT_CONTEXT.usedCertificates || [],
-      certificateType: PAYMENT_CONTEXT.certificateType || "електронний"
-    })
+// 1) реєструємо замовлення
+fetch("https://monal-mono-pay-production.up.railway.app/register-order", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    orderId: PAYMENT_CONTEXT.orderId,
+    text: PAYMENT_CONTEXT.text,
+    certificates: PAYMENT_CONTEXT.certificates || null,
+    usedCertificates: PAYMENT_CONTEXT.usedCertificates || [],
+    certificateType: PAYMENT_CONTEXT.certificateType || "електронний",
+
+    // 👇 ДОДАЄМО ОЦЕ
+    buyerName: last + " " + first,
+    buyerPhone: phone,
+    delivery: np,
+    itemsText: itemsText,
+    totalAmount: total,
+    paidAmount: payNow,
+    dueAmount: dueAmount,
+    paymentLabel: paymentLabel
   })
+})
+
   .then(res => {
     if (!res.ok) throw new Error("register-order failed");
 

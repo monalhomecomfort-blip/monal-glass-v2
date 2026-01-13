@@ -1276,19 +1276,20 @@ a.sub-mini {
 @media (min-width: 601px) {
   .mobile-cart { display: none !important; }
 }
-/* ===================== CERTIFICATE NOMINALS — MOBILE ===================== */
+/* ===================== CERTIFICATE NOMINALS — MOBILE FIX ===================== */
 @media (max-width: 600px) {
 
-  .certificate-options {
+  .nominal-row {
     display: grid;
-    grid-template-columns: 1fr 1fr; /* 2 колонки */
+    grid-template-columns: 1fr 1fr; /* 2 рівні колонки */
     gap: 12px;
   }
 
-  /* Фіксуємо порядок */
-  .certificate-options button:nth-child(1) { order: 1; } /* 1000 */
-  .certificate-options button:nth-child(2) { order: 3; } /* 2500 */
-  .certificate-options button:nth-child(3) { order: 2; } /* 3500 */
-  .certificate-options button:nth-child(4) { order: 4; } /* 5000 */
+  /* Фіксуємо порядок елементів */
+  .nominal-row .certificate-option:nth-child(1) { order: 1; } /* 1000 */
+  .nominal-row .certificate-option:nth-child(2) { order: 3; } /* 2500 */
+  .nominal-row .certificate-option:nth-child(3) { order: 2; } /* 3500 */
+  .nominal-row .certificate-option:nth-child(4) { order: 4; } /* 5000 */
 }
+
 

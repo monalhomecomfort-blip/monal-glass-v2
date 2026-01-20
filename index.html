@@ -296,6 +296,19 @@
   // первинне оновлення при завантаженні сторінки
   updateBurgerCartCount();
 </script>
+
+<script>
+  const catalogBtn = document.querySelector('.catalog-btn');
+  const navCatalog = document.querySelector('.nav-catalog');
+
+  if (catalogBtn && navCatalog) {
+    catalogBtn.addEventListener('click', () => {
+      if (window.innerWidth <= 600) {
+        navCatalog.classList.toggle('active');
+      }
+    });
+  }
+</script>  
     
 </body>
 </html>

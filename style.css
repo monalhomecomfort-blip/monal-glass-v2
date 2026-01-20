@@ -78,7 +78,8 @@ nav {
 .nav-right a:hover {
     color: #ffffff;
 }
-/* ===================== NAV — CATALOG (BASE + DESKTOP) ===================== */
+/* ===================== NAV — CATALOG (FINAL STABLE) ===================== */
+
 .nav-catalog {
     position: relative;
     display: flex;
@@ -109,7 +110,7 @@ nav {
     font-size: 11px;
     opacity: 0.7;
 }
-/* dropdown — завжди схований базово */
+/* dropdown */
 .catalog-dropdown {
     position: absolute;
     top: 100%;
@@ -128,7 +129,7 @@ nav {
     border-radius: 18px;
     padding: 10px 0;
 
-    display: none;
+    display: none;              /* ⬅️ тільки JS */
     flex-direction: column;
 
     box-shadow: 0 12px 30px rgba(0,0,0,0.45);
@@ -155,11 +156,9 @@ nav {
     margin: 8px 16px;
     background: rgba(232,225,214,0.15);
 }
-/* ===== DESKTOP: ТІЛЬКИ hover ===== */
-@media (min-width: 901px) {
-    .nav-catalog:hover .catalog-dropdown {
-        display: flex;
-    }
+/* JS-керований стан */
+.nav-catalog.open .catalog-dropdown {
+    display: flex;
 }
 /* ===================== КОНТЕЙНЕР ===================== */
 .container {
@@ -1393,26 +1392,69 @@ a.sub-mini {
 
 /* ===================== NAV — CATALOG (MOBILE) ===================== */
 @media (max-width: 600px) {
-.nav-catalog {
+
+  /* контейнер */
+  .nav-catalog {
     width: 100%;
-}
-.catalog-btn {
+  }
+  /* кнопка Каталог */
+  .catalog-btn {
     font-size: 16px;
     letter-spacing: 1px;
-}
-/* dropdown у мобілі */
-.catalog-dropdown {
-    position: static;
+
+    background: none;
+    border: none;
+    color: #e8e1d6;
+
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0;
+
+    cursor: pointer;
+  }
+  /* dropdown у мобільній версії */
+  .catalog-dropdown {
+    position: static;        /* ❗ НЕ absolute */
     width: 100%;
     max-height: none;
 
     margin-top: 14px;
-    border-radius: 18px;
 
-    display: none;
-}
-/* ПОКАЗ ТІЛЬКИ ПО КЛІКУ */
-.nav-catalog.active .catalog-dropdown {
+    background: rgba(4, 4, 4, 0.85);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+
+    border-radius: 18px;
+    padding: 10px 0;
+
+    display: none;           /* ❗ за замовчуванням схований */
+    flex-direction: column;
+  }
+  /* показ по кліку (JS додає .open) */
+  .nav-catalog.open .catalog-dropdown {
     display: flex;
+  }
+  /* пункти списку */
+  .catalog-dropdown a {
+    padding: 10px 18px;
+
+    font-size: 14px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+
+    color: #e8e1d6;
+    text-decoration: none;
+    white-space: normal;
+  }
+  .catalog-dropdown a:hover {
+    background: rgba(255,255,255,0.06);
+  }
+  /* роздільники */
+  .dropdown-divider {
+    height: 1px;
+    margin: 8px 16px;
+    background: rgba(232,225,214,0.15);
+  }
 }
-}
+

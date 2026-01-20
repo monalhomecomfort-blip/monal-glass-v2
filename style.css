@@ -1418,4 +1418,10 @@ a.sub-mini {
     display: flex;
 }
 }
+/* ===================== NAV — CATALOG (MOBILE DISABLED) ===================== */
+@media (max-width: 600px) {
+  .nav-catalog {
+    display: none !important;
+  }
+}
 

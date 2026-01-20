@@ -355,7 +355,7 @@ footer {
 .sub-mini img {
     width: 100%;
     height: 140px !important;
-    object-fit: cover;
+    object-fit: contain;
 }
 /* Текст не розтягує плитку */
 .mini-title {

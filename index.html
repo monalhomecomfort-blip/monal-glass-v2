@@ -302,40 +302,11 @@
   const catalogBtn = document.querySelector('.catalog-btn');
 
   if (navCatalog && catalogBtn) {
-
-    let isDesktop = () => window.innerWidth > 600;
-
-    // DESKTOP — hover через JS
-    navCatalog.addEventListener('mouseenter', () => {
-      if (isDesktop()) {
-        navCatalog.classList.add('open');
-      }
-    });
-
-    navCatalog.addEventListener('mouseleave', () => {
-      if (isDesktop()) {
-        navCatalog.classList.remove('open');
-      }
-    });
-
-    // MOBILE — click
     catalogBtn.addEventListener('click', (e) => {
-      if (!isDesktop()) {
-        e.stopPropagation();
+      if (window.innerWidth <= 600) {
+        e.preventDefault();
         navCatalog.classList.toggle('open');
       }
-    });
-
-    // MOBILE — close on outside click
-    document.addEventListener('click', () => {
-      if (!isDesktop()) {
-        navCatalog.classList.remove('open');
-      }
-    });
-
-    // resize safety
-    window.addEventListener('resize', () => {
-      navCatalog.classList.remove('open');
     });
   }
 </script>

@@ -351,6 +351,7 @@ footer {
     flex: 0 0 160px;
     padding: 8px;
     box-sizing: border-box;
+    overflow: visible;
 }
 /* Фіксація висоти фото всередині */
 .sub-mini img {

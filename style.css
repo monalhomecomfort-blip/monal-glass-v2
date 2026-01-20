@@ -79,13 +79,11 @@ nav {
     color: #ffffff;
 }
 /* ===================== NAV — CATALOG (BASE + DESKTOP) ===================== */
-
 .nav-catalog {
     position: relative;
     display: flex;
     align-items: center;
 }
-
 /* кнопка */
 .catalog-btn {
     background: none;
@@ -104,40 +102,38 @@ nav {
     align-items: center;
     gap: 6px;
 }
-
 .catalog-btn:hover {
     color: #ffffff;
 }
-
 .catalog-arrow {
     font-size: 11px;
     opacity: 0.7;
 }
-
-/* dropdown — БАЗОВО СХОВАНИЙ */
+/* dropdown — ТАКИЙ САМИЙ ФОН, ЯК NAV / FOOTER / ABOUT */
 .catalog-dropdown {
     position: absolute;
-    top: calc(100% + 14px);
+    top: 100%;
     left: 0;
 
     width: 280px;
     max-height: 420px;
     overflow-y: auto;
 
-    background: rgba(4, 4, 4, 0.95);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    margin-top: 8px;
+
+    background: rgba(4, 4, 4, 0.85);              /* ← ЯК У МЕНЮ */
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 
     border-radius: 18px;
     padding: 10px 0;
 
-    display: none;                /* ⬅️ КЛЮЧ */
+    display: none;
     flex-direction: column;
 
     box-shadow: 0 12px 30px rgba(0,0,0,0.45);
     z-index: 1000;
 }
-
 /* пункти */
 .catalog-dropdown a {
     padding: 8px 18px;
@@ -150,25 +146,21 @@ nav {
     text-decoration: none;
     white-space: nowrap;
 }
-
 .catalog-dropdown a:hover {
     background: rgba(255,255,255,0.06);
 }
-
 /* роздільники */
 .dropdown-divider {
     height: 1px;
     margin: 8px 16px;
     background: rgba(232,225,214,0.15);
 }
-
-/* DESKTOP: hover */
+/* DESKTOP hover */
 @media (min-width: 901px) {
     .nav-catalog:hover .catalog-dropdown {
         display: flex;
     }
 }
-
 /* ===================== КОНТЕЙНЕР ===================== */
 .container {
     padding: 110px 40px 110px;

@@ -355,8 +355,14 @@ footer {
 /* Фіксація висоти фото всередині */
 .sub-mini img {
     width: 100%;
-    height: auto;          /* КЛЮЧОВЕ */
+    height: 140px !important;
+
     display: block;
+    object-fit: cover;
+
+    background: none;
+    border-radius: 0;
+    box-shadow: none;
 }
 /* Текст не розтягує плитку */
 .mini-title {

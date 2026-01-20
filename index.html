@@ -303,19 +303,39 @@
 
   if (navCatalog && catalogBtn) {
 
-    // ТІЛЬКИ MOBILE
-    catalogBtn.addEventListener('click', (e) => {
-      if (window.innerWidth <= 600) {
-        e.stopPropagation();
-        navCatalog.classList.toggle('active');
+    let isDesktop = () => window.innerWidth > 600;
+
+    // DESKTOP — hover через JS
+    navCatalog.addEventListener('mouseenter', () => {
+      if (isDesktop()) {
+        navCatalog.classList.add('open');
       }
     });
 
-    // закриття по кліку будь-де (mobile)
-    document.addEventListener('click', () => {
-      if (window.innerWidth <= 600) {
-        navCatalog.classList.remove('active');
+    navCatalog.addEventListener('mouseleave', () => {
+      if (isDesktop()) {
+        navCatalog.classList.remove('open');
       }
+    });
+
+    // MOBILE — click
+    catalogBtn.addEventListener('click', (e) => {
+      if (!isDesktop()) {
+        e.stopPropagation();
+        navCatalog.classList.toggle('open');
+      }
+    });
+
+    // MOBILE — close on outside click
+    document.addEventListener('click', () => {
+      if (!isDesktop()) {
+        navCatalog.classList.remove('open');
+      }
+    });
+
+    // resize safety
+    window.addEventListener('resize', () => {
+      navCatalog.classList.remove('open');
     });
   }
 </script>

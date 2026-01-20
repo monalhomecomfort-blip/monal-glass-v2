@@ -78,7 +78,7 @@ nav {
 .nav-right a:hover {
     color: #ffffff;
 }
-/* ===================== NAV — CATALOG (BASE + DESKTOP) ===================== */
+/* ===================== NAV — CATALOG (STABLE DESKTOP) ===================== */
 .nav-catalog {
     position: relative;
     display: flex;
@@ -109,7 +109,7 @@ nav {
     font-size: 11px;
     opacity: 0.7;
 }
-/* dropdown — ТАКИЙ САМИЙ ФОН, ЯК NAV / FOOTER / ABOUT */
+/* dropdown */
 .catalog-dropdown {
     position: absolute;
     top: 100%;
@@ -119,9 +119,9 @@ nav {
     max-height: 420px;
     overflow-y: auto;
 
-    margin-top: 8px;
+    margin-top: 6px;
 
-    background: rgba(4, 4, 4, 0.85);              /* ← ЯК У МЕНЮ */
+    background: rgba(4, 4, 4, 0.85);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
 
@@ -133,6 +133,15 @@ nav {
 
     box-shadow: 0 12px 30px rgba(0,0,0,0.45);
     z-index: 1000;
+}
+/* 👇 НЕВИДИМИЙ HOVER-МІСТ */
+.catalog-dropdown::before {
+    content: "";
+    position: absolute;
+    top: -12px;
+    left: 0;
+    width: 100%;
+    height: 12px;
 }
 /* пункти */
 .catalog-dropdown a {
@@ -155,9 +164,10 @@ nav {
     margin: 8px 16px;
     background: rgba(232,225,214,0.15);
 }
-/* DESKTOP hover */
+/* ПОКАЗ */
 @media (min-width: 901px) {
-    .nav-catalog:hover .catalog-dropdown {
+    .nav-catalog:hover .catalog-dropdown,
+    .nav-catalog:focus-within .catalog-dropdown {
         display: flex;
     }
 }

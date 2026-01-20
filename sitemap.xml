@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <url><loc>https://monal.com.ua/</loc><priority>1.0</priority></url>
+
+  <!-- CORE -->
+  <url><loc>https://monal.com.ua/aromadiffusers.html</loc><priority>0.9</priority></url>
+  <url><loc>https://monal.com.ua/parfums.html</loc><priority>0.9</priority></url>
+  <url><loc>https://monal.com.ua/refills.html</loc><priority>0.9</priority></url>
+  <url><loc>https://monal.com.ua/gift-sets.html</loc><priority>0.9</priority></url>
+
+  <!-- GIFTS -->
+  <url><loc>https://monal.com.ua/certificates.html</loc><priority>0.8</priority></url>
+  <url><loc>https://monal.com.ua/discovery.html</loc><priority>0.8</priority></url>
+
+  <!-- FILLING -->
+  <url><loc>https://monal.com.ua/candles.html</loc><priority>0.6</priority></url>
+  <url><loc>https://monal.com.ua/car-sachets.html</loc><priority>0.6</priority></url>
+  <url><loc>https://monal.com.ua/wardrobe-sachets.html</loc><priority>0.6</priority></url>
+  <url><loc>https://monal.com.ua/hand-soap.html</loc><priority>0.6</priority></url>
+  <url><loc>https://monal.com.ua/hand-cream.html</loc><priority>0.6</priority></url>
+  <url><loc>https://monal.com.ua/shower-gel.html</loc><priority>0.6</priority></url>
+
+  <!-- SERVICE -->
+  <url><loc>https://monal.com.ua/about.html</loc><priority>0.4</priority></url>
+  <url><loc>https://monal.com.ua/delivery.html</loc><priority>0.3</priority></url>
+  <url><loc>https://monal.com.ua/contacts.html</loc><priority>0.3</priority></url>
+  <url><loc>https://monal.com.ua/privacy.html</loc><priority>0.2</priority></url>
+
+</urlset>

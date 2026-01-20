@@ -196,18 +196,6 @@ if (burgerBtn && mobileMenu && closeBtn) {
 
 updateBurgerCartCount();
 </script>
-<script>
-  const navCatalog = document.querySelector('.nav-catalog');
-  const catalogBtn = document.querySelector('.catalog-btn');
 
-  if (navCatalog && catalogBtn) {
-    catalogBtn.addEventListener('click', (e) => {
-      if (window.innerWidth <= 600) {
-        e.preventDefault();
-        navCatalog.classList.toggle('open');
-      }
-    });
-  }
-</script>
 </body>
 </html>

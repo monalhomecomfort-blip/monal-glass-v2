@@ -78,22 +78,24 @@ nav {
 .nav-right a:hover {
     color: #ffffff;
 }
-/* ===================== NAV — CATALOG (DESKTOP) ===================== */
+/* ===================== NAV — CATALOG (BASE + DESKTOP) ===================== */
+
 .nav-catalog {
     position: relative;
     display: flex;
     align-items: center;
 }
-/* кнопка Каталог */
+
+/* кнопка */
 .catalog-btn {
     background: none;
     border: none;
     cursor: pointer;
 
+    font-family: 'Montserrat', sans-serif;
     font-size: 14px;
     letter-spacing: 1.5px;
     text-transform: uppercase;
-    font-family: 'Montserrat', sans-serif;
 
     color: #e8e1d6;
     padding: 0;
@@ -102,21 +104,24 @@ nav {
     align-items: center;
     gap: 6px;
 }
+
 .catalog-btn:hover {
     color: #ffffff;
 }
+
 .catalog-arrow {
     font-size: 11px;
     opacity: 0.7;
 }
-/* випадаючий список */
+
+/* dropdown — БАЗОВО СХОВАНИЙ */
 .catalog-dropdown {
     position: absolute;
     top: calc(100% + 14px);
     left: 0;
 
-    width: 280px;              /* ❗ фіксоване вікно, не на всю ширину */
-    max-height: 420px;         /* ❗ вміщує всі категорії */
+    width: 280px;
+    max-height: 420px;
     overflow-y: auto;
 
     background: rgba(4, 4, 4, 0.95);
@@ -126,12 +131,13 @@ nav {
     border-radius: 18px;
     padding: 10px 0;
 
-    display: none;
+    display: none;                /* ⬅️ КЛЮЧ */
     flex-direction: column;
 
     box-shadow: 0 12px 30px rgba(0,0,0,0.45);
     z-index: 1000;
 }
+
 /* пункти */
 .catalog-dropdown a {
     padding: 8px 18px;
@@ -144,21 +150,25 @@ nav {
     text-decoration: none;
     white-space: nowrap;
 }
+
 .catalog-dropdown a:hover {
     background: rgba(255,255,255,0.06);
 }
+
 /* роздільники */
 .dropdown-divider {
     height: 1px;
     margin: 8px 16px;
     background: rgba(232,225,214,0.15);
 }
-/* hover тільки для десктопу */
+
+/* DESKTOP: hover */
 @media (min-width: 901px) {
     .nav-catalog:hover .catalog-dropdown {
         display: flex;
     }
 }
+
 /* ===================== КОНТЕЙНЕР ===================== */
 .container {
     padding: 110px 40px 110px;
@@ -1391,27 +1401,27 @@ a.sub-mini {
 
 /* ===================== NAV — CATALOG (MOBILE) ===================== */
 @media (max-width: 600px) {
-
-  .nav-catalog {
+.nav-catalog {
     width: 100%;
-  }
-  .catalog-btn {
+}
+.catalog-btn {
     font-size: 16px;
     letter-spacing: 1px;
-  }
-  .catalog-dropdown {
-    position: static;          /* ❗ не absolute */
+}
+/* dropdown у мобілі */
+.catalog-dropdown {
+    position: static;
     width: 100%;
     max-height: none;
 
     margin-top: 14px;
     border-radius: 18px;
 
-    display: none;
-  }
-  /* показ по кліку */
-  .nav-catalog.active .catalog-dropdown {
+    display: none;               /* ⬅️ НЕ видно без кліку */
+}
+/* показ по кліку */
+.nav-catalog.active .catalog-dropdown {
     display: flex;
-  }
+}
 }
 

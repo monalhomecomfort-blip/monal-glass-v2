@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- FAVICON -->
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon32_only_o.png">
+
+    <!-- SEO -->
+    <title>Аромасвічки для дому — скоро в наявності | Mōnal</title>
+    <meta name="description" content="Аромасвічки Mōnal для дому скоро з’являться у продажу. Ми готуємо нову колекцію зі збалансованими ароматами та атмосферним звучанням.">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<!-- NAV -->
+<nav>
+    <div class="nav-left">
+        <a href="index.html" class="nav-logo-link">
+            <img src="images/logo.svg" alt="Mōnal" class="nav-logo">
+        </a>
+
+        <div class="nav-social">
+            <a href="https://www.tiktok.com/@monalofficial?is_from_webapp=1&sender_device=pc" target="_blank">
+                <img src="images/social/tiktok.png" alt="TikTok">
+            </a>
+            <a href="https://www.instagram.com/monal.official/" target="_blank">
+                <img src="images/social/instagram.png" alt="Instagram">
+            </a>
+            <a href="https://www.facebook.com/people/Monal/61552030280894/" target="_blank">
+                <img src="images/social/facebook.png" alt="Facebook">
+            </a>
+            <a href="https://t.me/Monalgroup/1" target="_blank">
+                <img src="images/social/tg.png" alt="Telegram">
+            </a>
+        </div>
+    </div>
+
+    <div class="nav-center">
+        <a href="index.html">Головна</a>
+        <a href="about.html">Про бренд</a>
+        <a href="contacts.html">Контакти</a>
+    </div>
+
+    <div class="nav-right">
+        <a href="delivery.html">Доставка</a>
+        <a href="cart.html">Кошик <span id="cart-count"></span></a>
+    </div>
+
+    <a href="cart.html" class="mobile-cart">
+        <img src="images/social/cart.png" alt="Кошик">
+        <span class="mobile-cart-count"></span>
+    </a>
+
+    <button class="burger-btn" aria-label="Відкрити меню">☰</button>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu">
+    <button class="mobile-close">✕</button>
+
+    <a href="index.html">Головна</a>
+    <a href="about.html">Про бренд</a>
+    <a href="delivery.html">Доставка</a>
+    <a href="contacts.html">Контакти</a>
+    <a href="cart.html">Кошик <span class="burger-cart-count"></span></a>
+</div>
+
+<!-- CONTENT -->
+<div class="container">
+    <a href="index.html" class="back-btn">← Назад</a>
+
+    <!-- SEO H1 -->
+    <h1 class="page-title">Аромасвічки для дому</h1>
+
+    <!-- SEO INTRO -->
+    <p class="page-intro">
+        Колекція ароматичних свічок Mōnal перебуває на етапі підготовки.<br>
+        Зовсім скоро вони з’являться у продажу та стануть частиною
+        затишних і продуманих ритуалів для дому.
+    </p>
+
+    <!-- COMING SOON -->
+    <div class="product-soon">
+        <div class="soon-label">Скоро в наявності</div>
+
+        <p class="soon-text">
+            Ми працюємо над запуском колекції ароматичних свічок.<br>
+            Детальна інформація про аромати, формати та склад
+            буде додана після старту продажів.
+        </p>
+
+        <h2 class="soon-subtitle">Про продукт</h2>
+        <p class="soon-muted">
+            Ця сторінка підготовлена для попереднього ознайомлення
+            та буде оновлена одразу після запуску продукту.
+        </p>
+    </div>
+
+</div>
+
+<!-- FOOTER -->
+<footer>
+    <div class="footer-policy">
+        <a href="privacy.html">Політика конфіденційності</a>
+    </div>
+
+    <div class="footer-logo">
+        <img src="images/logo.svg" alt="Mōnal">
+    </div>
+
+    <span class="footer-copy">© 2023 Аромати для дому та подарунки</span>
+
+    <div class="footer-payments">
+        <img src="images/social/mastercard.svg" alt="Mastercard">
+        <img src="images/social/visa.svg" alt="Visa">
+        <img src="images/social/applepay.svg" alt="Apple Pay">
+        <img src="images/social/googlepay.svg" alt="Google Pay">
+    </div>
+</footer>
+
+<script src="cart.js"></script>
+<script>
+const burgerBtn = document.querySelector('.burger-btn');
+const mobileMenu = document.querySelector('.mobile-menu');
+const closeBtn = document.querySelector('.mobile-close');
+const burgerCartCount = document.querySelector('.burger-cart-count');
+
+function updateBurgerCartCount() {
+    if (!burgerCartCount) return;
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    burgerCartCount.textContent = cart.length ? `(${cart.length})` : "";
+}
+
+if (burgerBtn && mobileMenu && closeBtn) {
+    burgerBtn.addEventListener('click', () => {
+        updateBurgerCartCount();
+        mobileMenu.style.display = 'flex';
+    });
+
+    closeBtn.addEventListener('click', () => {
+        mobileMenu.style.display = 'none';
+    });
+
+    mobileMenu.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+            mobileMenu.style.display = 'none';
+        });
+    });
+}
+
+updateBurgerCartCount();
+</script>
+
+</body>
+</html>

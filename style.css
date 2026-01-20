@@ -345,61 +345,77 @@ footer {
     flex-wrap: nowrap;
     white-space: nowrap;
 }
-/* Фіксація реальних розмірів міні-плиток */
+/* ===================== MINI SUBCATEGORY TILES ===================== */
+
+/* МІНІ-ПЛИТКА (все зібрано в 1 блок) */
 .sub-mini {
     width: 160px !important;
     flex: 0 0 160px;
-    padding: 8px;
+
+    display: flex;
+    flex-direction: column;
+
     box-sizing: border-box;
     overflow: visible;
+
+    border-radius: 18px !important;
+
+    background: rgba(4, 4, 4, 0.85) !important;
+    color: #e8e1d6 !important;
+
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
 }
-/* Фіксація висоти фото всередині */
+
+/* ФОТО (вся картинка влазить) */
 .sub-mini img {
     width: 100%;
     height: 140px !important;
 
     display: block;
-    object-fit: cover;
+
+    object-fit: contain; /* ✅ щоб не обрізало */
 
     background: none;
-    border-radius: 0;
+    border-radius: 18px 18px 0 0 !important;
     box-shadow: none;
 }
-/* Текст не розтягує плитку */
+
+/* ТЕКСТ (2 рядки, не розтягує плитку) */
 .mini-title {
     font-size: 13px;
     padding: 8px 6px;
     white-space: normal;
     height: 34px; /* фіксує під два рядки */
     overflow: hidden;
+
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
 }
+
+/* текст назви кремово-бежевий (твій блок збережено) */
+.sub-mini .mini-title {
+    color: #e8e1d6 !important;
+}
+
+/* hover */
 .sub-mini:hover {
     transform: translateY(-4px);
 }
+
 /* коли це <a> */
 a.sub-mini {
     color: inherit;
 }
-/* збільшені і округлені плитки підкатегорій */
-.sub-mini {
-    width: 160px !important;
-    flex: 0 0 160px;
-    border-radius: 18px !important;
-    display: flex;
-    flex-direction: column;
-}
-.sub-mini img {
-    height: 140px !important;
-    border-radius: 18px 18px 0 0 !important;
-}
-/* не дозволяємо міні-шляхті зменшувати категорію */
+
+/* не дозволяємо міні-плиткам зменшувати категорію */
 .catalog-row > .subcategory {
     flex: 0 0 240px;
 }
+
 /* міні плитки не ростуть і не штовхають */
 .catalog-row .mini-line {
     flex: 1 1 auto;
@@ -407,18 +423,7 @@ a.sub-mini {
     gap: 18px;
     align-items: center;
 }
-/* стиль підкатегорій у стилі категорій */
-.sub-mini {
-    background: rgba(4, 4, 4, 0.85) !important;
-    color: #e8e1d6 !important;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
-}
-/* текст назви кремово-бежевий */
-.sub-mini .mini-title {
-    color: #e8e1d6 !important;
-}
+
 /* ===== ABOUT PAGE CLEANUP ===== */
 .about-container {
     display: grid;

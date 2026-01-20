@@ -298,17 +298,27 @@
 </script>
 
 <script>
-  const catalogBtn = document.querySelector('.catalog-btn');
   const navCatalog = document.querySelector('.nav-catalog');
+  const catalogBtn = document.querySelector('.catalog-btn');
 
-  if (catalogBtn && navCatalog) {
-    catalogBtn.addEventListener('click', () => {
+  if (navCatalog && catalogBtn) {
+
+    // ТІЛЬКИ MOBILE
+    catalogBtn.addEventListener('click', (e) => {
       if (window.innerWidth <= 600) {
+        e.stopPropagation();
         navCatalog.classList.toggle('active');
       }
     });
+
+    // закриття по кліку будь-де (mobile)
+    document.addEventListener('click', () => {
+      if (window.innerWidth <= 600) {
+        navCatalog.classList.remove('active');
+      }
+    });
   }
-</script>  
+</script>
     
 </body>
 </html>

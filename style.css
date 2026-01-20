@@ -386,8 +386,7 @@ a.sub-mini {
 
     object-fit: cover;
     object-position: center;
-    transform: scale(0.9);
-
+    
     border-radius: 18px 18px 0 0 !important;
 }
 

@@ -227,16 +227,17 @@ nav {
     text-align: center;
     margin-bottom: 28px;
 }
-.home-page .page-title {
+.home .page-title {
     font-family: 'Montserrat', serif;
     font-weight: 300;
     font-size: 28px;
     margin-bottom: 18px;
     text-transform: uppercase;    /* ВЕЛИКИЙ РЕГІСТР */
     margin-bottom: 28px;
-    margin-left: 325px;            /* зсув вправо */    
+    margin-left: 325px;            /* зсув вправо */   
+    
 }
-.page-intro {
+.home.page-intro {
     font-size: 14px;
     line-height: 1.5;
     margin-bottom: 18px;

@@ -168,6 +168,56 @@ nav {
     max-width: 1200px;
     margin: auto;
 }
+/* ===================== NAV — TOP CATEGORIES (HOME ONLY) ===================== */
+
+.nav-top-categories {
+  position: fixed;
+  top: 70px;
+  left: 0;
+  right: 0;
+
+  height: 42px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+
+  background: rgba(4, 4, 4, 0.85);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  z-index: 90;
+}
+
+.nav-top-categories a {
+  font-size: 12px;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+
+  color: #e8e1d6;
+  text-decoration: none;
+  opacity: 0.85;
+
+  transition: opacity 0.25s ease;
+}
+
+.nav-top-categories a:hover {
+  opacity: 1;
+}
+
+/* ===== OFFSET FOR HOME PAGE CONTENT ===== */
+.home-page .container {
+  padding-top: 160px;
+}
+
+/* ===== MOBILE: HIDE TOP CATEGORIES ===== */
+@media (max-width: 600px) {
+  .nav-top-categories {
+    display: none;
+  }
+}
+
 /* ===================== ЗАГОЛОВОК ===================== */
 .page-title {
     font-family: 'Montserrat', serif;

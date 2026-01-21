@@ -239,7 +239,7 @@ nav {
     margin-bottom: 18px;
     margin-left: 325px;
     text-transform: uppercase;    /* ВЕЛИКИЙ РЕГІСТР */
-    color: #333333;
+    color: transparent;
 }
 /* ===================== КАТАЛОГ ===================== */
 .subgrid {

@@ -935,7 +935,10 @@ a.sub-mini {
 .faq-section {
     width: 100%;
     margin: 80px 0 100px;
-    padding: 0;
+
+    /* ⬅️ КЛЮЧОВЕ */
+    padding-left: 40px;
+    padding-right: 40px;
 }
 /* Заголовок — як назва товару */
 .faq-title {

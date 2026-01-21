@@ -938,8 +938,8 @@ a.sub-mini {
     margin-bottom: 90px; /* ← залишаємо повітря до футера */
 
     /* ⬅️ КЛЮЧОВЕ */
-    padding-left: 185px;
-    padding-right: 185px;    
+    padding-left: 190px;
+    padding-right: 190px;    
 }
 /* Заголовок — як назва товару */
 .faq-title {

@@ -930,6 +930,91 @@ a.sub-mini {
 .certificate-option.active {
     background: #d8d2c2;
 }
+/* ===================== FAQ SECTION ===================== */
+
+.faq-section {
+    max-width: 900px;
+    margin: 90px auto 110px;
+    padding: 0 20px;
+}
+.faq-title {
+    font-size: 22px;
+    font-weight: 300;
+    margin-bottom: 36px;
+    text-align: center;
+}
+/* FAQ item */
+.faq-section details {
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+    padding: 18px 0;
+}
+/* Question */
+.faq-section summary {
+    position: relative;
+    cursor: pointer;
+
+    font-size: 15px;
+    font-weight: 400;
+    letter-spacing: 0.3px;
+
+    list-style: none;
+    padding-right: 28px;
+}
+/* Hide native marker */
+.faq-section summary::-webkit-details-marker {
+    display: none;
+}
+/* + / − indicator */
+.faq-section summary::after {
+    content: "+";
+    position: absolute;
+    right: 0;
+    top: 0;
+
+    font-size: 18px;
+    font-weight: 300;
+    line-height: 1;
+
+    color: #444;
+}
+/* Open state */
+.faq-section details[open] summary::after {
+    content: "–";
+}
+/* Answer */
+.faq-section p {
+    margin-top: 14px;
+    max-width: 720px;
+
+    font-size: 13px;
+    line-height: 1.45;
+    color: #444;
+}
+/* ===================== FAQ — MOBILE ===================== */
+
+@media (max-width: 900px) {
+
+    .faq-section {
+        margin: 60px auto 80px;
+        padding: 0 10px;
+    }
+    .faq-title {
+        font-size: 18px;
+        margin-bottom: 26px;
+    }
+    .faq-section summary {
+        font-size: 14px;
+        padding-right: 26px;
+    }
+    .faq-section summary::after {
+        font-size: 16px;
+        top: 1px;
+    }
+    .faq-section p {
+        font-size: 13px;
+        line-height: 1.5;
+    }
+}
 /* ===================== RESPONSIVE (АДАПТАЦІЯ) ===================== */
 /* 1) Планшети і менше */
 @media (max-width: 900px) {

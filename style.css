@@ -934,11 +934,12 @@ a.sub-mini {
 
 .faq-section {
     width: 100%;
-    margin: 80px 0 100px;
+    margin-top: 20px;     /* ← ПІДТЯГУЄМО */
+    margin-bottom: 90px; /* ← залишаємо повітря до футера */
 
     /* ⬅️ КЛЮЧОВЕ */
-    padding-left: 40px;
-    padding-right: 40px;
+    padding-left: 160px;
+    padding-right: 160px;    
 }
 /* Заголовок — як назва товару */
 .faq-title {
@@ -963,7 +964,7 @@ a.sub-mini {
     letter-spacing: 0.2px;
 
     list-style: none;
-    padding-right: 26px;
+    padding-right: 36px;
 }
 /* прибрати стандартний маркер */
 .faq-section summary::-webkit-details-marker {
@@ -997,9 +998,10 @@ a.sub-mini {
 
 @media (max-width: 900px) {
 
-    .faq-section {
-        margin: 60px auto 80px;
-        padding: 0 10px;
+    .faq-section {        
+        padding-left: 10px;
+        padding-right: 10px;
+        margin: 60px 0 80px;
     }
     .faq-title {
         font-size: 18px;

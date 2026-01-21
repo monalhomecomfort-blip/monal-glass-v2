@@ -226,9 +226,14 @@ nav {
     margin-bottom: 28px;
     text-transform: uppercase;    /* ВЕЛИКИЙ РЕГІСТР */
     margin-bottom: 28px;
-    margin-left: 260px;            /* зсув вправо */
-
-    
+    margin-left: 270px;            /* зсув вправо */    
+}
+.page-intro {
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 32px;
+    margin-left: 270px;
+    text-transform: uppercase;    /* ВЕЛИКИЙ РЕГІСТР */
 }
 /* ===================== КАТАЛОГ ===================== */
 .subgrid {

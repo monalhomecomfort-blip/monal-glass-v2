@@ -156,11 +156,8 @@ nav {
     margin: 8px 16px;
     background: rgba(232,225,214,0.15);
 }
-/* DESKTOP — ТІЛЬКИ HOVER */
-@media (min-width: 901px) {
-    .nav-catalog:hover .catalog-dropdown {
-        display: flex;
-    }
+.nav-catalog.open .catalog-dropdown {
+    display: flex;
 }
 /* ===================== КОНТЕЙНЕР ===================== */
 .container {
@@ -1547,33 +1544,6 @@ a.sub-mini {
   .nominal-row .certificate-option:nth-child(2) { order: 3; } /* 2500 */
   .nominal-row .certificate-option:nth-child(3) { order: 2; } /* 3500 */
   .nominal-row .certificate-option:nth-child(4) { order: 4; } /* 5000 */
-}
-
-/* ===================== NAV — CATALOG (MOBILE) ===================== */
-@media (max-width: 600px) {
-
-.nav-catalog {
-    width: 100%;
-}
-.catalog-btn {
-    font-size: 16px;
-    letter-spacing: 1px;
-}
-/* dropdown у мобільній */
-.catalog-dropdown {
-    position: static;
-    width: 100%;
-    max-height: none;
-
-    border-radius: 18px;
-    margin-top: 12px;
-
-    display: none;
-}
-/* показ по кліку */
-.nav-catalog.open .catalog-dropdown {
-    display: flex;
-}
 }
 /* ===================== NAV — CATALOG (MOBILE DISABLED) ===================== */
 @media (max-width: 600px) {

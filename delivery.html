@@ -211,5 +211,24 @@
   updateBurgerCartCount();
 </script>    
 
+<script>
+  if (window.innerWidth > 900) {
+    const navCatalog = document.querySelector('.nav-catalog');
+    const catalogBtn = document.querySelector('.catalog-btn');
+
+    if (navCatalog && catalogBtn) {
+      catalogBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        navCatalog.classList.toggle('open');
+      });
+
+      document.addEventListener('click', function () {
+        navCatalog.classList.remove('open');
+      });
+    }
+  }
+</script>
+
 </body>
 </html>

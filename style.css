@@ -469,7 +469,7 @@ footer {
 /* Rating block */
 .product-rating {
     margin-left: auto;
-    margin-top: calc(0.83em + 6px);
+    margin-top: 1.15em;
     flex: 0 0 auto;
 
     text-align: right;

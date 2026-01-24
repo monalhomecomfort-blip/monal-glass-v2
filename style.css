@@ -952,6 +952,10 @@ a.sub-mini {
     font-size: 15px;
     color: #e8e1d6;
 }
+/* Discovery only: повітря між шкалою і блоком "Ваш сет" */
+.discovery-row .product-rating {
+    margin-bottom: 24px;
+}
 /* Заголовок */
 .discovery-title {
     font-size: 15px;

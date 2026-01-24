@@ -1603,10 +1603,6 @@ a.sub-mini {
 }
 /* ===== MOBILE — FORCE MICRO-ANIMATION (FIX) ===== */
 @media (max-width: 600px) {
-  /* масштаб картки — як було */
-  .product-media.micro-animate {
-    transform: scale(1.03);
-  }
   /* ❗ КЛЮЧ: примусово даємо стан hover для ФОНУ */
   .micro-animate .product-bg {
     transform: translateY(-4%) scale(1.08);

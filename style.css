@@ -452,6 +452,74 @@ footer {
 .buy-btn:hover {
     background: #d8d2c2;
 }
+
+/* ===== PRODUCT HEAD: title + price + button + rating ===== */
+.product-head {
+    display: flex;
+    align-items: flex-start;
+    gap: 36px;
+}
+
+.product-head-left {
+    min-width: 0; /* критично для довгих назв */
+}
+
+/* Rating block */
+.product-rating {
+    margin-left: auto;
+    flex: 0 0 auto;
+
+    text-align: right;
+    white-space: nowrap;
+
+    font-size: 13px;
+    line-height: 1.35;
+    opacity: 0.85;
+}
+
+.product-rating .rating-row {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.product-rating .rating-row:last-child {
+    margin-bottom: 0;
+}
+
+.product-rating .rating-label {
+    opacity: 0.75;
+}
+
+/* Buyers rating — трохи акценту, без агресії */
+.product-rating .rating-buyers {
+    font-weight: 400;
+    opacity: 0.95;
+}
+
+/* щоб було зрозуміло, що це не клікабельно */
+.product-rating .rating-buyers .rating-dots {
+    letter-spacing: 1px;
+}
+
+/* ===== MOBILE ===== */
+@media (max-width: 768px) {
+    .product-head {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .product-rating {
+        margin-left: 0;
+        text-align: left;
+    }
+
+    .product-rating .rating-row {
+        justify-content: space-between;
+    }
+}
+
 /* ===== PAGE HEADER ===== */
 .page-header {
     display: flex;

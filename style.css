@@ -1601,10 +1601,17 @@ a.sub-mini {
     margin-top: 2px;
   }
   /* ===== АНІМАЦІЯ ===== */  
-  .product-media.micro-animate {
-    transform: scale(1.03);
-    transition: transform 0.6s ease;
-  }
+  .micro-animate .product-bg {
+    /* те, що у тебе вже є — НЕ ЧІПАЄМО */
+    .product-media.micro-animate {
+        transform: scale(1.03);
+    }
+
+    /* ОЦЕ — ДОДАЄМО */
+    .product-media.micro-animate .product-bg {
+        transform: translateY(-4%) scale(1.08);
+        filter: brightness(1.06) saturate(1.03);
+    }
 }
 /* 🚑 DESKTOP EMERGENCY: hide mobile cart */
 @media (min-width: 601px) {

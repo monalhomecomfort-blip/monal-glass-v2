@@ -1600,6 +1600,11 @@ a.sub-mini {
     opacity: 0.65;
     margin-top: 2px;
   }
+  /* ===== АНІМАЦІЯ ===== */  
+  .product-media.micro-animate {
+    transform: scale(1.03);
+    transition: transform 0.6s ease;
+  }
 }
 /* 🚑 DESKTOP EMERGENCY: hide mobile cart */
 @media (min-width: 601px) {

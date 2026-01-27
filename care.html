@@ -1,148 +1,16 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <!-- FAVICON -->
-    <link rel="icon" type="image/png" sizes="32x32" href="favicon32_only_o.png">
-    
-    <title>Догляд — Mōnal</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <title>Redirecting…</title>
+
+  <link rel="canonical" href="https://monal.com.ua/">
+  <meta http-equiv="refresh" content="0; url=/">
+
+  <script>
+    window.location.replace("/");
+  </script>
 </head>
-
 <body>
-
-<!-- Навігація — один стиль для ВСІХ сторінок -->
-<nav>
-
-    <!-- Ліворуч: логотип + соцмережі -->
-    <div class="nav-left">
-        <a href="index.html" class="nav-logo-link">
-            <img src="images/logo.svg" alt="Mōnal" class="nav-logo">
-        </a>
-
-        <div class="nav-social">
-            <a href="https://www.tiktok.com/@monalofficial?is_from_webapp=1&sender_device=pc" target="_blank">
-                <img src="images/social/tiktok.png" alt="TikTok">
-            </a>
-            <a href="https://www.instagram.com/monal.official/" target="_blank">
-                <img src="images/social/instagram.png" alt="Instagram">
-            </a>
-            <a href="https://www.facebook.com/people/Monal/61552030280894/" target="_blank">
-                <img src="images/social/facebook.png" alt="Facebook">
-            </a>
-            <a href="https://t.me/Monalgroup/1" target="_blank">
-                <img src="images/social/tg.png" alt="Telegram">
-            </a>
-        </div>
-    </div>
-
-    <!-- Центр -->
-    <div class="nav-center">
-        <a href="index.html">Головна</a>
-        <a href="about.html">Про бренд</a>
-        <a href="contacts.html">Контакти</a>
-    </div>
-
-    <!-- Праворуч -->
-    <div class="nav-right">
-        <a href="delivery.html">Доставка</a>
-        <a href="cart.html">Кошик <span id="cart-count"></span></a>
-    </div>
-    <!-- BURGER BUTTON -->
-<button class="burger-btn" aria-label="Відкрити меню">
-  ☰
-</button>
-</nav>
-<!-- TOP CATEGORIES — HOME ONLY -->
-<div class="nav-top-categories">
-  <a href="aromadiffusers.html">Аромадифузори</a>
-  <a href="parfums.html">Парфуми для дому</a>
-  <a href="refills.html">Рефіл</a>
-  <a href="discovery.html">Discovery set</a>
-  <a href="gift-sets.html">Подарункові набори</a>
-  <a href="certificates.html">Сертифікати</a>
-</div>
-<!-- MOBILE MENU -->
-<div class="mobile-menu">
-  <button class="mobile-close">✕</button>
-
-  <a href="index.html">Головна</a>
-  <a href="about.html">Про бренд</a>
-  <a href="delivery.html">Доставка</a>
-  <a href="contacts.html">Контакти</a>
-  <a href="cart.html">Кошик <span class="burger-cart-count"></span></a>
-</div>
-
-<!-- Контент -->
-<div class="container">
-    <a href="index.html" class="back-btn">← Назад</a>
-    <h1 class="page-title">Догляд</h1>
-
-    <div class="back-buttons">
-        <a href="javascript:history.back()" class="back-btn">← Назад</a>
-        <a href="catalog.html" class="back-btn secondary">← До каталогу</a>
-    </div>
-
-    <div class="subgrid">
-
-        <a class="subcategory" href="#">
-            <img src="images/скоро буде_каталог.jpg">
-            <div class="subcategory-title">Мило для рук</div>
-        </a>
-
-        <a class="subcategory" href="#">
-            <img src="images/скоро буде_каталог.jpg">
-            <div class="subcategory-title">Крем для рук</div>
-        </a>
-
-        <a class="subcategory" href="#">
-            <img src="images/скоро буде_каталог.jpg">
-            <div class="subcategory-title">Гель для душу</div>
-        </a>
-
-    </div>
-
-</div>
-
-<!-- Футер (уніфікований для всіх сторінок) -->
-<footer>
-    <div class="footer-logo">
-        <img src="images/logo.svg" alt="Mōnal">
-    </div>
-
-    <div class="footer-copy">
-        © 2026 Ароматика для дому
-    </div>
-</footer>
-
-<script src="cart.js"></script>
-<script>
-  const burgerBtn = document.querySelector('.burger-btn');
-  const mobileMenu = document.querySelector('.mobile-menu');
-  const closeBtn = document.querySelector('.mobile-close');
-  const burgerCartCount = document.querySelector('.burger-cart-count');
-  function updateBurgerCartCount() {
-    if (!burgerCartCount) return;
-    const cart = JSON.parse(localStorage.getItem("cart")) || [];
-    burgerCartCount.textContent = cart.length ? `(${cart.length})` : "";
-  }
-  if (burgerBtn && mobileMenu && closeBtn) {
-    burgerBtn.addEventListener('click', () => {
-      updateBurgerCartCount();          // ← оновлюємо при відкритті
-      mobileMenu.style.display = 'flex';
-    });
-    closeBtn.addEventListener('click', () => {
-      mobileMenu.style.display = 'none';
-    });
-    mobileMenu.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', () => {
-        mobileMenu.style.display = 'none';
-      });
-    });
-  }
-  // первинне оновлення при завантаженні сторінки
-  updateBurgerCartCount();
-</script>
 </body>
 </html>

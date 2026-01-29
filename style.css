@@ -498,21 +498,21 @@ footer {
     border: none;
     padding: 0;
 
-    font-size: 28px;
+    font-size: 30px;          /* трохи довші */
     line-height: 1;
     font-weight: 300;
 
-    color: rgba(0,0,0,0.45);
+    color: rgba(0,0,0,0.4);
     cursor: pointer;
 
     z-index: 2;
     user-select: none;
 }
 .page-parfums .gallery-prev {
-    left: -12px;
+    left: -6px;               /* БЛИЖЧЕ до фото */
 }
 .page-parfums .gallery-next {
-    right: -12px;
+    right: -6px;              /* БЛИЖЧЕ до фото */
 }
 .page-parfums .gallery-prev:hover,
 .page-parfums .gallery-next:hover {
@@ -1675,7 +1675,7 @@ a.sub-mini {
     margin-top: 2px;
   }  
 }
-/* ===== PARFUMS INLINE GALLERY — MOBILE ===== */
+/* ===== PARFUMS INLINE GALLERY — MOBILE (ARROWS NEAR IMAGE) ===== */
 @media (max-width: 600px) {
 
   .page-parfums .parfum-gallery {
@@ -1684,16 +1684,27 @@ a.sub-mini {
   .page-parfums .product-diffuser {
       max-height: 380px;
   }
+  /* стрілки — БЛИЗЬКО ДО ФОТО, АЛЕ НЕ НА НЬОМУ */
   .page-parfums .gallery-prev,
   .page-parfums .gallery-next {
-      font-size: 24px;
-      color: rgba(0,0,0,0.55);
+      font-size: 22px;
+      color: rgba(0,0,0,0.6);
+
+      top: 50%;
+      transform: translateY(-50%);
+
+      padding: 6px;
   }
+  /* ❗ КЛЮЧ: не від краю контейнера, а від фото */
   .page-parfums .gallery-prev {
-      left: -6px;
+      left: -22px;     /* близько до фото */
   }
   .page-parfums .gallery-next {
-      right: -6px;
+      right: -22px;    /* близько до фото */
+  }
+  .page-parfums .gallery-prev:active,
+  .page-parfums .gallery-next:active {
+      color: rgba(0,0,0,0.85);
   }
 }
 

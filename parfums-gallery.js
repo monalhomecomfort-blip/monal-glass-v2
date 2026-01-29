@@ -75,9 +75,9 @@ const galleries = {
    2. DOM ЕЛЕМЕНТИ
    ===================== */
 
-const modal = document.querySelector(".parfum-modal");
-const galleryBox = document.querySelector(".parfum-gallery");
-const closeBtn = document.querySelector(".parfum-close");
+const modal = document.querySelector(".parfums-gallery-modal");
+const galleryBox = document.querySelector(".parfums-gallery-track");
+const closeBtn = document.querySelector(".parfums-gallery-close");
 
 /* =====================
    3. ВІДКРИТТЯ ГАЛЕРЕЇ

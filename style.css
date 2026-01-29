@@ -453,6 +453,39 @@ footer {
     background: #d8d2c2;
 }
 
+/* ===================== PARFUMS PAGE — CLEAN MEDIA ===================== */
+
+.page-parfums .product-media {
+    background: none;
+    border-radius: 0;
+    box-shadow: none;
+    height: auto;
+    overflow: visible;
+}
+
+.page-parfums .product-bg {
+    display: none !important;
+}
+
+.page-parfums .parfum-open {
+    all: unset;
+    cursor: pointer;
+    display: block;
+}
+
+.page-parfums .product-diffuser {
+    pointer-events: auto;
+    cursor: pointer;
+
+    width: 100%;
+    max-height: 520px;
+    object-fit: contain;
+
+    background: none;
+    box-shadow: none;
+    border-radius: 0;
+}
+
 /* ===================== PARFUMS GALLERY MODAL ===================== */
 /* hidden — реально ховає модалку */
 .parfums-gallery-modal[hidden] {
@@ -506,6 +539,7 @@ footer {
     font-size: 22px;
     cursor: pointer;
     opacity: 0.6;
+    z-index: 3;
 }
 .parfums-gallery-close:hover {
     opacity: 1;

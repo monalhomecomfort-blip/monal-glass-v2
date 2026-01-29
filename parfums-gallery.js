@@ -77,7 +77,7 @@ const galleries = {
   const overlay = document.querySelector(".parfums-gallery-overlay");
   const closeBtn = document.querySelector(".parfums-gallery-close");
   const track = document.querySelector(".parfums-gallery-track");
-  const buttons = document.querySelectorAll("button.parfum-open");
+  const buttons = document.querySelectorAll(".parfum-open");
 
   // 2) Якщо чогось немає — показуємо ОДНЕ зрозуміле повідомлення
   if (!modal || !overlay || !closeBtn || !track) {

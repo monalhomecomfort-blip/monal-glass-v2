@@ -452,9 +452,7 @@ footer {
 .buy-btn:hover {
     background: #d8d2c2;
 }
-
 /* ===================== PARFUMS PAGE — INLINE GALLERY (DESKTOP) ===================== */
-
 .page-parfums .product-media {
     background: none;
     border-radius: 0;
@@ -466,7 +464,6 @@ footer {
     justify-content: center;
     align-items: center;
 }
-
 /* контейнер галереї */
 .page-parfums .parfum-gallery {
     position: relative;
@@ -477,7 +474,6 @@ footer {
     align-items: center;
     justify-content: center;
 }
-
 /* основне фото */
 .page-parfums .product-diffuser {
     width: 100%;
@@ -490,7 +486,6 @@ footer {
 
     pointer-events: none;
 }
-
 /* стрілки ‹ › — ТОНКІ, БЛИЗЬКО ДО ФОТО */
 .page-parfums .gallery-prev,
 .page-parfums .gallery-next {
@@ -503,7 +498,7 @@ footer {
     padding: 0;
 
     font-family: 'Montserrat', sans-serif;
-    font-size: 22px;
+    font-size: 36px;
     font-weight: 300;
     line-height: 1;
 
@@ -513,20 +508,16 @@ footer {
     z-index: 2;
     user-select: none;
 }
-
 .page-parfums .gallery-prev {
-    left: -8px;
+    left: -10px;
 }
-
 .page-parfums .gallery-next {
-    right: -8px;
+    right: -10px;
 }
-
 .page-parfums .gallery-prev:hover,
 .page-parfums .gallery-next:hover {
     color: rgba(0,0,0,0.75);
 }
-
 /* прибираємо ВСЕ, що було під модалку */
 .parfums-gallery-modal,
 .parfums-gallery-overlay,
@@ -535,7 +526,6 @@ footer {
 .parfums-gallery-close {
     display: none !important;
 }
-
 /* ===== PRODUCT HEAD: title + price + button + rating ===== */
 .product-head {
     display: flex;
@@ -543,12 +533,10 @@ footer {
     gap: 36px;
     width: 100%;
 }
-
 .product-head-left {
     min-width: 0; /* критично для довгих назв */
     flex: 1 1 auto;
 }
-
 /* Rating block */
 .product-rating {
     margin-left: auto;
@@ -562,50 +550,41 @@ footer {
     line-height: 1.35;
     opacity: 0.85;
 }
-
 .product-rating .rating-row {
     display: flex;
     justify-content: flex-end;
     gap: 12px;
     margin-bottom: 8px;
 }
-
 .product-rating .rating-row:last-child {
     margin-bottom: 0;
 }
-
 .product-rating .rating-label {
     opacity: 0.75;
 }
-
 /* Buyers rating — трохи акценту, без агресії */
 .product-rating .rating-buyers {
     font-weight: 400;
     opacity: 0.95;
 }
-
 /* щоб було зрозуміло, що це не клікабельно */
 .product-rating .rating-buyers .rating-dots {
     letter-spacing: 1px;
 }
-
 /* ===== MOBILE ===== */
 @media (max-width: 600px) {
     .product-head {
         flex-direction: column;
         gap: 12px;
     }
-
     .product-rating {
         margin-left: 0;
         text-align: left;
     }
-
     .product-rating .rating-row {
         justify-content: space-between;
     }
 }
-
 /* ===== PAGE HEADER ===== */
 .page-header {
     display: flex;
@@ -649,7 +628,6 @@ footer {
 /* ===============================
    МІНІ-ПЛИТКИ ПІДКАТЕГОРІЙ
    =============================== */
-
 /* Фіксація реальних розмірів міні-плиток */
 .sub-mini {
     width: 160px !important;
@@ -669,17 +647,14 @@ footer {
 
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
 }
-
 /* Hover-ефект */
 .sub-mini:hover {
     transform: translateY(-4px);
 }
-
 /* Коли плитка — це <a> */
 a.sub-mini {
     color: inherit;
 }
-
 /* Фіксація висоти фото всередині */
 .sub-mini img {
     width: 100%;
@@ -690,7 +665,6 @@ a.sub-mini {
     
     border-radius: 18px 18px 0 0 !important;
 }
-
 /* Текст не розтягує плитку */
 .mini-title {
     font-size: 13px;
@@ -705,16 +679,13 @@ a.sub-mini {
     justify-content: center;
     text-align: center;
 }
-
 /* Текст назви кремово-бежевий */
 .sub-mini .mini-title {
     color: #e8e1d6 !important;
 }
-
 /* ===============================
    КАТАЛОГ / РЯДИ
    =============================== */
-
 /* Не дозволяємо міні-плиткам зменшувати категорію */
 .catalog-row > .subcategory {
     flex: 0 0 240px;
@@ -1152,7 +1123,6 @@ a.sub-mini {
     background: #d8d2c2;
 }
 /* ===================== FAQ SECTION ===================== */
-
 .faq-section {
     width: 100%;
     margin-top: 1px;     /* ← ПІДТЯГУЄМО */
@@ -1684,38 +1654,35 @@ a.sub-mini {
     margin-top: 2px;
   }  
 }
-/* ===================== PARFUMS PAGE — INLINE GALLERY (MOBILE) ===================== */
+/* ===== PARFUMS INLINE GALLERY — MOBILE ===== */
 @media (max-width: 600px) {
 
-    .page-parfums .parfum-gallery {
-        max-width: 100%;
-    }
+  .page-parfums .parfum-gallery {
+      max-width: 92%;          /* ❗ стискаємо контейнер */
+      margin: 0 auto;
+  }
+  .page-parfums .product-diffuser {
+      max-height: 380px;
+  }
+  .page-parfums .gallery-prev,
+  .page-parfums .gallery-next {
+      font-size: 26px;         /* менші ніж desktop */
+      color: rgba(0,0,0,0.6);
 
-    .page-parfums .product-diffuser {
-        max-height: 380px;
-    }
-
-    /* стрілки ‹ › — МЕНШІ І ЩЕ БЛИЖЧЕ */
-    .page-parfums .gallery-prev,
-    .page-parfums .gallery-next {
-        font-size: 20px;
-        color: rgba(0,0,0,0.5);
-    }
-
-    .page-parfums .gallery-prev {
-        left: -6px;
-    }
-
-    .page-parfums .gallery-next {
-        right: -6px;
-    }
-
-    .page-parfums .gallery-prev:active,
-    .page-parfums .gallery-next:active {
-        color: rgba(0,0,0,0.8);
-    }
+      top: 50%;
+      transform: translateY(-50%);
+  }
+  .page-parfums .gallery-prev {
+      left: -14px;             /* БІЛЯ фото, НЕ край екрану */
+  }
+  .page-parfums .gallery-next {
+      right: -14px;            /* БІЛЯ фото */
+  }
+  .page-parfums .gallery-prev:active,
+  .page-parfums .gallery-next:active {
+      color: rgba(0,0,0,0.85);
+  }
 }
-
 /* 🚑 DESKTOP EMERGENCY: hide mobile cart */
 @media (min-width: 601px) {
   .mobile-cart { display: none !important; }
@@ -1728,7 +1695,6 @@ a.sub-mini {
     grid-template-columns: 1fr 1fr; /* 2 рівні колонки */
     gap: 12px;
   }
-
   /* Фіксуємо порядок елементів */
   .nominal-row .certificate-option:nth-child(1) { order: 1; } /* 1000 */
   .nominal-row .certificate-option:nth-child(2) { order: 3; } /* 2500 */

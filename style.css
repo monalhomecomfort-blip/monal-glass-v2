@@ -453,6 +453,89 @@ footer {
     background: #d8d2c2;
 }
 
+/* =====================
+   PARFUMS GALLERY MODAL
+   ===================== */
+
+/* overlay + контейнер */
+.parfums-gallery-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* затемнення фону */
+.parfums-gallery-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+}
+
+/* вікно галереї */
+.parfums-gallery-window {
+    position: relative;
+    z-index: 1;
+
+    width: 100%;
+    max-width: 720px;
+    max-height: 90vh;
+
+    background: #f4efe6;
+    border-radius: 20px;
+    padding: 24px 24px 28px;
+
+    display: flex;
+    flex-direction: column;
+}
+
+/* кнопка закриття */
+.parfums-gallery-close {
+    position: absolute;
+    top: 14px;
+    right: 16px;
+
+    background: none;
+    border: none;
+    font-size: 22px;
+    cursor: pointer;
+    opacity: 0.6;
+}
+.parfums-gallery-close:hover {
+    opacity: 1;
+}
+
+/* трек з фото */
+.parfums-gallery-track {
+    display: flex;
+    gap: 18px;
+
+    overflow-x: auto;
+    overflow-y: hidden;
+
+    padding-top: 10px;
+    scroll-snap-type: x mandatory;
+}
+
+/* прибираємо scrollbar */
+.parfums-gallery-track::-webkit-scrollbar {
+    display: none;
+}
+
+/* фото */
+.parfums-gallery-track img {
+    flex: 0 0 100%;
+    max-width: 100%;
+    height: auto;
+
+    object-fit: contain;
+    scroll-snap-align: center;
+    border-radius: 14px;
+}
+
 /* ===== PRODUCT HEAD: title + price + button + rating ===== */
 .product-head {
     display: flex;
@@ -1601,7 +1684,20 @@ a.sub-mini {
     margin-top: 2px;
   }  
 }
-/* ===== MOBILE — FORCE MICRO-ANIMATION (FIX) ===== */
+/* ===== PARFUMS GALLERY — MOBILE ===== */
+@media (max-width: 600px) {
+
+  .parfums-gallery-window {
+      max-width: 92%;
+      padding: 18px 14px 22px;
+  }
+  .parfums-gallery-track {
+      gap: 12px;
+  }
+  .parfums-gallery-track img {
+      border-radius: 12px;
+  }
+}
 
 /* 🚑 DESKTOP EMERGENCY: hide mobile cart */
 @media (min-width: 601px) {

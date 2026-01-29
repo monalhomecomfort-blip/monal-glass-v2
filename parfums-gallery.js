@@ -79,6 +79,10 @@ const modal = document.querySelector(".parfums-gallery-modal");
 const galleryBox = document.querySelector(".parfums-gallery-track");
 const closeBtn = document.querySelector(".parfums-gallery-close");
 
+const overlay = document.querySelector(".parfums-gallery-overlay");
+
+overlay.addEventListener("click", closeModal);
+
 /* =====================
    3. ВІДКРИТТЯ ГАЛЕРЕЇ
    ===================== */

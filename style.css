@@ -1675,18 +1675,25 @@ a.sub-mini {
     margin-top: 2px;
   }  
 }
-/* ===== PARFUMS GALLERY — MOBILE ===== */
+/* ===== PARFUMS INLINE GALLERY — MOBILE ===== */
 @media (max-width: 600px) {
 
-  .parfums-gallery-window {
-      max-width: 92%;
-      padding: 18px 14px 22px;
+  .page-parfums .parfum-gallery {
+      max-width: 100%;
   }
-  .parfums-gallery-track {
-      gap: 12px;
+  .page-parfums .product-diffuser {
+      max-height: 380px;
   }
-  .parfums-gallery-track img {
-      border-radius: 12px;
+  .page-parfums .gallery-prev,
+  .page-parfums .gallery-next {
+      font-size: 24px;
+      color: rgba(0,0,0,0.55);
+  }
+  .page-parfums .gallery-prev {
+      left: -6px;
+  }
+  .page-parfums .gallery-next {
+      right: -6px;
   }
 }
 

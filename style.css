@@ -484,7 +484,7 @@ footer {
     max-width: 720px;
     max-height: 90vh;
 
-    background: #f4efe6;
+    background: transparent;
     border-radius: 20px;
     padding: 24px 24px 28px;
 

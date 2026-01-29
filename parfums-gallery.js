@@ -1,5 +1,3 @@
-alert("parfums-gallery.js LOADED");
-
 document.addEventListener("DOMContentLoaded", () => {
 
   const galleries = {
@@ -60,23 +58,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const closeBtn = document.querySelector(".parfums-gallery-close");
   const track = document.querySelector(".parfums-gallery-track");
   const buttons = document.querySelectorAll(".parfum-open");
-
-  if (!modal || !overlay || !closeBtn || !track) {
-    alert("❌ Не знайдені елементи модалки (parfums-gallery-*)");
-    return;
-  }
-
+  
   function openGallery(btn) {
     const img = btn.querySelector("img");
     if (!img) return;
 
     const key = img.dataset.gallery;
     const list = galleries[key];
-
-    if (!list) {
-      alert(`❌ Немає галереї для data-gallery="${key}"`);
-      return;
-    }
 
     track.innerHTML = "";
 

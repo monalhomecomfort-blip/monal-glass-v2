@@ -1,3 +1,5 @@
+alert("parfums-gallery.js LOADED");
+
 /* =====================================================
    PARFUMS GALLERY — Mōnal
    Працює ТІЛЬКИ на сторінці parfums.html

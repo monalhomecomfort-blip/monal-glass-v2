@@ -453,9 +453,11 @@ footer {
     background: #d8d2c2;
 }
 
-/* =====================
-   PARFUMS GALLERY MODAL
-   ===================== */
+/* ===================== PARFUMS GALLERY MODAL ===================== */
+/* hidden — реально ховає модалку */
+.parfums-gallery-modal[hidden] {
+    display: none !important;
+}
 
 /* overlay + контейнер */
 .parfums-gallery-modal {
@@ -473,12 +475,13 @@ footer {
     position: absolute;
     inset: 0;
     background: rgba(0,0,0,0.6);
+    z-index: 1;   
 }
 
 /* вікно галереї */
 .parfums-gallery-window {
     position: relative;
-    z-index: 1;
+    z-index: 2;
 
     width: 100%;
     max-width: 720px;

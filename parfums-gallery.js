@@ -81,7 +81,9 @@ const closeBtn = document.querySelector(".parfums-gallery-close");
 
 const overlay = document.querySelector(".parfums-gallery-overlay");
 
-overlay.addEventListener("click", closeModal);
+if (overlay) {
+  overlay.addEventListener("click", closeModal);
+}
 
 /* =====================
    3. ВІДКРИТТЯ ГАЛЕРЕЇ

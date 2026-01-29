@@ -132,4 +132,4 @@ const galleries = {
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape" && !modal.hidden) closeModal();
   });
-})();
+

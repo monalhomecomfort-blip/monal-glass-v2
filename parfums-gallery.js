@@ -71,74 +71,65 @@ const galleries = {
   ]
 };
 
-/* =====================
-   2. DOM ЕЛЕМЕНТИ
-   ===================== */
+  const modal = document.querySelector(".parfums-gallery-modal");
+  const overlay = document.querySelector(".parfums-gallery-overlay");
+  const closeBtn = document.querySelector(".parfums-gallery-close");
+  const track = document.querySelector(".parfums-gallery-track");
+  const buttons = document.querySelectorAll("button.parfum-open");
 
-const modal = document.querySelector(".parfums-gallery-modal");
-const galleryBox = document.querySelector(".parfums-gallery-track");
-const closeBtn = document.querySelector(".parfums-gallery-close");
+  // 2) Якщо чогось немає — показуємо ОДНЕ зрозуміле повідомлення
+  if (!modal || !overlay || !closeBtn || !track) {
+    alert("Помилка: не знайдені елементи модалки (parfums-gallery-*) у HTML.");
+    return;
+  }
+  if (!buttons.length) {
+    alert("Помилка: не знайдені кнопки .parfum-open у парфумах.");
+    return;
+  }
 
-const overlay = document.querySelector(".parfums-gallery-overlay");
+  function openGallery(btn) {
+    const img = btn.querySelector("img");
+    if (!img) return;
 
-if (overlay) {
-  overlay.addEventListener("click", closeModal);
-}
-
-/* =====================
-   3. ВІДКРИТТЯ ГАЛЕРЕЇ
-   ===================== */
-
-document.querySelectorAll(".parfum-open").forEach(button => {
-  button.addEventListener("click", () => {
-    const img = button.querySelector("img");
     const key = img.dataset.gallery;
+    const list = galleries[key];
 
-    // safety check
-    if (!galleries[key]) {
-      console.warn(`Gallery "${key}" not found`);
+    if (!list) {
+      alert(`Помилка: у JS немає галереї для data-gallery="${key}"`);
       return;
     }
 
-    // очищаємо галерею
-    galleryBox.innerHTML = "";
-
-    // додаємо фото
-    galleries[key].forEach(src => {
-      const image = document.createElement("img");
-      image.src = src;
-      image.alt = img.alt; // використовуємо той самий ALT
-      galleryBox.appendChild(image);
+    track.innerHTML = "";
+    list.forEach(src => {
+      const el = document.createElement("img");
+      el.src = src;
+      el.alt = img.alt;
+      track.appendChild(el);
     });
 
+    // важливо: знімаємо hidden явно
     modal.hidden = false;
-    document.body.style.overflow = "hidden"; // фіксуємо скрол сторінки
+    modal.removeAttribute("hidden");
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeModal() {
+    modal.hidden = true;
+    modal.setAttribute("hidden", "");
+    document.body.style.overflow = "";
+  }
+
+  buttons.forEach(btn => {
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      openGallery(btn);
+    });
   });
-});
 
-/* =====================
-   4. ЗАКРИТТЯ МОДАЛКИ
-   ===================== */
+  closeBtn.addEventListener("click", closeModal);
+  overlay.addEventListener("click", closeModal);
 
-function closeModal() {
-  modal.hidden = true;
-  document.body.style.overflow = "";
-}
-
-closeBtn.addEventListener("click", closeModal);
-
-modal.addEventListener("click", event => {
-  if (event.target === modal) {
-    closeModal();
-  }
-});
-
-/* =====================
-   5. ESC ДЛЯ ЗАКРИТТЯ
-   ===================== */
-
-document.addEventListener("keydown", event => {
-  if (event.key === "Escape" && !modal.hidden) {
-    closeModal();
-  }
-});
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && !modal.hidden) closeModal();
+  });
+})();

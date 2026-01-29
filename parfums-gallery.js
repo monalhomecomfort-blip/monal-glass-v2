@@ -17,9 +17,9 @@ const galleries = {
   ],
 
   "stone-salt": [
-    "images/perfumes/stone_salt.png",
-    "images/perfumes/stone_salt_2.png",
-    "images/perfumes/stone_salt_3.png"
+    "images/perfumes/stone&salt.png",
+    "images/perfumes/stone&salt_2.png",
+    "images/perfumes/stone&salt_3.png"
   ],
 
   "drift": [

@@ -581,8 +581,8 @@ footer {
     content: "";
     position: absolute;
     top: 0;
-    left: -40px;
-    right: -40px;
+    left: -200px;
+    right: -200px;
 
     height: 36px;
 

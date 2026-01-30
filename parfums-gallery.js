@@ -78,3 +78,49 @@ document.querySelectorAll(".parfum-gallery").forEach(gallery => {
     img.src = images[index];
   });
 });
+/* =====================
+   PARFUMS INLINE GALLERY — SWIPE (MOBILE)
+===================== */
+
+if (window.innerWidth <= 768) {
+
+  document.querySelectorAll('.parfum-gallery').forEach(gallery => {
+
+    const img = gallery.querySelector('.product-diffuser');
+    const key = gallery.dataset.gallery;
+    const images = galleries[key];
+
+    if (!img || !images) return;
+
+    let startX = 0;
+    let endX = 0;
+
+    gallery.addEventListener('touchstart', (e) => {
+      startX = e.touches[0].clientX;
+    }, { passive: true });
+
+    gallery.addEventListener('touchend', (e) => {
+      endX = e.changedTouches[0].clientX;
+      handleSwipe();
+    });
+
+    function handleSwipe() {
+      const diff = startX - endX;
+
+      if (Math.abs(diff) < 40) return; // ігноруємо мікрорухи
+
+      let index = images.indexOf(img.getAttribute('src'));
+
+      if (diff > 0) {
+        // свайп вліво → наступне фото
+        index = (index + 1) % images.length;
+      } else {
+        // свайп вправо → попереднє фото
+        index = (index - 1 + images.length) % images.length;
+      }
+
+      img.src = images[index];
+    }
+
+  });
+}

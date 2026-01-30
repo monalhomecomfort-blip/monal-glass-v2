@@ -574,10 +574,6 @@ footer {
 /* ===================== PARFUMS PAGE — VISUAL DIVIDER (NO SPACING) ===================== */
 
 /* divider між інтро і першим товаром */
-.page-parfums .page-header {
-    position: relative;
-}
-
 .page-parfums .page-header::after {
     content: "";
     display: block;
@@ -587,18 +583,11 @@ footer {
 
     background: rgba(4, 4, 4, 0.25);
 
-    position: absolute;
-    left: 50%;
-    bottom: -50%;           /* ❗ СЕРЕДИНА ІСНУЮЧОГО ПОВІТРЯ */
-    transform: translateX(-50%);
+    margin: 0 auto; /* ❗ НІЯКОГО додаткового повітря */
 }
 
 /* divider між товарами */
-.page-parfums .product-row {
-    position: relative;
-}
-
-.page-parfums .product-row::after {
+.page-parfums .product-row:not(:last-of-type)::after {
     content: "";
     display: block;
 
@@ -607,16 +596,9 @@ footer {
 
     background: rgba(4, 4, 4, 0.25);
 
-    position: absolute;
-    left: 50%;
-    bottom: -50%;           /* ❗ СЕРЕДИНА МІЖ БЛОКАМИ */
-    transform: translateX(-50%);
+    margin: 0 auto; /* ❗ НІЯКОГО додаткового повітря */
 }
 
-/* не малюємо після останнього товару */
-.page-parfums .product-row:last-of-type::after {
-    display: none;
-}
 
 /* ===== MOBILE ===== */
 @media (max-width: 600px) {

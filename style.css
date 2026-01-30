@@ -577,7 +577,7 @@ footer {
     width: 68%;
     height: 1px;
 
-    margin: 72px auto;
+    margin: 0 auto;
 
     background: rgba(4, 4, 4, 0.25); /* той самий чорний матовий “скляний” */
 }

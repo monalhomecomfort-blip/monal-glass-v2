@@ -1654,29 +1654,42 @@ a.sub-mini {
     margin-top: 2px;
   }  
 }
-/* ===== PARFUMS INLINE GALLERY — MOBILE ===== */
+/* ===== PARFUMS INLINE GALLERY — MOBILE (ARROWS NEAR IMAGE, BIG) ===== */
 @media (max-width: 600px) {
-
   .page-parfums .parfum-gallery {
-      max-width: 92%;          /* ❗ стискаємо контейнер */
-      margin: 0 auto;
+      max-width: 100%;
+      padding: 0 32px; /* ❗ дає простір, щоб стрілки не були біля країв екрану */
   }
   .page-parfums .product-diffuser {
       max-height: 380px;
   }
+  /* стрілки — ТІ Ж ‹ ›, але БІЛЬШІ */
   .page-parfums .gallery-prev,
   .page-parfums .gallery-next {
-      font-size: 26px;         /* менші ніж desktop */
-      color: rgba(0,0,0,0.6);
-
+      position: absolute;
       top: 50%;
       transform: translateY(-50%);
+
+      background: none;
+      border: none;
+      padding: 0;
+
+      font-size: 30px;        /* ⬅️ БІЛЬШІ */
+      line-height: 1;
+      font-weight: 300;
+
+      color: rgba(0,0,0,0.6);
+      cursor: pointer;
+
+      z-index: 2;
+      user-select: none;
   }
+  /* ❗ НЕ від краю екрану, а близько до фото */
   .page-parfums .gallery-prev {
-      left: -14px;             /* БІЛЯ фото, НЕ край екрану */
+      left: 8px;
   }
   .page-parfums .gallery-next {
-      right: -14px;            /* БІЛЯ фото */
+      right: 8px;
   }
   .page-parfums .gallery-prev:active,
   .page-parfums .gallery-next:active {

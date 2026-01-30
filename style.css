@@ -571,6 +571,17 @@ footer {
 .product-rating .rating-buyers .rating-dots {
     letter-spacing: 1px;
 }
+/* ===================== PARFUMS PAGE — GLASS DIVIDER ===================== */
+
+.page-parfums .parfums-divider {
+    width: 68%;
+    height: 1px;
+
+    margin: 72px auto;
+
+    background: rgba(4, 4, 4, 0.25); /* той самий чорний матовий “скляний” */
+}
+
 /* ===== MOBILE ===== */
 @media (max-width: 600px) {
     .product-head {

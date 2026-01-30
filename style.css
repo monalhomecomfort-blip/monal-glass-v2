@@ -571,15 +571,51 @@ footer {
 .product-rating .rating-buyers .rating-dots {
     letter-spacing: 1px;
 }
-/* ===================== PARFUMS PAGE — GLASS DIVIDER ===================== */
+/* ===================== PARFUMS PAGE — VISUAL DIVIDER (NO SPACING) ===================== */
 
-.page-parfums .parfums-divider {
+/* divider між інтро і першим товаром */
+.page-parfums .page-header {
+    position: relative;
+}
+
+.page-parfums .page-header::after {
+    content: "";
+    display: block;
+
     width: 68%;
     height: 1px;
 
-    margin: 28px auto 0;
+    background: rgba(4, 4, 4, 0.25);
 
-    background: rgba(4, 4, 4, 0.25); /* той самий чорний матовий “скляний” */
+    position: absolute;
+    left: 50%;
+    bottom: -50%;           /* ❗ СЕРЕДИНА ІСНУЮЧОГО ПОВІТРЯ */
+    transform: translateX(-50%);
+}
+
+/* divider між товарами */
+.page-parfums .product-row {
+    position: relative;
+}
+
+.page-parfums .product-row::after {
+    content: "";
+    display: block;
+
+    width: 68%;
+    height: 1px;
+
+    background: rgba(4, 4, 4, 0.25);
+
+    position: absolute;
+    left: 50%;
+    bottom: -50%;           /* ❗ СЕРЕДИНА МІЖ БЛОКАМИ */
+    transform: translateX(-50%);
+}
+
+/* не малюємо після останнього товару */
+.page-parfums .product-row:last-of-type::after {
+    display: none;
 }
 
 /* ===== MOBILE ===== */

@@ -10,6 +10,7 @@ const isParfums = document.body.classList.contains('page-parfums');
 const isRefills = document.body.classList.contains('page-refills');
 const isDiscovery = document.body.classList.contains('page-discovery');
 const isGifts = document.body.classList.contains('page-gifts');
+const isAromadiffusers = document.body.classList.contains('page-aromadiffusers');
 
 /* ===================== PARFUMS ===================== */
 const parfumsGalleries = {
@@ -233,6 +234,129 @@ const giftsGalleries = {
   ]
 };
 
+/* ===================== AROMADIFFUSERS ===================== */
+const aromadiffusersGalleries = {
+  "shadow-of-fig": [
+    "images/aromadiffusers/diffuser_11.png",
+    "images/aromadiffusers/diffuser_15.png",
+    "images/aromadiffusers/diffuser_13.png",
+    "images/aromadiffusers/diffuser_16.png",
+    "images/aromadiffusers/diffuser_14.png",
+    "images/aromadiffusers/diffuser_7.png",
+    "images/aromadiffusers/diffuser_8.png",
+    "images/aromadiffusers/diffuser_3.png",
+    "images/aromadiffusers/diffuser_4.png"
+  ],
+
+  "nocturne": [
+    "images/aromadiffusers/diffuser_11.png",
+    "images/aromadiffusers/diffuser_15.png",
+    "images/aromadiffusers/diffuser_13.png",
+    "images/aromadiffusers/diffuser_16.png",
+    "images/aromadiffusers/diffuser_14.png",
+    "images/aromadiffusers/diffuser_7.png",
+    "images/aromadiffusers/diffuser_8.png",
+    "images/aromadiffusers/diffuser_3.png",
+    "images/aromadiffusers/diffuser_4.png"
+  ],
+
+  "crown-of-olive": [
+    "images/aromadiffusers/diffuser_11.png",
+    "images/aromadiffusers/diffuser_15.png",
+    "images/aromadiffusers/diffuser_13.png",
+    "images/aromadiffusers/diffuser_16.png",
+    "images/aromadiffusers/diffuser_14.png",
+    "images/aromadiffusers/diffuser_7.png",
+    "images/aromadiffusers/diffuser_8.png",
+    "images/aromadiffusers/diffuser_3.png",
+    "images/aromadiffusers/diffuser_4.png"
+  ],
+
+  "green-haven": [
+    "images/aromadiffusers/diffuser_11.png",
+    "images/aromadiffusers/diffuser_15.png",
+    "images/aromadiffusers/diffuser_13.png",
+    "images/aromadiffusers/diffuser_16.png",
+    "images/aromadiffusers/diffuser_14.png",
+    "images/aromadiffusers/diffuser_7.png",
+    "images/aromadiffusers/diffuser_8.png",
+    "images/aromadiffusers/diffuser_3.png",
+    "images/aromadiffusers/diffuser_4.png"
+  ],
+
+  "vesper": [
+    "images/aromadiffusers/diffuser_11.png",
+    "images/aromadiffusers/diffuser_15.png",
+    "images/aromadiffusers/diffuser_13.png",
+    "images/aromadiffusers/diffuser_16.png",
+    "images/aromadiffusers/diffuser_14.png",
+    "images/aromadiffusers/diffuser_7.png",
+    "images/aromadiffusers/diffuser_8.png",
+    "images/aromadiffusers/diffuser_3.png",
+    "images/aromadiffusers/diffuser_4.png"
+  ],
+
+  "rosalya": [
+    "images/aromadiffusers/diffuser_11.png",
+    "images/aromadiffusers/diffuser_15.png",
+    "images/aromadiffusers/diffuser_13.png",
+    "images/aromadiffusers/diffuser_16.png",
+    "images/aromadiffusers/diffuser_14.png",
+    "images/aromadiffusers/diffuser_7.png",
+    "images/aromadiffusers/diffuser_8.png",
+    "images/aromadiffusers/diffuser_3.png",
+    "images/aromadiffusers/diffuser_4.png"
+  ],
+
+  "drift": [
+    "images/aromadiffusers/diffuser_11.png",
+    "images/aromadiffusers/diffuser_15.png",
+    "images/aromadiffusers/diffuser_13.png",
+    "images/aromadiffusers/diffuser_16.png",
+    "images/aromadiffusers/diffuser_14.png",
+    "images/aromadiffusers/diffuser_7.png",
+    "images/aromadiffusers/diffuser_8.png",
+    "images/aromadiffusers/diffuser_3.png",
+    "images/aromadiffusers/diffuser_4.png"
+  ],
+
+  "freedom": [
+    "images/aromadiffusers/diffuser_11.png",
+    "images/aromadiffusers/diffuser_15.png",
+    "images/aromadiffusers/diffuser_13.png",
+    "images/aromadiffusers/diffuser_16.png",
+    "images/aromadiffusers/diffuser_14.png",
+    "images/aromadiffusers/diffuser_7.png",
+    "images/aromadiffusers/diffuser_8.png",
+    "images/aromadiffusers/diffuser_3.png",
+    "images/aromadiffusers/diffuser_4.png"
+  ],
+
+  "golden-rum": [
+    "images/aromadiffusers/diffuser_11.png",
+    "images/aromadiffusers/diffuser_15.png",
+    "images/aromadiffusers/diffuser_13.png",
+    "images/aromadiffusers/diffuser_16.png",
+    "images/aromadiffusers/diffuser_14.png",
+    "images/aromadiffusers/diffuser_7.png",
+    "images/aromadiffusers/diffuser_8.png",
+    "images/aromadiffusers/diffuser_3.png",
+    "images/aromadiffusers/diffuser_4.png"
+  ],
+
+  "stone-salt": [
+    "images/aromadiffusers/diffuser_11.png",
+    "images/aromadiffusers/diffuser_15.png",
+    "images/aromadiffusers/diffuser_13.png",
+    "images/aromadiffusers/diffuser_16.png",
+    "images/aromadiffusers/diffuser_14.png",
+    "images/aromadiffusers/diffuser_7.png",
+    "images/aromadiffusers/diffuser_8.png",
+    "images/aromadiffusers/diffuser_3.png",
+    "images/aromadiffusers/diffuser_4.png"
+  ]
+};
+
 /* ===================== HELPERS ===================== */
 function initGalleries(selector, galleriesMap) {
   document.querySelectorAll(selector).forEach(gallery => {
@@ -314,4 +438,9 @@ if (isDiscovery) {
 if (isGifts) {
   initGalleries(".gifts-gallery", giftsGalleries);
   initSwipe(".gifts-gallery", giftsGalleries);
+}
+
+if (isAromadiffusers) {
+  initGalleries(".aromadiffuser-gallery", aromadiffusersGalleries);
+  initSwipe(".aromadiffuser-gallery", aromadiffusersGalleries);
 }

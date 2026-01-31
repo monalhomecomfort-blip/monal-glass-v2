@@ -126,8 +126,7 @@ const discoveryGalleries = {
     "images/discovery/discovery_9.png",
     "images/discovery/discovery_12.png",
     "images/discovery/discovery_13.png",
-    "images/discovery/discovery_15.png",
-    "images/discovery/discovery_17.png"
+    "images/discovery/discovery_15.png"
   ],
 
   "golden-rum": [
@@ -136,8 +135,7 @@ const discoveryGalleries = {
     "images/discovery/discovery_9.png",
     "images/discovery/discovery_12.png",
     "images/discovery/discovery_13.png",
-    "images/discovery/discovery_15.png",
-    "images/discovery/discovery_17.png"
+    "images/discovery/discovery_15.png"    
   ],
 
   "green-haven": [
@@ -146,8 +144,7 @@ const discoveryGalleries = {
     "images/discovery/discovery_9.png",
     "images/discovery/discovery_12.png",
     "images/discovery/discovery_13.png",
-    "images/discovery/discovery_15.png",
-    "images/discovery/discovery_17.png"
+    "images/discovery/discovery_15.png"
   ],
 
   "nocturne": [
@@ -156,8 +153,7 @@ const discoveryGalleries = {
     "images/discovery/discovery_9.png",
     "images/discovery/discovery_12.png",
     "images/discovery/discovery_13.png",
-    "images/discovery/discovery_15.png",
-    "images/discovery/discovery_17.png"
+    "images/discovery/discovery_15.png"
   ],
 
   "rosalya": [
@@ -166,8 +162,7 @@ const discoveryGalleries = {
     "images/discovery/discovery_9.png",
     "images/discovery/discovery_12.png",
     "images/discovery/discovery_13.png",
-    "images/discovery/discovery_15.png",
-    "images/discovery/discovery_17.png"
+    "images/discovery/discovery_15.png"
   ],
 
   "shadow-of-fig": [
@@ -176,8 +171,7 @@ const discoveryGalleries = {
     "images/discovery/discovery_9.png",
     "images/discovery/discovery_12.png",
     "images/discovery/discovery_13.png",
-    "images/discovery/discovery_15.png",
-    "images/discovery/discovery_17.png"
+    "images/discovery/discovery_15.png"
   ],
 
   "stone-salt": [
@@ -186,8 +180,7 @@ const discoveryGalleries = {
     "images/discovery/discovery_9.png",
     "images/discovery/discovery_12.png",
     "images/discovery/discovery_13.png",
-    "images/discovery/discovery_15.png",
-    "images/discovery/discovery_17.png"
+    "images/discovery/discovery_15.png"
   ],
 
   "vesper": [
@@ -196,8 +189,7 @@ const discoveryGalleries = {
     "images/discovery/discovery_9.png",
     "images/discovery/discovery_12.png",
     "images/discovery/discovery_13.png",
-    "images/discovery/discovery_15.png",
-    "images/discovery/discovery_17.png"
+    "images/discovery/discovery_15.png"
   ],
 
   "crown-of-olive": [
@@ -206,8 +198,7 @@ const discoveryGalleries = {
     "images/discovery/discovery_9.png",
     "images/discovery/discovery_12.png",
     "images/discovery/discovery_13.png",
-    "images/discovery/discovery_15.png",
-    "images/discovery/discovery_17.png"
+    "images/discovery/discovery_15.png"
   ],
 
   "drift": [
@@ -216,8 +207,7 @@ const discoveryGalleries = {
     "images/discovery/discovery_9.png",
     "images/discovery/discovery_12.png",
     "images/discovery/discovery_13.png",
-    "images/discovery/discovery_15.png",
-    "images/discovery/discovery_17.png"
+    "images/discovery/discovery_15.png"
   ]
 };
 

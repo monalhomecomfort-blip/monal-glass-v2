@@ -9,6 +9,7 @@
 const isParfums = document.body.classList.contains('page-parfums');
 const isRefills = document.body.classList.contains('page-refills');
 const isDiscovery = document.body.classList.contains('page-discovery');
+const isGifts = document.body.classList.contains('page-gifts');
 
 /* ===================== PARFUMS ===================== */
 const parfumsGalleries = {
@@ -211,6 +212,27 @@ const discoveryGalleries = {
   ]
 };
 
+/* ===================== GIFTS ===================== */
+const giftsGalleries = {
+  "fairytale": [
+    "images/gifts/gift_6.png",
+    "images/gifts/gift_3.png",
+    "images/gifts/gift_9.png",
+    "images/gifts/gift.png",
+    "images/gifts/gift_4.png",
+    "images/gifts/gift_parfum_2.png",
+    "images/gifts/gift_parfum_3.png",
+    "images/gifts/schocko_3.png"
+  ],
+
+  "ten-mini": [
+    "images/gifts/discovery_5.png",
+    "images/gifts/discovery_4.png",
+    "images/gifts/discovery_11.png",
+    "images/gifts/discovery_14.png"
+  ]
+};
+
 /* ===================== HELPERS ===================== */
 function initGalleries(selector, galleriesMap) {
   document.querySelectorAll(selector).forEach(gallery => {
@@ -289,3 +311,7 @@ if (isDiscovery) {
   initSwipe(".discovery-gallery", discoveryGalleries);
 }
 
+if (isGifts) {
+  initGalleries(".gifts-gallery", giftsGalleries);
+  initSwipe(".gifts-gallery", giftsGalleries);
+}

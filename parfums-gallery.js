@@ -1,10 +1,20 @@
 /* =====================================================
-   PARFUMS INLINE GALLERY — Mōnal
-   Працює ТІЛЬКИ на сторінці parfums.html
-   Без модалки. Гортає фото НА МІСЦІ.
+   INLINE GALLERY — Mōnal
+   Працює на:
+   - parfums.html  (body.page-parfums)  + .parfum-gallery
+   - refills.html  (body.page-refills)  + .refill-gallery
+   Без модалки. Гортає фото НА МІСЦІ. + SWIPE (mobile)
 ===================================================== */
 
-const galleries = {
+const isParfums = document.body.classList.contains('page-parfums');
+const isRefills = document.body.classList.contains('page-refills');
+
+if (!isParfums && !isRefills) {
+  return;
+}
+
+/* ===================== PARFUMS ===================== */
+const parfumsGalleries = {
   "golden-rum": [
     "images/perfumes/golden_rum.png",
     "images/perfumes/golden_rum_2.png",
@@ -57,38 +67,93 @@ const galleries = {
   ]
 };
 
-document.querySelectorAll(".parfum-gallery").forEach(gallery => {
-  const key = gallery.dataset.gallery;
-  const images = galleries[key];
-  if (!images) return;
+/* ===================== REFILLS ===================== */
+const refillsGalleries = {
+  "crown-of-olive": [
+    "images/refills/crown_of_olive_.png",
+    "images/refills/sticks_5.png",
+    "images/refills/sticks.png"
+  ],
+  "drift": [
+    "images/refills/drift_.png",
+    "images/refills/sticks_5.png",
+    "images/refills/sticks.png"
+  ],
+  "freedom": [
+    "images/refills/freedom_.png",
+    "images/refills/sticks_5.png",
+    "images/refills/sticks.png"
+  ],
+  "golden-rum": [
+    "images/refills/golden_rum_.png",
+    "images/refills/sticks_5.png",
+    "images/refills/sticks.png"
+  ],
+  "green-haven": [
+    "images/refills/green_haven_.png",
+    "images/refills/sticks_5.png",
+    "images/refills/sticks.png"
+  ],
+  "nocturne": [
+    "images/refills/nocturne_.png",
+    "images/refills/sticks_5.png",
+    "images/refills/sticks.png"
+  ],
+  "rosalya": [
+    "images/refills/rosalya_.png",
+    "images/refills/sticks_5.png",
+    "images/refills/sticks.png"
+  ],
+  "shadow-of-fig": [
+    "images/refills/shadow_of_fig_.png",
+    "images/refills/sticks_5.png",
+    "images/refills/sticks.png"
+  ],
+  "stone-salt": [
+    "images/refills/stone&salt_.png",
+    "images/refills/sticks_5.png",
+    "images/refills/sticks.png"
+  ],
+  "vesper": [
+    "images/refills/vesper_.png",
+    "images/refills/sticks_5.png",
+    "images/refills/sticks.png"
+  ]
+};
 
-  const img = gallery.querySelector("img");
-  const prevBtn = gallery.querySelector(".gallery-prev");
-  const nextBtn = gallery.querySelector(".gallery-next");
-
-  let index = 0;
-
-  prevBtn.addEventListener("click", () => {
-    index = (index - 1 + images.length) % images.length;
-    img.src = images[index];
-  });
-
-  nextBtn.addEventListener("click", () => {
-    index = (index + 1) % images.length;
-    img.src = images[index];
-  });
-});
-/* =====================
-   PARFUMS INLINE GALLERY — SWIPE (MOBILE)
-===================== */
-
-if (window.innerWidth <= 768) {
-
-  document.querySelectorAll('.parfum-gallery').forEach(gallery => {
-
-    const img = gallery.querySelector('.product-diffuser');
+/* ===================== HELPERS ===================== */
+function initGalleries(selector, galleriesMap) {
+  document.querySelectorAll(selector).forEach(gallery => {
     const key = gallery.dataset.gallery;
-    const images = galleries[key];
+    const images = galleriesMap[key];
+    if (!images) return;
+
+    const img = gallery.querySelector('img');
+    const prevBtn = gallery.querySelector('.gallery-prev');
+    const nextBtn = gallery.querySelector('.gallery-next');
+    if (!img || !prevBtn || !nextBtn) return;
+
+    let index = 0;
+
+    prevBtn.addEventListener('click', () => {
+      index = (index - 1 + images.length) % images.length;
+      img.src = images[index];
+    });
+
+    nextBtn.addEventListener('click', () => {
+      index = (index + 1) % images.length;
+      img.src = images[index];
+    });
+  });
+}
+
+function initSwipe(selector, galleriesMap) {
+  if (window.innerWidth > 768) return;
+
+  document.querySelectorAll(selector).forEach(gallery => {
+    const img = gallery.querySelector('.product-diffuser') || gallery.querySelector('img');
+    const key = gallery.dataset.gallery;
+    const images = galleriesMap[key];
 
     if (!img || !images) return;
 
@@ -101,26 +166,31 @@ if (window.innerWidth <= 768) {
 
     gallery.addEventListener('touchend', (e) => {
       endX = e.changedTouches[0].clientX;
-      handleSwipe();
-    });
 
-    function handleSwipe() {
       const diff = startX - endX;
-
-      if (Math.abs(diff) < 40) return; // ігноруємо мікрорухи
+      if (Math.abs(diff) < 40) return;
 
       let index = images.indexOf(img.getAttribute('src'));
+      if (index < 0) index = 0;
 
       if (diff > 0) {
-        // свайп вліво → наступне фото
         index = (index + 1) % images.length;
       } else {
-        // свайп вправо → попереднє фото
         index = (index - 1 + images.length) % images.length;
       }
 
       img.src = images[index];
-    }
-
+    });
   });
+}
+
+/* ===================== INIT ===================== */
+if (isParfums) {
+  initGalleries('.parfum-gallery', parfumsGalleries);
+  initSwipe('.parfum-gallery', parfumsGalleries);
+}
+
+if (isRefills) {
+  initGalleries('.refill-gallery', refillsGalleries);
+  initSwipe('.refill-gallery', refillsGalleries);
 }

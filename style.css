@@ -758,7 +758,7 @@ footer {
 /* основне фото */
 .page-gifts .product-diffuser {
     width: 100%;
-    max-height: 420px;
+    max-height: 480px;
     object-fit: contain;
 
     background: none;

@@ -642,6 +642,96 @@ footer {
         rgba(4, 4, 4, 0.00)
     );
 }
+/* ===================== DISCOVERY PAGE — INLINE GALLERY (DESKTOP) ===================== */
+.page-discovery .product-media {
+    background: none;
+    border-radius: 0;
+    box-shadow: none;
+    height: auto;
+    overflow: visible;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+/* контейнер галереї */
+.page-discovery .discovery-gallery {
+    position: relative;
+    width: 100%;
+    max-width: 520px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+/* основне фото */
+.page-discovery .product-diffuser {
+    width: 100%;
+    max-height: 520px;
+    object-fit: contain;
+
+    background: none;
+    box-shadow: none;
+    border-radius: 0;
+
+    pointer-events: none;
+}
+/* стрілки ‹ › */
+.page-discovery .gallery-prev,
+.page-discovery .gallery-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+
+    background: none;
+    border: none;
+    padding: 0;
+
+    font-family: 'Montserrat', sans-serif;
+    font-size: 36px;
+    font-weight: 300;
+    line-height: 1;
+
+    color: rgba(0,0,0,0.45);
+    cursor: pointer;
+
+    z-index: 2;
+    user-select: none;
+}
+.page-discovery .gallery-prev {
+    left: -10px;
+}
+.page-discovery .gallery-next {
+    right: -10px;
+}
+.page-discovery .gallery-prev:hover,
+.page-discovery .gallery-next:hover {
+    color: rgba(0,0,0,0.75);
+}
+/* ===================== DISCOVERY PAGE — FULL WIDTH SHADOW DIVIDER ===================== */
+.page-discovery .product-row {
+    position: relative;
+}
+.page-discovery .product-row::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -200px;
+    right: -200px;
+
+    height: 36px;
+
+    pointer-events: none;
+    z-index: 1;
+
+    background: linear-gradient(
+        to bottom,
+        rgba(4, 4, 4, 0.22),
+        rgba(4, 4, 4, 0.10),
+        rgba(4, 4, 4, 0.04),
+        rgba(4, 4, 4, 0.00)
+    );
+}
 
 /* ===== PRODUCT HEAD: title + price + button + rating ===== */
 .product-head {

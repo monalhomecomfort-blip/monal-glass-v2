@@ -9,10 +9,6 @@
 const isParfums = document.body.classList.contains('page-parfums');
 const isRefills = document.body.classList.contains('page-refills');
 
-if (!isParfums && !isRefills) {
-  return;
-}
-
 /* ===================== PARFUMS ===================== */
 const parfumsGalleries = {
   "golden-rum": [
@@ -69,8 +65,33 @@ const parfumsGalleries = {
 
 /* ===================== REFILLS ===================== */
 const refillsGalleries = {
+  "shadow-of-fig": [
+    "images/refills/shadow_of_fig_.png",
+    "images/refills/sticks_5.png",
+    "images/refills/sticks.png"
+  ],
+  "nocturne": [
+    "images/refills/nocturne_.png",
+    "images/refills/sticks_5.png",
+    "images/refills/sticks.png"
+  ],
   "crown-of-olive": [
     "images/refills/crown_of_olive_.png",
+    "images/refills/sticks_5.png",
+    "images/refills/sticks.png"
+  ],
+  "green-haven": [
+    "images/refills/green_haven_.png",
+    "images/refills/sticks_5.png",
+    "images/refills/sticks.png"
+  ],
+  "vesper": [
+    "images/refills/vesper_.png",
+    "images/refills/sticks_5.png",
+    "images/refills/sticks.png"
+  ],
+  "rosalya": [
+    "images/refills/rosalya_.png",
     "images/refills/sticks_5.png",
     "images/refills/sticks.png"
   ],
@@ -89,33 +110,8 @@ const refillsGalleries = {
     "images/refills/sticks_5.png",
     "images/refills/sticks.png"
   ],
-  "green-haven": [
-    "images/refills/green_haven_.png",
-    "images/refills/sticks_5.png",
-    "images/refills/sticks.png"
-  ],
-  "nocturne": [
-    "images/refills/nocturne_.png",
-    "images/refills/sticks_5.png",
-    "images/refills/sticks.png"
-  ],
-  "rosalya": [
-    "images/refills/rosalya_.png",
-    "images/refills/sticks_5.png",
-    "images/refills/sticks.png"
-  ],
-  "shadow-of-fig": [
-    "images/refills/shadow_of_fig_.png",
-    "images/refills/sticks_5.png",
-    "images/refills/sticks.png"
-  ],
   "stone-salt": [
     "images/refills/stone&salt_.png",
-    "images/refills/sticks_5.png",
-    "images/refills/sticks.png"
-  ],
-  "vesper": [
-    "images/refills/vesper_.png",
     "images/refills/sticks_5.png",
     "images/refills/sticks.png"
   ]
@@ -128,19 +124,19 @@ function initGalleries(selector, galleriesMap) {
     const images = galleriesMap[key];
     if (!images) return;
 
-    const img = gallery.querySelector('img');
-    const prevBtn = gallery.querySelector('.gallery-prev');
-    const nextBtn = gallery.querySelector('.gallery-next');
+    const img = gallery.querySelector("img");
+    const prevBtn = gallery.querySelector(".gallery-prev");
+    const nextBtn = gallery.querySelector(".gallery-next");
     if (!img || !prevBtn || !nextBtn) return;
 
     let index = 0;
 
-    prevBtn.addEventListener('click', () => {
+    prevBtn.addEventListener("click", () => {
       index = (index - 1 + images.length) % images.length;
       img.src = images[index];
     });
 
-    nextBtn.addEventListener('click', () => {
+    nextBtn.addEventListener("click", () => {
       index = (index + 1) % images.length;
       img.src = images[index];
     });
@@ -151,26 +147,25 @@ function initSwipe(selector, galleriesMap) {
   if (window.innerWidth > 768) return;
 
   document.querySelectorAll(selector).forEach(gallery => {
-    const img = gallery.querySelector('.product-diffuser') || gallery.querySelector('img');
+    const img = gallery.querySelector(".product-diffuser") || gallery.querySelector("img");
     const key = gallery.dataset.gallery;
     const images = galleriesMap[key];
-
     if (!img || !images) return;
 
     let startX = 0;
     let endX = 0;
 
-    gallery.addEventListener('touchstart', (e) => {
+    gallery.addEventListener("touchstart", (e) => {
       startX = e.touches[0].clientX;
     }, { passive: true });
 
-    gallery.addEventListener('touchend', (e) => {
+    gallery.addEventListener("touchend", (e) => {
       endX = e.changedTouches[0].clientX;
 
       const diff = startX - endX;
       if (Math.abs(diff) < 40) return;
 
-      let index = images.indexOf(img.getAttribute('src'));
+      let index = images.indexOf(img.getAttribute("src"));
       if (index < 0) index = 0;
 
       if (diff > 0) {
@@ -184,13 +179,13 @@ function initSwipe(selector, galleriesMap) {
   });
 }
 
-/* ===================== INIT ===================== */
+/* ===================== INIT (НЕ ЛАМАЄ НІЧОГО) ===================== */
 if (isParfums) {
-  initGalleries('.parfum-gallery', parfumsGalleries);
-  initSwipe('.parfum-gallery', parfumsGalleries);
+  initGalleries(".parfum-gallery", parfumsGalleries);
+  initSwipe(".parfum-gallery", parfumsGalleries);
 }
 
 if (isRefills) {
-  initGalleries('.refill-gallery', refillsGalleries);
-  initSwipe('.refill-gallery', refillsGalleries);
+  initGalleries(".refill-gallery", refillsGalleries);
+  initSwipe(".refill-gallery", refillsGalleries);
 }

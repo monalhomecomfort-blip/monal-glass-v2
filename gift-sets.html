@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="style.css">
 </head>
 
-<body>
+<body class="page-gifts">
 
 <!-- NAV -->
 <nav>
@@ -76,7 +76,6 @@
 
 </div>
 
-
     <div class="nav-right">
         <a href="delivery.html">Доставка</a>
         <a href="cart.html">Кошик <span id="cart-count"></span></a>
@@ -122,13 +121,32 @@
 <div class="product-row">
 
     <!-- MEDIA -->
-    <div class="product-media micro-animate">
-        <div
-            class="product-bg"
-            style="background-image: url('images/gifts/gift_1.jpg');">
-        </div>
-        <!-- без статичної картинки -->
+<div class="product-media">
+
+    <div class="gifts-gallery" data-gallery="fairytale">
+
+        <button
+            class="gallery-prev"
+            type="button"
+            aria-label="Попереднє фото">
+            ‹
+        </button>
+
+        <img
+            src="images/gifts/gift_6.png"
+            alt="Подарунковий набір для дому Mōnal FAIRYTALE"
+            class="product-diffuser">
+
+        <button
+            class="gallery-next"
+            type="button"
+            aria-label="Наступне фото">
+            ›
+        </button>
+
     </div>
+
+</div>
 
     <!-- TEXT -->
     <div class="product-text">
@@ -191,17 +209,32 @@
 <div class="product-row">
 
     <!-- MEDIA -->
-    <div class="product-media micro-animate">
-        <div
-            class="product-bg"
-            style="background-image: url('images/gifts/ten_mini_fon.jpg');">
-        </div>
+<div class="product-media">
+
+    <div class="gifts-gallery" data-gallery="ten-mini">
+
+        <button
+            class="gallery-prev"
+            type="button"
+            aria-label="Попереднє фото">
+            ‹
+        </button>
 
         <img
-            src="images/gifts/ten_mini.PNG"
+            src="images/gifts/discovery_5.png"
             alt="Подарунковий набір мініатюр парфумів для дому Mōnal Ten mini"
             class="product-diffuser">
+
+        <button
+            class="gallery-next"
+            type="button"
+            aria-label="Наступне фото">
+            ›
+        </button>
+
     </div>
+
+</div>
 
     <!-- TEXT -->
     <div class="product-text">
@@ -370,5 +403,7 @@
   }
 </script>
 
+<script src="./parfums-gallery.js"></script>
+    
 </body>
 </html>

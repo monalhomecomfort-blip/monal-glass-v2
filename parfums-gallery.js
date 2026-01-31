@@ -186,7 +186,8 @@ if (isParfums) {
 }
 
 if (isRefills) {
-  initGalleries(".parfum-gallery", refillsGalleries);
-  initSwipe(".parfum-gallery", refillsGalleries);
+  initGalleries(".refill-gallery", refillsGalleries);
+  initSwipe(".refill-gallery", refillsGalleries);
 }
+
 

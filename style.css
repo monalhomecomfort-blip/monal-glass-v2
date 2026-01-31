@@ -824,6 +824,95 @@ footer {
     );
 }
 
+/* ===================== AROMADIFFUSERS PAGE — INLINE GALLERY (DESKTOP) ===================== */
+.page-aromadiffusers .product-media {
+    background: none;
+    border-radius: 0;
+    box-shadow: none;
+    height: auto;
+    overflow: visible;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+/* контейнер галереї */
+.page-aromadiffusers .aromadiffuser-gallery {
+    position: relative;
+    width: 100%;
+    max-width: 520px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+/* основне фото */
+.page-aromadiffusers .product-diffuser {
+    width: 100%;
+    max-height: 520px;
+    object-fit: contain;
+
+    background: none;
+    box-shadow: none;
+    border-radius: 0;
+
+    pointer-events: none;
+}
+/* стрілки ‹ › */
+.page-aromadiffusers .gallery-prev,
+.page-aromadiffusers .gallery-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+
+    background: none;
+    border: none;
+    padding: 0;
+
+    font-family: 'Montserrat', sans-serif;
+    font-size: 36px;
+    font-weight: 300;
+    line-height: 1;
+
+    color: rgba(0,0,0,0.45);
+    cursor: pointer;
+
+    z-index: 2;
+    user-select: none;
+}
+.page-aromadiffusers .gallery-prev {
+    left: -10px;
+}
+.page-aromadiffusers .gallery-next {
+    right: -10px;
+}
+.page-aromadiffusers .gallery-prev:hover,
+.page-aromadiffusers .gallery-next:hover {
+    color: rgba(0,0,0,0.75);
+}
+/* FULL WIDTH SHADOW DIVIDER */
+.page-aromadiffusers .product-row {
+    position: relative;
+}
+.page-aromadiffusers .product-row::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -200px;
+    right: -200px;
+
+    height: 36px;
+    pointer-events: none;
+    z-index: 1;
+
+    background: linear-gradient(
+        to bottom,
+        rgba(4, 4, 4, 0.22),
+        rgba(4, 4, 4, 0.10),
+        rgba(4, 4, 4, 0.04),
+        rgba(4, 4, 4, 0.00)
+    );
+}
 /* ===== PRODUCT HEAD: title + price + button + rating ===== */
 .product-head {
     display: flex;
@@ -2115,7 +2204,47 @@ a.sub-mini {
       color: rgba(0,0,0,0.85);
   }
 }
+/* ===== AROMADIFFUSERS INLINE GALLERY — MOBILE ===== */
+@media (max-width: 600px) {
 
+  .page-aromadiffusers .aromadiffuser-gallery {
+      max-width: 100%;
+      padding: 0 32px;
+  }
+  .page-aromadiffusers .product-diffuser {
+      max-height: 380px;
+  }
+  .page-aromadiffusers .gallery-prev,
+  .page-aromadiffusers .gallery-next {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+
+      background: none;
+      border: none;
+      padding: 0;
+
+      font-size: 30px;
+      line-height: 1;
+      font-weight: 300;
+
+      color: rgba(0,0,0,0.6);
+      cursor: pointer;
+
+      z-index: 2;
+      user-select: none;
+  }
+  .page-aromadiffusers .gallery-prev {
+      left: 8px;
+  }
+  .page-aromadiffusers .gallery-next {
+      right: 8px;
+  }
+  .page-aromadiffusers .gallery-prev:active,
+  .page-aromadiffusers .gallery-next:active {
+      color: rgba(0,0,0,0.85);
+  }
+}
 
 /* 🚑 DESKTOP EMERGENCY: hide mobile cart */
 @media (min-width: 601px) {

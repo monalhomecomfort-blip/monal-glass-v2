@@ -8,6 +8,7 @@
 
 const isParfums = document.body.classList.contains('page-parfums');
 const isRefills = document.body.classList.contains('page-refills');
+const isDiscovery = document.body.classList.contains('page-discovery');
 
 /* ===================== PARFUMS ===================== */
 const parfumsGalleries = {
@@ -117,6 +118,109 @@ const refillsGalleries = {
   ]
 };
 
+/* ===================== DISCOVERY ===================== */
+const discoveryGalleries = {
+  "freedom": [
+    "images/discovery/discovery_freedom.png",
+    "images/discovery/discovery_8.png",
+    "images/discovery/discovery_9.png",
+    "images/discovery/discovery_12.png",
+    "images/discovery/discovery_13.png",
+    "images/discovery/discovery_15.png",
+    "images/discovery/discovery_17.png"
+  ],
+
+  "golden-rum": [
+    "images/discovery/discovery_golden_rum.png",
+    "images/discovery/discovery_8.png",
+    "images/discovery/discovery_9.png",
+    "images/discovery/discovery_12.png",
+    "images/discovery/discovery_13.png",
+    "images/discovery/discovery_15.png",
+    "images/discovery/discovery_17.png"
+  ],
+
+  "green-haven": [
+    "images/discovery/discovery_green_haven.png",
+    "images/discovery/discovery_8.png",
+    "images/discovery/discovery_9.png",
+    "images/discovery/discovery_12.png",
+    "images/discovery/discovery_13.png",
+    "images/discovery/discovery_15.png",
+    "images/discovery/discovery_17.png"
+  ],
+
+  "nocturne": [
+    "images/discovery/discovery_nocturne.png",
+    "images/discovery/discovery_8.png",
+    "images/discovery/discovery_9.png",
+    "images/discovery/discovery_12.png",
+    "images/discovery/discovery_13.png",
+    "images/discovery/discovery_15.png",
+    "images/discovery/discovery_17.png"
+  ],
+
+  "rosalya": [
+    "images/discovery/discovery_rosalya.png",
+    "images/discovery/discovery_8.png",
+    "images/discovery/discovery_9.png",
+    "images/discovery/discovery_12.png",
+    "images/discovery/discovery_13.png",
+    "images/discovery/discovery_15.png",
+    "images/discovery/discovery_17.png"
+  ],
+
+  "shadow-of-fig": [
+    "images/discovery/discovery_shadow_of_fig.png",
+    "images/discovery/discovery_8.png",
+    "images/discovery/discovery_9.png",
+    "images/discovery/discovery_12.png",
+    "images/discovery/discovery_13.png",
+    "images/discovery/discovery_15.png",
+    "images/discovery/discovery_17.png"
+  ],
+
+  "stone-salt": [
+    "images/discovery/discovery_stone&salt.png",
+    "images/discovery/discovery_8.png",
+    "images/discovery/discovery_9.png",
+    "images/discovery/discovery_12.png",
+    "images/discovery/discovery_13.png",
+    "images/discovery/discovery_15.png",
+    "images/discovery/discovery_17.png"
+  ],
+
+  "vesper": [
+    "images/discovery/discovery_vesper.png",
+    "images/discovery/discovery_8.png",
+    "images/discovery/discovery_9.png",
+    "images/discovery/discovery_12.png",
+    "images/discovery/discovery_13.png",
+    "images/discovery/discovery_15.png",
+    "images/discovery/discovery_17.png"
+  ],
+
+  "crown-of-olive": [
+    "images/discovery/discovery_crown_of_olive.png",
+    "images/discovery/discovery_8.png",
+    "images/discovery/discovery_9.png",
+    "images/discovery/discovery_12.png",
+    "images/discovery/discovery_13.png",
+    "images/discovery/discovery_15.png",
+    "images/discovery/discovery_17.png"
+  ],
+
+  "drift": [
+    "images/discovery/discovery_drift.png",
+    "images/discovery/discovery_8.png",
+    "images/discovery/discovery_9.png",
+    "images/discovery/discovery_12.png",
+    "images/discovery/discovery_13.png",
+    "images/discovery/discovery_15.png",
+    "images/discovery/discovery_17.png"
+  ]
+};
+
 /* ===================== HELPERS ===================== */
 function initGalleries(selector, galleriesMap) {
   document.querySelectorAll(selector).forEach(gallery => {
@@ -190,4 +294,8 @@ if (isRefills) {
   initSwipe(".refill-gallery", refillsGalleries);
 }
 
+if (isDiscovery) {
+  initGalleries(".discovery-gallery", discoveryGalleries);
+  initSwipe(".discovery-gallery", discoveryGalleries);
+}
 

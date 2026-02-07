@@ -249,8 +249,8 @@ const aromadiffusersGalleries = {
   ],
 
   "nocturne": [
-    "images/aromadiffusers/diffuser_11.png",
     "images/aromadiffusers/diffuser_15.png",
+    "images/aromadiffusers/diffuser_11.png",
     "images/aromadiffusers/diffuser_13.png",
     "images/aromadiffusers/diffuser_16.png",
     "images/aromadiffusers/diffuser_14.png",
@@ -261,9 +261,9 @@ const aromadiffusersGalleries = {
   ],
 
   "crown-of-olive": [
-    "images/aromadiffusers/diffuser_11.png",
-    "images/aromadiffusers/diffuser_15.png",
     "images/aromadiffusers/diffuser_13.png",
+    "images/aromadiffusers/diffuser_15.png",
+    "images/aromadiffusers/diffuser_11.png",
     "images/aromadiffusers/diffuser_16.png",
     "images/aromadiffusers/diffuser_14.png",
     "images/aromadiffusers/diffuser_7.png",
@@ -273,10 +273,10 @@ const aromadiffusersGalleries = {
   ],
 
   "green-haven": [
-    "images/aromadiffusers/diffuser_11.png",
+    "images/aromadiffusers/diffuser_16.png",
     "images/aromadiffusers/diffuser_15.png",
     "images/aromadiffusers/diffuser_13.png",
-    "images/aromadiffusers/diffuser_16.png",
+    "images/aromadiffusers/diffuser_11.png",
     "images/aromadiffusers/diffuser_14.png",
     "images/aromadiffusers/diffuser_7.png",
     "images/aromadiffusers/diffuser_8.png",
@@ -285,13 +285,13 @@ const aromadiffusersGalleries = {
   ],
 
   "vesper": [
-    "images/aromadiffusers/diffuser_11.png",
+    "images/aromadiffusers/diffuser_8.png",
     "images/aromadiffusers/diffuser_15.png",
     "images/aromadiffusers/diffuser_13.png",
     "images/aromadiffusers/diffuser_16.png",
     "images/aromadiffusers/diffuser_14.png",
     "images/aromadiffusers/diffuser_7.png",
-    "images/aromadiffusers/diffuser_8.png",
+    "images/aromadiffusers/diffuser_11.png",
     "images/aromadiffusers/diffuser_3.png",
     "images/aromadiffusers/diffuser_4.png"
   ],
@@ -309,8 +309,8 @@ const aromadiffusersGalleries = {
   ],
 
   "drift": [
-    "images/aromadiffusers/diffuser_11.png",
     "images/aromadiffusers/diffuser_15.png",
+    "images/aromadiffusers/diffuser_11.png",
     "images/aromadiffusers/diffuser_13.png",
     "images/aromadiffusers/diffuser_16.png",
     "images/aromadiffusers/diffuser_14.png",
@@ -321,9 +321,9 @@ const aromadiffusersGalleries = {
   ],
 
   "freedom": [
-    "images/aromadiffusers/diffuser_11.png",
-    "images/aromadiffusers/diffuser_15.png",
     "images/aromadiffusers/diffuser_13.png",
+    "images/aromadiffusers/diffuser_15.png",
+    "images/aromadiffusers/diffuser_11.png",
     "images/aromadiffusers/diffuser_16.png",
     "images/aromadiffusers/diffuser_14.png",
     "images/aromadiffusers/diffuser_7.png",
@@ -333,10 +333,10 @@ const aromadiffusersGalleries = {
   ],
 
   "golden-rum": [
-    "images/aromadiffusers/diffuser_11.png",
+    "images/aromadiffusers/diffuser_16.png",
     "images/aromadiffusers/diffuser_15.png",
     "images/aromadiffusers/diffuser_13.png",
-    "images/aromadiffusers/diffuser_16.png",
+    "images/aromadiffusers/diffuser_11.png",
     "images/aromadiffusers/diffuser_14.png",
     "images/aromadiffusers/diffuser_7.png",
     "images/aromadiffusers/diffuser_8.png",
@@ -345,13 +345,13 @@ const aromadiffusersGalleries = {
   ],
 
   "stone-salt": [
-    "images/aromadiffusers/diffuser_11.png",
+    "images/aromadiffusers/diffuser_8.png",
     "images/aromadiffusers/diffuser_15.png",
     "images/aromadiffusers/diffuser_13.png",
     "images/aromadiffusers/diffuser_16.png",
     "images/aromadiffusers/diffuser_14.png",
     "images/aromadiffusers/diffuser_7.png",
-    "images/aromadiffusers/diffuser_8.png",
+    "images/aromadiffusers/diffuser_11.png",
     "images/aromadiffusers/diffuser_3.png",
     "images/aromadiffusers/diffuser_4.png"
   ]

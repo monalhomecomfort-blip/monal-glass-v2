@@ -1584,8 +1584,8 @@ a.sub-mini {
 
   transform: translate(0, 0) rotate(0deg);
   transition:
-    transform 4.8s cubic-bezier(.18,.78,.28,1),
-    opacity 4.5s ease;
+    transform 5s cubic-bezier(.18,.78,.28,1),
+    opacity 5.5s ease;
 
   opacity: 1;
 }

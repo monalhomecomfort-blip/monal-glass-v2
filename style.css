@@ -1578,10 +1578,9 @@ a.sub-mini {
 
 .valentine-heart {
   position: absolute;
-  transform: rotate(45deg);
+  transform: rotate(45deg) scale(1.45); /* ⬅️ ОЦЕ ВАЖЛИВО */
   opacity: 0.96;
 
-  /* 🎈 НАДУВНИЙ ОБʼЄМ */
   background:
     radial-gradient(
       circle at 28% 22%,
@@ -1592,7 +1591,6 @@ a.sub-mini {
       rgba(0,0,0,0.28) 100%
     );
 
-  /* 🌑 ТІНІ ЯК В КУЛЬКИ */
   box-shadow:
     inset -10px -14px 22px rgba(0,0,0,0.35),
     inset 6px 6px 14px rgba(255,255,255,0.35),
@@ -1602,6 +1600,7 @@ a.sub-mini {
     transform 3.6s cubic-bezier(.14,.66,.29,1),
     opacity 3.6s ease;
 }
+
 .valentine-heart::before,
 .valentine-heart::after {
   content: "";
@@ -1630,10 +1629,10 @@ a.sub-mini {
     translate(var(--x), var(--y))
     rotate(45deg)
     rotateX(22deg)
-    rotateY(-16deg);
+    rotateY(-16deg)
+    scale(1.45);
   opacity: 0;
 }
-
 
 /* ===================== FAQ — MOBILE ===================== */
 

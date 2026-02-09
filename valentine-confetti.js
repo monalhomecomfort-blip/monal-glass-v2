@@ -7,7 +7,7 @@
     "#f2a1b3"  // рожевий
   ];
 
-  const COUNT = 38;
+  const COUNT = 90;
   const DURATION = 4200;
 
   const container = document.createElement("div");

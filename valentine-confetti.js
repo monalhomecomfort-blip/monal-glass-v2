@@ -1,93 +1,53 @@
 (() => {
-  const DURATION = 4000; // 4 секунди
-  const COUNT_DESKTOP = 28;
-  const COUNT_MOBILE = 16;
-
-  const colors = [
+  const COLORS = [
     "#f4efe6", // слонова кость
-    "#f2b6c6", // рожевий
-    "#c91f4a", // червоний
     "#7b1e3a", // гнила вишня
-    "#6d1b3b"  // пурпур
+    "#a4163a", // пурпур
+    "#d62839", // червоний
+    "#f2a1b3"  // рожевий
   ];
 
-  const isMobile = window.innerWidth < 600;
-  const COUNT = isMobile ? COUNT_MOBILE : COUNT_DESKTOP;
+  const COUNT = 42;
+  const DURATION = 4200;
 
   const container = document.createElement("div");
   container.style.position = "fixed";
   container.style.inset = "0";
   container.style.pointerEvents = "none";
-  container.style.zIndex = "99999";
+  container.style.zIndex = "9999";
   document.body.appendChild(container);
+
+  const originX = window.innerWidth / 2;
+  const originY = window.innerHeight * 0.55;
 
   for (let i = 0; i < COUNT; i++) {
     const heart = document.createElement("div");
+    heart.className = "valentine-heart";
 
-    const size = Math.random() * 18 + 12;
-    const left = Math.random() * 100;
-    const delay = Math.random() * 600;
-    const duration = Math.random() * 1200 + 2400;
+    const size = 10 + Math.random() * 18;
+    const color = COLORS[Math.floor(Math.random() * COLORS.length)];
+    const angle = Math.random() * Math.PI * 2;
+    const distance = 180 + Math.random() * 260;
 
-    heart.style.position = "absolute";
-    heart.style.left = `${left}%`;
-    heart.style.bottom = "-40px";
+    const x = Math.cos(angle) * distance;
+    const y = Math.sin(angle) * distance * -1;
+
     heart.style.width = `${size}px`;
     heart.style.height = `${size}px`;
-    heart.style.background = colors[Math.floor(Math.random() * colors.length)];
-    heart.style.transform = "rotate(45deg)";
-    heart.style.opacity = "0.95";
-    heart.style.borderRadius = "4px";
-    heart.style.filter = "drop-shadow(0 4px 6px rgba(0,0,0,0.25))";
-
-    heart.style.animation = `
-      floatUp ${duration}ms ease-out ${delay}ms forwards
-    `;
-
-    heart.innerHTML = `
-      <span style="
-        position:absolute;
-        width:100%;
-        height:100%;
-        background:inherit;
-        border-radius:50%;
-        top:-50%;
-        left:0;
-      "></span>
-      <span style="
-        position:absolute;
-        width:100%;
-        height:100%;
-        background:inherit;
-        border-radius:50%;
-        left:-50%;
-        top:0;
-      "></span>
-    `;
+    heart.style.background = color;
+    heart.style.left = `${originX}px`;
+    heart.style.top = `${originY}px`;
+    heart.style.setProperty("--x", `${x}px`);
+    heart.style.setProperty("--y", `${y}px`);
 
     container.appendChild(heart);
-  }
 
-  const style = document.createElement("style");
-  style.innerHTML = `
-    @keyframes floatUp {
-      0% {
-        transform: translateY(0) rotate(45deg) scale(0.8);
-        opacity: 0;
-      }
-      15% {
-        opacity: 1;
-      }
-      100% {
-        transform: translateY(-110vh) rotate(45deg) scale(1.1);
-        opacity: 0;
-      }
-    }
-  `;
-  document.head.appendChild(style);
+    requestAnimationFrame(() => {
+      heart.classList.add("explode");
+    });
+  }
 
   setTimeout(() => {
     container.remove();
-    style.remove();
-  }, DURATION + 1000);
+  }, DURATION);
 })();

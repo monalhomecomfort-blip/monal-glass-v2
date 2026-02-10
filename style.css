@@ -1599,6 +1599,27 @@ a.sub-mini {
   opacity: 0;
 }
 
+/* ===================== VALENTINE CONFETTI — MOBILE ===================== */
+@media (max-width: 600px) {
+
+  .valentine-heart {
+    transform: translate3d(0,0,0) rotate(45deg);
+    will-change: transform, opacity;
+
+    /* трохи важчі, щоб читались на маленькому екрані */
+    opacity: 1;
+
+    filter:
+      drop-shadow(0 6px 10px rgba(0,0,0,0.35))
+      drop-shadow(0 3px 5px rgba(0,0,0,0.22));
+
+    transition:
+      transform 4.6s cubic-bezier(.17,.67,.32,1),
+      opacity 6.2s ease-out;
+  }
+
+}
+
 /* ===================== FAQ — MOBILE ===================== */
 
 @media (max-width: 900px) {

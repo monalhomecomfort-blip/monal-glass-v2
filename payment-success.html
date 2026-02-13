@@ -18,13 +18,11 @@
 
 <script>
   // 🔹 маяк для Google
-  if (navigator.sendBeacon && typeof gtag === "function") {
-    gtag('event', 'purchase', {
-      transaction_id: Date.now().toString(),
-      value: 1,
-      currency: 'UAH'
-    });
-  }
+  gtag('event', 'purchase', {
+    transaction_id: Date.now().toString(),
+    value: 1,
+    currency: 'UAH'
+  });
 
   // 🔹 очищаємо кошик
   localStorage.removeItem("cart");

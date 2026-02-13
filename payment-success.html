@@ -7,11 +7,20 @@
 <body>
 
 <script>
-  // ✅ очищаємо кошик ТІЛЬКИ після оплати
+  // 🔹 маяк для Google
+  if (navigator.sendBeacon && typeof gtag === "function") {
+    gtag('event', 'purchase', {
+      transaction_id: Date.now().toString(),
+      value: 1,
+      currency: 'UAH'
+    });
+  }
+
+  // 🔹 очищаємо кошик
   localStorage.removeItem("cart");
   localStorage.removeItem("discoverySetItems");
 
-  // повертаємо на головну
+  // 🔹 редірект
   window.location.href = "/";
 </script>
 

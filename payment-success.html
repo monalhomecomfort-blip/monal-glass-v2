@@ -3,32 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <title>Оплата успішна</title>
-
-  <!-- GA4 -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-87PVMWLBDF"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-87PVMWLBDF');
-</script>
-
 </head>
 <body>
 
 <script>
-  // 🔹 маяк для Google
-  gtag('event', 'purchase', {
-    transaction_id: Date.now().toString(),
-    value: 1,
-    currency: 'UAH'
-  });
-
-  // 🔹 очищаємо кошик
+  // ✅ очищаємо кошик ТІЛЬКИ після оплати
   localStorage.removeItem("cart");
   localStorage.removeItem("discoverySetItems");
 
-  // 🔹 редірект
+  // повертаємо на головну
   window.location.href = "/";
 </script>
 

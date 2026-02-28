@@ -136,7 +136,20 @@ function removeFromCart(index) {
 }
 
 function clearCart() {
+    // очищаємо кошик
     localStorage.removeItem("cart");
+
+    // очищаємо промокод
+    localStorage.removeItem("promo_code");
+    PROMO_CODE = "";
+
+    // очищаємо поле вводу і повідомлення
+    const promoInput = document.getElementById("promo-input");
+    const promoMessage = document.getElementById("promo-message");
+
+    if (promoInput) promoInput.value = "";
+    if (promoMessage) promoMessage.textContent = "";
+
     renderCart();
     updateCartCount();
 }

@@ -780,7 +780,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         if (!isPromoActive()) {
-            promoMessage.textContent = "Промо наразі не активне";
+            promoMessage.textContent = "Промокод наразі не активний";
             return;
         }
 
@@ -789,10 +789,28 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
+        const cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+        // перевіряємо чи є хоча б один товар,
+        // на який поширюється знижка
+        let hasEligible = false;
+
+        cart.forEach(item => {
+            if (!isExcludedItem(item)) {
+                hasEligible = true;
+            }
+        });
+
+        if (!hasEligible) {
+            promoMessage.textContent = "Знижка не поширюється на товари з кошика";
+            return;
+        }
+
+        // якщо є хоча б один підходящий товар — застосовуємо
         PROMO_CODE = entered;
         localStorage.setItem("promo_code", PROMO_CODE);
 
-        promoMessage.innerHTML = `Знижка застосована`;
+        promoMessage.textContent = "Знижка застосована";
         renderCart();
     });
 });

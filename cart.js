@@ -3,7 +3,63 @@ let PAY_NOW_AMOUNT = 0;
 let CERT_APPLIED_AMOUNT = 0;
 let CERT_CODE_USED = null;
 
+// ===================== PROMO ENGINE =====================
 
+const PROMO = window.PROMO_CONFIG || null;
+let PROMO_CODE = (localStorage.getItem("promo_code") || "").trim().toUpperCase();
+
+function isPromoActive() {
+    if (!PROMO || !PROMO.active) return false;
+
+    if (!PROMO.start || !PROMO.end) return true;
+
+    const now = new Date();
+    const start = new Date(PROMO.start);
+    const end = new Date(PROMO.end);
+
+    return now >= start && now <= end;
+}
+
+function isExcludedItem(item) {
+    const name = String(item?.name || "").toLowerCase();
+
+    if (PROMO?.exclusions?.certificates &&
+        (name.includes("сертиф") || String(item?.label || "").toLowerCase().includes("сертиф"))) {
+        return true;
+    }
+
+    if (PROMO?.exclusions?.discovery &&
+        (name.includes("discovery") || name.includes("діскавер"))) {
+        return true;
+    }
+
+    if (PROMO?.exclusions?.tenMini &&
+        (name.includes("ten mini") || name.includes("10х3"))) {
+        return true;
+    }
+
+    return false;
+}
+
+function calcPromoDiscount(cart) {
+    if (!isPromoActive()) return 0;
+    if (!PROMO_CODE || !PROMO.codes.includes(PROMO_CODE)) return 0;
+
+    let eligibleSum = 0;
+    let hasNonExcluded = false;
+
+    cart.forEach(item => {
+        if (!isExcludedItem(item)) {
+            hasNonExcluded = true;
+            eligibleSum += (Number(item.price) || 0);
+        }
+    });
+
+    // ❗ Якщо в кошику тільки виключення — знижка не працює
+    if (!hasNonExcluded) return 0;
+
+    return Math.min(PROMO.discount, eligibleSum);
+}
 /* ===================== КОШИК ===================== */
 
 function updateCartCount() {
@@ -52,7 +108,23 @@ function renderCart() {
         </div>
     `).join("");
 
-    totalEl.textContent = cart.reduce((s, i) => s + i.price, 0) + " грн";
+    const total = cart.reduce((s, i) => s + Number(i.price), 0);
+    const promoDiscount = typeof calcPromoDiscount === "function"
+        ? calcPromoDiscount(cart)
+        : 0;
+
+    let finalTotal = total - promoDiscount;
+    if (finalTotal < 0) finalTotal = 0;
+
+    if (promoDiscount > 0) {
+        totalEl.innerHTML = `
+            Загальна сума: ${total} грн<br>
+            Промокод: −${promoDiscount} грн<br>
+            <strong>${finalTotal} грн</strong>
+        `;
+    } else {
+        totalEl.textContent = total + " грн";
+    }
 }
 
 function removeFromCart(index) {

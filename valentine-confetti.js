@@ -1,14 +1,14 @@
 (() => {
   const COLORS = [
-    "#f4efe6", // слонова кость
-    "#7b1e3a", // гнила вишня
-    "#a4163a", // пурпур
-    "#d62839", // червоний
-    "#f2a1b3"  // рожевий
+    "#f4efe6",
+    "#7b1e3a",
+    "#a4163a",
+    "#d62839",
+    "#f2a1b3"
   ];
 
-  const COUNT = 90;
-  const DURATION = 4200;
+  const COUNT = 120;        // більше частинок
+  const DURATION = 4500;
 
   const container = document.createElement("div");
   container.style.position = "fixed";
@@ -21,54 +21,85 @@
   const originY = window.innerHeight * 0.55;
 
   for (let i = 0; i < COUNT; i++) {
-    const size = 34 + Math.random() * 28;
+
+    const isDust = Math.random() < 0.25;   // 25% світлий пил
+    const size = isDust
+      ? 6 + Math.random() * 6
+      : 26 + Math.random() * 24;
+
     const color = COLORS[Math.floor(Math.random() * COLORS.length)];
 
     const angle = Math.random() * Math.PI * 2;
-    const distance = 220 + Math.random() * 260;
+    const distance = 240 + Math.random() * 300;
 
     const x = Math.cos(angle) * distance;
     const y = Math.sin(angle) * distance * -1;
 
-    const heart = document.createElementNS(
+    const el = document.createElementNS(
       "http://www.w3.org/2000/svg",
       "svg"
     );
 
-    heart.setAttribute("viewBox", "0 0 32 29");
-    heart.setAttribute("class", "valentine-heart");
-    heart.style.width = `${size}px`;
-    heart.style.height = `${size}px`;
-    heart.style.left = `${originX}px`;
-    heart.style.top = `${originY}px`;
-    heart.style.setProperty("--x", `${x}px`);
-    heart.style.setProperty("--y", `${y}px`);
+    el.setAttribute("viewBox", "0 0 40 40");
+    el.setAttribute("class", "valentine-heart");
+    el.style.width = `${size}px`;
+    el.style.height = `${size}px`;
+    el.style.left = `${originX}px`;
+    el.style.top = `${originY}px`;
+    el.style.setProperty("--x", `${x}px`);
+    el.style.setProperty("--y", `${y}px`);
 
-    heart.innerHTML = `
-      <defs>
-        <radialGradient id="shine-${i}" cx="28%" cy="22%" r="70%">
-          <stop offset="0%" stop-color="rgba(255,255,255,0.95)" />
-          <stop offset="22%" stop-color="rgba(255,255,255,0.45)" />
-          <stop offset="55%" stop-color="${color}" />
-          <stop offset="100%" stop-color="rgba(0,0,0,0.35)" />
-        </radialGradient>
-      </defs>
-      <path
-        d="M16 29
-           C7 22, 0 16, 0 9
-           C0 4, 4 0, 9 0
-           C12 0, 14 2, 16 4
-           C18 2, 20 0, 23 0
-           C28 0, 32 4, 32 9
-           C32 16, 25 22, 16 29 Z"
-        fill="url(#shine-${i})"
-      />
-    `;
+    if (isDust) {
+      el.innerHTML = `
+        <circle cx="20" cy="20" r="10"
+          fill="rgba(255,255,255,0.9)"
+        />
+      `;
+    } else {
 
-    container.appendChild(heart);
+      // 50% пелюстка / 50% міні квітка
+      if (Math.random() < 0.5) {
+        el.innerHTML = `
+          <defs>
+            <radialGradient id="petal-${i}" cx="35%" cy="25%" r="75%">
+              <stop offset="0%" stop-color="rgba(255,255,255,0.85)" />
+              <stop offset="45%" stop-color="${color}" />
+              <stop offset="100%" stop-color="rgba(0,0,0,0.35)" />
+            </radialGradient>
+          </defs>
+          <ellipse
+            cx="20"
+            cy="20"
+            rx="14"
+            ry="18"
+            fill="url(#petal-${i})"
+            transform="rotate(${Math.random()*360} 20 20)"
+          />
+        `;
+      } else {
+        el.innerHTML = `
+          <defs>
+            <radialGradient id="flower-${i}" cx="30%" cy="30%" r="75%">
+              <stop offset="0%" stop-color="rgba(255,255,255,0.9)" />
+              <stop offset="40%" stop-color="${color}" />
+              <stop offset="100%" stop-color="rgba(0,0,0,0.4)" />
+            </radialGradient>
+          </defs>
+          <g fill="url(#flower-${i})">
+            <ellipse cx="20" cy="8" rx="6" ry="12"/>
+            <ellipse cx="20" cy="32" rx="6" ry="12"/>
+            <ellipse cx="8" cy="20" rx="12" ry="6"/>
+            <ellipse cx="32" cy="20" rx="12" ry="6"/>
+          </g>
+          <circle cx="20" cy="20" r="6" fill="rgba(255,255,255,0.9)"/>
+        `;
+      }
+    }
+
+    container.appendChild(el);
 
     requestAnimationFrame(() => {
-      heart.classList.add("explode");
+      el.classList.add("explode");
     });
   }
 

@@ -733,6 +733,46 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
+/* ===================== PROMO APPLY BUTTON ===================== */
+
+document.addEventListener("DOMContentLoaded", () => {
+    const promoInput = document.getElementById("promo-input");
+    const promoBtn = document.getElementById("promo-apply-btn");
+    const promoMessage = document.getElementById("promo-message");
+
+    if (!promoInput || !promoBtn || !promoMessage) return;
+
+    // якщо вже був застосований код — підставляємо
+    if (PROMO_CODE) {
+        promoInput.value = PROMO_CODE;
+    }
+
+    promoBtn.addEventListener("click", () => {
+        const entered = promoInput.value.trim().toUpperCase();
+
+        if (!entered) {
+            promoMessage.textContent = "Введіть промокод";
+            return;
+        }
+
+        if (!isPromoActive()) {
+            promoMessage.textContent = "Промо наразі не активне";
+            return;
+        }
+
+        if (!PROMO || !PROMO.codes.includes(entered)) {
+            promoMessage.textContent = "Невірний промокод";
+            return;
+        }
+
+        PROMO_CODE = entered;
+        localStorage.setItem("promo_code", PROMO_CODE);
+
+        promoMessage.innerHTML = `Знижка застосована`;
+        renderCart();
+    });
+});
+
 /* ===== MAKE CART FUNCTIONS GLOBAL (for onclick="...") ===== */
 window.addToCart = addToCart;
 window.removeFromCart = removeFromCart;

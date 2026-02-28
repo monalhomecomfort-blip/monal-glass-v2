@@ -1,14 +1,13 @@
 (() => {
   const COLORS = [
     "#f4efe6",
-    "#7b1e3a",
-    "#a4163a",
+    "#f2a1b3",
     "#d62839",
-    "#f2a1b3"
+    "#7b1e3a"
   ];
 
-  const COUNT = 120;        // більше частинок
-  const DURATION = 4500;
+  const COUNT = 130;
+  const DURATION = 4200;
 
   const container = document.createElement("div");
   container.style.position = "fixed";
@@ -22,78 +21,38 @@
 
   for (let i = 0; i < COUNT; i++) {
 
-    const isDust = Math.random() < 0.25;   // 25% світлий пил
+    const isDust = Math.random() < 0.3;
+
     const size = isDust
-      ? 6 + Math.random() * 6
-      : 26 + Math.random() * 24;
+      ? 4 + Math.random() * 4
+      : 18 + Math.random() * 18;
 
     const color = COLORS[Math.floor(Math.random() * COLORS.length)];
 
     const angle = Math.random() * Math.PI * 2;
-    const distance = 240 + Math.random() * 300;
+    const distance = 240 + Math.random() * 280;
 
     const x = Math.cos(angle) * distance;
     const y = Math.sin(angle) * distance * -1;
 
-    const el = document.createElementNS(
-      "http://www.w3.org/2000/svg",
-      "svg"
-    );
-
-    el.setAttribute("viewBox", "0 0 40 40");
-    el.setAttribute("class", "valentine-heart");
+    const el = document.createElement("div");
+    el.className = "valentine-heart";
     el.style.width = `${size}px`;
-    el.style.height = `${size}px`;
+    el.style.height = `${size * 1.4}px`;
     el.style.left = `${originX}px`;
     el.style.top = `${originY}px`;
     el.style.setProperty("--x", `${x}px`);
     el.style.setProperty("--y", `${y}px`);
 
     if (isDust) {
-      el.innerHTML = `
-        <circle cx="20" cy="20" r="10"
-          fill="rgba(255,255,255,0.9)"
-        />
-      `;
+      el.style.borderRadius = "50%";
+      el.style.background = "rgba(255,255,255,0.85)";
+      el.style.boxShadow = "0 0 6px rgba(255,255,255,0.6)";
     } else {
-
-      // 50% пелюстка / 50% міні квітка
-      if (Math.random() < 0.5) {
-        el.innerHTML = `
-          <defs>
-            <radialGradient id="petal-${i}" cx="35%" cy="25%" r="75%">
-              <stop offset="0%" stop-color="rgba(255,255,255,0.85)" />
-              <stop offset="45%" stop-color="${color}" />
-              <stop offset="100%" stop-color="rgba(0,0,0,0.35)" />
-            </radialGradient>
-          </defs>
-          <ellipse
-            cx="20"
-            cy="20"
-            rx="14"
-            ry="18"
-            fill="url(#petal-${i})"
-            transform="rotate(${Math.random()*360} 20 20)"
-          />
-        `;
-      } else {
-        el.innerHTML = `
-          <defs>
-            <radialGradient id="flower-${i}" cx="30%" cy="30%" r="75%">
-              <stop offset="0%" stop-color="rgba(255,255,255,0.9)" />
-              <stop offset="40%" stop-color="${color}" />
-              <stop offset="100%" stop-color="rgba(0,0,0,0.4)" />
-            </radialGradient>
-          </defs>
-          <g fill="url(#flower-${i})">
-            <ellipse cx="20" cy="8" rx="6" ry="12"/>
-            <ellipse cx="20" cy="32" rx="6" ry="12"/>
-            <ellipse cx="8" cy="20" rx="12" ry="6"/>
-            <ellipse cx="32" cy="20" rx="12" ry="6"/>
-          </g>
-          <circle cx="20" cy="20" r="6" fill="rgba(255,255,255,0.9)"/>
-        `;
-      }
+      el.style.borderRadius = "60% 40% 70% 30%";
+      el.style.background = color;
+      el.style.boxShadow = "0 10px 20px rgba(0,0,0,0.25)";
+      el.style.transform = `rotate(${Math.random()*360}deg)`;
     }
 
     container.appendChild(el);

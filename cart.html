@@ -137,33 +137,43 @@
                 <div id="cart-list" style="margin-bottom:14px;"></div>
 
                 <!-- PROMO CODE BLOCK -->
-                <div id="promo-block">
-                  <input 
-                    id="promo-input" 
-                    type="text" 
-                    class="input"
-                    placeholder="Введіть промокод"
-                  >
+                <div id="promo-block" style="margin-bottom:18px;">
+                    <input 
+                        id="promo-input" 
+                        type="text" 
+                        class="input"
+                        placeholder="Введіть промокод"
+                        style="width:100%; box-sizing:border-box;"
+                    >
 
-                  <button 
-                    id="promo-apply-btn" 
-                    type="button" 
-                    class="buy-btn"
-                  >
-                    Застосувати
-                  </button>
+                    <button 
+                        id="promo-apply-btn" 
+                        type="button" 
+                        class="buy-btn"
+                        style="width:100%; margin-top:10px;"
+                    >
+                        Застосувати
+                    </button>
 
-                  <div id="promo-message"></div>
+                    <div id="promo-message" style="margin-top:8px; font-size:14px;"></div>
                 </div>
 
                 <h2>Сума</h2>
                 <div id="cart-total" style="font-size:20px; margin-bottom:18px;"></div>
 
-                <button class="buy-btn" onclick="clearCart()" style="margin-right:10px;">
+                <button 
+                    class="buy-btn" 
+                    onclick="clearCart()" 
+                    style="width:100%;"
+                >
                     Очистити
                 </button>
 
-                <button class="buy-btn" onclick="showCheckout()">
+                <button 
+                    class="buy-btn" 
+                    onclick="showCheckout()" 
+                    style="width:100%; margin-top:10px;"
+                >
                     Оформити
                 </button>
             </div>

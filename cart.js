@@ -414,8 +414,18 @@ function submitOrder() {
     }
 
     // ===== ЄДИНЕ місце розрахунку сум =====
-    const total = cart.reduce((s, i) => s + i.price, 0);
-    const remainingToPay = Math.max(0, total - CERT_APPLIED_AMOUNT);
+    const total = cart.reduce((s, i) => s + Number(i.price), 0);
+
+    // рахуємо знижку по промокоду
+    const promoDiscount = typeof calcPromoDiscount === "function"
+        ? calcPromoDiscount(cart)
+        : 0;
+
+    // після промокоду
+    const afterPromo = Math.max(0, total - promoDiscount);
+
+    // після сертифіката
+    const remainingToPay = Math.max(0, afterPromo - CERT_APPLIED_AMOUNT);
 
     const pay = document.querySelector("input[name='pay']:checked");
 

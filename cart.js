@@ -506,6 +506,7 @@ function submitOrder() {
 📦 НП: ${np}
 
 💰 Загальна сума: ${total} грн
+${promoDiscount > 0 ? `🏷 Промокод: −${promoDiscount} грн\n` : ""}
 ${(typeof CERT_CODE_USED === "string" && CERT_CODE_USED)
   ? `🎟 Сертифікат: ${CERT_CODE_USED} (−${CERT_APPLIED_AMOUNT} грн)\n`
   : ""}

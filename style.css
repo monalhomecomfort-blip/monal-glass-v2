@@ -1574,28 +1574,23 @@ a.sub-mini {
     color: #444;
 }
 
-/* ===================== SEASONAL BURST ENGINE ===================== */
+/* ===================== SEASONAL BURST (CANVAS VERSION) ===================== */
 
-.burst-item {
-  position: absolute;
+canvas {
+  position: fixed;
+  inset: 0;
   pointer-events: none;
-  opacity: 1;
-  transform: translate(-50%, -50%) scale(0.2);
-  will-change: transform, opacity;
-  transition:
-    transform 4.5s cubic-bezier(.15,.75,.25,1),
-    opacity 4.8s ease;
-  filter: drop-shadow(0 10px 22px rgba(0,0,0,0.25));
-}
+  z-index: 9999;
 
-.burst-item.explode {
-  transform:
-    translate(calc(-50% + var(--x)), calc(-50% + var(--y)))
-    rotate(var(--r))
-    scale(var(--s));
-  opacity: 0;
-}
+  /* трохи пом’якшуємо вигляд */
+  opacity: 0.97;
 
+  /* легка глибина, без “пластикового” ефекту */
+  filter: drop-shadow(0 8px 20px rgba(0,0,0,0.15));
+
+  /* нормальне змішування з фоном */
+  mix-blend-mode: normal;
+}
 /* ===================== SEASONAL BURST — MOBILE ===================== */
 @media (max-width: 600px) {
 

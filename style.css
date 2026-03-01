@@ -1632,9 +1632,9 @@ a.sub-mini {
 /* ===== SPRING MAGNOLIA BACKGROUND ===== */
 
 body.home {
-  background-image: url("images/sprint-magnolia.png");
+  background-image: url("images/spring-magnolia.png");
   background-repeat: no-repeat;
-  background-position: left 140px;
+  background-position: -80px 140px;
   background-size: 280px auto;
 }
 /* ===================== FAQ — MOBILE ===================== */

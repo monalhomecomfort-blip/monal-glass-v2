@@ -1629,36 +1629,6 @@ a.sub-mini {
   filter: blur(18px);
 }
 
-/* ===== SPRING MAGNOLIA BRANCH — ONLY HOME ===== */
-
-body.home .container {
-  position: relative;
-}
-
-body.home .container::before {
-  content: "";
-  position: absolute;
-  left: -140px;
-  top: 120px;
-  width: 320px;
-  height: 650px;
-  pointer-events: none;
-  z-index: 0;
-  opacity: 0.18;
-
-  background: url("data:image/svg+xml;utf8,
-  <svg viewBox='0 0 400 700' xmlns='http://www.w3.org/2000/svg'>
-    <path d='M200 700 C170 560 240 470 180 380 C120 300 210 210 160 130 C140 80 190 30 200 0'
-          stroke='%236a665c'
-          stroke-width='2'
-          fill='none'/>
-
-    <ellipse cx='190' cy='420' rx='38' ry='60' fill='%23f7d5df'/>
-    <ellipse cx='225' cy='330' rx='32' ry='52' fill='%23f1b9c8'/>
-    <ellipse cx='170' cy='250' rx='40' ry='64' fill='%23f9cbd8'/>
-    <ellipse cx='210' cy='170' rx='30' ry='50' fill='%23f4b4c6'/>
-  </svg>") no-repeat left top / contain;
-}
 /* ===================== FAQ — MOBILE ===================== */
 
 @media (max-width: 900px) {

@@ -1,6 +1,6 @@
 (() => {
 
-  const COUNT = 120;
+  const COUNT = 90;
   const DURATION = 4800;
 
   const canvas = document.createElement("canvas");
@@ -23,7 +23,12 @@
     return min + Math.random() * (max - min);
   }
 
+  function noise(val, amount) {
+    return val + random(-amount, amount);
+  }
+
   const reds = ["#ff4d6d", "#e63946", "#d62839", "#ff758f"];
+  const greens = ["#9ad1a3", "#1b5e20"];
 
   const particles = [];
 
@@ -33,22 +38,16 @@
     const typeRand = Math.random();
 
     let type;
-    if (typeRand < 0.45) type = "petal";
-    else if (typeRand < 0.7) type = "leaf";
-    else if (typeRand < 0.85) type = "pollen";
+    if (typeRand < 0.5) type = "petal";
+    else if (typeRand < 0.75) type = "leaf";
     else type = "flower";
 
     const size =
-      type === "pollen"
-        ? random(2, 4)
-        : type === "flower"
-        ? random(24, 36)
-        : random(14, 24);
+      type === "flower"
+        ? random(28, 45)
+        : random(16, 26);
 
-    const speed =
-      type === "pollen"
-        ? random(3, 6)
-        : random(2, 4);
+    const speed = random(2, 4);
 
     particles.push({
       x: centerX,
@@ -60,7 +59,8 @@
       rotationSpeed: random(-0.02, 0.02),
       type,
       alpha: 1,
-      color: reds[Math.floor(Math.random() * reds.length)]
+      color: reds[Math.floor(Math.random() * reds.length)],
+      leafColor: greens[Math.floor(Math.random() * greens.length)]
     });
   }
 
@@ -70,7 +70,7 @@
     ctx.rotate(p.rotation);
 
     const g = ctx.createRadialGradient(
-      0, -p.size * 0.4, p.size * 0.1,
+      0, -p.size * 0.3, p.size * 0.2,
       0, 0, p.size
     );
 
@@ -80,19 +80,31 @@
     ctx.fillStyle = g;
 
     ctx.beginPath();
-    ctx.moveTo(0, -p.size);
-    ctx.bezierCurveTo(
-      p.size, -p.size * 0.2,
-      p.size * 0.6, p.size,
-      0, p.size
-    );
-    ctx.bezierCurveTo(
-      -p.size * 0.6, p.size * 0.7,
-      -p.size, -p.size * 0.3,
-      0, -p.size
-    );
-    ctx.fill();
 
+    const topX = noise(0, p.size * 0.15);
+    const topY = -p.size;
+
+    ctx.moveTo(topX, topY);
+
+    ctx.bezierCurveTo(
+      noise(p.size * 1.1, p.size * 0.2),
+      noise(-p.size * 0.3, p.size * 0.2),
+      noise(p.size * 0.5, p.size * 0.2),
+      noise(p.size, p.size * 0.2),
+      0,
+      p.size
+    );
+
+    ctx.bezierCurveTo(
+      noise(-p.size * 0.6, p.size * 0.2),
+      noise(p.size * 0.6, p.size * 0.2),
+      noise(-p.size * 1.1, p.size * 0.2),
+      noise(-p.size * 0.3, p.size * 0.2),
+      topX,
+      topY
+    );
+
+    ctx.fill();
     ctx.restore();
   }
 
@@ -102,37 +114,34 @@
     ctx.rotate(p.rotation);
 
     const g = ctx.createLinearGradient(0, -p.size, 0, p.size);
-    g.addColorStop(0, "#a8e6a3");
-    g.addColorStop(1, "#1b5e20");
+    g.addColorStop(0, p.leafColor);
+    g.addColorStop(1, "#0f3e13");
 
     ctx.fillStyle = g;
 
     ctx.beginPath();
+
     ctx.moveTo(0, -p.size);
+
     ctx.bezierCurveTo(
-      p.size * 1.2, -p.size * 0.3,
-      p.size * 0.6, p.size,
-      0, p.size
+      noise(p.size * 1.2, p.size * 0.2),
+      noise(-p.size * 0.3, p.size * 0.2),
+      noise(p.size * 0.6, p.size * 0.2),
+      noise(p.size, p.size * 0.2),
+      0,
+      p.size
     );
+
     ctx.bezierCurveTo(
-      -p.size * 0.6, p.size * 0.6,
-      -p.size * 1.2, -p.size * 0.4,
-      0, -p.size
+      noise(-p.size * 0.6, p.size * 0.2),
+      noise(p.size * 0.6, p.size * 0.2),
+      noise(-p.size * 1.2, p.size * 0.2),
+      noise(-p.size * 0.3, p.size * 0.2),
+      0,
+      -p.size
     );
+
     ctx.fill();
-
-    ctx.restore();
-  }
-
-  function drawPollen(p) {
-    ctx.save();
-    ctx.translate(p.x, p.y);
-
-    ctx.fillStyle = "#f4c430";
-    ctx.beginPath();
-    ctx.arc(0, 0, p.size, 0, Math.PI * 2);
-    ctx.fill();
-
     ctx.restore();
   }
 
@@ -141,37 +150,32 @@
     ctx.translate(p.x, p.y);
     ctx.rotate(p.rotation);
 
-    for (let i = 0; i < 5; i++) {
-      ctx.rotate((Math.PI * 2) / 5);
+    const petals = Math.floor(random(5, 8));
+    const step = (Math.PI * 2) / petals;
 
-      const g = ctx.createRadialGradient(
-        0, -p.size * 0.4, p.size * 0.1,
-        0, 0, p.size
-      );
-
-      g.addColorStop(0, "#fff0f6");
-      g.addColorStop(1, "#ff8fab");
-
-      ctx.fillStyle = g;
-
-      ctx.beginPath();
-      ctx.moveTo(0, -p.size);
-      ctx.quadraticCurveTo(
-        p.size * 0.6, 0,
-        0, p.size * 0.6
-      );
-      ctx.quadraticCurveTo(
-        -p.size * 0.6, 0,
-        0, -p.size
-      );
-      ctx.fill();
+    for (let i = 0; i < petals; i++) {
+      ctx.rotate(step);
+      drawPetal({
+        x: 0,
+        y: 0,
+        size: p.size * random(0.8, 1),
+        rotation: 0,
+        color: p.color
+      });
     }
 
-    // серцевина
+    // центр зернистий
     ctx.fillStyle = "#d4a017";
-    ctx.beginPath();
-    ctx.arc(0, 0, p.size * 0.18, 0, Math.PI * 2);
-    ctx.fill();
+
+    for (let i = 0; i < 25; i++) {
+      const r = random(0, p.size * 0.25);
+      const a = random(0, Math.PI * 2);
+      const x = Math.cos(a) * r;
+      const y = Math.sin(a) * r;
+      ctx.beginPath();
+      ctx.arc(x, y, random(0.5, 1.5), 0, Math.PI * 2);
+      ctx.fill();
+    }
 
     ctx.restore();
   }
@@ -190,13 +194,12 @@
       p.vy += 0.04;
       p.vx += 0.01;
       p.rotation += p.rotationSpeed;
-      p.alpha -= 0.006;
+      p.alpha -= 0.005;
 
       ctx.globalAlpha = p.alpha;
 
       if (p.type === "petal") drawPetal(p);
       else if (p.type === "leaf") drawLeaf(p);
-      else if (p.type === "pollen") drawPollen(p);
       else drawFlower(p);
     });
 

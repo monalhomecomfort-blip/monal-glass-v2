@@ -1,21 +1,14 @@
 (() => {
 
-  const CONFIG = {
-    theme: "spring",     // змінюється при потребі
-    count: 120,
-    duration: 4200
-  };
+  const COUNT = 90;
+  const DURATION = 4200;
 
-  const THEMES = {
-
-    spring: {
-      colors: ["#f4efe6","#f2a1b3","#d62839","#7b1e3a"],
-      type: "petal"
-    }
-
-  };
-
-  const theme = THEMES[CONFIG.theme];
+  const COLORS = [
+    "#f4efe6",
+    "#f2a1b3",
+    "#d62839",
+    "#7b1e3a"
+  ];
 
   const container = document.createElement("div");
   container.style.position = "fixed";
@@ -27,56 +20,80 @@
   const originX = window.innerWidth / 2;
   const originY = window.innerHeight * 0.55;
 
-  for (let i = 0; i < CONFIG.count; i++) {
+  for (let i = 0; i < COUNT; i++) {
 
-    const isDust = Math.random() < 0.25;
-    const size = isDust
-      ? 4 + Math.random() * 4
-      : 14 + Math.random() * 16;
+    const isDust = Math.random() < 0.3;
 
     const angle = Math.random() * Math.PI * 2;
-    const distance = 260 + Math.random() * 260;
+    const distance = 240 + Math.random() * 260;
 
     const x = Math.cos(angle) * distance;
     const y = Math.sin(angle) * distance * -1;
 
-    const el = document.createElement("div");
-    el.className = "burst-item";
-
-    el.style.position = "absolute";
-    el.style.left = originX + "px";
-    el.style.top = originY + "px";
-
-    el.style.setProperty("--x", x + "px");
-    el.style.setProperty("--y", y + "px");
-    el.style.setProperty("--r", (Math.random()*360) + "deg");
-    el.style.setProperty("--s", 1 + Math.random()*0.4);
-
     if (isDust) {
-      el.style.width = size + "px";
-      el.style.height = size + "px";
-      el.style.borderRadius = "50%";
-      el.style.background = "rgba(255,255,255,0.85)";
-      el.style.boxShadow = "0 0 10px rgba(255,255,255,0.6)";
+      // ✨ Світлий пил
+      const dust = document.createElement("div");
+      dust.className = "burst-item";
+
+      const size = 3 + Math.random() * 4;
+
+      dust.style.width = size + "px";
+      dust.style.height = size + "px";
+      dust.style.borderRadius = "50%";
+      dust.style.background = "rgba(255,255,255,0.85)";
+      dust.style.boxShadow = "0 0 8px rgba(255,255,255,0.6)";
+
+      dust.style.left = originX + "px";
+      dust.style.top = originY + "px";
+
+      dust.style.setProperty("--x", x + "px");
+      dust.style.setProperty("--y", y + "px");
+      dust.style.setProperty("--r", Math.random()*360 + "deg");
+      dust.style.setProperty("--s", 1);
+
+      container.appendChild(dust);
+      requestAnimationFrame(() => dust.classList.add("explode"));
+
     } else {
-      el.style.width = size + "px";
-      el.style.height = size * 1.6 + "px";
-      el.style.background = theme.colors[Math.floor(Math.random()*theme.colors.length)];
+      // 🌸 Пелюстка SVG
+      const size = 16 + Math.random() * 18;
 
-      /* Справжня форма пелюстки */
-      el.style.clipPath = "ellipse(38% 55% at 50% 50%)";
-      el.style.transform = "translate(-50%, -50%) rotate(" + (Math.random()*360) + "deg)";
+      const svg = document.createElementNS("http://www.w3.org/2000/svg","svg");
+      svg.setAttribute("viewBox","0 0 30 50");
+      svg.classList.add("burst-item");
+
+      svg.style.width = size + "px";
+      svg.style.height = size * 1.6 + "px";
+
+      svg.style.left = originX + "px";
+      svg.style.top = originY + "px";
+
+      svg.style.setProperty("--x", x + "px");
+      svg.style.setProperty("--y", y + "px");
+      svg.style.setProperty("--r", (Math.random()*360) + "deg");
+      svg.style.setProperty("--s", 1);
+
+      const path = document.createElementNS("http://www.w3.org/2000/svg","path");
+
+      path.setAttribute(
+        "d",
+        "M15 0 C25 10 28 25 15 50 C2 25 5 10 15 0 Z"
+      );
+
+      path.setAttribute(
+        "fill",
+        COLORS[Math.floor(Math.random()*COLORS.length)]
+      );
+
+      svg.appendChild(path);
+      container.appendChild(svg);
+
+      requestAnimationFrame(() => svg.classList.add("explode"));
     }
-
-    container.appendChild(el);
-
-    requestAnimationFrame(() => {
-      el.classList.add("explode");
-    });
   }
 
   setTimeout(() => {
     container.remove();
-  }, CONFIG.duration);
+  }, DURATION);
 
 })();

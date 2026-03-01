@@ -1574,37 +1574,49 @@ a.sub-mini {
     color: #444;
 }
 
-/* ===== GOLDEN GLOW IN LOGO ===== */
+/* ===== SOFT GOLD DUST AROUND LOGO ===== */
 
 .nav-logo-link {
   position: relative;
   display: inline-block;
 }
 
-.nav-logo-link::after {
+/* легке тепле сяйво під логотипом */
+.nav-logo-link::before {
   content: "";
   position: absolute;
-
-  left: 44%;   /* твоя позиція */
-  top: 50%;
-
-  width: 18px;
-  height: 18px;
-  transform: translate(-50%, -50%);
+  inset: -18px;
   border-radius: 50%;
-
   pointer-events: none;
 
   background:
-    radial-gradient(circle at 40% 35%, rgba(255,230,150,0.95) 0%, rgba(255,200,80,0.8) 25%, rgba(212,168,70,0.5) 55%, transparent 75%),
-    radial-gradient(circle at 60% 60%, rgba(255,215,120,0.6) 0%, transparent 60%);
+    radial-gradient(circle at 50% 50%,
+      rgba(212,168,70,0.25) 0%,
+      rgba(212,168,70,0.12) 35%,
+      rgba(212,168,70,0.05) 55%,
+      transparent 75%
+    );
 
-  filter: blur(0.4px);
+  filter: blur(10px);
+  opacity: 0.6;
 }
 
+/* дрібний блискучий пилок */
+.nav-logo-link::after {
+  content: "";
+  position: absolute;
+  inset: -10px;
   pointer-events: none;
-}
 
+  background:
+    radial-gradient(circle at 20% 30%, rgba(255,220,120,0.8) 0 1px, transparent 2px),
+    radial-gradient(circle at 75% 40%, rgba(255,210,110,0.7) 0 1px, transparent 2px),
+    radial-gradient(circle at 60% 75%, rgba(255,230,160,0.6) 0 1px, transparent 2px),
+    radial-gradient(circle at 35% 80%, rgba(255,215,140,0.7) 0 1px, transparent 2px),
+    radial-gradient(circle at 85% 65%, rgba(255,225,150,0.6) 0 1px, transparent 2px);
+
+  opacity: 0.6;
+}
 /* ===================== FAQ — MOBILE ===================== */
 
 @media (max-width: 900px) {

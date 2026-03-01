@@ -1574,38 +1574,35 @@ a.sub-mini {
     color: #444;
 }
 
-/* ===================== SEASONAL BURST (CANVAS VERSION) ===================== */
+/* ===== GOLDEN GLOW IN LOGO ===== */
 
-canvas {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 9999;
-
-  /* трохи пом’якшуємо вигляд */
-  opacity: 0.97;
-
-  /* легка глибина, без “пластикового” ефекту */
-  filter: drop-shadow(0 8px 20px rgba(0,0,0,0.15));
-
-  /* нормальне змішування з фоном */
-  mix-blend-mode: normal;
+.nav-logo-link {
+  position: relative;
+  display: inline-block;
 }
-/* ===================== SEASONAL BURST — MOBILE ===================== */
-@media (max-width: 600px) {
 
-  .burst-item {
-    will-change: transform, opacity;
+.nav-logo-link::after {
+  content: "";
+  position: absolute;
 
-    /* легші тіні, щоб не було "чорної діри" */
-    filter: drop-shadow(0 6px 12px rgba(0,0,0,0.22));
+  /* центр логотипу */
+  left: 52%;
+  top: 50%;
 
-    /* трохи швидший розліт на моб */
-    transition:
-      transform 4.2s cubic-bezier(.17,.67,.32,1),
-      opacity 5.5s ease-out;
-  }
+  width: 16px;
+  height: 16px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
 
+  background: radial-gradient(
+    circle,
+    rgba(212,168,70,0.9) 0%,
+    rgba(212,168,70,0.5) 40%,
+    rgba(212,168,70,0.15) 70%,
+    transparent 100%
+  );
+
+  pointer-events: none;
 }
 
 /* ===================== FAQ — MOBILE ===================== */

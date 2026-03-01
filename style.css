@@ -1629,6 +1629,14 @@ a.sub-mini {
   filter: blur(18px);
 }
 
+/* ===== SPRING MAGNOLIA BACKGROUND ===== */
+
+body.home {
+  background-image: url("images/spring-magnolia.png");
+  background-repeat: no-repeat;
+  background-position: left 140px;
+  background-size: 280px auto;
+}
 /* ===================== FAQ — MOBILE ===================== */
 
 @media (max-width: 900px) {

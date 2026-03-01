@@ -1,14 +1,17 @@
 (() => {
 
-  const COUNT = 110;
-  const DURATION = 4800;
+  const COUNT = 120;
+  const DURATION = 5200;
 
-  const COLORS = [
-    "#f4efe6",
-    "#f2a1b3",
-    "#ff6b81",
-    "#e63946",
-    "#f1c27d"
+  const PETAL_COLORS = [
+    ["#f8d7e3","#f2a1b3"],
+    ["#ffe5ec","#ffb3c6"],
+    ["#ffd6e0","#ff8fab"]
+  ];
+
+  const LEAF_COLORS = [
+    ["#9fd8a3","#4f9d69"],
+    ["#b7e4c7","#2d6a4f"]
   ];
 
   const container = document.createElement("div");
@@ -22,82 +25,87 @@
   const originX = window.innerWidth / 2;
   const originY = window.innerHeight / 2;
 
-  for (let i = 0; i < COUNT; i++) {
+  function random(min,max){ return min + Math.random()*(max-min); }
 
-    const isDust = Math.random() < 0.25;
-
-    const angle = Math.random() * Math.PI * 2;
-    const force = 180 + Math.random() * 420;
-
-    const x = Math.cos(angle) * force;
-    const y = Math.sin(angle) * force;
-
-    const gravity = 180 + Math.random() * 180;
-
-    if (isDust) {
-
-      const dust = document.createElement("div");
-      dust.className = "burst-item";
-
-      const size = 2 + Math.random() * 5;
-
-      dust.style.width = size + "px";
-      dust.style.height = size + "px";
-      dust.style.borderRadius = "50%";
-      dust.style.background = "rgba(255,255,255,0.9)";
-      dust.style.boxShadow = "0 0 10px rgba(255,255,255,0.8)";
-
-      dust.style.left = originX + "px";
-      dust.style.top = originY + "px";
-
-      dust.style.setProperty("--x", x + "px");
-      dust.style.setProperty("--y", y + gravity + "px");
-      dust.style.setProperty("--r", (Math.random()*360) + "deg");
-      dust.style.setProperty("--s", 0.6 + Math.random()*0.8);
-
-      container.appendChild(dust);
-      requestAnimationFrame(() => dust.classList.add("explode"));
-
-    } else {
-
-      const size = 18 + Math.random() * 22;
-
-      const svg = document.createElementNS("http://www.w3.org/2000/svg","svg");
-      svg.setAttribute("viewBox","0 0 30 50");
-      svg.classList.add("burst-item");
-
-      svg.style.width = size + "px";
-      svg.style.height = size * 1.6 + "px";
-
-      svg.style.left = originX + "px";
-      svg.style.top = originY + "px";
-
-      svg.style.setProperty("--x", x + "px");
-      svg.style.setProperty("--y", y + gravity + "px");
-      svg.style.setProperty("--r", (Math.random()*720 - 360) + "deg");
-      svg.style.setProperty("--s", 0.8 + Math.random()*0.6);
-
-      const path = document.createElementNS("http://www.w3.org/2000/svg","path");
-
-      path.setAttribute(
-        "d",
-        "M15 0 C25 12 28 30 15 50 C2 30 5 12 15 0 Z"
-      );
-
-      path.setAttribute(
-        "fill",
-        COLORS[Math.floor(Math.random()*COLORS.length)]
-      );
-
-      svg.appendChild(path);
-      container.appendChild(svg);
-
-      requestAnimationFrame(() => svg.classList.add("explode"));
-    }
+  function createGradient(id, colors){
+    return `
+      <defs>
+        <radialGradient id="${id}" cx="50%" cy="40%" r="70%">
+          <stop offset="0%" stop-color="${colors[0]}"/>
+          <stop offset="100%" stop-color="${colors[1]}"/>
+        </radialGradient>
+      </defs>
+    `;
   }
 
-  setTimeout(() => {
-    container.remove();
-  }, DURATION);
+  for (let i = 0; i < COUNT; i++) {
+
+    const type = Math.random();
+    const angle = Math.random() * Math.PI * 2;
+    const force = random(180, 420);
+
+    const x = Math.cos(angle) * force;
+    const y = Math.sin(angle) * force + random(120,260);
+
+    const size = random(16,38);
+    const depth = Math.random();
+
+    const svg = document.createElementNS("http://www.w3.org/2000/svg","svg");
+    svg.classList.add("burst-item");
+    svg.setAttribute("viewBox","0 0 60 60");
+
+    svg.style.width = size + "px";
+    svg.style.height = size + "px";
+    svg.style.left = originX + "px";
+    svg.style.top = originY + "px";
+
+    svg.style.opacity = 0.8 + Math.random()*0.2;
+    if(depth < 0.3){
+      svg.style.filter = "blur(2px)";
+    }
+
+    svg.style.setProperty("--x", x + "px");
+    svg.style.setProperty("--y", y + "px");
+    svg.style.setProperty("--r", (random(-360,360)) + "deg");
+    svg.style.setProperty("--s", random(0.7,1.4));
+
+    let shape = "";
+    let gradientId = "g" + i;
+
+    if(type < 0.5){
+      // 🌸 пелюстка форма 1
+      const colors = PETAL_COLORS[Math.floor(Math.random()*PETAL_COLORS.length)];
+      shape = `
+        ${createGradient(gradientId, colors)}
+        <path d="M30 5 C50 15 50 45 30 55 C10 45 10 15 30 5 Z"
+        fill="url(#${gradientId})"/>
+      `;
+    }
+    else if(type < 0.75){
+      // 🌺 пелюстка форма 2
+      const colors = PETAL_COLORS[Math.floor(Math.random()*PETAL_COLORS.length)];
+      shape = `
+        ${createGradient(gradientId, colors)}
+        <path d="M30 10 C45 20 40 50 30 55 C20 50 15 20 30 10 Z"
+        fill="url(#${gradientId})"/>
+      `;
+    }
+    else{
+      // 🍃 листок
+      const colors = LEAF_COLORS[Math.floor(Math.random()*LEAF_COLORS.length)];
+      shape = `
+        ${createGradient(gradientId, colors)}
+        <path d="M10 30 Q30 5 50 30 Q30 55 10 30 Z"
+        fill="url(#${gradientId})"/>
+      `;
+    }
+
+    svg.innerHTML = shape;
+    container.appendChild(svg);
+
+    requestAnimationFrame(() => svg.classList.add("explode"));
+  }
+
+  setTimeout(() => container.remove(), DURATION);
 
 })();

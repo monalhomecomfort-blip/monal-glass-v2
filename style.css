@@ -1585,22 +1585,22 @@ a.sub-mini {
   content: "";
   position: absolute;
 
-  /* центр логотипу */
-  left: 46%;
+  left: 44%;   /* твоя позиція */
   top: 50%;
 
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
   transform: translate(-50%, -50%);
   border-radius: 50%;
 
-  background: radial-gradient(
-    circle,
-    rgba(212,168,70,0.9) 0%,
-    rgba(212,168,70,0.5) 40%,
-    rgba(212,168,70,0.15) 70%,
-    transparent 100%
-  );
+  pointer-events: none;
+
+  background:
+    radial-gradient(circle at 40% 35%, rgba(255,230,150,0.95) 0%, rgba(255,200,80,0.8) 25%, rgba(212,168,70,0.5) 55%, transparent 75%),
+    radial-gradient(circle at 60% 60%, rgba(255,215,120,0.6) 0%, transparent 60%);
+
+  filter: blur(0.4px);
+}
 
   pointer-events: none;
 }

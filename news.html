@@ -224,19 +224,23 @@ async function loadNews() {
 
     rows.forEach(row => {
         const cols = row.split(",");
-        if (cols.length < 5) return;
 
-        const active = cols[1].trim();
-        const date = cols[2].trim();
-        const text = cols[3].trim();
-        const media = cols[4].trim();
+        if (cols.length < 7) return;
+
+        const active = cols[1]?.trim();
+        const date = cols[2]?.trim();
+        const title = cols[3]?.trim();
+        const text = cols[4]?.trim();
+        const mediaType = cols[5]?.trim();
+        const media = cols[6]?.trim();
 
         if (active !== "TRUE") return;
 
-        newsItems.push({ date, text, media });
+        newsItems.push({ date, title, text, mediaType, media });
     });
 
-    newsItems.reverse(); // нові зверху
+    // нові зверху
+    newsItems.reverse();
 
     newsItems.forEach(item => {
         const block = document.createElement("div");
@@ -244,10 +248,15 @@ async function loadNews() {
 
         block.innerHTML = `
             <div class="news-media">
-                <img src="${item.media}" alt="Новина">
+                ${
+                    item.mediaType === "video"
+                    ? `<iframe src="${item.media}" frameborder="0" allowfullscreen></iframe>`
+                    : `<img src="${item.media}" alt="${item.title}">`
+                }
             </div>
             <div class="news-text">
-                <h2>${item.date}</h2>
+                <h2>${item.title}</h2>
+                <p><strong>${item.date}</strong></p>
                 <p>${item.text}</p>
             </div>
         `;

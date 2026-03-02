@@ -211,51 +211,56 @@
 </script>
 
 <script>
-const SHEET_URL = "YOUR_CSV_LINK";
+const NEWS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTcAL9QeVcquFRbMc8S0H6gtJ4cu5XFlPdV4ZxfQd9toqK1ZQNpLL5QkoYONiBBhO2NRxEcwcbXHVxj/pub?gid=552201247&single=true&output=csv";
 
-fetch(SHEET_URL)
-  .then(res => res.text())
-  .then(csv => {
-    const rows = csv.split("\n").slice(1);
+async function loadNews() {
+    const response = await fetch(NEWS_CSV_URL);
+    const data = await response.text();
 
-    const news = rows
-      .map(row => row.split(","))
-      .filter(r => r[0] === "TRUE")
-      .map(r => ({
-        date: new Date(r[1]),
-        title: r[2],
-        text: r[3],
-        media_type: r[4],
-        media_url: r[5]
-      }))
-      .sort((a,b) => b.date - a.date);
+    const rows = data.split("\n").slice(1); // без заголовків
+    const container = document.getElementById("news-container");
 
-    const container = document.querySelector(".news-container");
+    const newsItems = [];
 
-    news.forEach(item => {
-      const block = document.createElement("div");
-      block.className = "news-block";
+    rows.forEach(row => {
+        const cols = row.split(",");
+        if (cols.length < 5) return;
 
-      block.innerHTML = `
-        <div class="news-media">
-          ${
-            item.media_type === "video"
-            ? `<iframe src="${item.media_url}" frameborder="0" allowfullscreen></iframe>`
-            : `<img src="${item.media_url}" alt="${item.title}">`
-          }
-        </div>
-        <div class="news-text">
-          <h2>${item.title}</h2>
-          <p>${item.text}</p>
-        </div>
-      `;
+        const active = cols[1].trim();
+        const date = cols[2].trim();
+        const text = cols[3].trim();
+        const media = cols[4].trim();
 
-      container.appendChild(block);
+        if (active !== "TRUE") return;
+
+        newsItems.push({ date, text, media });
     });
-  });
-</script>    
+
+    // нові зверху
+    newsItems.reverse();
+
+    newsItems.forEach(item => {
+        const block = document.createElement("div");
+        block.className = "about-block big";
+
+        block.innerHTML = `
+            <div class="news-item">
+                <div class="news-media">
+                    <img src="${item.media}" alt="Новина">
+                </div>
+                <div class="news-text">
+                    <p><strong>${item.date}</strong></p>
+                    <p>${item.text}</p>
+                </div>
+            </div>
+        `;
+
+        container.appendChild(block);
+    });
+}
+
+loadNews();
+</script>
 </body>
 </html>
-
-
   

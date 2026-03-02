@@ -1556,6 +1556,42 @@ a.sub-mini {
 .certificate-option.active {
     background: #d8d2c2;
 }
+
+/* ===== NEWS PAGE ===== */
+.news-container {
+    display: flex;
+    flex-direction: column;
+    gap: 80px;
+    margin: 80px auto 120px;
+    max-width: 1200px;
+    padding: 0 40px;
+}
+.news-block {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+}
+.news-media img,
+.news-media iframe {
+    width: 100%;
+    border-radius: 18px;
+}
+.news-text h2 {
+    font-family: 'Montserrat', serif;
+    font-weight: 300;
+    font-size: 26px;
+    margin-bottom: 16px;
+}
+.news-text p {
+    font-size: 14px;
+    line-height: 1.5;
+}
+@media (max-width: 900px) {
+    .news-block {
+        grid-template-columns: 1fr;
+    }
+}
 /* ===================== FAQ SECTION ===================== */
 .faq-section {
     width: 100%;

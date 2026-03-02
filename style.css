@@ -1571,11 +1571,12 @@ a.sub-mini {
     grid-template-columns: 1fr 1fr;
     gap: 60px;
     align-items: center;
+    background: transparent !important;
 }
 .news-media img,
 .news-media iframe {
     width: 100%;
-    border-radius: 18px;
+    border-radius: 18px;    
 }
 .news-text h2 {
     font-family: 'Montserrat', serif;
@@ -1587,11 +1588,16 @@ a.sub-mini {
     font-size: 14px;
     line-height: 1.5;
 }
+.news-media {
+    background: transparent !important;
+    padding: 0;
+}
 .news-media img {
     width: 100%;
     max-height: 500px;
     object-fit: contain;
-    background: #fff;
+    background: transparent;
+    border-radius: 0;
 }
 @media (max-width: 900px) {
     .news-block {

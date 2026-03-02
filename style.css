@@ -1170,6 +1170,34 @@ a.sub-mini {
 .partners .about-block a:hover {
     border-bottom: 1px solid #e8e1d6;
 }
+/* ===== PARTNERS: PARTNER BLOCK ===== */
+.partners .partner-content {
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+}
+.partners .partner-info {
+    flex: 1;
+}
+.partners .partner-photo img {
+    width: 260px;
+    border-radius: 14px;
+    object-fit: cover;
+    display: block;
+}
+.partners .partner-photo {
+    margin-top: 6px;
+}
+/* mobile */
+@media (max-width: 768px) {
+    .partners .partner-content {
+        flex-direction: column;
+    }
+    .partners .partner-photo img {
+        width: 100%;
+        max-width: 100%;
+    }
+}
 /* ===== CONTACTS PAGE ===== */
 .contact-columns {
     display: grid;

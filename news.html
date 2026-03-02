@@ -20,6 +20,9 @@
 
     <link rel="stylesheet" href="style.css">
 
+    <!-- PapaParse -->
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+
     <!-- Google tag -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17895832671"></script>
     <script>
@@ -213,59 +216,47 @@
 <script>
 const NEWS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTcAL9QeVcquFRbMc8S0H6gtJ4cu5XFlPdV4ZxfQd9toqK1ZQNpLL5QkoYONiBBhO2NRxEcwcbXHVxj/pub?gid=552201247&single=true&output=csv";
 
-async function loadNews() {
-    const response = await fetch(NEWS_CSV_URL);
-    const data = await response.text();
+function loadNews() {
+    Papa.parse(NEWS_CSV_URL, {
+        download: true,
+        header: true,
+        complete: function(results) {
 
-    const rows = data.split("\n").slice(1);
-    const container = document.getElementById("news-container");
+            const container = document.getElementById("news-container");
 
-    const newsItems = [];
+            const newsItems = results.data
+                .filter(row => row["Активна новина"] === "TRUE")
+                .reverse();
 
-    rows.forEach(row => {
-        const cols = row.split(",");
+            newsItems.forEach(item => {
 
-        if (cols.length < 7) return;
+                const block = document.createElement("div");
+                block.className = "news-block";
 
-        const active = cols[1]?.trim();
-        const date = cols[2]?.trim();
-        const title = cols[3]?.trim();
-        const text = cols[4]?.trim();
-        const mediaType = cols[5]?.trim();
-        const media = cols[6]?.trim();
+                const title = item["Заголовок"] || "";
+                const date = item["Дата публікації"] || "";
+                const text = (item["Текст новини"] || "").replace(/\n/g, "<br>");
+                const media = item["Посилання на фото або відео"] || "";
 
-        if (active !== "TRUE") return;
+                block.innerHTML = `
+                    <div class="news-media">
+                        <img src="${media}" alt="${title}">
+                    </div>
+                    <div class="news-text">
+                        <h2>${title}</h2>
+                        <p><strong>${date}</strong></p>
+                        <p>${text}</p>
+                    </div>
+                `;
 
-        newsItems.push({ date, title, text, mediaType, media });
-    });
-
-    // нові зверху
-    newsItems.reverse();
-
-    newsItems.forEach(item => {
-        const block = document.createElement("div");
-        block.className = "news-block";
-
-        block.innerHTML = `
-            <div class="news-media">
-                ${
-                    item.mediaType === "video"
-                    ? `<iframe src="${item.media}" frameborder="0" allowfullscreen></iframe>`
-                    : `<img src="${item.media}" alt="${item.title}">`
-                }
-            </div>
-            <div class="news-text">
-                <h2>${item.title}</h2>
-                <p><strong>${item.date}</strong></p>
-                <p>${item.text}</p>
-            </div>
-        `;
-
-        container.appendChild(block);
+                container.appendChild(block);
+            });
+        }
     });
 }
 
 loadNews();
+</script>
 </script>
 </body>
 </html>

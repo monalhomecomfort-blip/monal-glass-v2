@@ -1157,6 +1157,19 @@ a.sub-mini {
     display: flex;
     flex-direction: column;
 }
+/* ===== PARTNERS PAGE ===== */
+.partners .about-container {
+    margin: 50px auto 100px;
+}
+.partners .about-block a {
+    color: #e8e1d6;
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: 0.25s;
+}
+.partners .about-block a:hover {
+    border-bottom: 1px solid #e8e1d6;
+}
 /* ===== CONTACTS PAGE ===== */
 .contact-columns {
     display: grid;

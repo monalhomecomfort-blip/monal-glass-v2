@@ -1587,6 +1587,12 @@ a.sub-mini {
     font-size: 14px;
     line-height: 1.5;
 }
+.news-media img {
+    width: 100%;
+    max-height: 500px;
+    object-fit: contain;
+    background: #fff;
+}
 @media (max-width: 900px) {
     .news-block {
         grid-template-columns: 1fr;

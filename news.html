@@ -217,7 +217,7 @@ async function loadNews() {
     const response = await fetch(NEWS_CSV_URL);
     const data = await response.text();
 
-    const rows = data.split("\n").slice(1); // без заголовків
+    const rows = data.split("\n").slice(1);
     const container = document.getElementById("news-container");
 
     const newsItems = [];
@@ -236,22 +236,19 @@ async function loadNews() {
         newsItems.push({ date, text, media });
     });
 
-    // нові зверху
-    newsItems.reverse();
+    newsItems.reverse(); // нові зверху
 
     newsItems.forEach(item => {
         const block = document.createElement("div");
-        block.className = "about-block big";
+        block.className = "news-block";
 
         block.innerHTML = `
-            <div class="news-item">
-                <div class="news-media">
-                    <img src="${item.media}" alt="Новина">
-                </div>
-                <div class="news-text">
-                    <p><strong>${item.date}</strong></p>
-                    <p>${item.text}</p>
-                </div>
+            <div class="news-media">
+                <img src="${item.media}" alt="Новина">
+            </div>
+            <div class="news-text">
+                <h2>${item.date}</h2>
+                <p>${item.text}</p>
             </div>
         `;
 

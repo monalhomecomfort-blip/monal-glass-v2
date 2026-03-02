@@ -1190,6 +1190,7 @@ a.sub-mini {
     width: 220px;          /* розмір "візитівки" */
     height: 220px;         /* квадрат */
     flex-shrink: 0;        /* не стискається */
+    margin-top: -10px;   /* підбери значення: -6px / -12px */
 }
 /* mobile */
 @media (max-width: 768px) {

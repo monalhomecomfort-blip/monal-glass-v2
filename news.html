@@ -19,10 +19,7 @@
     <meta property="og:image" content="https://monal.com.ua/favicon32_only_o.png">
 
     <link rel="stylesheet" href="style.css">
-
-    <!-- PapaParse -->
-    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
-
+    
     <!-- Google tag -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17895832671"></script>
     <script>
@@ -34,7 +31,7 @@
     </script>
 </head>
 
-<body class="news">
+<body class="news page-news">
 
 <!-- НАВІГАЦІЯ -->
 <nav>
@@ -141,9 +138,54 @@
 <main class="container">
     <h1 class="page-title">Новини</h1>
 
-    <div class="news-container" id="news-container">
-        <a href="index.html" class="back-btn">← Назад</a>
+<div class="news-container">
+
+    <a href="index.html" class="back-btn">← Назад</a>
+
+    <!-- NEWS 1 : SPRING PROMO -->
+    <div class="product-row">
+
+        <!-- MEDIA -->
+        <div class="product-media">
+
+            <div class="product-media">
+
+                <img
+                    src="https://monal.com.ua/images/news/spring_promo.png"
+                    alt="Spring Sprint — сезонний промокод Mōnal"
+                    class="product-diffuser">
+
+            </div>
+
+        </div>
+
+        <!-- TEXT -->
+        <div class="product-text">
+
+            <h2 class="product-title">SPRING SPRINT</h2>
+            <div class="product-subtitle">Сезонна пропозиція · -150 грн</div>
+
+            <p>
+                Партнерський запуск весняної пропозиції дії промокоду на аромадифузори,
+                парфуми для дому, рефіли та подарунковий набір Fairytale.
+            </p>
+
+            <p>
+                Промокод надає знижку 150 грн.
+                Атмосфера весни — без зайвої гучності,
+                але з характером.
+            </p>
+
+            <p>
+                Промокод діє з 1.03.2026 по 31.05.2026
+                Весна — чудовий привід оновити атмосферу.
+            </p>
+
+        </div>
+
     </div>
+
+</div>
 </main>
 
 
@@ -213,51 +255,5 @@
   }
 </script>
 
-<script>
-const NEWS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTcAL9QeVcquFRbMc8S0H6gtJ4cu5XFlPdV4ZxfQd9toqK1ZQNpLL5QkoYONiBBhO2NRxEcwcbXHVxj/pub?gid=552201247&single=true&output=csv";
-
-function loadNews() {
-    Papa.parse(NEWS_CSV_URL, {
-        download: true,
-        header: true,
-        complete: function(results) {
-
-            const container = document.getElementById("news-container");
-
-            const newsItems = results.data
-                .filter(row => row["Активна новина"] === "TRUE")
-                .reverse();
-
-            newsItems.forEach(item => {
-
-                const block = document.createElement("div");
-                block.className = "news-block";
-
-                const title = item["Заголовок"] || "";
-                const date = item["Дата публікації"] || "";
-                const text = (item["Текст новини"] || "").replace(/\n/g, "<br>");
-                const media = item["Посилання на фото або відео"] || "";
-
-                block.innerHTML = `
-                    <div class="news-media">
-                        <img src="${media}" alt="${title}">
-                    </div>
-                    <div class="news-text">
-                        <h2>${title}</h2>
-                        <p><strong>${date}</strong></p>
-                        <p>${text}</p>
-                    </div>
-                `;
-
-                container.appendChild(block);
-            });
-        }
-    });
-}
-
-loadNews();
-</script>
-</script>
 </body>
-</html>
-  
+</html> 

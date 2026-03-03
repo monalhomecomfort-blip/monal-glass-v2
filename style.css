@@ -1638,6 +1638,31 @@ body.news .news-media iframe {
         grid-template-columns: 1fr;
     }
 }
+/* ===================== NEWS PAGE — SHADOW BETWEEN NEWS ===================== */
+
+.page-news .news-block {
+    position: relative;
+}
+.page-news .news-block::before {
+    content: "";
+    position: absolute;
+    top: -40px;          /* відстань над блоком */
+    left: -200px;
+    right: -200px;
+
+    height: 36px;
+
+    pointer-events: none;
+    z-index: 1;
+
+    background: linear-gradient(
+        to bottom,
+        rgba(4, 4, 4, 0.22),
+        rgba(4, 4, 4, 0.10),
+        rgba(4, 4, 4, 0.04),
+        rgba(4, 4, 4, 0.00)
+    );
+}
 /* ===================== FAQ SECTION ===================== */
 .faq-section {
     width: 100%;

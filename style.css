@@ -1557,95 +1557,39 @@ a.sub-mini {
     background: #d8d2c2;
 }
 
-/* ===== NEWS PAGE ONLY ===== */
+/* ===================== NEWS PAGE ===================== */
 
 body.news .container {
     margin-top: 20px;
 }
+
 body.news .page-title {
     margin-bottom: 20px;
 }
+
 body.news .news-container {
     display: flex;
     flex-direction: column;
-    gap: 40px;
+    gap: 60px;
     margin: 20px auto 120px;
     max-width: 1200px;
     padding: 0 40px;
 }
+
 body.news .back-btn {
-    margin: 0;
+    margin-bottom: 20px;
 }
-body.news .news-block {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 60px;
-    align-items: center;
-}
-body.news .news-media img,
-body.news .news-media iframe {
-    width: 100%;
-}
-@media (max-width: 900px) {
-    body.news .news-block {
-        grid-template-columns: 1fr;
-    }
-}
-/* ===== NEWS PAGE ===== */
-.news-container {
-    display: flex;
-    flex-direction: column;
-    gap: 80px;
-    margin: 80px auto 120px;
-    max-width: 1200px;
-    padding: 0 40px;
-}
-.news-block {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 60px;
-    align-items: center;
-    background: transparent !important;
-}
-.news-media img,
-.news-media iframe {
-    width: 100%;
-    border-radius: 18px;    
-}
-.news-text h2 {
-    font-family: 'Montserrat', serif;
-    font-weight: 300;
-    font-size: 26px;
-    margin-bottom: 16px;
-}
-.news-text p {
-    font-size: 14px;
-    line-height: 1.5;
-}
-.news-media {
-    background: transparent !important;
-    padding: 0;
-}
-.news-media img {
-    width: 100%;
-    max-height: 500px;
-    object-fit: contain;
-    background: transparent;
-    border-radius: 0;
-}
-@media (max-width: 900px) {
-    .news-block {
-        grid-template-columns: 1fr;
-    }
-}
-/* ===================== NEWS PAGE — SHADOW BETWEEN NEWS ===================== */
 
-.page-news .news-block {
+/* ---- використовуємо існуючі стилі product-row ---- */
+
+body.news .product-row {
     position: relative;
-    padding-top: 40px; /* створюємо простір для тіні */
+    padding-top: 40px;
 }
 
-.page-news .news-block::before {
+/* ---- градієнт між новинами ---- */
+
+body.news .product-row::before {
     content: "";
     position: absolute;
     top: 0;
@@ -1664,6 +1608,7 @@ body.news .news-media iframe {
         rgba(4, 4, 4, 0.00)
     );
 }
+
 /* ===================== FAQ SECTION ===================== */
 .faq-section {
     width: 100%;

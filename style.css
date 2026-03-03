@@ -1562,31 +1562,26 @@ a.sub-mini {
 body.news .container {
     margin-top: 20px;
 }
-
 body.news .page-title {
     margin-bottom: 20px;
 }
-
 body.news .news-container {
     display: flex;
     flex-direction: column;
-    gap: 60px;
-    margin: 20px auto 120px;
+    gap: 40px;
+    margin: 10px auto 120px;
     max-width: 1200px;
     padding: 0 40px;
 }
-
 body.news .back-btn {
     margin-bottom: 20px;
 }
-
 /* ---- використовуємо існуючі стилі product-row ---- */
 
 body.news .product-row {
     position: relative;
-    padding-top: 40px;
+    padding-top: 20px;
 }
-
 /* ---- градієнт між новинами ---- */
 
 body.news .product-row::before {
@@ -1608,7 +1603,6 @@ body.news .product-row::before {
         rgba(4, 4, 4, 0.00)
     );
 }
-
 /* ===================== FAQ SECTION ===================== */
 .faq-section {
     width: 100%;

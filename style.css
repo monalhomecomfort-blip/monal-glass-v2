@@ -1642,18 +1642,19 @@ body.news .news-media iframe {
 
 .page-news .news-block {
     position: relative;
+    padding-top: 40px; /* створюємо простір для тіні */
 }
+
 .page-news .news-block::before {
     content: "";
     position: absolute;
-    top: -40px;          /* відстань над блоком */
+    top: 0;
     left: -200px;
     right: -200px;
-
     height: 36px;
 
     pointer-events: none;
-    z-index: 1;
+    z-index: 0;
 
     background: linear-gradient(
         to bottom,

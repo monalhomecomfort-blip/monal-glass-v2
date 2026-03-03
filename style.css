@@ -1559,12 +1559,6 @@ a.sub-mini {
 
 /* ===================== NEWS PAGE ===================== */
 
-body.news .container {
-    margin-top: 20px;
-}
-body.news .page-title {
-    margin-bottom: 20px;
-}
 body.news .news-container {
     display: flex;
     flex-direction: column;
@@ -1604,6 +1598,19 @@ body.news .product-row::before {
         rgba(4, 4, 4, 0.04),
         rgba(4, 4, 4, 0.00)
     );
+}
+/* ===== NEWS PAGE — TIGHT TOP ===== */
+
+body.news .container {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+}
+body.news .page-title {
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+body.news .nav-top-categories {
+    margin-bottom: 0;
 }
 /* ===================== FAQ SECTION ===================== */
 .faq-section {

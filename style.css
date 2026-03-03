@@ -1569,7 +1569,7 @@ body.news .news-container {
     display: flex;
     flex-direction: column;
     gap: 40px;
-    margin: 10px auto 120px;
+    margin: 0 auto 120px;
     max-width: 1200px;
     padding: 0 40px;
 }
@@ -1583,18 +1583,20 @@ body.news .product-row {
     padding-top: 20px;
 }
 /* ---- градієнт між новинами ---- */
-
+body.news .product-row {
+    position: relative;
+    padding-top: 10px; /* ще вище */
+}
 body.news .product-row::before {
     content: "";
     position: absolute;
     top: 0;
-    left: -200px;
-    right: -200px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100vw;          /* на всю ширину екрана */
     height: 36px;
-
     pointer-events: none;
     z-index: 0;
-
     background: linear-gradient(
         to bottom,
         rgba(4, 4, 4, 0.22),

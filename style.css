@@ -1602,11 +1602,9 @@ body.news .product-row::before {
 /* ===== NEWS PAGE — TIGHT TOP ===== */
 
 body.news .container {
-    margin-top: 0 !important;
-    padding-top: 0 !important;
+    margin-top: 20px;
 }
 body.news .page-title {
-    margin-top: 0;
     margin-bottom: 10px;
 }
 body.news .nav-top-categories {

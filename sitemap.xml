@@ -21,10 +21,12 @@
   <url><loc>https://monal.com.ua/hand-cream.html</loc><priority>0.6</priority></url>
   <url><loc>https://monal.com.ua/shower-gel.html</loc><priority>0.6</priority></url>
 
-  <!-- SERVICE -->
+  <!-- SERVICE -->  
   <url><loc>https://monal.com.ua/about.html</loc><priority>0.4</priority></url>
   <url><loc>https://monal.com.ua/delivery.html</loc><priority>0.3</priority></url>
   <url><loc>https://monal.com.ua/contacts.html</loc><priority>0.3</priority></url>
+  <url><loc>https://monal.com.ua/partners.html</loc><priority>0.4</priority></url>
+  <url><loc>https://monal.com.ua/news.html</loc><priority>0.5</priority></url>
   <url><loc>https://monal.com.ua/privacy.html</loc><priority>0.2</priority></url>
 
 </urlset>

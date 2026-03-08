@@ -20,9 +20,9 @@ const parfumsGalleries = {
     "images/perfumes/golden_rum_3.png"
   ],
   "stone-salt": [
-    "images/perfumes/stone&salt.png",
-    "images/perfumes/stone&salt_2.png",
-    "images/perfumes/stone&salt_3.png"
+    "images/perfumes/stone_salt.png",
+    "images/perfumes/stone_salt_2.png",
+    "images/perfumes/stone_salt_3.png"
   ],
   "drift": [
     "images/perfumes/drift.png",
@@ -114,7 +114,7 @@ const refillsGalleries = {
     "images/refills/sticks.png"
   ],
   "stone-salt": [
-    "images/refills/stone&salt_.png",
+    "images/refills/stone_salt_.png",
     "images/refills/sticks_5.png",
     "images/refills/sticks.png"
   ]
@@ -177,7 +177,7 @@ const discoveryGalleries = {
   ],
 
   "stone-salt": [
-    "images/discovery/discovery_stone&salt.png",
+    "images/discovery/discovery_stone_salt.png",
     "images/discovery/discovery_8.png",
     "images/discovery/discovery_9.png",
     "images/discovery/discovery_12.png",

@@ -38,7 +38,7 @@ if (!user) {
 
     const levels = [
         { limit: 0, discount: 3 },
-        { limit: 30, discount: 5 },
+        { limit: 5000, discount: 5 },
         { limit: 8000, discount: 7 },
         { limit: 10000, discount: 10 },
         { limit: 15000, discount: 15 }

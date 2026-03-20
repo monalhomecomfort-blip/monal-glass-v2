@@ -9,7 +9,7 @@ document.getElementById("registerForm").addEventListener("submit", async functio
     try {
 
         const response = await fetch(
-            "https://monal-mono-pay-production-a7ae.up.railway.app/api/register",
+            "https://monal-mono-pay-production.up.railway.app/api/register",
             {
                 method: "POST",
                 headers: {

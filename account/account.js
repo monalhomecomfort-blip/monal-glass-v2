@@ -82,7 +82,7 @@ function refreshUserData() {
     const user = JSON.parse(localStorage.getItem("monal_user") || "null");
     if (!user || !user.id) return;
 
-    fetch("https://monal-mono-pay-production-a7ae.up.railway.app/api/user/" + user.id)
+    fetch("https://monal-mono-pay-production.up.railway.app/api/user/" + user.id)
         .then(res => res.json())
         .then(data => {
 

@@ -8,7 +8,7 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
     try {
 
         const response = await fetch(
-            "https://monal-mono-pay-production-a7ae.up.railway.app/api/login",
+            "https://monal-mono-pay-production.up.railway.app/api/login",
             {
                 method: "POST",
                 headers: {

@@ -88,7 +88,10 @@ function addToCart(name, price, label = "", items = null) {
 }
 
 function renderCart() {
+
     const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    const user = JSON.parse(localStorage.getItem("monal_user") || "null");
+
     const list = document.getElementById("cart-list");
     const totalEl = document.getElementById("cart-total");
 
@@ -109,22 +112,59 @@ function renderCart() {
     `).join("");
 
     const total = cart.reduce((s, i) => s + Number(i.price), 0);
+
+    /* ===================== ПЕРСОНАЛЬНА ЗНИЖКА ===================== */
+
+    let personalDiscount = 0;
+
+    if (user && user.discount) {
+
+        const eligibleTotal = cart
+            .filter(i => i.label !== "Сертифікат")
+            .reduce((s, i) => s + Number(i.price), 0);
+
+        personalDiscount = Math.round(
+            eligibleTotal * (Number(user.discount) / 100)
+        );
+    }
+
+    const afterPersonal = total - personalDiscount;
+
+    /* ===================== ПРОМОКОД ===================== */
+
     const promoDiscount = typeof calcPromoDiscount === "function"
         ? calcPromoDiscount(cart)
         : 0;
 
-    let finalTotal = total - promoDiscount;
-    if (finalTotal < 0) finalTotal = 0;
+    const afterPromo = Math.max(0, afterPersonal - promoDiscount);
+
+    /* ===================== СЕРТИФІКАТ ===================== */
+
+    const certificateAmount = typeof CERT_APPLIED_AMOUNT === "number"
+        ? CERT_APPLIED_AMOUNT
+        : 0;
+
+    const finalTotal = Math.max(0, afterPromo - certificateAmount);
+
+    /* ===================== ВИВІД ===================== */
+
+    let html = `Загальна сума: ${total} грн<br>`;
+
+    if (personalDiscount > 0) {
+        html += `Персональна знижка: −${personalDiscount} грн<br>`;
+    }
 
     if (promoDiscount > 0) {
-        totalEl.innerHTML = `
-            Загальна сума: ${total} грн<br>
-            Промокод: −${promoDiscount} грн<br>
-            <strong>${finalTotal} грн</strong>
-        `;
-    } else {
-        totalEl.textContent = total + " грн";
+        html += `Промокод: −${promoDiscount} грн<br>`;
     }
+
+    if (certificateAmount > 0) {
+        html += `Сертифікат: −${certificateAmount} грн<br>`;
+    }
+
+    html += `<strong>${finalTotal} грн</strong>`;
+
+    totalEl.innerHTML = html;
 }
 
 function removeFromCart(index) {
@@ -348,21 +388,35 @@ function applyCertificate() {
     });
 }
 
-
 function recalcAfterCertificate() {
-    const totalEl = document.getElementById("cart-total");
-    if (!totalEl) return;
+
+    renderCart(); // тут вже рахується ВСЕ: персональна, промокод, сертифікат
 
     const cart = JSON.parse(localStorage.getItem("cart")) || [];
-    const total = cart.reduce((s, i) => s + i.price, 0);
+    const user = JSON.parse(localStorage.getItem("monal_user") || "null");
 
-    const remaining = Math.max(0, total - CERT_APPLIED_AMOUNT);
+    const total = cart.reduce((s, i) => s + Number(i.price), 0);
 
-    totalEl.innerHTML = `
-        Загальна сума: ${total} грн<br>
-        Сертифікат: −${CERT_APPLIED_AMOUNT} грн<br>
-        <strong>До оплати: ${remaining} грн</strong>
-    `;
+    let personalDiscount = 0;
+
+    if (user && user.discount) {
+        const eligibleTotal = cart
+            .filter(i => i.label !== "Сертифікат")
+            .reduce((s, i) => s + Number(i.price), 0);
+
+        personalDiscount = Math.round(
+            eligibleTotal * (Number(user.discount) / 100)
+        );
+    }
+
+    const promoDiscount =
+        typeof calcPromoDiscount === "function"
+            ? calcPromoDiscount(cart)
+            : 0;
+
+    const afterDiscounts = Math.max(0, total - personalDiscount - promoDiscount);
+
+    const remaining = Math.max(0, afterDiscounts - CERT_APPLIED_AMOUNT);
 
     // 🔒 UX: якщо 0 грн — блокуємо вибір оплати
     const payInputs = document.querySelectorAll('input[name="pay"]');
@@ -378,14 +432,13 @@ function recalcAfterCertificate() {
         });
     }
 }
-
-
 /* ===================== ОФОРМЛЕННЯ ЗАМОВЛЕННЯ ===================== */
 function submitOrder() {
+
     const cart = JSON.parse(localStorage.getItem("cart")) || [];
-    if (!cart.length) {        
-        return;
-    }
+    const savedUser = JSON.parse(localStorage.getItem("monal_user") || "null");
+
+    if (!cart.length) return;
 
     const last  = document.getElementById("inp-last")?.value.trim() || "";
     const first = document.getElementById("inp-first")?.value.trim() || "";
@@ -402,17 +455,14 @@ function submitOrder() {
         ? `✍️ ВРУЧНУ: ${npManual}`
         : npSelect;
 
-    // 🎁 Повідомлення покупцю, якщо в кошику є сертифікат
     const hasCertificate = cart.some(i => i.label === "Сертифікат");
 
-    // 🎁 Тип сертифікату (електронний / фізичний)
     let certificateType = null;
 
     if (hasCertificate) {
         const certTypeInput = document.querySelector('input[name="certType"]:checked');
         certificateType = certTypeInput ? certTypeInput.value : "електронний";
     }
-
 
     if (hasCertificate) {
         const infoEl = document.getElementById("cert-info");
@@ -426,23 +476,30 @@ function submitOrder() {
         }
     }
 
-    // ===== ЄДИНЕ місце розрахунку сум =====
+    /* ===================== РОЗРАХУНОК СУМ ===================== */
+
     const total = cart.reduce((s, i) => s + Number(i.price), 0);
 
-    // рахуємо знижку по промокоду
+    let personalDiscount = 0;
+
+    if (savedUser && savedUser.discount) {
+        const eligibleSum = cart
+            .filter(i => i.label !== "Сертифікат" && i.name !== "Сертифікат")
+            .reduce((s, i) => s + Number(i.price), 0);
+
+        personalDiscount = Math.round(eligibleSum * (savedUser.discount / 100));
+    }
+
     const promoDiscount = typeof calcPromoDiscount === "function"
         ? calcPromoDiscount(cart)
         : 0;
 
-    // після промокоду
-    const afterPromo = Math.max(0, total - promoDiscount);
+    const afterDiscounts = Math.max(0, total - personalDiscount - promoDiscount);
 
-    // після сертифіката
-    const remainingToPay = Math.max(0, afterPromo - CERT_APPLIED_AMOUNT);
+    const remainingToPay = Math.max(0, afterDiscounts - CERT_APPLIED_AMOUNT);
 
     const pay = document.querySelector("input[name='pay']:checked");
 
-    // 🎁 Якщо є сертифікат — тільки 100% оплата
     if (hasCertificate) {
         const prepayRadio = document.querySelector(
             "input[name='pay'][value='Передплата 150 грн']"
@@ -453,8 +510,7 @@ function submitOrder() {
             prepayRadio.disabled = true;
         }
     }
-    
-    // ❗ якщо 0 грн — спосіб оплати не обовʼязковий
+
     if (!last || !first || !phone || !city || !np || (remainingToPay > 0 && !pay)) {
         alert("Заповніть всі поля");
         return;
@@ -478,7 +534,7 @@ function submitOrder() {
         }
     }
 
-    let payNow = remainingToPay;  
+    let payNow = remainingToPay;
 
     let paymentLabel =
         remainingToPay === 0
@@ -486,19 +542,15 @@ function submitOrder() {
             : "100% оплата";
 
     if (pay && pay.value === "Передплата 150 грн") {
-        payNow = 150; 
+        payNow = 150;
         paymentLabel = "Передплата 150 грн";
     }
 
-
-    const remainingAfterCertificate = Math.max(0, total - CERT_APPLIED_AMOUNT);
-
-    let dueAmount = Math.max(0, remainingAfterCertificate - payNow);
-
+    const dueAmount = Math.max(0, remainingToPay - payNow);
 
     const itemsText = cart
         .map(i => {
-            // DISCOVERY SET
+
             if (i.name.startsWith("Discovery set") && discoveryItems.length) {
                 return (
                     `• ${i.name} — ${i.price} грн\n` +
@@ -506,7 +558,6 @@ function submitOrder() {
                 );
             }
 
-            // ЗВИЧАЙНІ ТОВАРИ
             return `• ${i.name} — ${i.price} грн`;
         })
         .join("\n");
@@ -519,6 +570,7 @@ function submitOrder() {
 📦 НП: ${np}
 
 💰 Загальна сума: ${total} грн
+${personalDiscount > 0 ? `👤 Персональна знижка: −${personalDiscount} грн\n` : ""}
 ${promoDiscount > 0 ? `🏷 Промокод: −${promoDiscount} грн\n` : ""}
 ${(typeof CERT_CODE_USED === "string" && CERT_CODE_USED)
   ? `🎟 Сертифікат: ${CERT_CODE_USED} (−${CERT_APPLIED_AMOUNT} грн)\n`
@@ -530,38 +582,40 @@ ${(typeof CERT_CODE_USED === "string" && CERT_CODE_USED)
 ${itemsText}
 `;
 
-// ✅ Збираємо ВСІ сертифікати з кошика
-const certificatesData = cart
-  .filter(i => i.label === "Сертифікат")
-  .map(i => ({
-    nominal: i.price
-    // type: ""  // додамо пізніше, коли зробиш вибір електронний/фізичний
-  }));
+    const certificatesData = cart
+      .filter(i => i.label === "Сертифікат")
+      .map(i => ({
+        nominal: i.price
+      }));
 
-PAYMENT_CONTEXT = {
-  orderId,
-  text,
-  payNow,
-  certificates: certificatesData.length ? certificatesData : null,
-  usedCertificates: CERT_CODE_USED ? [CERT_CODE_USED] : [],
-  certificateType,
+    PAYMENT_CONTEXT = {
+      orderId,
+      userId: savedUser ? savedUser.id : null,
+      userEmail: savedUser ? savedUser.email : null,
+      text,
+      payNow,
+      certificates: certificatesData.length ? certificatesData : null,
+      usedCertificates: CERT_CODE_USED ? [CERT_CODE_USED] : [],
+      certificateType,
 
-  buyerName: last + " " + first,
-  buyerPhone: phone,
-  delivery: np,
-  itemsText: itemsText,
-  totalAmount: total,
-  paidAmount: payNow,
-  dueAmount: dueAmount,
-  paymentLabel: paymentLabel
-};
+      buyerName: last + " " + first,
+      buyerPhone: phone,
+      delivery: np,
+      itemsText: itemsText,
+      totalAmount: total,
+      paidAmount: payNow,
+      dueAmount: dueAmount,
+      paymentLabel: paymentLabel,
+      
+      personalDiscount,
+      promoDiscount,
+      certificateAmount: CERT_APPLIED_AMOUNT
+    };
 
     PAY_NOW_AMOUNT = payNow;
 
-    // ✅ ВІДКРИВАЄМО МОДАЛКУ
     openPaymentModal(orderId, payNow);
 }
-
 /* ===================== МОДАЛКА ПЕРЕВІРКИ ЗАМОВЛЕННЯ ===================== */
 function openPaymentModal(orderId, payNow) {
     const modal   = document.getElementById("payment-modal");
@@ -615,6 +669,8 @@ function closePaymentModal() {
 
 function goToPayment() {
   if (!PAYMENT_CONTEXT) return;
+  
+  const userId = localStorage.getItem("user_id");
 
 // 1) реєструємо замовлення
 fetch("https://monal-mono-pay-production.up.railway.app/register-order", {
@@ -634,7 +690,14 @@ fetch("https://monal-mono-pay-production.up.railway.app/register-order", {
     totalAmount: PAYMENT_CONTEXT.totalAmount || "",
     paidAmount: PAYMENT_CONTEXT.paidAmount || "",
     dueAmount: PAYMENT_CONTEXT.dueAmount || "",
-    paymentLabel: PAYMENT_CONTEXT.paymentLabel || ""
+    paymentLabel: PAYMENT_CONTEXT.paymentLabel || "",
+    
+    personalDiscount: PAYMENT_CONTEXT.personalDiscount || 0,
+    promoDiscount: PAYMENT_CONTEXT.promoDiscount || 0,
+    certificateAmount: PAYMENT_CONTEXT.certificateAmount || 0,
+    
+    userId: PAYMENT_CONTEXT.userId || null,
+    userEmail: PAYMENT_CONTEXT.userEmail || null    
   })
 })
 

@@ -33,3 +33,31 @@ function initSidebarUserState() {
     }
 
 }
+
+function openSidebar() {
+
+    const sidebar = document.getElementById("user-sidebar");
+
+    if (sidebar) {
+        sidebar.style.display = "block";
+    }
+
+}
+
+function closeSidebar() {
+
+    const sidebar = document.getElementById("user-sidebar");
+
+    if (sidebar) {
+        sidebar.style.display = "none";
+    }
+
+}
+
+document.addEventListener("click", function(e) {
+
+    if (e.target.id === "sidebar-close" || e.target.id === "sidebar-overlay") {
+        closeSidebar();
+    }
+
+});

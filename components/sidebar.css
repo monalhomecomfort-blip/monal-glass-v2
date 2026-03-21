@@ -1,1 +1,23 @@
+#user-sidebar {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+}
 
+.sidebar-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+}
+
+.sidebar-panel {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 320px;
+    background: #111;
+    color: white;
+    padding: 20px;
+}

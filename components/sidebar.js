@@ -38,9 +38,10 @@ function openSidebar() {
 
     const sidebar = document.getElementById("user-sidebar");
 
-    if (sidebar) {
-        sidebar.style.display = "block";
-    }
+    if (!sidebar) return;
+
+    sidebar.style.display = "block";
+    sidebar.classList.add("open");
 
 }
 
@@ -48,12 +49,15 @@ function closeSidebar() {
 
     const sidebar = document.getElementById("user-sidebar");
 
-    if (sidebar) {
+    if (!sidebar) return;
+
+    sidebar.classList.remove("open");
+
+    setTimeout(() => {
         sidebar.style.display = "none";
-    }
+    }, 300);
 
 }
-
 document.addEventListener("click", function(e) {
 
     if (e.target.id === "sidebar-close" || e.target.id === "sidebar-overlay") {

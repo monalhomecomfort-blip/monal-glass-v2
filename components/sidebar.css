@@ -18,7 +18,7 @@
 .sidebar-panel {
     position: absolute;
     left: 0;
-    top: 0;
+    top: 70;
     bottom: 0;
 
     width: 320px;
@@ -72,8 +72,22 @@
     text-decoration: none;
     font-size: 15px;
     opacity: 0.85;
+    display: block;
+    width: 100%;
 }
 
 .sidebar-menu a:hover {
     opacity: 1;
+}
+
+.sidebar-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.sidebar-menu button {
+    display: block;
+    width: 100%;
+    text-align: left;
 }

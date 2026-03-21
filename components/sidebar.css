@@ -1,4 +1,4 @@
-#user-sidebar {
+#user-sidebar {    
     position: fixed;
     inset: 0;
     display: none;
@@ -23,7 +23,7 @@
 
     width: 320px;
 
-    background: #111;
+    background: rgba(4, 4, 4, 0.85);
 
     padding: 30px 24px;
 

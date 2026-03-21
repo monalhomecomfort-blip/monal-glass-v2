@@ -1,74 +1,56 @@
-<div id="user-sidebar" class="user-sidebar">
+<div id="user-sidebar">
 
     <div id="sidebar-overlay" class="sidebar-overlay"></div>
 
     <aside class="sidebar-panel">
 
         <div class="sidebar-header">
+
+            <span id="sidebar-user-name">Імʼя</span>
+            <span id="sidebar-user-discount">Знижка: 0%</span>
+
             <span id="sidebar-close">✕</span>
-        </div>
-
-
-        <!-- PROFILE BLOCK -->
-
-        <div id="sidebar-profile">
-
-            <div id="sidebar-guest">
-
-                <button onclick="openLogin()">Увійти</button>
-                <button onclick="openRegister()">Зареєструватися</button>
-
-            </div>
-
-
-            <div id="sidebar-user" style="display:none;">
-
-                <div id="sidebar-user-name">
-                    Імʼя користувача
-                </div>
-
-                <div id="sidebar-user-discount">
-                    Знижка: 0%
-                </div>
-
-            </div>
 
         </div>
 
 
-        <!-- MAIN MENU -->
+        <div id="sidebar-guest" class="sidebar-menu">
 
-        <nav>
+            <button onclick="openLogin()">Увійти</button>
+            <button onclick="openRegister()">Зареєструватися</button>
 
-            <button onclick="goToCart()">Мій кошик</button>
-
-            <button onclick="goToAccount()">Мій кабінет</button>
-
-            <button onclick="goToOrders()">Мої замовлення</button>
-
-            <button onclick="goToCertificates()">Мої сертифікати</button>
-
-            <button onclick="goToOffers()">Персональні пропозиції</button>
-
-        </nav>
+        </div>
 
 
-        <!-- BRAND MENU -->
+        <div id="sidebar-user" class="sidebar-menu" style="display:none;">
 
-        <nav>
+            <a href="/account/account.html">Мій кабінет</a>
 
-            <button onclick="goToLoyalty()">Програма лояльності</button>
+            <a href="#">Мій кошик</a>
 
-            <button onclick="openTelegram()">Переписка з Monal</button>
+            <a href="#">Мої замовлення</a>
 
-            <button onclick="goToWishlist()">Побажання щодо асортименту</button>
+            <a href="#">Персональні пропозиції</a>
 
-            <button onclick="goToReviews()">Відгуки</button>
+            <a href="#">Мої сертифікати</a>
 
-        </nav>
+        </div>
 
 
-        <div id="sidebar-logout" style="display:none;">
+        <div class="sidebar-menu">
+
+            <a href="#">Програма лояльності</a>
+
+            <a href="#">Переписка з Monal</a>
+
+            <a href="#">Побажання щодо асортименту</a>
+
+            <a href="#">Відгуки</a>
+
+        </div>
+
+
+        <div id="sidebar-logout" class="sidebar-menu" style="display:none;">
 
             <button onclick="logoutUser()">Вийти</button>
 

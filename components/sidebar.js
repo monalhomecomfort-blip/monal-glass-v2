@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", () => {
+function initSidebarUserState() {
 
     const userData = localStorage.getItem("monal_user");
 
@@ -32,4 +32,4 @@ document.addEventListener("DOMContentLoaded", () => {
 
     }
 
-});
+}

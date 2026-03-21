@@ -285,6 +285,10 @@ navCatalog.classList.remove('open');
 }
 </script>
 
+<div id="sidebar-container"></div>
+    
+<script src="/components/sidebar.js"></script>   
+    
 <script>
 fetch("/components/sidebar.html")
   .then(res => res.text())
@@ -296,8 +300,6 @@ fetch("/components/sidebar.html")
     }
   });
 </script>
-
-<script src="/components/sidebar.js"></script>   
     
 </body>
 </html>

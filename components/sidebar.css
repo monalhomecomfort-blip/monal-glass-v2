@@ -16,7 +16,7 @@
 /* панель */
 
 .sidebar-panel {
-    position: absolute;
+    position: fixed;
     left: 0;
     top: var(--nav-height);
     height: calc(100vh - var(--nav-height));
@@ -24,13 +24,11 @@
     width: 320px;
 
     background: #111;
-    color: white;
 
-    padding: 30px 20px;
+    padding: 30px 24px;
 
     display: flex;
     flex-direction: column;
-    gap: 18px;
 
     transform: translateX(-100%);
     transition: transform 0.3s ease;
@@ -47,12 +45,16 @@
 }
 
 /* header */
-
 .sidebar-header {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+
     font-size: 18px;
     font-weight: 500;
-}
 
+    margin-bottom: 28px;
+}
 /* кнопка закриття */
 
 #sidebar-close {
@@ -65,7 +67,7 @@
 
 /* меню */
 .sidebar-menu a {
-    color: white;
+    color: inherit;
     text-decoration: none;
     font-size: 15px;
     opacity: 0.85;

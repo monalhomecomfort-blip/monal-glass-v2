@@ -1,9 +1,12 @@
 #user-sidebar {
-    display: none;
     position: fixed;
     inset: 0;
+    display: none;
     z-index: 9999;
 }
+
+
+/* затемнення фону */
 
 .sidebar-overlay {
     position: absolute;
@@ -11,13 +14,31 @@
     background: rgba(0,0,0,0.4);
 }
 
+
+/* сама панель */
+
 .sidebar-panel {
     position: absolute;
     left: 0;
     top: 0;
     bottom: 0;
+
     width: 320px;
+
     background: #111;
     color: white;
-    padding: 20px;
+
+    padding: 30px 20px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+
+/* кнопка закриття */
+
+#sidebar-close {
+    cursor: pointer;
+    font-size: 22px;
 }

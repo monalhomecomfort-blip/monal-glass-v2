@@ -65,3 +65,20 @@ document.addEventListener("click", function(e) {
     }
 
 });
+
+function setSidebarTopOffset() {
+    const nav = document.querySelector("nav");
+    const topCats = document.querySelector(".nav-top-categories");
+
+    let top = 0;
+
+    if (nav) {
+        top += nav.offsetHeight;
+    }
+
+    if (topCats && window.getComputedStyle(topCats).display !== "none") {
+        top += topCats.offsetHeight;
+    }
+
+    document.documentElement.style.setProperty("--sidebar-top", top + "px");
+}

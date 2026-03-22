@@ -9,10 +9,14 @@
 
 .sidebar-overlay {
     position: absolute;
-    inset: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    top: var(--nav-height);
+
     background: rgba(4, 4, 4, 0.85);
 }
-
 /* панель */
 
 .sidebar-panel {
@@ -67,6 +71,10 @@
 
 .sidebar-block + .sidebar-block {
     margin-top: 24px;
+}
+
+.sidebar-block > * {
+    line-height: 1.6;
 }
 
 /* посилання */

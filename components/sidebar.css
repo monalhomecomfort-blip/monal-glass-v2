@@ -1,4 +1,4 @@
-#user-sidebar {    
+#user-sidebar {
     position: fixed;
     inset: 0;
     display: none;
@@ -44,17 +44,6 @@
     transform: translateX(0);
 }
 
-/* header */
-.sidebar-header {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-
-    font-size: 18px;
-    font-weight: 500;
-
-    margin-bottom: 28px;
-}
 /* кнопка закриття */
 
 #sidebar-close {
@@ -63,34 +52,46 @@
     position: absolute;
     right: 15px;
     top: 10px;
-}
-
-/* меню */
-.sidebar-menu a {
     color: #e8e1d6;
-    text-decoration: none;
-    font-size: 15px;
-    opacity: 0.85;
-    display: block;
-    width: 100%;
 }
 
-.sidebar-menu a:hover {
-    opacity: 1;
-}
+/* універсальні блоки sidebar */
 
-.sidebar-menu {
+.sidebar-block {
     display: flex;
     flex-direction: column;
     gap: 14px;
 }
 
-.sidebar-menu + .sidebar-menu {
+/* відступ між групами блоків */
+
+.sidebar-block + .sidebar-block {
     margin-top: 24px;
 }
 
-.sidebar-menu button {
+/* посилання */
+
+.sidebar-block a {
+    color: #e8e1d6;
+    text-decoration: none;
+    font-size: 15px;
+    opacity: 0.85;
+}
+
+.sidebar-block a:hover {
+    opacity: 1;
+}
+
+/* кнопки */
+
+.sidebar-block button {
     display: block;
     width: 100%;
     text-align: left;
+}
+
+/* кнопка logout шириною sidebar */
+
+#sidebar-logout .buy-btn {
+    width: 100%;
 }

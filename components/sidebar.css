@@ -1,3 +1,7 @@
+:root {
+    --sidebar-top: 0px;
+}
+
 #user-sidebar {
     position: fixed;
     inset: 0;
@@ -5,30 +9,24 @@
     z-index: 9999;
 }
 
-/* затемнення */
-
 .sidebar-overlay {
     position: absolute;
     left: 0;
     right: 0;
     bottom: 0;
-
-    top: var(--nav-height);
-
+    top: var(--sidebar-top);
     background: rgba(4, 4, 4, 0.85);
 }
-/* панель */
 
 .sidebar-panel {
     position: fixed;
     left: 0;
-    top: var(--nav-height);
-    height: calc(100vh - var(--nav-height));
+    top: var(--sidebar-top);
+    height: calc(100vh - var(--sidebar-top));
 
-    width: 320px;
+    width: min(380px, 100vw);
 
     background: rgba(4, 4, 4, 0.85);
-
     padding: 30px 24px;
 
     display: flex;
@@ -37,12 +35,6 @@
     transform: translateX(-100%);
     transition: transform 0.3s ease;
 }
-
-:root {
-    --nav-height: 70px;
-}
-
-/* відкритий стан */
 
 #user-sidebar.open .sidebar-panel {
     transform: translateX(0);

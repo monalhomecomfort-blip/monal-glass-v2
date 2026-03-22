@@ -298,7 +298,17 @@ fetch("../components/sidebar.html")
     if (typeof initSidebarUserState === "function") {
         initSidebarUserState();
     }
+
+    if (typeof setSidebarTopOffset === "function") {
+        setSidebarTopOffset();
+    }
   });
+
+window.addEventListener("resize", function () {
+    if (typeof setSidebarTopOffset === "function") {
+        setSidebarTopOffset();
+    }
+});
 </script>
     
 </body>

@@ -1,14 +1,12 @@
 :root {
     --sidebar-top: 0px;
 }
-
 #user-sidebar {
     position: fixed;
     inset: 0;
     display: none;
     z-index: 9999;
 }
-
 .sidebar-overlay {
     position: absolute;
     left: 0;
@@ -17,31 +15,23 @@
     top: var(--sidebar-top);
     background: rgba(4, 4, 4, 0.85);
 }
-
 .sidebar-panel {
     position: fixed;
     left: 0;
     top: var(--sidebar-top);
     height: calc(100vh - var(--sidebar-top));
-
     width: min(380px, 100vw);
-
     background: rgba(4, 4, 4, 0.85);
     padding: 30px 24px;
-
     display: flex;
     flex-direction: column;
-
     transform: translateX(-100%);
     transition: transform 0.3s ease;
 }
-
 #user-sidebar.open .sidebar-panel {
     transform: translateX(0);
 }
-
 /* кнопка закриття */
-
 #sidebar-close {
     cursor: pointer;
     font-size: 22px;
@@ -50,33 +40,35 @@
     top: 10px;
     color: #e8e1d6;
 }
-
-/* універсальні блоки sidebar */
-
+/* блоки sidebar */
 .sidebar-block {
     display: flex;
     flex-direction: column;
-    gap: 14px;
 }
-
+/* рівні міжрядкові відступи всередині всіх блоків */
+.sidebar-block > * + * {
+    margin-top: 14px;
+}
+/* якщо всередині вкладений контейнер (#sidebar-user або #sidebar-guest) */
+.sidebar-block > div {
+    display: flex;
+    flex-direction: column;
+}
+.sidebar-block > div > * + * {
+    margin-top: 14px;
+}
+/* відступ між блоками */
 .sidebar-block + .sidebar-block {
     margin-top: 24px;
 }
-
-.sidebar-block > * {
-    line-height: 1.45;
-}
-
 /* посилання */
-
 .sidebar-block a {
     display: block;
     color: #e8e1d6;
     text-decoration: none;
-    font-size: 15px;    
+    font-size: 15px;
     white-space: nowrap;
 }
-
 .sidebar-block a:hover {
     opacity: 0.75;
 }
@@ -86,13 +78,14 @@
     width: 100%;
     text-align: left;
 }
-
+/* кнопка logout */
 #sidebar-logout .buy-btn {
     width: 100%;
 }
-
+/* ім’я та знижка */
 #sidebar-user-name,
 #sidebar-user-discount {
     color: #e8e1d6;
+    font-size: 15px;
+    line-height: 1.45;
 }
-

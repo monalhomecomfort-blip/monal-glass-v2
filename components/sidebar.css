@@ -59,7 +59,7 @@
 }
 /* відступ між блоками */
 .sidebar-block + .sidebar-block {
-    margin-top: 24px;
+    margin-top: 34px;
 }
 /* посилання */
 .sidebar-block a {

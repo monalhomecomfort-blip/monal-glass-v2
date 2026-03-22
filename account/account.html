@@ -155,7 +155,6 @@ class="nav-logo">
 
 </div>
 
-
 <div class="container">
 
 <a href="../user-account.html" class="back-btn">← Назад</a>
@@ -164,35 +163,111 @@ class="nav-logo">
 
 <button onclick="openSidebar()">Відкрити sidebar (тест)</button>    
 
-<div class="delivery-columns">
+<div class="about-container">
 
-<div class="column">
+<a href="../user-account.html" class="back-btn">← Назад</a>
 
-<div class="delivery-block">
+<!-- 1. Дані акаунту -->
 
-<h2>Дані акаунту</h2>
+<div class="about-block big">
 
-<p><strong>Ім'я:</strong> <span id="acc-name"></span></p>
-<p><strong>Персональні пропозиції</strong></p>
+<h2>Мій акаунт Mōnal</h2>
 
 <p>
-• безкоштовна доставка від 3000 грн<br>
-• ранній доступ до нових ароматів
+<strong id="acc-fullname">—</strong><br>
+<span id="acc-email">—</span>
 </p>
-<p><strong>Знижка:</strong> <span id="acc-discount"></span>%</p>
-<p><strong>Сума покупок:</strong> <span id="acc-total"></span> грн</p>
-
-<p><strong>Прогрес до наступного рівня</strong></p>
-
-<div style="width:100%;height:20px;background:#eee;border-radius:10px;overflow:hidden;">
-    <div id="progress-bar" style="height:100%;width:0%;background:#000;"></div>
-</div>
-
-<p id="progress-text"></p>
-
-<button id="logout-btn" class="buy-btn">Вийти з акаунта</button>
 
 </div>
+
+<!-- 2. Особисті дані -->
+
+<div class="about-block big">
+
+<h2>Особисті дані</h2>
+
+<p>
+
+Дата народження:
+<span id="acc-birthday">не вказано</span><br>
+
+Стать:
+<span id="acc-gender">не вказано</span><br>
+
+Телефон:
+<span id="acc-phone">не вказано</span>
+
+</p>
+
+</div>
+
+<!-- 3. Основна адреса доставки -->
+
+<div class="about-block big">
+
+<h2>Основна адреса доставки</h2>
+
+<p id="acc-address">
+
+Адреса не вказана
+
+</p>
+
+</div>
+
+<!-- 4. Програма лояльності -->
+
+<div class="about-block big">
+
+<h2>Моя знижка</h2>
+
+<p>
+
+Знижка:
+<strong><span id="acc-discount"></span>%</strong><br>
+
+Сума покупок:
+<strong><span id="acc-total"></span> грн</strong><br>
+
+До наступного рівня залишилось:
+<strong><span id="acc-next-level"></span> грн</strong>
+
+</p>
+
+<div style="width:100%;height:20px;background:#eee;border-radius:10px;overflow:hidden;margin-top:12px;">
+
+<div id="progress-bar"
+style="height:100%;width:0%;background:#000;">
+</div>
+
+</div>
+
+</div>
+
+<!-- 5. Додаткова інформація -->
+
+<div class="about-block big">
+
+<h2>Додаткова інформація</h2>
+
+<p>
+
+<label>
+<input type="checkbox" id="extra-pet">
+маю домашнього улюбленця
+</label><br>
+
+<label>
+<input type="checkbox" id="extra-car">
+маю автомобіль
+</label><br>
+
+<label>
+<input type="checkbox" id="extra-travel">
+багато подорожую
+</label>
+
+</p>
 
 </div>
 

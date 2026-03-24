@@ -13,7 +13,7 @@
 
 .mobile-home-carousel {
 
-    display: flex;
+    display: none;
 
     flex-direction: row;
 

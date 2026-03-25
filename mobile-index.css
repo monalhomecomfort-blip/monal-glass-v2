@@ -16,6 +16,7 @@
     padding-left: 22%;
     padding-right: 22%;
     scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
 }
 
 /* прибираємо скролбар */
@@ -26,6 +27,7 @@
 .mobile-carousel-card {
     flex: 0 0 56%;
     scroll-snap-align: center;
+    scroll-snap-stop: always;
     text-decoration: none;
     transform: scale(0.45);
     opacity: 0.45;

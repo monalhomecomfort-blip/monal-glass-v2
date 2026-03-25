@@ -49,7 +49,7 @@
 /* картинка плитки */
 .mobile-carousel-card img {
     width: 100%;
-    height: 72vw;
+    height: 74vw;
     object-fit: cover;
     border-radius: 20px;
 }

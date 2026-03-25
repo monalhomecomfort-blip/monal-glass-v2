@@ -13,6 +13,7 @@
     flex-direction: row;
     overflow-x: auto;
     overflow-y: visible;
+    min-height: 78vw;
     
     gap: 12px;
     padding-left: 22%;

@@ -41,7 +41,7 @@
 
 /* активна плитка */
 .mobile-carousel-card.active {
-    transform: scale(1.06) translateY(-12px);
+    transform: scale(1.06) translateY(-6px);
     opacity: 1;
     z-index: 5;
 }

@@ -30,6 +30,7 @@
     scroll-snap-align: center;
     scroll-snap-stop: always;
     text-decoration: none;
+    overflow: visible;
     transform: scale(0.40) translateY(-6px);
     opacity: 0.45;
     z-index: 1;
@@ -48,7 +49,7 @@
 /* картинка плитки */
 .mobile-carousel-card img {
     width: 100%;
-    aspect-ratio: 3 / 4;
+    height: 72vw;
     object-fit: cover;
     border-radius: 20px;
 }

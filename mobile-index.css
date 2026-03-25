@@ -26,11 +26,11 @@
 }
 /* плитки */
 .mobile-carousel-card {
-    flex: 0 0 72%;
+    flex: 0 0 74%;
     scroll-snap-align: center;
     scroll-snap-stop: always;
     text-decoration: none;
-    transform: scale(0.40) translateY(10px);
+    transform: scale(0.40) translateY(6px);
     opacity: 0.45;
     z-index: 1;
     transition:
@@ -40,7 +40,7 @@
 
 /* активна плитка */
 .mobile-carousel-card.active {
-    transform: scale(1.10) translateY(-6px);
+    transform: scale(1.10) translateY(-4px);
     opacity: 1;
     z-index: 5;
 }

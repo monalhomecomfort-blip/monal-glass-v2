@@ -409,12 +409,25 @@
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-const cards = document.querySelectorAll(".mobile-carousel-card");
+const carousel = document.querySelector(".mobile-home-carousel");
+if (!carousel) return;
+const cards = Array.from(carousel.children);
+/* дублюємо плитки спереду і ззаду */
+cards.forEach(card => {
+const cloneStart = card.cloneNode(true);
+const cloneEnd = card.cloneNode(true);
+carousel.appendChild(cloneEnd);
+carousel.insertBefore(cloneStart, carousel.firstChild);
+});
+const allCards = document.querySelectorAll(".mobile-carousel-card");
+/* стартова позиція — середина */
+carousel.scrollLeft = carousel.scrollWidth / 3;
+/* визначення активної плитки */
 function updateActiveCard() {
 let center = window.innerWidth / 2;
 let closestCard = null;
 let closestDistance = Infinity;
-cards.forEach(card => {
+allCards.forEach(card => {
 const rect = card.getBoundingClientRect();
 const cardCenter = rect.left + rect.width / 2;
 const distance = Math.abs(center - cardCenter);
@@ -423,20 +436,25 @@ closestDistance = distance;
 closestCard = card;
 }
 });
-cards.forEach(card => card.classList.remove("active"));
-if (closestCard) {
-closestCard.classList.add("active");
+allCards.forEach(card => card.classList.remove("active"));
+if (closestCard) closestCard.classList.add("active");
 }
-}
-const carousel = document.querySelector(".mobile-home-carousel");
-if (carousel) {
+/* loop поведінка */
 carousel.addEventListener("scroll", () => {
 updateActiveCard();
-});
-updateActiveCard();
+const scrollLeft = carousel.scrollLeft;
+const scrollWidth = carousel.scrollWidth;
+const visibleWidth = carousel.offsetWidth;
+if (scrollLeft <= visibleWidth) {
+carousel.scrollLeft += scrollWidth / 3;
+}
+if (scrollLeft >= scrollWidth - visibleWidth * 2) {
+carousel.scrollLeft -= scrollWidth / 3;
 }
 });
-</script>  
+updateActiveCard();
+});
+</script>
     
 </body>
 </html>

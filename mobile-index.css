@@ -76,3 +76,9 @@ body.home .catalog-row {
     display: none;
 }
 }
+
+@media (max-width: 768px) {
+body.home .mobile-home-carousel {
+    min-height: 82vw;
+}
+}

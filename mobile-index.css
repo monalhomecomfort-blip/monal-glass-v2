@@ -26,7 +26,7 @@
 }
 /* плитки */
 .mobile-carousel-card {
-    flex: 0 0 68%;
+    flex: 0 0 72%;
     scroll-snap-align: center;
     scroll-snap-stop: always;
     text-decoration: none;

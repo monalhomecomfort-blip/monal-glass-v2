@@ -1,100 +1,65 @@
 /* ============================= */
 /* MOBILE HOMEPAGE 3D CAROUSEL */
 /* ============================= */
-
 /* desktop не бачить */
 .mobile-home-carousel {
     display: none;
 }
 
-
 /* мобільна версія */
 @media (max-width: 768px) {
-
 .mobile-home-carousel {
-
-    display: none;
-
+    display: flex;
     flex-direction: row;
-
     overflow-x: auto;
-
     gap: 12px;
-
     padding-left: 22%;
     padding-right: 22%;
-
     scroll-snap-type: x mandatory;
-
 }
 
-
 /* прибираємо скролбар */
-
 .mobile-home-carousel::-webkit-scrollbar {
     display: none;
 }
-
-
 /* плитки */
-
 .mobile-carousel-card {
-
     flex: 0 0 56%;
-
     scroll-snap-align: center;
-
     text-decoration: none;
-
     transform: scale(0.45);
-
     opacity: 0.45;
-
     transition:
         transform 0.35s ease,
         opacity 0.35s ease;
-
 }
-
-
 /* активна плитка */
-
 .mobile-carousel-card.active {
-
     transform: scale(1);
-
     opacity: 1;
-
 }
-
-
 /* картинка плитки */
-
 .mobile-carousel-card img {
-
     width: 100%;
-
     height: 78vw;
-
     object-fit: cover;
-
     border-radius: 20px;
-
 }
-
-
 /* назва під плиткою */
-
 .mobile-carousel-title {
-
     margin-top: 6px;
-
     font-size: 14px;
-
     color: #333;
-
     text-align: center;
-
+}
 }
 
+/* ============================= */
+/* HIDE OLD MOBILE CATALOG GRID */
+/* ONLY FOR HOMEPAGE */
+/* ============================= */
+@media (max-width: 768px) {
+body.home .catalog-row {
+    display: none;
+}
 }

@@ -14,6 +14,7 @@
     overflow-x: auto;
     overflow-y: visible;
     min-height: 80vw;
+    padding-top: 10px;
     
     gap: 12px;
     padding-left: 22%;
@@ -28,11 +29,12 @@
 }
 /* плитки */
 .mobile-carousel-card {
-    flex: 0 0 74%;
+    flex: 0 0 76%;
     scroll-snap-align: center;
     scroll-snap-stop: always;
     text-decoration: none;
     overflow: visible;
+    transform-origin: center center;
     transform: scale(0.40) translateY(-6px);
     opacity: 0.45;
     z-index: 1;

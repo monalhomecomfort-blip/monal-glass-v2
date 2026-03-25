@@ -405,6 +405,38 @@
 "url":"https://monal.com.ua/",
 "inLanguage":"uk"
 }
-</script>    
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+const cards = document.querySelectorAll(".mobile-carousel-card");
+function updateActiveCard() {
+let center = window.innerWidth / 2;
+let closestCard = null;
+let closestDistance = Infinity;
+cards.forEach(card => {
+const rect = card.getBoundingClientRect();
+const cardCenter = rect.left + rect.width / 2;
+const distance = Math.abs(center - cardCenter);
+if (distance < closestDistance) {
+closestDistance = distance;
+closestCard = card;
+}
+});
+cards.forEach(card => card.classList.remove("active"));
+if (closestCard) {
+closestCard.classList.add("active");
+}
+}
+const carousel = document.querySelector(".mobile-home-carousel");
+if (carousel) {
+carousel.addEventListener("scroll", () => {
+updateActiveCard();
+});
+updateActiveCard();
+}
+});
+</script>  
+    
 </body>
 </html>

@@ -61,9 +61,12 @@ if (!user) {
     if (!nextLevel) {
 
         bar.style.width = "100%";
+        if (nextLevelEl) {
+            nextLevelEl.textContent = "0";
+        }
         text.textContent = "Максимальний рівень знижки досягнуто";
-
-    } else {
+    }
+    else {
         const prevLimit = levels.find(l => l.limit < nextLevel.limit)?.limit || 0;
         const progress = (spent - prevLimit) / (nextLevel.limit - prevLimit) * 100;
         bar.style.width = Math.max(0, Math.min(progress, 100)) + "%";

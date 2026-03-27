@@ -34,6 +34,8 @@ if (!user) {
     if (emailEl) emailEl.textContent = user.email;
     const phoneEl = document.getElementById("acc-phone");
     if (phoneEl && user.phone) phoneEl.textContent = user.phone;
+    const birthdayEl = document.getElementById("acc-birthday");
+    if (birthdayEl && user.birthday) birthdayEl.textContent = user.birthday;
     document.getElementById("acc-discount").textContent = user.discount;
     document.getElementById("acc-total").textContent = user.total_spent;
 
@@ -107,6 +109,11 @@ function refreshUserData() {
             const phoneEl = document.getElementById("acc-phone");
             if (phoneEl && data.phone) {
                 phoneEl.textContent = data.phone;
+            }
+
+            const birthdayEl = document.getElementById("acc-birthday");
+            if (birthdayEl && data.birthday) {
+                birthdayEl.textContent = data.birthday;
             }
 
         })

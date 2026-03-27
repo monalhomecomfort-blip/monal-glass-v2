@@ -185,3 +185,29 @@ if (logoutBtn) {
     });
 
 }
+
+/* ===================== EDIT BIRTHDAY ===================== */
+
+const editBirthdayBtn = document.getElementById("edit-birthday-btn");
+const saveBirthdayBtn = document.getElementById("save-birthday-btn");
+const birthdaySpan = document.getElementById("acc-birthday");
+
+if (editBirthdayBtn && saveBirthdayBtn && birthdaySpan) {
+
+    editBirthdayBtn.addEventListener("click", () => {
+
+        const currentValue =
+            birthdaySpan.textContent === "не вказано"
+            ? ""
+            : birthdaySpan.textContent;
+
+        birthdaySpan.innerHTML = `
+            <input type="date" id="birthday-input" value="${currentValue}">
+        `;
+
+        editBirthdayBtn.style.display = "none";
+        saveBirthdayBtn.style.display = "inline";
+
+    });
+
+}

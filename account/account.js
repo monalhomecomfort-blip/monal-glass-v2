@@ -438,3 +438,61 @@ if (saveAddressBtn) {
         }
     });
 }
+
+/* ===================== EDIT ADDITIONAL INFO ===================== */
+const editExtraBtn = document.getElementById("edit-extra-btn");
+if (editExtraBtn) {
+    editExtraBtn.addEventListener("click", () => {
+        const checkboxes = document.querySelectorAll(".extra-info-checkbox");
+        checkboxes.forEach(cb => {
+            cb.disabled = false;
+            cb.classList.remove("readonly-checkbox");
+        });
+        editExtraBtn.style.display = "none";
+        document.getElementById("save-extra-btn").style.display = "inline";
+    });
+}
+
+/* ===================== SAVE ADDITIONAL INFO ===================== */
+const saveExtraBtn = document.getElementById("save-extra-btn");
+if (saveExtraBtn) {
+    saveExtraBtn.addEventListener("click", async () => {
+        const has_pet = document.getElementById("has-pet-checkbox")?.checked ? 1 : 0;
+        const has_car = document.getElementById("has-car-checkbox")?.checked ? 1 : 0;
+        const travels_often = document.getElementById("travels-often-checkbox")?.checked ? 1 : 0;
+        const user = JSON.parse(localStorage.getItem("monal_user"));
+        if (!user?.id) return;
+        try {
+            const res = await fetch(
+                "https://monal-mono-pay-production.up.railway.app/api/update-profile",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        userId: user.id,
+                        has_pet,
+                        has_car,
+                        travels_often
+                    })
+                }
+            );
+            const data = await res.json();
+            if (!data.ok) {
+                alert("Помилка збереження");
+                return;
+            }
+            const checkboxes = document.querySelectorAll(".extra-info-checkbox");
+            checkboxes.forEach(cb => {
+                cb.disabled = true;
+                cb.classList.add("readonly-checkbox");
+            });
+            saveExtraBtn.style.display = "none";
+            document.getElementById("edit-extra-btn").style.display = "inline";
+        } catch (err) {
+            console.error(err);
+            alert("Помилка сервера");
+        }
+    });
+}

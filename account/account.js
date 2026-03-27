@@ -36,6 +36,10 @@ if (!user) {
     if (phoneEl && user.phone) phoneEl.textContent = user.phone;
     const birthdayEl = document.getElementById("acc-birthday");
     if (birthdayEl && user.birthday) birthdayEl.textContent = user.birthday;
+    const genderEl = document.getElementById("acc-gender");
+    if (genderEl && user.gender) genderEl.textContent = user.gender;
+    const addressEl = document.getElementById("acc-address");
+    if (addressEl && user.address) addressEl.textContent = user.address;
     document.getElementById("acc-discount").textContent = user.discount;
     document.getElementById("acc-total").textContent = user.total_spent;
 
@@ -114,6 +118,16 @@ function refreshUserData() {
             const birthdayEl = document.getElementById("acc-birthday");
             if (birthdayEl && data.birthday) {
                 birthdayEl.textContent = data.birthday;
+            }
+
+            const genderEl = document.getElementById("acc-gender");
+            if (genderEl && data.gender) {
+                genderEl.textContent = data.gender;
+            }
+
+            const addressEl = document.getElementById("acc-address");
+            if (addressEl && data.address) {
+                addressEl.textContent = data.address;
             }
 
         })

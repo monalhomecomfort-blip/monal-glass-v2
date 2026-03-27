@@ -194,20 +194,23 @@ const birthdaySpan = document.getElementById("acc-birthday");
 
 if (editBirthdayBtn && saveBirthdayBtn && birthdaySpan) {
 
-    editBirthdayBtn.addEventListener("click", () => {
+    editBirthdayBtn.onclick = function () {
 
-        const currentValue =
-            birthdaySpan.textContent === "не вказано"
-            ? ""
-            : birthdaySpan.textContent;
+        let currentValue = birthdaySpan.textContent.trim();
 
-        birthdaySpan.innerHTML = `
-            <input type="date" id="birthday-input" value="${currentValue}">
-        `;
+        if (currentValue === "не вказано") {
+            currentValue = "";
+        } else if (currentValue.includes(".")) {
+            const parts = currentValue.split(".");
+            if (parts.length === 3) {
+                currentValue = `${parts[2]}-${parts[1]}-${parts[0]}`;
+            }
+        }
+
+        birthdaySpan.innerHTML = `<input type="date" id="birthday-input" value="${currentValue}">`;
 
         editBirthdayBtn.style.display = "none";
         saveBirthdayBtn.style.display = "inline";
-
-    });
+    };
 
 }

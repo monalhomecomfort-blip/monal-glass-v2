@@ -72,7 +72,7 @@ if (!user) {
     }
 
     const bar = document.getElementById("progress-bar");
-    const text = document.getElementById("progress-text");
+    const text = document.getElementById("acc-next-level");
     const nextLevelEl = document.getElementById("acc-next-level");
 
     if (!nextLevel) {

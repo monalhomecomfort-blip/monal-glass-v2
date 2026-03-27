@@ -34,8 +34,17 @@ if (!user) {
     if (emailEl) emailEl.textContent = user.email;
     const phoneEl = document.getElementById("acc-phone");
     if (phoneEl && user.phone) phoneEl.textContent = user.phone;
+    
     const birthdayEl = document.getElementById("acc-birthday");
-    if (birthdayEl && user.birthday) birthdayEl.textContent = user.birthday;
+    if (birthdayEl && user.birthday) {
+        const date = new Date(user.birthday);
+        const formatted =
+            String(date.getDate()).padStart(2, "0") + "." +
+            String(date.getMonth() + 1).padStart(2, "0") + "." +
+            date.getFullYear();
+        birthdayEl.textContent = formatted;
+    }
+    
     const genderEl = document.getElementById("acc-gender");
     if (genderEl && user.gender) genderEl.textContent = user.gender;
     const addressEl = document.getElementById("acc-address");
@@ -117,7 +126,12 @@ function refreshUserData() {
 
             const birthdayEl = document.getElementById("acc-birthday");
             if (birthdayEl && data.birthday) {
-                birthdayEl.textContent = data.birthday;
+                const date = new Date(data.birthday);
+                const formatted =
+                    String(date.getDate()).padStart(2, "0") + "." +
+                    String(date.getMonth() + 1).padStart(2, "0") + "." +
+                    date.getFullYear();
+                birthdayEl.textContent = formatted;
             }
 
             const genderEl = document.getElementById("acc-gender");

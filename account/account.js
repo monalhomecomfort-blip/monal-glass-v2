@@ -356,24 +356,53 @@ const editAddressBtn = document.getElementById("edit-address-btn");
 if (editAddressBtn) {
     editAddressBtn.addEventListener("click", () => {
         const addressEl = document.getElementById("acc-address");
-        const currentValue =
-            addressEl.textContent === "не вказано"
-                ? ""
-                : addressEl.textContent;
-        addressEl.innerHTML =
-            `<input type="text" id="address-input" value="${currentValue}" />`;
+        let city = "";
+        let street = "";
+        if (addressEl.textContent !== "не вказано") {
+            const parts = addressEl.textContent.split(",");
+            city = parts[0]?.trim() || "";
+            street = parts[1]?.trim() || "";
+        }
+        addressEl.innerHTML = `
+            <input
+                type="text"
+                id="np-city-input"
+                placeholder="Почніть вводити місто"
+                value="${city}"
+                autocomplete="off"
+            >
+            <div id="np-city-list" class="np-city-list"></div>
+
+            <br>
+
+            <input
+                type="text"
+                id="street-input"
+                placeholder="Вулиця, будинок"
+                value="${street}"
+            >
+        `;
         editAddressBtn.style.display = "none";
         document.getElementById("save-address-btn").style.display = "inline";
+        /* запускаємо автокомпліт NP міст */
+        if (typeof loadNPFromJSON === "function") {
+            loadNPFromJSON();
+        }
     });
 }
-
 /* ===================== SAVE ADDRESS ===================== */
 const saveAddressBtn = document.getElementById("save-address-btn");
 if (saveAddressBtn) {
     saveAddressBtn.addEventListener("click", async () => {
-        const input = document.getElementById("address-input");
-        if (!input) return;
-        const address = input.value.trim();
+        const cityInput = document.getElementById("np-city-input");
+        const streetInput = document.getElementById("street-input");
+        if (!cityInput || !streetInput) return;
+        const city = cityInput.value.trim();
+        const street = streetInput.value.trim();
+        const address =
+            city || street
+                ? `${city}${city && street ? ", " : ""}${street}`
+                : "";
         const user = JSON.parse(localStorage.getItem("monal_user"));
         if (!user?.id) return;
         try {

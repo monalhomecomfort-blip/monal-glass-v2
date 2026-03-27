@@ -82,3 +82,13 @@ function setSidebarTopOffset() {
 
     document.documentElement.style.setProperty("--sidebar-top", top + "px");
 }
+
+function logoutUser() {
+
+    localStorage.removeItem("monal_user");
+    localStorage.removeItem("monal_login_time");
+    localStorage.removeItem("user_id");
+
+    window.location.href = "/account/login.html";
+
+}

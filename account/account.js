@@ -214,3 +214,33 @@ if (editBirthdayBtn && saveBirthdayBtn && birthdaySpan) {
     };
 
 }
+
+/* ===================== SAVE BIRTHDAY ===================== */
+
+if (saveBirthdayBtn && birthdaySpan) {
+
+    saveBirthdayBtn.onclick = function () {
+
+        const input = document.getElementById("birthday-input");
+
+        if (!input) return;
+
+        let value = input.value;
+
+        if (!value) {
+            birthdaySpan.textContent = "не вказано";
+        } else {
+
+            const parts = value.split("-");
+
+            value = `${parts[2]}.${parts[1]}.${parts[0]}`;
+
+            birthdaySpan.textContent = value;
+        }
+
+        editBirthdayBtn.style.display = "inline";
+        saveBirthdayBtn.style.display = "none";
+
+    };
+
+}

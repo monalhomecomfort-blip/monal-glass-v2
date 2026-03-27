@@ -104,6 +104,11 @@ function refreshUserData() {
                 discountEl.textContent = data.discount;
             }
 
+            const phoneEl = document.getElementById("acc-phone");
+            if (phoneEl && data.phone) {
+                phoneEl.textContent = data.phone;
+            }
+
         })
         .catch(err => console.error("refreshUserData error:", err));
 

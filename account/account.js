@@ -56,6 +56,7 @@ if (!user) {
 
     const bar = document.getElementById("progress-bar");
     const text = document.getElementById("progress-text");
+    const nextLevelEl = document.getElementById("acc-next-level");
 
     if (!nextLevel) {
 
@@ -63,19 +64,16 @@ if (!user) {
         text.textContent = "Максимальний рівень знижки досягнуто";
 
     } else {
-
         const prevLimit = levels.find(l => l.limit < nextLevel.limit)?.limit || 0;
-
         const progress = (spent - prevLimit) / (nextLevel.limit - prevLimit) * 100;
-
         bar.style.width = Math.max(0, Math.min(progress, 100)) + "%";
 
         const remain = nextLevel.limit - spent;
-
+        if (nextLevelEl) {
+        nextLevelEl.textContent = remain;
+        }
         text.textContent = "До " + nextLevel.discount + "% залишилось: " + remain + " грн";
-
     }
-
 }
 
 function refreshUserData() {

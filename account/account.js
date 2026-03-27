@@ -358,7 +358,11 @@ if (editAddressBtn) {
         const addressEl = document.getElementById("acc-address");
         let city = "";
         let street = "";
-        if (addressEl.textContent !== "не вказано") {
+        if (
+            addressEl.textContent &&
+            addressEl.textContent !== "не вказано" &&
+            addressEl.textContent !== "Адреса не вказана"
+        ) {
             const parts = addressEl.textContent.split(",");
             city = parts[0]?.trim() || "";
             street = parts[1]?.trim() || "";
@@ -367,14 +371,12 @@ if (editAddressBtn) {
             <input
                 type="text"
                 id="np-city-input"
-                placeholder="Почніть вводити місто"
+                placeholder="Місто"
                 value="${city}"
                 autocomplete="off"
             >
             <div id="np-city-list" class="np-city-list"></div>
-
             <br>
-
             <input
                 type="text"
                 id="street-input"
@@ -384,12 +386,14 @@ if (editAddressBtn) {
         `;
         editAddressBtn.style.display = "none";
         document.getElementById("save-address-btn").style.display = "inline";
-        /* запускаємо автокомпліт NP міст */
+
+        /* запускаємо автокомпліт NP */
         if (typeof loadNPFromJSON === "function") {
             loadNPFromJSON();
         }
     });
 }
+
 /* ===================== SAVE ADDRESS ===================== */
 const saveAddressBtn = document.getElementById("save-address-btn");
 if (saveAddressBtn) {
@@ -406,16 +410,19 @@ if (saveAddressBtn) {
         const user = JSON.parse(localStorage.getItem("monal_user"));
         if (!user?.id) return;
         try {
-            const res = await fetch("/api/update-profile", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    userId: user.id,
-                    address
-                })
-            });
+            const res = await fetch(
+                "https://monal-mono-pay-production.up.railway.app/api/update-profile",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        userId: user.id,
+                        address
+                    })
+                }
+            );
             const data = await res.json();
             if (!data.ok) {
                 alert("Помилка збереження");

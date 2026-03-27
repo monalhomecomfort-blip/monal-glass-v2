@@ -28,7 +28,8 @@ if (!user) {
 
 } else {
 
-    document.getElementById("acc-name").textContent = user.name;
+    const nameEl = document.getElementById("acc-fullname");
+    if (nameEl) nameEl.textContent = user.name;
     const emailEl = document.getElementById("acc-email");
     if (emailEl) emailEl.textContent = user.email;
     document.getElementById("acc-discount").textContent = user.discount;

@@ -193,11 +193,8 @@ const saveBirthdayBtn = document.getElementById("save-birthday-btn");
 const birthdaySpan = document.getElementById("acc-birthday");
 
 if (editBirthdayBtn && saveBirthdayBtn && birthdaySpan) {
-
     editBirthdayBtn.onclick = function () {
-
         let currentValue = birthdaySpan.textContent.trim();
-
         if (currentValue === "не вказано") {
             currentValue = "";
         } else if (currentValue.includes(".")) {
@@ -206,41 +203,55 @@ if (editBirthdayBtn && saveBirthdayBtn && birthdaySpan) {
                 currentValue = `${parts[2]}-${parts[1]}-${parts[0]}`;
             }
         }
-
         birthdaySpan.innerHTML = `<input type="date" id="birthday-input" value="${currentValue}">`;
-
         editBirthdayBtn.style.display = "none";
         saveBirthdayBtn.style.display = "inline";
     };
-
 }
 
 /* ===================== SAVE BIRTHDAY ===================== */
 
 if (saveBirthdayBtn && birthdaySpan) {
-
-    saveBirthdayBtn.onclick = function () {
-
+    saveBirthdayBtn.onclick = async function () {
         const input = document.getElementById("birthday-input");
-
         if (!input) return;
-
-        let value = input.value;
-
-        if (!value) {
-            birthdaySpan.textContent = "не вказано";
-        } else {
-
-            const parts = value.split("-");
-
-            value = `${parts[2]}.${parts[1]}.${parts[0]}`;
-
-            birthdaySpan.textContent = value;
+        const value = input.value;
+        const user = JSON.parse(localStorage.getItem("monal_user"));
+        if (!user || !user.id) {
+            alert("Помилка користувача");
+            return;
         }
-
-        editBirthdayBtn.style.display = "inline";
-        saveBirthdayBtn.style.display = "none";
-
+        try {
+            const response = await fetch(
+                "https://monal-mono-pay-production.up.railway.app/api/update-profile",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        userId: user.id,
+                        birthday: value
+                    })
+                }
+            );
+            const data = await response.json();
+            if (!data.ok) {
+                alert("Не вдалося зберегти дату");
+                return;
+            }
+            if (!value) {
+                birthdaySpan.textContent = "не вказано";
+            } else {
+                const parts = value.split("-");
+                birthdaySpan.textContent =
+                    `${parts[2]}.${parts[1]}.${parts[0]}`;
+            }
+            editBirthdayBtn.style.display = "inline";
+            saveBirthdayBtn.style.display = "none";
+        } catch (err) {
+            console.error(err);
+            alert("Помилка збереження");
+        }
     };
-
 }

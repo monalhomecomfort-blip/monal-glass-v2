@@ -255,3 +255,64 @@ if (saveBirthdayBtn && birthdaySpan) {
         }
     };
 }
+
+/* ===================== EDIT PHONE ===================== */
+
+const editPhoneBtn = document.getElementById("edit-phone-btn");
+const savePhoneBtn = document.getElementById("save-phone-btn");
+const phoneSpan = document.getElementById("acc-phone");
+
+if (editPhoneBtn && savePhoneBtn && phoneSpan) {
+    editPhoneBtn.onclick = function () {
+        let currentValue = phoneSpan.textContent.trim();
+        if (currentValue === "не вказано") {
+            currentValue = "";
+        }
+        phoneSpan.innerHTML =
+            `<input type="text" id="phone-input" value="${currentValue}">`;
+        editPhoneBtn.style.display = "none";
+        savePhoneBtn.style.display = "inline";
+    };
+}
+
+/* ===================== SAVE PHONE ===================== */
+
+if (savePhoneBtn && phoneSpan) {
+    savePhoneBtn.onclick = async function () {
+        const input = document.getElementById("phone-input");
+        if (!input) return;
+        const value = input.value;
+        const user = JSON.parse(localStorage.getItem("monal_user"));
+        if (!user || !user.id) {
+            alert("Помилка користувача");
+            return;
+        }
+        try {
+            const response = await fetch(
+                "https://monal-mono-pay-production.up.railway.app/api/update-profile",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        userId: user.id,
+                        phone: value
+                    })
+                }
+            );
+            const data = await response.json();
+            if (!data.ok) {
+                alert("Не вдалося зберегти телефон");
+                return;
+            }
+            phoneSpan.textContent =
+                value || "не вказано";
+            editPhoneBtn.style.display = "inline";
+            savePhoneBtn.style.display = "none";
+        } catch (err) {
+            console.error(err);
+            alert("Помилка збереження");
+        }
+    };
+}

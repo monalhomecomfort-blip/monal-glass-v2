@@ -350,3 +350,55 @@ if (saveGenderBtn && genderSpan) {
         }
     };
 }
+
+/* ===================== EDIT ADDRESS ===================== */
+const editAddressBtn = document.getElementById("edit-address-btn");
+if (editAddressBtn) {
+    editAddressBtn.addEventListener("click", () => {
+        const addressEl = document.getElementById("acc-address");
+        const currentValue =
+            addressEl.textContent === "не вказано"
+                ? ""
+                : addressEl.textContent;
+        addressEl.innerHTML =
+            `<input type="text" id="address-input" value="${currentValue}" />`;
+        editAddressBtn.style.display = "none";
+        document.getElementById("save-address-btn").style.display = "inline";
+    });
+}
+
+/* ===================== SAVE ADDRESS ===================== */
+const saveAddressBtn = document.getElementById("save-address-btn");
+if (saveAddressBtn) {
+    saveAddressBtn.addEventListener("click", async () => {
+        const input = document.getElementById("address-input");
+        if (!input) return;
+        const address = input.value.trim();
+        const user = JSON.parse(localStorage.getItem("monal_user"));
+        if (!user?.id) return;
+        try {
+            const res = await fetch("/api/update-profile", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    userId: user.id,
+                    address
+                })
+            });
+            const data = await res.json();
+            if (!data.ok) {
+                alert("Помилка збереження");
+                return;
+            }
+            document.getElementById("acc-address").textContent =
+                address || "не вказано";
+            saveAddressBtn.style.display = "none";
+            document.getElementById("edit-address-btn").style.display = "inline";
+        } catch (err) {
+            console.error(err);
+            alert("Помилка сервера");
+        }
+    });
+}

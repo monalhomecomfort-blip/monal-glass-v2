@@ -253,25 +253,44 @@ style="height:100%;width:0%;background:#000;">
 </div>
 
 <!-- 5. Додаткова інформація -->
-
 <div class="about-block big">
-
-<h2>Додаткова інформація</h2>
+<h2>
+Додаткова інформація
+<span id="edit-extra-btn" style="cursor:pointer; margin-left:6px;">✏️</span>
+<span id="save-extra-btn" style="cursor:pointer; margin-left:6px; display:none;">✔</span>
+</h2>
 
 <p>
 
 <label>
-<input type="checkbox" id="extra-pet">
+<input
+type="checkbox"
+id="has-pet-checkbox"
+class="extra-info-checkbox"
+disabled
+>
 маю домашнього улюбленця
-</label><br>
+</label>
+<br>
 
 <label>
-<input type="checkbox" id="extra-car">
+<input
+type="checkbox"
+id="has-car-checkbox"
+class="extra-info-checkbox"
+disabled
+>
 маю автомобіль
-</label><br>
+</label>
+<br>
 
 <label>
-<input type="checkbox" id="extra-travel">
+<input
+type="checkbox"
+id="travels-often-checkbox"
+class="extra-info-checkbox"
+disabled
+>
 багато подорожую
 </label>
 

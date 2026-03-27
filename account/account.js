@@ -32,7 +32,14 @@ if (!user) {
         birthdayEl.textContent = formatted;
     }    
     const genderEl = document.getElementById("acc-gender");
-    if (genderEl && user.gender) genderEl.textContent = user.gender;
+    if (genderEl && user.gender) {
+    genderEl.textContent =
+        user.gender === "female"
+            ? "жіноча"
+            : user.gender === "male"
+            ? "чоловіча"
+            : "не вказано";
+}
     const addressEl = document.getElementById("acc-address");
     if (addressEl && user.address) addressEl.textContent = user.address;
     document.getElementById("acc-discount").textContent = user.discount;
@@ -105,7 +112,12 @@ function refreshUserData() {
             }
             const genderEl = document.getElementById("acc-gender");
             if (genderEl && data.gender) {
-                genderEl.textContent = data.gender;
+                    genderEl.textContent =
+                    data.gender === "female"
+                        ? "жіноча"
+                        : data.gender === "male"
+                        ? "чоловіча"
+                        : "не вказано";
             }
             const addressEl = document.getElementById("acc-address");
             if (addressEl && data.address) {

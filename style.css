@@ -1700,9 +1700,10 @@ stroke: #111;
 /* ============================= */
 
 .account-page .account-container {
-    padding: 110px 40px 110px 40px;
-    max-width: 1400px;
-    margin: 0 auto;
+    padding: 110px 0 110px 0;
+    width: 100%;
+    max-width: none;
+    margin: 0;
 
     display: grid;
     grid-template-columns: 320px minmax(620px, 760px);
@@ -1739,17 +1740,17 @@ stroke: #111;
 .account-page .sidebar-panel {
     position: sticky;
     top: 110px;
-    left: auto;
+    left: 0;
 
     width: 320px;
-    min-height: auto;
-    height: auto;
+    min-height: calc(100vh - 110px);
+    height: calc(100vh - 110px);
 
     transform: none;
     transition: none;
 
     margin: 0;
-    border-radius: 16px;
+    border-radius: 0;
     padding: 24px 20px;
     box-sizing: border-box;
 }

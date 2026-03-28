@@ -180,7 +180,8 @@
     width: 100%;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
+    margin-bottom: 24px;
 }
 .sidebar-avatar-label {
     display: inline-flex;

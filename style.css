@@ -1795,19 +1795,19 @@ stroke: #111;
 /* ============================= */
 
 .account-page .account-block {
-    padding: 16px 18px;
-    border-radius: 16px;
-    background: rgba(4, 4, 4, 0.85);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    color: #e8e1d6;
+    padding: 26px 28px;
+    border-radius: 18px;
+    background: #f4efe6;
+    color: #1f1f1f;
 
     width: 100%;
     max-width: 760px;
     margin-bottom: 20px;
     box-sizing: border-box;
-}
 
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+}
 .account-page .account-block.big {
     grid-column: 2;
 }
@@ -1816,8 +1816,8 @@ stroke: #111;
     font-family: 'Montserrat', serif;
     font-weight: 300;
     font-size: 24px;
-    margin-bottom: 10px;
-    color: #e8e1d6;
+    margin-bottom: 16px;
+    color: #1f1f1f;
 }
 
 /* ============================= */

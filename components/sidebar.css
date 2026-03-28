@@ -89,3 +89,46 @@
     font-size: 15px;
     line-height: 1.45;
 }
+
+.sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+
+    min-height: 48px;
+    padding: 10px 14px;
+    border-radius: 14px;
+
+    color: #e8e1d6;
+    text-decoration: none;
+    transition: background 0.25s ease, opacity 0.25s ease;
+}
+
+.sidebar-icon {
+    width: 20px;
+    height: 20px;
+    flex: 0 0 20px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sidebar-icon svg {
+    width: 20px;
+    height: 20px;
+    display: block;
+}
+
+.sidebar-label {
+    font-size: 15px;
+    line-height: 1.2;
+}
+
+.sidebar-link:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.sidebar-link.is-active {
+    background: rgba(255, 255, 255, 0.10);
+}

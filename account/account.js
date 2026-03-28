@@ -151,185 +151,84 @@ if (logoutBtn) {
     });
 }
 
-/* ===================== EDIT PERSONAL BLOCK ===================== */
+/* ===================== EDIT PERSONAL DATA BLOCK ===================== */
 
 const editPersonalBtn = document.getElementById("edit-personal-btn");
+const savePersonalBtn = document.getElementById("save-personal-btn");
 
-if (editPersonalBtn) {
-editPersonalBtn.addEventListener("click", () => {
-
-document.getElementById("edit-birthday-btn")?.click();
-document.getElementById("edit-gender-btn")?.click();
-document.getElementById("edit-phone-btn")?.click();
-
-});
-}
-/* ===================== EDIT BIRTHDAY ===================== */
-const editBirthdayBtn = document.getElementById("edit-birthday-btn");
-const saveBirthdayBtn = document.getElementById("save-birthday-btn");
 const birthdaySpan = document.getElementById("acc-birthday");
-
-if (editBirthdayBtn && saveBirthdayBtn && birthdaySpan) {
-    editBirthdayBtn.onclick = function () {
-        let currentValue = birthdaySpan.textContent.trim();
-        if (currentValue === "не вказано") {
-            currentValue = "";
-        } else if (currentValue.includes(".")) {
-            const parts = currentValue.split(".");
-            if (parts.length === 3) {
-                currentValue = `${parts[2]}-${parts[1]}-${parts[0]}`;
-            }
-        }
-        birthdaySpan.innerHTML = `<input type="date" id="birthday-input" value="${currentValue}">`;
-        editBirthdayBtn.style.display = "none";
-        saveBirthdayBtn.style.display = "inline";
-    };
-}
-
-/* ===================== SAVE BIRTHDAY ===================== */
-if (saveBirthdayBtn && birthdaySpan) {
-    saveBirthdayBtn.onclick = async function () {
-        const input = document.getElementById("birthday-input");
-        if (!input) return;
-        const value = input.value;
-        const user = JSON.parse(localStorage.getItem("monal_user"));
-        if (!user || !user.id) {
-            alert("Помилка користувача");
-            return;
-        }
-        try {
-            const response = await fetch(
-                "https://monal-mono-pay-production.up.railway.app/api/update-profile",
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        userId: user.id,
-                        birthday: value
-                    })
-                }
-            );
-            const data = await response.json();
-            if (!data.ok) {
-                alert("Не вдалося зберегти дату");
-                return;
-            }
-            if (!value) {
-                birthdaySpan.textContent = "не вказано";
-            } else {
-                const parts = value.split("-");
-                birthdaySpan.textContent =
-                    `${parts[2]}.${parts[1]}.${parts[0]}`;
-            }
-            editBirthdayBtn.style.display = "inline";
-            saveBirthdayBtn.style.display = "none";
-        } catch (err) {
-            console.error(err);
-            alert("Помилка збереження");
-        }
-    };
-}
-
-/* ===================== EDIT PHONE ===================== */
-
-const editPhoneBtn = document.getElementById("edit-phone-btn");
-const savePhoneBtn = document.getElementById("save-phone-btn");
+const genderSpan = document.getElementById("acc-gender");
 const phoneSpan = document.getElementById("acc-phone");
 
-if (editPhoneBtn && savePhoneBtn && phoneSpan) {
-    editPhoneBtn.onclick = function () {
-        let currentValue = phoneSpan.textContent.trim();
-        if (currentValue === "не вказано") {
-            currentValue = "";
-        }
-        phoneSpan.innerHTML =
-            `<input type="text" id="phone-input" value="${currentValue}">`;
-        editPhoneBtn.style.display = "none";
-        savePhoneBtn.style.display = "inline";
-    };
-}
+if (editPersonalBtn && savePersonalBtn && birthdaySpan && genderSpan && phoneSpan) {
+    editPersonalBtn.addEventListener("click", () => {
+        let birthdayValue = birthdaySpan.textContent.trim();
+        let genderValue = genderSpan.textContent.trim();
+        let phoneValue = phoneSpan.textContent.trim();
 
-/* ===================== SAVE PHONE ===================== */
-
-if (savePhoneBtn && phoneSpan) {
-    savePhoneBtn.onclick = async function () {
-        const input = document.getElementById("phone-input");
-        if (!input) return;
-        const value = input.value;
-        const user = JSON.parse(localStorage.getItem("monal_user"));
-        if (!user || !user.id) {
-            alert("Помилка користувача");
-            return;
-        }
-        try {
-            const response = await fetch(
-                "https://monal-mono-pay-production.up.railway.app/api/update-profile",
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        userId: user.id,
-                        phone: value
-                    })
-                }
-            );
-            const data = await response.json();
-            if (!data.ok) {
-                alert("Не вдалося зберегти телефон");
-                return;
+        if (birthdayValue === "не вказано") {
+            birthdayValue = "";
+        } else if (birthdayValue.includes(".")) {
+            const parts = birthdayValue.split(".");
+            if (parts.length === 3) {
+                birthdayValue = `${parts[2]}-${parts[1]}-${parts[0]}`;
             }
-            phoneSpan.textContent =
-                value || "не вказано";
-            editPhoneBtn.style.display = "inline";
-            savePhoneBtn.style.display = "none";
-        } catch (err) {
-            console.error(err);
-            alert("Помилка збереження");
         }
-    };
-}
 
-/* ===================== EDIT GENDER ===================== */
-const editGenderBtn = document.getElementById("edit-gender-btn");
-const saveGenderBtn = document.getElementById("save-gender-btn");
-const genderSpan = document.getElementById("acc-gender");
-if (editGenderBtn && saveGenderBtn && genderSpan) {
-    editGenderBtn.onclick = function () {
-        let currentValue = genderSpan.textContent.trim();
+        if (genderValue === "жіноча") {
+            genderValue = "female";
+        } else if (genderValue === "чоловіча") {
+            genderValue = "male";
+        } else {
+            genderValue = "";
+        }
+
+        if (phoneValue === "не вказано") {
+            phoneValue = "";
+        }
+
+        birthdaySpan.innerHTML = `
+            <input type="date" id="birthday-input" value="${birthdayValue}">
+        `;
+
         genderSpan.innerHTML = `
-<select id="gender-input">
-<option value="">не вказано</option>
-<option value="female">жіноча</option>
-<option value="male">чоловіча</option>
-</select>
-`;
-        const select = document.getElementById("gender-input");
-        if (currentValue === "жіноча") {
-            select.value = "female";
-        }
-        if (currentValue === "чоловіча") {
-            select.value = "male";
-        }
-        editGenderBtn.style.display = "none";
-        saveGenderBtn.style.display = "inline";
-    };
-}
+            <select id="gender-input">
+                <option value="">не вказано</option>
+                <option value="female">жіноча</option>
+                <option value="male">чоловіча</option>
+            </select>
+        `;
 
-/* ===================== SAVE GENDER ===================== */
-if (saveGenderBtn && genderSpan) {
-    saveGenderBtn.onclick = async function () {
-        const input = document.getElementById("gender-input");
-        if (!input) return;
-        const value = input.value;
-        const user = JSON.parse(localStorage.getItem("monal_user"));
+        phoneSpan.innerHTML = `
+            <input type="text" id="phone-input" value="${phoneValue}">
+        `;
+
+        const genderInput = document.getElementById("gender-input");
+        if (genderInput) {
+            genderInput.value = genderValue;
+        }
+
+        editPersonalBtn.style.display = "none";
+        savePersonalBtn.style.display = "inline-flex";
+    });
+
+    savePersonalBtn.addEventListener("click", async () => {
+        const birthdayInput = document.getElementById("birthday-input");
+        const genderInput = document.getElementById("gender-input");
+        const phoneInput = document.getElementById("phone-input");
+
+        if (!birthdayInput || !genderInput || !phoneInput) return;
+
+        const birthday = birthdayInput.value.trim();
+        const gender = genderInput.value.trim();
+        const phone = phoneInput.value.trim();
+
+        const user = JSON.parse(localStorage.getItem("monal_user") || "null");
         if (!user || !user.id) {
             alert("Помилка користувача");
             return;
         }
+
         try {
             const response = await fetch(
                 "https://monal-mono-pay-production.up.railway.app/api/update-profile",
@@ -340,28 +239,52 @@ if (saveGenderBtn && genderSpan) {
                     },
                     body: JSON.stringify({
                         userId: user.id,
-                        gender: value
+                        birthday,
+                        gender,
+                        phone
                     })
                 }
             );
+
             const data = await response.json();
+
             if (!data.ok) {
-                alert("Не вдалося зберегти стать");
+                alert("Не вдалося зберегти дані");
                 return;
             }
+
+            if (!birthday) {
+                birthdaySpan.textContent = "не вказано";
+            } else {
+                const parts = birthday.split("-");
+                birthdaySpan.textContent = `${parts[2]}.${parts[1]}.${parts[0]}`;
+            }
+
             genderSpan.textContent =
-                value === "female"
+                gender === "female"
                     ? "жіноча"
-                    : value === "male"
+                    : gender === "male"
                     ? "чоловіча"
                     : "не вказано";
-            editGenderBtn.style.display = "inline";
-            saveGenderBtn.style.display = "none";
+
+            phoneSpan.textContent = phone || "не вказано";
+
+            const updatedUser = {
+                ...user,
+                birthday: birthday || null,
+                gender: gender || null,
+                phone: phone || null
+            };
+
+            localStorage.setItem("monal_user", JSON.stringify(updatedUser));
+
+            editPersonalBtn.style.display = "inline-flex";
+            savePersonalBtn.style.display = "none";
         } catch (err) {
             console.error(err);
             alert("Помилка збереження");
         }
-    };
+    });
 }
 
 /* ===================== EDIT ADDRESS ===================== */

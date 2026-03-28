@@ -151,6 +151,19 @@ if (logoutBtn) {
     });
 }
 
+/* ===================== EDIT PERSONAL BLOCK ===================== */
+
+const editPersonalBtn = document.getElementById("edit-personal-btn");
+
+if (editPersonalBtn) {
+editPersonalBtn.addEventListener("click", () => {
+
+document.getElementById("edit-birthday-btn")?.click();
+document.getElementById("edit-gender-btn")?.click();
+document.getElementById("edit-phone-btn")?.click();
+
+});
+}
 /* ===================== EDIT BIRTHDAY ===================== */
 const editBirthdayBtn = document.getElementById("edit-birthday-btn");
 const saveBirthdayBtn = document.getElementById("save-birthday-btn");

@@ -307,10 +307,10 @@ if (user) {
 
 <div id="sidebar-container"></div>
     
-<script src="../components/sidebar.js"></script>   
+<script src="components/sidebar.js"></script>   
     
 <script>
-fetch("../components/sidebar.html")
+fetch("components/sidebar.html")
   .then(res => res.text())
   .then(html => {
     document.getElementById("sidebar-container").innerHTML = html;

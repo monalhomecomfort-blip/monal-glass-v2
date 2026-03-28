@@ -1715,7 +1715,7 @@ stroke: #111;
 .account-page .account-main {
     grid-column: 2;
     width: 100%;
-    max-width: 960px;
+    max-width: 1160px;
     justify-self: center;
     padding-bottom: 110px;
 }
@@ -1802,7 +1802,7 @@ stroke: #111;
     color: #1f1f1f;
 
     width: 100%;
-    max-width: 960px;
+    max-width: 1160px;
     margin-bottom: 20px;
     box-sizing: border-box;
 

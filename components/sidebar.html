@@ -3,10 +3,30 @@
     <aside class="sidebar-panel">
         <span id="sidebar-close">✕</span>
 
-        <div class="sidebar-block">
-            <div id="sidebar-user-name">Імʼя</div>
-            <div id="sidebar-user-discount">Знижка: 0%</div>
-        </div>
+<div class="sidebar-block sidebar-profile">
+
+    <div class="sidebar-avatar-wrap">
+        <label for="sidebar-avatar-input" class="sidebar-avatar-label">
+            <img
+                id="sidebar-avatar-preview"
+                src="/images/avatar-placeholder.png"
+                alt="Фото профілю"
+                class="sidebar-avatar"
+            >
+            <span class="sidebar-avatar-edit">Змінити фото</span>
+        </label>
+
+        <input
+            type="file"
+            id="sidebar-avatar-input"
+            accept="image/*"
+            hidden
+        >
+    </div>
+
+    <div id="sidebar-user-name">Імʼя</div>
+    <div id="sidebar-user-discount">Знижка: 0%</div>
+</div>
 
         <div class="sidebar-block">
         <div id="sidebar-guest">

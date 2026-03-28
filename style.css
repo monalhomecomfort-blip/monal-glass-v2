@@ -1709,7 +1709,7 @@ stroke: #111;
     grid-template-columns: 320px minmax(620px, 760px);
     column-gap: 56px;
     justify-content: start;
-    align-items: start;
+    align-items: stretch;
 }
 
 .account-page .account-main {
@@ -1721,9 +1721,9 @@ stroke: #111;
 .account-page #sidebar-container {
     grid-column: 1;
     width: 320px;
-    align-self: start;
+    align-self: stretch;
+    background: rgba(4, 4, 4, 0.85);
 }
-
 /* на сторінці акаунта sidebar завжди видимий як частина сторінки */
 .account-page #user-sidebar {
     display: block;
@@ -1743,8 +1743,8 @@ stroke: #111;
     left: 0;
 
     width: 320px;
-    min-height: calc(100vh - 110px);
-    height: calc(100vh - 110px);
+    min-height: auto;
+    height: auto;
 
     transform: none;
     transition: none;
@@ -1753,6 +1753,7 @@ stroke: #111;
     border-radius: 0;
     padding: 24px 20px;
     box-sizing: border-box;
+    background: transparent;
 }
 
 /* хрестик закриття на account не потрібен */

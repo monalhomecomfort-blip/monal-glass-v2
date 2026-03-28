@@ -1677,22 +1677,22 @@ body.news .nav-top-categories {
 /* ===== РЕДАГУВАННЯ В КАБІНЕТІ ===== */
 .edit-icon {
 cursor: pointer;
-margin-left: 6px;
+margin-left: 10px;
 display: inline-flex;
-align-items: center;
+vertical-align: middle;
 }
 
 .edit-icon svg {
-width: 14px;
-height: 14px;
-stroke: #444;
-stroke-width: 1.5;
+width: 18px;
+height: 18px;
+stroke: #6f6f6f;
+stroke-width: 1.6;
 fill: none;
-transition: 0.2s;
+transition: stroke .2s ease;
 }
 
 .edit-icon:hover svg {
-stroke: #000;
+stroke: #111;
 }
 /* ===== SOFT GOLD DUST AROUND LOGO ===== */
 

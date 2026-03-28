@@ -133,6 +133,7 @@ class="nav-logo">
 
 <button class="mobile-close">✕</button>
 
+<a href="user-account.html" id="mobile-account">Кабінет</a>    
 <a href="index.html">Головна</a>
 <a href="about.html">Про бренд</a>
 <a href="partners.html">Партнерам</a>
@@ -147,6 +148,10 @@ class="nav-logo">
 
 <a href="index.html" class="back-btn">← Назад</a>
 
+    
+<button onclick="openSidebar()">Відкрити sidebar (тест)</button>    
+
+    
 <h1 class="page-title">Кабінет клієнта</h1>
 
 <div class="delivery-columns">
@@ -251,29 +256,43 @@ updateBurgerCartCount();
 </script>
 
 <script>
-
 if (window.innerWidth > 900) {
-
 const navCatalog = document.querySelector('.nav-catalog');
 const catalogBtn = document.querySelector('.catalog-btn');
-
 if (navCatalog && catalogBtn) {
-
 catalogBtn.addEventListener('click', function (e) {
 e.preventDefault();
 e.stopPropagation();
 navCatalog.classList.toggle('open');
 });
-
 document.addEventListener('click', function () {
 navCatalog.classList.remove('open');
 });
-
 }
-
 }
-
 </script>
 
+<div id="sidebar-container"></div>
+    
+<script src="../components/sidebar.js"></script>   
+<script>
+fetch("../components/sidebar.html")
+  .then(res => res.text())
+  .then(html => {
+    document.getElementById("sidebar-container").innerHTML = html;
+    if (typeof initSidebarUserState === "function") {
+        initSidebarUserState();
+    }
+    if (typeof setSidebarTopOffset === "function") {
+        setSidebarTopOffset();
+    }
+  });
+window.addEventListener("resize", function () {
+    if (typeof setSidebarTopOffset === "function") {
+        setSidebarTopOffset();
+    }
+});
+</script>
+    
 </body>
 </html>

@@ -1711,6 +1711,11 @@ stroke: #111;
     align-items: start;
 }
 
+.account-page .account-main {
+    grid-column: 2;
+    width: 100%;
+    max-width: 760px;
+}
 /* ліва колонка */
 .account-page #sidebar-container {
     grid-column: 1;

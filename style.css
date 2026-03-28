@@ -1674,6 +1674,26 @@ body.news .nav-top-categories {
     color: #444;
 }
 
+/* ===== РЕДАГУВАННЯ В КАБІНЕТІ ===== */
+.edit-icon {
+cursor: pointer;
+margin-left: 6px;
+display: inline-flex;
+align-items: center;
+}
+
+.edit-icon svg {
+width: 14px;
+height: 14px;
+stroke: #444;
+stroke-width: 1.5;
+fill: none;
+transition: 0.2s;
+}
+
+.edit-icon:hover svg {
+stroke: #000;
+}
 /* ===== SOFT GOLD DUST AROUND LOGO ===== */
 
 .nav-logo-link {

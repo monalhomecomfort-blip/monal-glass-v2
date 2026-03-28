@@ -321,7 +321,7 @@ if (editAddressBtn) {
             >
         `;
         editAddressBtn.style.display = "none";
-        document.getElementById("save-address-btn").style.display = "inline";
+        document.getElementById("save-address-btn").style.display = "inline-flex";
 
         /* запускаємо автокомпліт NP */
         if (typeof loadNPFromJSON === "function") {
@@ -367,7 +367,7 @@ if (saveAddressBtn) {
             document.getElementById("acc-address").textContent =
                 address || "не вказано";
             saveAddressBtn.style.display = "none";
-            document.getElementById("edit-address-btn").style.display = "inline";
+            document.getElementById("edit-address-btn").style.display = "inline-flex";
         } catch (err) {
             console.error(err);
             alert("Помилка сервера");
@@ -385,7 +385,7 @@ if (editExtraBtn) {
             cb.classList.remove("readonly-checkbox");
         });
         editExtraBtn.style.display = "none";
-        document.getElementById("save-extra-btn").style.display = "inline";
+        document.getElementById("save-extra-btn").style.display = "inline-flex";
     });
 }
 
@@ -425,7 +425,7 @@ if (saveExtraBtn) {
                 cb.classList.add("readonly-checkbox");
             });
             saveExtraBtn.style.display = "none";
-            document.getElementById("edit-extra-btn").style.display = "inline";
+            document.getElementById("edit-extra-btn").style.display = "inline-flex";
         } catch (err) {
             console.error(err);
             alert("Помилка сервера");

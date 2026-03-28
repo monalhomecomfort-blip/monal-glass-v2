@@ -1829,6 +1829,10 @@ stroke: #111;
     position: relative;
     padding-bottom: 14px;
     margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
 }
 
 .account-page .account-block h2::after {
@@ -1839,6 +1843,11 @@ stroke: #111;
     bottom: 0;
     height: 1px;
     background: rgba(0, 0, 0, 0.20);
+}
+
+.account-page .account-block .edit-icon {
+    margin-left: auto;
+    flex-shrink: 0;
 }
 /* ============================= */
 /* MOBILE */

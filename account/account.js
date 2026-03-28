@@ -42,6 +42,18 @@ if (!user) {
 }
     const addressEl = document.getElementById("acc-address");
     if (addressEl && user.address) addressEl.textContent = user.address;
+    const hasPetCheckbox = document.getElementById("has-pet-checkbox");
+    if (hasPetCheckbox) {
+        hasPetCheckbox.checked = Number(user.has_pet) === 1;
+    }
+    const hasCarCheckbox = document.getElementById("has-car-checkbox");
+    if (hasCarCheckbox) {
+        hasCarCheckbox.checked = Number(user.has_car) === 1;
+    }
+    const travelsOftenCheckbox = document.getElementById("travels-often-checkbox");
+    if (travelsOftenCheckbox) {
+        travelsOftenCheckbox.checked = Number(user.travels_often) === 1;
+    }
     document.getElementById("acc-discount").textContent = user.discount;
     document.getElementById("acc-total").textContent = user.total_spent;
     const spent = Number(user.total_spent);
@@ -122,6 +134,18 @@ function refreshUserData() {
             const addressEl = document.getElementById("acc-address");
             if (addressEl && data.address) {
                 addressEl.textContent = data.address;
+            }
+            const hasPetCheckbox = document.getElementById("has-pet-checkbox");
+            if (hasPetCheckbox) {
+                hasPetCheckbox.checked = Number(data.has_pet) === 1;
+            }
+            const hasCarCheckbox = document.getElementById("has-car-checkbox");
+            if (hasCarCheckbox) {
+                hasCarCheckbox.checked = Number(data.has_car) === 1;
+            }
+            const travelsOftenCheckbox = document.getElementById("travels-often-checkbox");
+            if (travelsOftenCheckbox) {
+                travelsOftenCheckbox.checked = Number(data.travels_often) === 1;
             }
         })
         .catch(err => console.error("refreshUserData error:", err));
@@ -419,6 +443,13 @@ if (saveExtraBtn) {
                 alert("Помилка збереження");
                 return;
             }
+            const updatedUser = {
+                ...user,
+                has_pet,
+                has_car,
+                travels_often
+            };
+            localStorage.setItem("monal_user", JSON.stringify(updatedUser));
             const checkboxes = document.querySelectorAll(".extra-info-checkbox");
             checkboxes.forEach(cb => {
                 cb.disabled = true;

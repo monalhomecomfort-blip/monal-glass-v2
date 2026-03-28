@@ -1702,6 +1702,16 @@ stroke: #111;
     padding: 110px 40px 110px;
     max-width: 1200px;
     margin: auto;
+
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 32px;
+}
+
+.account-page #user-sidebar {
+    position: sticky;
+    top: var(--sidebar-top);
+    height: calc(100vh - var(--sidebar-top));
 }
 /* ============================= */
 /* ACCOUNT BLOCKS */

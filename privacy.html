@@ -104,6 +104,7 @@
 
 
     <div class="nav-right">
+        <a href="user-account.html" id="nav-account">Кабінет</a>
         <a href="delivery.html">Доставка</a>
         <a href="cart.html">Кошик <span id="cart-count"></span></a>
     </div>
@@ -129,6 +130,7 @@
 <div class="mobile-menu">
   <button class="mobile-close">✕</button>
 
+  <a href="user-account.html" id="mobile-account">Кабінет</a>
   <a href="index.html">Головна</a>
   <a href="about.html">Про бренд</a>
   <a href="partners.html">Партнерам</a>  
@@ -139,6 +141,11 @@
 </div> 
 <div class="container">
     <a href="index.html" class="back-btn">← Назад</a>
+
+    
+    <button onclick="openSidebar()">Відкрити sidebar (тест)</button>
+
+    
     <h1 class="page-title">Політика конфіденційності</h1>
 
     <div class="policy-text">
@@ -278,6 +285,52 @@
     }
   }
 </script>
-   
+
+
+
+
+    
+<script>
+const user = localStorage.getItem("monal_user");
+if (user) {
+    const userData = JSON.parse(user);
+    const navAccount = document.getElementById("nav-account");
+    if (navAccount) {
+        navAccount.textContent = userData.name;
+    }
+    const mobileAccount = document.getElementById("mobile-account");
+    if (mobileAccount) {
+        mobileAccount.textContent = userData.name;
+    }
+}
+</script>
+
+<div id="sidebar-container"></div>
+    
+<script src="../components/sidebar.js"></script>   
+    
+<script>
+fetch("../components/sidebar.html")
+  .then(res => res.text())
+  .then(html => {
+    document.getElementById("sidebar-container").innerHTML = html;
+
+    if (typeof initSidebarUserState === "function") {
+        initSidebarUserState();
+    }
+
+    if (typeof setSidebarTopOffset === "function") {
+        setSidebarTopOffset();
+    }
+  });
+
+window.addEventListener("resize", function () {
+    if (typeof setSidebarTopOffset === "function") {
+        setSidebarTopOffset();
+    }
+});
+</script>
+
+    
 </body>
 </html>

@@ -1706,7 +1706,14 @@ stroke: #111;
 
     display: grid;
     grid-template-columns: 260px 1fr;
-    gap: 40px;
+    column-gap: 40px;
+
+    align-items: start;
+}
+
+/* sidebar стає колонкою layout */
+.account-page #sidebar-container {
+    grid-column: 1;
 }
 
 .account-page #user-sidebar {
@@ -1715,38 +1722,60 @@ stroke: #111;
     inset: auto;
 }
 
+/* sticky панель sidebar */
 .account-page .sidebar-panel {
     position: sticky;
     top: 110px;
 
     transform: none;
-    height: auto;
+
+    height: fit-content;
+    width: 260px;
 }
 
+/* прибираємо затемнення overlay */
 .account-page .sidebar-overlay {
     display: none;
 }
+
+/* ============================= */
+/* ACCOUNT CONTENT */
+/* ============================= */
+.account-page .back-btn,
+.account-page button,
+.account-page .account-block {
+    grid-column: 2;
+}
+
 /* ============================= */
 /* ACCOUNT BLOCKS */
 /* ============================= */
 .account-page .account-block {
     padding: 16px 18px;
+
     border-radius: 16px;
+
     background: rgba(4, 4, 4, 0.85);
+
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
+
     color: #e8e1d6;
+
+    margin-bottom: 24px;
 }
-/* великі блоки */
-.account-page .account-block.big {
-    grid-column: span 2;
-}
+
 /* заголовки блоків */
+
 .account-page .account-block h2 {
     font-family: 'Montserrat', serif;
+
     font-weight: 300;
+
     font-size: 24px;
+
     margin-bottom: 10px;
+
     color: #e8e1d6;
 }
 /* ===== SOFT GOLD DUST AROUND LOGO ===== */

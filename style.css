@@ -1706,7 +1706,7 @@ stroke: #111;
     margin: 0;
 
     display: grid;
-    grid-template-columns: 320px minmax(620px, 760px);
+    grid-template-columns: 320px 1fr;
     column-gap: 56px;
     justify-content: start;
     align-items: stretch;
@@ -1716,6 +1716,7 @@ stroke: #111;
     grid-column: 2;
     width: 100%;
     max-width: 760px;
+    justify-self: center;
 }
 /* ліва колонка */
 .account-page #sidebar-container {

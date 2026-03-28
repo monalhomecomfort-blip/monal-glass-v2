@@ -1710,9 +1710,17 @@ stroke: #111;
 }
 
 .account-page #user-sidebar {
+    display: block;
+    position: static;
+    inset: auto;
+}
+
+.account-page .sidebar-panel {
     position: sticky;
-    top: var(--sidebar-top);
-    height: calc(100vh - var(--sidebar-top));
+    top: 110px;
+
+    transform: none;
+    height: auto;
 }
 /* ============================= */
 /* ACCOUNT BLOCKS */

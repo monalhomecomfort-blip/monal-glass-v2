@@ -113,6 +113,7 @@ class="nav-logo">
 
 <div class="nav-right">
 
+<a href="../user-account.html" id="nav-account">Кабінет</a>    
 <a href="../delivery.html">Доставка</a>
 <a href="../cart.html">Кошик <span id="cart-count"></span></a>
 </div>
@@ -145,6 +146,7 @@ class="nav-logo">
 
 <button class="mobile-close">✕</button>
 
+<a href="../user-account.html" id="mobile-account">Кабінет</a>    
 <a href="../index.html">Головна</a>
 <a href="../about.html">Про бренд</a>
 <a href="../partners.html">Партнерам</a>
@@ -367,6 +369,21 @@ navCatalog.classList.remove('open');
 }
 </script>
 
+<script>
+const user = localStorage.getItem("monal_user");
+if (user) {
+    const userData = JSON.parse(user);
+    const navAccount = document.getElementById("nav-account");
+    if (navAccount) {
+        navAccount.textContent = userData.name;
+    }
+    const mobileAccount = document.getElementById("mobile-account");
+    if (mobileAccount) {
+        mobileAccount.textContent = userData.name;
+    }
+}
+</script>
+    
 <div id="sidebar-container"></div>
     
 <script src="../components/sidebar.js"></script>   

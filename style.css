@@ -1700,26 +1700,31 @@ stroke: #111;
 /* ============================= */
 
 .account-page .account-container {
-    padding: 110px 0 110px 0;
+    padding: 110px 40px 110px 40px;
     max-width: 1400px;
     margin: 0 auto;
 
     display: grid;
-    grid-template-columns: 380px minmax(0, 1fr);
-    column-gap: 48px;
+    grid-template-columns: 320px minmax(620px, 760px);
+    column-gap: 56px;
+    justify-content: start;
     align-items: start;
 }
 
+/* ліва колонка */
 .account-page #sidebar-container {
     grid-column: 1;
+    width: 320px;
     align-self: start;
 }
 
+/* на сторінці акаунта sidebar завжди видимий як частина сторінки */
 .account-page #user-sidebar {
     display: block;
     position: static;
     inset: auto;
-    width: 380px;
+    width: 100%;
+    z-index: auto;
 }
 
 .account-page .sidebar-overlay {
@@ -1730,15 +1735,23 @@ stroke: #111;
     position: sticky;
     top: 110px;
     left: auto;
-    width: 380px;
-    min-height: calc(100vh - 110px);
-    height: calc(100vh - 110px);
+
+    width: 320px;
+    min-height: auto;
+    height: auto;
 
     transform: none;
     transition: none;
 
     margin: 0;
-    border-radius: 0;
+    border-radius: 16px;
+    padding: 24px 20px;
+    box-sizing: border-box;
+}
+
+/* хрестик закриття на account не потрібен */
+.account-page #sidebar-close {
+    display: none;
 }
 
 /* ============================= */
@@ -1749,6 +1762,10 @@ stroke: #111;
 .account-page .account-block,
 .account-page button[onclick="openSidebar()"] {
     grid-column: 2;
+}
+
+.account-page .back-btn {
+    margin-bottom: 8px;
 }
 
 .account-page button[onclick="openSidebar()"] {
@@ -1768,7 +1785,9 @@ stroke: #111;
     color: #e8e1d6;
 
     width: 100%;
-    margin-bottom: 24px;
+    max-width: 760px;
+    margin-bottom: 20px;
+    box-sizing: border-box;
 }
 
 .account-page .account-block.big {
@@ -1781,6 +1800,60 @@ stroke: #111;
     font-size: 24px;
     margin-bottom: 10px;
     color: #e8e1d6;
+}
+
+/* ============================= */
+/* MOBILE */
+/* ============================= */
+
+@media (max-width: 900px) {
+    .account-page .account-container {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        padding: 90px 10px 80px;
+    }
+
+    .account-page #sidebar-container {
+        width: 100%;
+    }
+
+    .account-page #user-sidebar {
+        display: none;
+    }
+
+    .account-page button[onclick="openSidebar()"] {
+        display: inline-flex;
+    }
+
+    .account-page .account-block {
+        max-width: 100%;
+        margin-bottom: 16px;
+    }
+
+    .account-page .sidebar-panel {
+        position: fixed;
+        top: var(--sidebar-top);
+        left: 0;
+        width: min(380px, 100vw);
+        height: calc(100vh - var(--sidebar-top));
+        min-height: calc(100vh - var(--sidebar-top));
+        border-radius: 0;
+        transform: translateX(-100%);
+        padding: 30px 24px;
+    }
+
+    .account-page #sidebar-close {
+        display: block;
+    }
+
+    .account-page .sidebar-overlay {
+        display: block;
+    }
+
+    .account-page #user-sidebar.open .sidebar-panel {
+        transform: translateX(0);
+    }
 }
 /* ===== SOFT GOLD DUST AROUND LOGO ===== */
 

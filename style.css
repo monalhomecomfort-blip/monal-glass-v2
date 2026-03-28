@@ -1698,84 +1698,88 @@ stroke: #111;
 /* ============================= */
 /* ACCOUNT PAGE LAYOUT */
 /* ============================= */
-.account-page .account-container {
-    padding: 110px 40px 110px;
 
-    max-width: 1200px;
-    margin: auto;
+.account-page .account-container {
+    padding: 110px 0 110px 0;
+    max-width: 1400px;
+    margin: 0 auto;
 
     display: grid;
-    grid-template-columns: 260px 1fr;
-    column-gap: 40px;
-
+    grid-template-columns: 380px minmax(0, 1fr);
+    column-gap: 48px;
     align-items: start;
 }
 
-/* sidebar стає колонкою layout */
 .account-page #sidebar-container {
     grid-column: 1;
+    align-self: start;
 }
 
 .account-page #user-sidebar {
     display: block;
     position: static;
     inset: auto;
+    width: 380px;
 }
 
-/* sticky панель sidebar */
+.account-page .sidebar-overlay {
+    display: none;
+}
+
 .account-page .sidebar-panel {
     position: sticky;
     top: 110px;
+    left: auto;
+    width: 380px;
+    min-height: calc(100vh - 110px);
+    height: calc(100vh - 110px);
 
     transform: none;
+    transition: none;
 
-    height: fit-content;
-    width: 260px;
-}
-
-/* прибираємо затемнення overlay */
-.account-page .sidebar-overlay {
-    display: none;
+    margin: 0;
+    border-radius: 0;
 }
 
 /* ============================= */
 /* ACCOUNT CONTENT */
 /* ============================= */
+
 .account-page .back-btn,
-.account-page button,
-.account-page .account-block {
+.account-page .account-block,
+.account-page button[onclick="openSidebar()"] {
     grid-column: 2;
+}
+
+.account-page button[onclick="openSidebar()"] {
+    display: none;
 }
 
 /* ============================= */
 /* ACCOUNT BLOCKS */
 /* ============================= */
+
 .account-page .account-block {
     padding: 16px 18px;
-
     border-radius: 16px;
-
     background: rgba(4, 4, 4, 0.85);
-
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-
     color: #e8e1d6;
 
+    width: 100%;
     margin-bottom: 24px;
 }
 
-/* заголовки блоків */
+.account-page .account-block.big {
+    grid-column: 2;
+}
 
 .account-page .account-block h2 {
     font-family: 'Montserrat', serif;
-
     font-weight: 300;
-
     font-size: 24px;
-
     margin-bottom: 10px;
-
     color: #e8e1d6;
 }
 /* ===== SOFT GOLD DUST AROUND LOGO ===== */

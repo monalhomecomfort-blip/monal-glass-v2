@@ -158,24 +158,19 @@ class="nav-logo">
 <div class="about-container">
 
 <a href="../user-account.html" class="back-btn">← Назад</a>
-<button onclick="openSidebar()">Відкрити sidebar (тест)</button>  
+<button onclick="openSidebar()">Відкрити sidebar (тест)</button>
+    
 <!-- 1. Дані акаунту -->
-
 <div class="about-block big">
-
 <h2>Мій акаунт Mōnal</h2>
-
 <p>
 <strong id="acc-fullname">—</strong><br>
 <span id="acc-email">—</span>
 </p>
-
 </div>
-
+    
 <!-- 2. Особисті дані -->
-
 <div class="about-block big">
-
 <h2>
 Особисті дані
 <span id="edit-personal-btn" class="edit-icon">
@@ -186,73 +181,53 @@ class="nav-logo">
 </span>
 <span id="save-personal-btn" style="cursor:pointer; margin-left:6px; display:none;">✔</span>
 </h2>
-
 <p>
-
 Дата народження:
 <span id="acc-birthday">не вказано</span>
 <br>
-
 Стать:
 <span id="acc-gender">не вказано</span>
 <br>
-
 Телефон:
 <span id="acc-phone">не вказано</span>
-
 </p>
-
 </div>
 
 <!-- 3. Основна адреса доставки -->
-
 <div class="about-block big">
-
-<h2>Основна адреса доставки</h2>
-
-<p>
-
-<span id="acc-address">Адреса не вказана</span>
-
-<span id="edit-address-btn" style="cursor:pointer; margin-left:6px;">
-✏️
+<h2>
+Основна адреса доставки
+<span id="edit-address-btn" class="edit-icon">
+<svg viewBox="0 0 24 24">
+<path d="M3 17.25V21h3.75L19.81 7.94l-3.75-3.75L3 17.25z"/>
+<path d="M14.06 4.19l3.75 3.75"/>
+</svg>
 </span>
-
 <span id="save-address-btn" style="cursor:pointer; margin-left:6px; display:none;">
 ✔
 </span>
-
+</h2>
+<p>
+<span id="acc-address">Адреса не вказана</span>
 </p>
-
 </div>
 
 <!-- 4. Програма лояльності -->
-
 <div class="about-block big">
-
 <h2>Моя знижка</h2>
-
 <p>
-
 Знижка:
 <strong><span id="acc-discount"></span>%</strong><br>
-
 Сума покупок:
 <strong><span id="acc-total"></span> грн</strong><br>
-
 До наступного рівня залишилось:
 <strong><span id="acc-next-level"></span> грн</strong>
-
 </p>
-
 <div style="width:100%;height:20px;background:#eee;border-radius:10px;overflow:hidden;margin-top:12px;">
-
 <div id="progress-bar"
 style="height:100%;width:0%;background:#000;">
 </div>
-
 </div>
-
 </div>
 
 <!-- 5. Додаткова інформація -->

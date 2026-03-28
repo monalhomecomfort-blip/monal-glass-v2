@@ -1722,6 +1722,10 @@ stroke: #111;
     transform: none;
     height: auto;
 }
+
+.account-page .sidebar-overlay {
+    display: none;
+}
 /* ============================= */
 /* ACCOUNT BLOCKS */
 /* ============================= */

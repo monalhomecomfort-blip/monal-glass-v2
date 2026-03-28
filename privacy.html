@@ -144,7 +144,7 @@
     <a href="index.html" class="back-btn">← Назад</a>
 
     
-    <button id="open-sidebar-test">Відкрити sidebar (тест)</button>
+    <button onclick="openSidebar()">Відкрити sidebar (тест)</button>
 
     
     <h1 class="page-title">Політика конфіденційності</h1>
@@ -322,12 +322,7 @@ fetch("components/sidebar.html")
         setSidebarTopOffset();
     }
   });
-    document.getElementById("open-sidebar-test")?.addEventListener("click", function () {
-        if (typeof openSidebar === "function") {
-            openSidebar();
-        }
-    });    
-
+    
 window.addEventListener("resize", function () {
     if (typeof setSidebarTopOffset === "function") {
         setSidebarTopOffset();

@@ -113,7 +113,7 @@
     align-items: center;
     justify-content: center;
     position: relative;
-    top: 1px;
+    top: 3px;
 }
 
 .sidebar-icon svg {

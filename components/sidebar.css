@@ -27,6 +27,7 @@
     flex-direction: column;
     transform: translateX(-100%);
     transition: transform 0.3s ease;
+    box-sizing: border-box;
 }
 #user-sidebar.open .sidebar-panel {
     transform: translateX(0);
@@ -59,7 +60,7 @@
 }
 /* відступ між блоками */
 .sidebar-block + .sidebar-block {
-    margin-top: 34px;
+    margin-top: 26px;
 }
 /* посилання */
 .sidebar-block a {
@@ -86,8 +87,19 @@
 #sidebar-user-name,
 #sidebar-user-discount {
     color: #e8e1d6;
-    font-size: 15px;
     line-height: 1.45;
+}
+
+#sidebar-user-name {
+    font-size: 16px;
+    font-weight: 500;
+    margin-top: 6px;
+}
+
+#sidebar-user-discount {
+    font-size: 15px;
+    opacity: 0.95;
+    margin-top: 8px;
 }
 
 .sidebar-link {
@@ -133,4 +145,46 @@
 
 .sidebar-link.is-active {
     background: rgba(255, 255, 255, 0.10);
+}
+
+.sidebar-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.sidebar-link {
+    min-height: 52px;
+    padding: 12px 14px;
+    border-radius: 16px;
+}
+
+.sidebar-label {
+    font-size: 15px;
+    line-height: 1.25;
+}
+
+.sidebar-link:hover {
+    background: rgba(255, 255, 255, 0.10);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+}
+
+.sidebar-link.is-active {
+    background: rgba(255, 255, 255, 0.11);
+    box-shadow:
+        inset 0 0 0 1px rgba(255, 255, 255, 0.05),
+        0 8px 20px rgba(0, 0, 0, 0.16);
+}
+
+.sidebar-block:first-child {
+    margin-bottom: 10px;
+}
+
+#sidebar-logout {
+    margin-top: auto;
+    padding-top: 26px;
+}
+
+#sidebar-logout .buy-btn {
+    border-radius: 16px;
 }

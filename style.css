@@ -1700,7 +1700,7 @@ stroke: #111;
 /* ============================= */
 
 .account-page .account-container {
-    padding: 110px 0 110px 0;
+    padding: 110px 0 0 0;
     width: 100%;
     max-width: none;
     margin: 0;
@@ -1717,6 +1717,7 @@ stroke: #111;
     width: 100%;
     max-width: 760px;
     justify-self: center;
+    padding-bottom: 110px;
 }
 /* ліва колонка */
 .account-page #sidebar-container {

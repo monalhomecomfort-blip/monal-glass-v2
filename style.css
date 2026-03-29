@@ -1681,7 +1681,6 @@ margin-left: 10px;
 display: inline-flex;
 vertical-align: middle;
 }
-
 .edit-icon svg {
 width: 22px;
 height: 22px;
@@ -1690,7 +1689,6 @@ stroke-width: 1.6;
 fill: none;
 transition: stroke .2s ease;
 }
-
 .edit-icon:hover svg {
 stroke: #111;
 }
@@ -1698,7 +1696,6 @@ stroke: #111;
 /* ============================= */
 /* ACCOUNT PAGE LAYOUT */
 /* ============================= */
-
 .account-page .account-container {
     padding: 110px 0 0 0;
     width: 100%;
@@ -1711,7 +1708,6 @@ stroke: #111;
     justify-content: start;
     align-items: stretch;
 }
-
 .account-page .account-main {
     grid-column: 2;
     width: 100%;
@@ -1744,11 +1740,9 @@ stroke: #111;
     width: 100%;
     z-index: auto;
 }
-
 .account-page .sidebar-overlay {
     display: none;
 }
-
 .account-page .sidebar-panel {
     position: sticky;
     top: 110px;
@@ -1767,7 +1761,6 @@ stroke: #111;
     box-sizing: border-box;
     background: transparent;
 }
-
 /* хрестик закриття на account не потрібен */
 .account-page #sidebar-close {
     display: none;
@@ -1776,17 +1769,14 @@ stroke: #111;
 /* ============================= */
 /* ACCOUNT CONTENT */
 /* ============================= */
-
 .account-page .back-btn,
 .account-page .account-block,
 .account-page button[onclick="openSidebar()"] {
     grid-column: 2;
 }
-
 .account-page .back-btn {
     margin-bottom: 8px;
 }
-
 .account-page button[onclick="openSidebar()"] {
     display: none;
 }
@@ -1794,7 +1784,6 @@ stroke: #111;
 /* ============================= */
 /* ACCOUNT BLOCKS */
 /* ============================= */
-
 .account-page .account-block {
     padding: 26px 28px;
     border-radius: 18px;
@@ -1816,7 +1805,6 @@ stroke: #111;
 .account-page .account-block.big {
     grid-column: 2;
 }
-
 .account-page .account-block h2 {
     font-family: 'Montserrat', serif;
     font-weight: 300;
@@ -1824,7 +1812,6 @@ stroke: #111;
     margin-bottom: 16px;
     color: #1f1f1f;
 }
-
 .account-page .account-block h2 {
     position: relative;
     padding-bottom: 14px;
@@ -1834,7 +1821,6 @@ stroke: #111;
     justify-content: space-between;
     gap: 12px;
 }
-
 .account-page .account-block h2::after {
     content: "";
     position: absolute;
@@ -1844,10 +1830,110 @@ stroke: #111;
     height: 1px;
     background: rgba(0, 0, 0, 0.20);
 }
-
 .account-page .account-block .edit-icon {
     margin-left: auto;
     flex-shrink: 0;
+}
+
+/* ============================= */
+/* ВХІД І РЕЄСТРАЦІЯ */
+/* ============================= */
+.account-auth-page .container {
+    max-width: 1280px;
+}
+.account-auth-page .page-title {
+    margin-bottom: 34px;
+}
+.account-auth-page .delivery-columns {
+    display: flex;
+    justify-content: center;
+    margin: 50px auto 110px !important;
+    padding: 0 40px;
+    width: 100%;
+}
+.account-auth-page .column {
+    width: 100%;
+    max-width: 760px;
+    display: block;
+}
+.account-auth-page .delivery-block {
+    padding: 34px 38px;
+    border-radius: 24px;
+    background: rgba(4, 4, 4, 0.85);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color: #e8e1d6;
+    box-shadow:
+        0 1px 0 rgba(255,255,255,0.04) inset,
+        0 14px 28px rgba(0,0,0,0.18);
+}
+.account-auth-page .delivery-block h2 {
+    font-family: 'Montserrat', serif;
+    font-weight: 300;
+    font-size: 30px;
+    margin-bottom: 18px;
+    color: #e8e1d6;
+}
+.account-auth-page .delivery-block p {
+    font-size: 15px;
+    line-height: 1.55;
+    color: #e8e1d6;
+    opacity: 0.92;
+}
+.account-auth-page form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 8px;
+}
+.account-auth-page form br {
+    display: none;
+}
+.account-auth-page form input {
+    width: 100%;
+    height: 52px;
+    padding: 0 16px;
+    border-radius: 14px;
+    border: 1px solid rgba(255,255,255,0.10);
+    background: rgba(255,255,255,0.06);
+    color: #e8e1d6;
+    font-size: 15px;
+    outline: none;
+    box-sizing: border-box;
+}
+.account-auth-page form input::placeholder {
+    color: rgba(232,225,214,0.55);
+}
+.account-auth-page form input:focus {
+    border-color: rgba(232,225,214,0.28);
+    box-shadow: 0 0 0 3px rgba(232,225,214,0.06);
+}
+.account-auth-page form .buy-btn {
+    margin-top: 10px;
+    align-self: flex-start;
+    min-width: 220px;
+}
+
+@media (max-width: 900px) {
+    .account-auth-page .delivery-columns {
+        margin: 30px auto 80px !important;
+        padding: 0 10px !important;
+    }
+    .account-auth-page .column {
+        max-width: 100%;
+    }
+    .account-auth-page .delivery-block {
+        padding: 26px 22px;
+        border-radius: 18px;
+    }
+    .account-auth-page .delivery-block h2 {
+        font-size: 24px;
+        margin-bottom: 14px;
+    }
+    .account-auth-page form .buy-btn {
+        width: 100%;
+        min-width: 0;
+    }
 }
 /* ============================= */
 /* MOBILE */

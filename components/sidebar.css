@@ -28,6 +28,7 @@
     transform: translateX(-100%);
     transition: transform 0.3s ease;
     box-sizing: border-box;
+    overflow-y: auto;
 }
 #user-sidebar.open .sidebar-panel {
     transform: translateX(0);

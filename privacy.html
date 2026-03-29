@@ -291,17 +291,40 @@
 
 
     
+
+    
 <script>
 const user = localStorage.getItem("monal_user");
+const navAccount = document.getElementById("nav-account");
+const mobileAccount = document.getElementById("mobile-account");
 if (user) {
     const userData = JSON.parse(user);
-    const navAccount = document.getElementById("nav-account");
     if (navAccount) {
         navAccount.textContent = userData.name;
+        navAccount.setAttribute("href", "#");
+        navAccount.addEventListener("click", function (e) {
+            e.preventDefault();
+            if (typeof openSidebar === "function") {
+                openSidebar();
+            }
+        });
     }
-    const mobileAccount = document.getElementById("mobile-account");
     if (mobileAccount) {
         mobileAccount.textContent = userData.name;
+        mobileAccount.setAttribute("href", "#");
+        mobileAccount.addEventListener("click", function (e) {
+            e.preventDefault();
+            if (typeof openSidebar === "function") {
+                openSidebar();
+            }
+        });
+    }
+} else {
+    if (navAccount) {
+        navAccount.setAttribute("href", "user-account.html");
+    }
+    if (mobileAccount) {
+        mobileAccount.setAttribute("href", "user-account.html");
     }
 }
 </script>

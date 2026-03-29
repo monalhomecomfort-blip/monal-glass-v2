@@ -399,6 +399,10 @@ fetch("../components/sidebar.html")
         initSidebarUserState();
     }
 
+    if (typeof initSidebarAvatarPreview === "function") {
+        initSidebarAvatarPreview();
+    }  
+
     if (typeof setSidebarTopOffset === "function") {
         setSidebarTopOffset();
     }

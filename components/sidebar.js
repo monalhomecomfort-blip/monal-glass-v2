@@ -19,6 +19,10 @@ function initSidebarUserState() {
         if (userDiscount) {
             userDiscount.textContent = "Знижка: " + (user.discount || 0) + "%";
         }
+        const avatarPreview = document.getElementById("sidebar-avatar-preview");
+        if (avatarPreview && user.avatar_data) {
+            avatarPreview.src = user.avatar_data;
+        }
     }
 }
 

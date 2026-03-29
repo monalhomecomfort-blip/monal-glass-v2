@@ -109,6 +109,14 @@ function refreshUserData() {
             if (discountEl) {
                 discountEl.textContent = data.discount;
             }
+            const navAccount = document.getElementById("nav-account");
+            if (navAccount && data.name) {
+                navAccount.textContent = data.name;
+            }
+            const mobileAccount = document.getElementById("mobile-account");
+            if (mobileAccount && data.name) {
+                mobileAccount.textContent = data.name;
+            }
             const phoneEl = document.getElementById("acc-phone");
             if (phoneEl && data.phone) {
                 phoneEl.textContent = data.phone;

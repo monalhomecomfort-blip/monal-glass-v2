@@ -93,25 +93,23 @@ function logoutUser() {
 
 }
 
-const avatarInput = document.getElementById("sidebar-avatar-input");
-const avatarPreview = document.getElementById("sidebar-avatar-preview");
 
-if (avatarInput && avatarPreview) {
+
+function initSidebarAvatarPreview() {
+    const avatarInput = document.getElementById("sidebar-avatar-input");
+    const avatarPreview = document.getElementById("sidebar-avatar-preview");
+    if (!avatarInput || !avatarPreview) return;
     avatarInput.addEventListener("change", function () {
         const file = this.files && this.files[0];
         if (!file) return;
-
         if (!file.type.startsWith("image/")) {
             alert("Оберіть файл зображення");
             return;
         }
-
         const reader = new FileReader();
-
         reader.onload = function (e) {
             avatarPreview.src = e.target.result;
         };
-
         reader.readAsDataURL(file);
     });
 }

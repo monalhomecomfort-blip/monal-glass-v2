@@ -1894,19 +1894,18 @@ stroke: #111;
     height: 52px;
     padding: 0 16px;
     border-radius: 14px;
-    border: 1px solid rgba(255,255,255,0.10);
-    background: rgba(255,255,255,0.06);
-    color: #e8e1d6;
+    border: none;
+    background: #e7e4d9;
+    color: #1f1f1f;
     font-size: 15px;
     outline: none;
     box-sizing: border-box;
 }
 .account-auth-page form input::placeholder {
-    color: rgba(232,225,214,0.55);
+    color: rgba(31, 31, 31, 0.48);
 }
 .account-auth-page form input:focus {
-    border-color: rgba(232,225,214,0.28);
-    box-shadow: 0 0 0 3px rgba(232,225,214,0.06);
+    box-shadow: 0 0 0 2px rgba(231, 228, 217, 0.55);
 }
 .account-auth-page form .buy-btn {
     margin-top: 10px;

@@ -221,3 +221,23 @@
 .sidebar-avatar-label:hover .sidebar-avatar-edit {
     opacity: 1;
 }
+.sidebar-panel {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(232, 225, 214, 0.35) transparent;
+}
+.sidebar-panel::-webkit-scrollbar {
+    width: 8px;
+}
+.sidebar-panel::-webkit-scrollbar-track {
+    background: transparent;
+}
+.sidebar-panel::-webkit-scrollbar-thumb {
+    background: rgba(232, 225, 214, 0.28);
+    border-radius: 999px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+}
+.sidebar-panel::-webkit-scrollbar-thumb:hover {
+    background: rgba(232, 225, 214, 0.45);
+    background-clip: padding-box;
+}

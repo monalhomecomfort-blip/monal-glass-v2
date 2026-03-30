@@ -2267,6 +2267,9 @@ body.home {
   object-fit: cover;
   object-position: center;
   display: none;
+}
+.mobile-account-trigger {
+  display: inline-flex;
 }    
   /* ЛІВИЙ КОНТЕЙНЕР */
   .nav-left {

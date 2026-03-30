@@ -1941,7 +1941,6 @@ stroke: #111;
 /* ============================= */
 /* MOBILE */
 /* ============================= */
-
 @media (max-width: 900px) {
     .account-page .account-container {
         display: flex;
@@ -1949,24 +1948,32 @@ stroke: #111;
         gap: 20px;
         padding: 90px 10px 80px;
     }
-
     .account-page #sidebar-container {
         width: 100%;
     }
-
     .account-page #user-sidebar {
         display: none;
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        width: auto;
     }
-
     .account-page button[onclick="openSidebar()"] {
-        display: inline-flex;
+        display: none;
     }
-
     .account-page .account-block {
         max-width: 100%;
         margin-bottom: 16px;
     }
-
+    .account-page .sidebar-overlay {
+        display: block;
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        top: var(--sidebar-top);
+        background: rgba(4, 4, 4, 0.85);
+    }
     .account-page .sidebar-panel {
         position: fixed;
         top: var(--sidebar-top);
@@ -1977,16 +1984,13 @@ stroke: #111;
         border-radius: 0;
         transform: translateX(-100%);
         padding: 30px 24px;
+        background: rgba(4, 4, 4, 0.85);
+        transition: transform 0.3s ease;
+        z-index: 10000;
     }
-
     .account-page #sidebar-close {
         display: block;
     }
-
-    .account-page .sidebar-overlay {
-        display: block;
-    }
-
     .account-page #user-sidebar.open .sidebar-panel {
         transform: translateX(0);
     }

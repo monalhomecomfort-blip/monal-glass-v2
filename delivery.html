@@ -21,6 +21,7 @@
     <meta property="og:site_name" content="Monal">
 
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="components/sidebar.css">
 
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17895832671"></script>
@@ -103,13 +104,19 @@
 
 
     <div class="nav-right">
+        <a href="user-account.html" id="nav-account">Кабінет</a>
         <a href="delivery.html">Доставка</a>
         <a href="cart.html">Кошик <span id="cart-count"></span></a>
     </div>
     <a href="cart.html" class="mobile-cart">
         <img src="images/social/cart.png" alt="Кошик">
         <span class="mobile-cart-count"></span>
-    </a> 
+    </a>
+    <a href="user-account.html" class="mobile-account-trigger" id="mobile-account-trigger" aria-label="Кабінет">
+        <span class="mobile-account-trigger-letter" id="mobile-account-trigger-letter">М</span>
+        <img src="images/avatar-placeholder.png" alt="Акаунт" class="mobile-account-trigger-avatar" id="mobile-account-trigger-avatar">
+    </a>
+
     <!-- BURGER BUTTON -->
 <button class="burger-btn" aria-label="Відкрити меню">
   ☰
@@ -129,7 +136,7 @@
 <!-- MOBILE MENU -->
 <div class="mobile-menu">
   <button class="mobile-close">✕</button>
-
+  <a href="user-account.html" id="mobile-account">Кабінет</a>
   <a href="index.html">Головна</a>
   <a href="about.html">Про бренд</a>
   <a href="partners.html">Партнерам</a>
@@ -259,5 +266,98 @@
   }
 </script>
 
+<script>
+(function () {
+    const storedUser = localStorage.getItem("monal_user");
+    const navAccountEl = document.getElementById("nav-account");
+    const mobileAccountEl = document.getElementById("mobile-account");
+    const mobileTrigger = document.getElementById("mobile-account-trigger");
+    const mobileTriggerLetter = document.getElementById("mobile-account-trigger-letter");
+    const mobileTriggerAvatar = document.getElementById("mobile-account-trigger-avatar");
+    if (mobileTrigger) {
+        mobileTrigger.style.display = "none";
+    }
+    if (storedUser) {
+        const userData = JSON.parse(storedUser);
+        if (navAccountEl) {
+            navAccountEl.textContent = userData.name;
+            navAccountEl.setAttribute("href", "#");
+            navAccountEl.addEventListener("click", function (e) {
+                e.preventDefault();
+                if (typeof openSidebar === "function") {
+                    openSidebar();
+                }
+            });
+        }
+        if (mobileAccountEl) {
+            mobileAccountEl.textContent = userData.name;
+            mobileAccountEl.setAttribute("href", "#");
+            mobileAccountEl.addEventListener("click", function (e) {
+                e.preventDefault();
+                if (typeof openSidebar === "function") {
+                    openSidebar();
+                }
+            });
+        }
+        if (mobileTrigger && window.innerWidth <= 600) {
+            mobileTrigger.style.display = "inline-flex";
+            mobileTrigger.setAttribute("href", "#");
+            mobileTrigger.addEventListener("click", function (e) {
+                e.preventDefault();
+                if (typeof openSidebar === "function") {
+                    openSidebar();
+                }
+            });
+        }
+        if (mobileTriggerAvatar && userData.avatar_data) {
+            mobileTriggerAvatar.src = userData.avatar_data;
+            mobileTriggerAvatar.style.display = "block";
+            if (mobileTriggerLetter) {
+                mobileTriggerLetter.style.display = "none";
+            }
+        } else if (mobileTriggerLetter) {
+            mobileTriggerLetter.textContent =
+                (userData.name || "К").trim().charAt(0).toUpperCase();
+            mobileTriggerLetter.style.display = "flex";
+
+            if (mobileTriggerAvatar) {
+                mobileTriggerAvatar.style.display = "none";
+            }
+        }
+    } else {
+        if (navAccountEl) {
+            navAccountEl.setAttribute("href", "user-account.html");
+        }
+        if (mobileAccountEl) {
+            mobileAccountEl.setAttribute("href", "user-account.html");
+        }
+    }
+})();
+</script>
+
+<div id="sidebar-container"></div>
+    
+<script src="components/sidebar.js"></script>   
+    
+<script>
+fetch("components/sidebar.html")
+  .then(res => res.text())
+  .then(html => {
+    document.getElementById("sidebar-container").innerHTML = html;
+    if (typeof initSidebarUserState === "function") {
+        initSidebarUserState();
+    }
+    if (typeof setSidebarTopOffset === "function") {
+        setSidebarTopOffset();
+    }
+  });
+    
+window.addEventListener("resize", function () {
+    if (typeof setSidebarTopOffset === "function") {
+        setSidebarTopOffset();
+    }
+});
+</script>
+    
 </body>
 </html>

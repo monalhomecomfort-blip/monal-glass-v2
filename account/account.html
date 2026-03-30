@@ -379,18 +379,49 @@ navCatalog.classList.remove('open');
 
 <script>
 const user = localStorage.getItem("monal_user");
+const navAccount = document.getElementById("nav-account");
+const mobileAccount = document.getElementById("mobile-account");
+const mobileAccountTrigger = document.getElementById("mobile-account-trigger");
+const mobileAccountTriggerLetter = document.getElementById("mobile-account-trigger-letter");
+const mobileAccountTriggerAvatar = document.getElementById("mobile-account-trigger-avatar");
+if (mobileAccountTrigger) {
+    mobileAccountTrigger.style.display = "none";
+}
 if (user) {
     const userData = JSON.parse(user);
-    const navAccount = document.getElementById("nav-account");
     if (navAccount) {
         navAccount.textContent = userData.name;
     }
-    const mobileAccount = document.getElementById("mobile-account");
     if (mobileAccount) {
         mobileAccount.textContent = userData.name;
     }
+    if (mobileAccountTrigger) {
+        mobileAccountTrigger.style.display = "inline-flex";
+        mobileAccountTrigger.setAttribute("href", "#");
+
+        mobileAccountTrigger.addEventListener("click", function (e) {
+            e.preventDefault();
+            if (typeof openSidebar === "function") {
+                openSidebar();
+            }
+        });
+    }
+    if (mobileAccountTriggerAvatar && userData.avatar_data) {
+        mobileAccountTriggerAvatar.src = userData.avatar_data;
+        mobileAccountTriggerAvatar.style.display = "block";
+        if (mobileAccountTriggerLetter) {
+            mobileAccountTriggerLetter.style.display = "none";
+        }
+    } else if (mobileAccountTriggerLetter) {
+        mobileAccountTriggerLetter.textContent =
+            (userData.name || "К").trim().charAt(0).toUpperCase();
+        mobileAccountTriggerLetter.style.display = "flex";
+        if (mobileAccountTriggerAvatar) {
+            mobileAccountTriggerAvatar.style.display = "none";
+        }
+    }
 }
-</script>    
+</script>
 
 <script src="../components/sidebar.js"></script>   
     

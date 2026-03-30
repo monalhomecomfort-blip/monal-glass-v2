@@ -295,39 +295,72 @@
 
     
 <script>
-const user = localStorage.getItem("monal_user");
-const navAccount = document.getElementById("nav-account");
-const mobileAccount = document.getElementById("mobile-account");
-if (user) {
-    const userData = JSON.parse(user);
-    if (navAccount) {
-        navAccount.textContent = userData.name;
-        navAccount.setAttribute("href", "#");
-        navAccount.addEventListener("click", function (e) {
-            e.preventDefault();
-            if (typeof openSidebar === "function") {
-                openSidebar();
+(function () {
+    const storedUser = localStorage.getItem("monal_user");
+    const navAccountEl = document.getElementById("nav-account");
+    const mobileAccountEl = document.getElementById("mobile-account");
+    const mobileTrigger = document.getElementById("mobile-account-trigger");
+    const mobileTriggerLetter = document.getElementById("mobile-account-trigger-letter");
+    const mobileTriggerAvatar = document.getElementById("mobile-account-trigger-avatar");
+    if (mobileTrigger) {
+        mobileTrigger.style.display = "none";
+    }
+    if (storedUser) {
+        const userData = JSON.parse(storedUser);
+        if (navAccountEl) {
+            navAccountEl.textContent = userData.name;
+            navAccountEl.setAttribute("href", "#");
+            navAccountEl.addEventListener("click", function (e) {
+                e.preventDefault();
+                if (typeof openSidebar === "function") {
+                    openSidebar();
+                }
+            });
+        }
+        if (mobileAccountEl) {
+            mobileAccountEl.textContent = userData.name;
+            mobileAccountEl.setAttribute("href", "#");
+            mobileAccountEl.addEventListener("click", function (e) {
+                e.preventDefault();
+                if (typeof openSidebar === "function") {
+                    openSidebar();
+                }
+            });
+        }
+        if (mobileTrigger && window.innerWidth <= 600) {
+            mobileTrigger.style.display = "inline-flex";
+            mobileTrigger.setAttribute("href", "#");
+            mobileTrigger.addEventListener("click", function (e) {
+                e.preventDefault();
+                if (typeof openSidebar === "function") {
+                    openSidebar();
+                }
+            });
+        }
+        if (mobileTriggerAvatar && userData.avatar_data) {
+            mobileTriggerAvatar.src = userData.avatar_data;
+            mobileTriggerAvatar.style.display = "block";
+            if (mobileTriggerLetter) {
+                mobileTriggerLetter.style.display = "none";
             }
-        });
-    }
-    if (mobileAccount) {
-        mobileAccount.textContent = userData.name;
-        mobileAccount.setAttribute("href", "#");
-        mobileAccount.addEventListener("click", function (e) {
-            e.preventDefault();
-            if (typeof openSidebar === "function") {
-                openSidebar();
+        } else if (mobileTriggerLetter) {
+            mobileTriggerLetter.textContent =
+                (userData.name || "К").trim().charAt(0).toUpperCase();
+            mobileTriggerLetter.style.display = "flex";
+
+            if (mobileTriggerAvatar) {
+                mobileTriggerAvatar.style.display = "none";
             }
-        });
+        }
+    } else {
+        if (navAccountEl) {
+            navAccountEl.setAttribute("href", "user-account.html");
+        }
+        if (mobileAccountEl) {
+            mobileAccountEl.setAttribute("href", "user-account.html");
+        }
     }
-} else {
-    if (navAccount) {
-        navAccount.setAttribute("href", "user-account.html");
-    }
-    if (mobileAccount) {
-        mobileAccount.setAttribute("href", "user-account.html");
-    }
-}
+})();
 </script>
 
 <div id="sidebar-container"></div>

@@ -396,7 +396,11 @@ navCatalog.classList.remove('open');
         mobileAccountEl.textContent = userData.name;
     }
     if (mobileTrigger) {
-        mobileTrigger.style.display = "inline-flex";
+        if (window.innerWidth <= 600) {
+            mobileTrigger.style.display = "inline-flex";
+        } else {
+            mobileTrigger.style.display = "none";
+        }
         mobileTrigger.setAttribute("href", "#");
         mobileTrigger.addEventListener("click", function (e) {
             e.preventDefault();

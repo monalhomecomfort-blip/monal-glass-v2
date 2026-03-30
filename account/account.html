@@ -377,49 +377,49 @@ navCatalog.classList.remove('open');
 </script>
 
 <script>
-const user = localStorage.getItem("monal_user");
-const navAccount = document.getElementById("nav-account");
-const mobileAccount = document.getElementById("mobile-account");
-const mobileAccountTrigger = document.getElementById("mobile-account-trigger");
-const mobileAccountTriggerLetter = document.getElementById("mobile-account-trigger-letter");
-const mobileAccountTriggerAvatar = document.getElementById("mobile-account-trigger-avatar");
-if (mobileAccountTrigger) {
-    mobileAccountTrigger.style.display = "none";
-}
-if (user) {
-    const userData = JSON.parse(user);
-    if (navAccount) {
-        navAccount.textContent = userData.name;
+(function () {
+    const storedUser = localStorage.getItem("monal_user");
+    const navAccountEl = document.getElementById("nav-account");
+    const mobileAccountEl = document.getElementById("mobile-account");
+    const mobileTrigger = document.getElementById("mobile-account-trigger");
+    const mobileTriggerLetter = document.getElementById("mobile-account-trigger-letter");
+    const mobileTriggerAvatar = document.getElementById("mobile-account-trigger-avatar");
+    if (mobileTrigger) {
+        mobileTrigger.style.display = "none";
     }
-    if (mobileAccount) {
-        mobileAccount.textContent = userData.name;
+    if (!storedUser) return;
+    const userData = JSON.parse(storedUser);
+    if (navAccountEl && userData.name) {
+        navAccountEl.textContent = userData.name;
     }
-    if (mobileAccountTrigger) {
-        mobileAccountTrigger.style.display = "inline-flex";
-        mobileAccountTrigger.setAttribute("href", "#");
-
-        mobileAccountTrigger.addEventListener("click", function (e) {
+    if (mobileAccountEl && userData.name) {
+        mobileAccountEl.textContent = userData.name;
+    }
+    if (mobileTrigger) {
+        mobileTrigger.style.display = "inline-flex";
+        mobileTrigger.setAttribute("href", "#");
+        mobileTrigger.addEventListener("click", function (e) {
             e.preventDefault();
             if (typeof openSidebar === "function") {
                 openSidebar();
             }
         });
     }
-    if (mobileAccountTriggerAvatar && userData.avatar_data) {
-        mobileAccountTriggerAvatar.src = userData.avatar_data;
-        mobileAccountTriggerAvatar.style.display = "block";
-        if (mobileAccountTriggerLetter) {
-            mobileAccountTriggerLetter.style.display = "none";
+    if (mobileTriggerAvatar && userData.avatar_data) {
+        mobileTriggerAvatar.src = userData.avatar_data;
+        mobileTriggerAvatar.style.display = "block";
+        if (mobileTriggerLetter) {
+            mobileTriggerLetter.style.display = "none";
         }
-    } else if (mobileAccountTriggerLetter) {
-        mobileAccountTriggerLetter.textContent =
+    } else if (mobileTriggerLetter) {
+        mobileTriggerLetter.textContent =
             (userData.name || "К").trim().charAt(0).toUpperCase();
-        mobileAccountTriggerLetter.style.display = "flex";
-        if (mobileAccountTriggerAvatar) {
-            mobileAccountTriggerAvatar.style.display = "none";
+        mobileTriggerLetter.style.display = "flex";
+        if (mobileTriggerAvatar) {
+            mobileTriggerAvatar.style.display = "none";
         }
     }
-}
+})();
 </script>
 
 <script src="../components/sidebar.js"></script>   

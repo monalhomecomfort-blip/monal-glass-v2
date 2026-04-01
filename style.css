@@ -2062,6 +2062,15 @@ stroke: #111;
     display: none;
 }
 /* ============================= */
+/* REVIEWS LIST */
+/* ============================= */
+.review-card {
+    padding: 18px 0;
+}
+.review-card + .review-card {
+    border-top: 1px solid rgba(0, 0, 0, 0.14);
+}
+/* ============================= */
 /* MOBILE */
 /* ============================= */
 @media (max-width: 900px) {

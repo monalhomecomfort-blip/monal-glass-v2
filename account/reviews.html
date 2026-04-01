@@ -467,6 +467,89 @@ if (reviewForm) {
 resetReviewCategoryState();
 </script>
 
+<script>
+let approvedReviews = [];
+let visibleReviewsCount = 5;
+
+function formatReviewDate(dateString) {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("uk-UA");
+}
+
+function getReviewTypeLabel(review) {
+    if (review.review_type === "brand") {
+        return "Відгук про Monal";
+    }
+
+    if (review.review_type === "product" && review.category_slug) {
+        return "Відгук про товар · " + review.category_slug;
+    }
+
+    return "Відгук";
+}
+
+function renderApprovedReviews() {
+    const reviewsList = document.getElementById("reviews-list");
+    const expandBtn = document.getElementById("reviews-expand-btn");
+
+    if (!reviewsList || !expandBtn) return;
+
+    if (!approvedReviews.length) {
+        reviewsList.innerHTML = `
+            <div class="review-card">
+                <p><strong>Поки що немає опублікованих відгуків.</strong></p>
+            </div>
+        `;
+        expandBtn.style.display = "none";
+        return;
+    }
+
+    const visibleReviews = approvedReviews.slice(0, visibleReviewsCount);
+
+    reviewsList.innerHTML = visibleReviews.map(review => `
+        <div class="review-card">
+            <p><strong>${review.name || "Клієнт"}</strong></p>
+            <p>${getReviewTypeLabel(review)}</p>
+            <p>${review.review_text}</p>
+            <p>${formatReviewDate(review.created_at)}</p>
+        </div>
+    `).join("");
+
+    if (approvedReviews.length > visibleReviewsCount) {
+        expandBtn.style.display = "inline-flex";
+    } else {
+        expandBtn.style.display = "none";
+    }
+}
+
+async function loadApprovedReviews() {
+    try {
+        const res = await fetch("https://monal-mono-pay-production.up.railway.app/api/reviews/approved");
+        const data = await res.json();
+
+        if (!data.ok || !Array.isArray(data.reviews)) {
+            return;
+        }
+
+        approvedReviews = data.reviews;
+        renderApprovedReviews();
+
+    } catch (err) {
+        console.error("LOAD APPROVED REVIEWS ERROR:", err);
+    }
+}
+
+const reviewsExpandBtn = document.getElementById("reviews-expand-btn");
+if (reviewsExpandBtn) {
+    reviewsExpandBtn.addEventListener("click", function () {
+        visibleReviewsCount += 5;
+        renderApprovedReviews();
+    });
+}
+
+loadApprovedReviews();
+</script>
+    
 <script src="../components/sidebar.js"></script>
 
 <script>

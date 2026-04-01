@@ -163,44 +163,38 @@ class="nav-logo">
 <h2>Залишити відгук</h2>
 
 <form id="review-form" class="review-form">
-    <div class="review-type-row">
-        <label class="review-radio-label">
-            <input type="radio" name="review-type" value="brand" checked>
-            <span>Відгук про Monal</span>
-        </label>
 
-        <label class="review-radio-label">
-            <input type="radio" name="review-type" value="product">
-            <span>Відгук про товар</span>
-        </label>
-    </div>
+    <label for="review-target">Ваш відгук про</label>
+    <select id="review-target" name="review-target">
+        <option value="">Оберіть варіант</option>
+        <option value="brand">Monal</option>
+        <option value="product">Товар</option>
+    </select>
 
-    <div id="review-product-fields" style="display:none;">
-        <label for="review-category">Оберіть категорію товару</label>
-        <select id="review-category" name="review-category">
-            <option value="">Оберіть категорію</option>
-            <option value="aromadiffusers">Аромадифузори</option>
-            <option value="refills">Рефіли</option>
-            <option value="parfums">Парфуми для дому</option>
-            <option value="discovery">Discovery set</option>
-            <option value="candles">Свічки</option>
-            <option value="gift-sets">Подарункові набори</option>
-            <option value="certificates">Подарункові сертифікати</option>
-            <option value="car-sachets">Аромасаше для авто</option>
-            <option value="wardrobe-sachets">Аромасаше для гардеробу</option>
-            <option value="hand-soap">Мило для рук</option>
-            <option value="hand-cream">Крем для рук</option>
-            <option value="shower-gel">Гель для душу</option>
-        </select>
-
-        <label for="review-product">Оберіть товар</label>
-        <select id="review-product" name="review-product">
-            <option value="">Спочатку оберіть категорію</option>
-        </select>
-    </div>
+    <label for="review-category">Виберіть категорію</label>
+    <select id="review-category" name="review-category" disabled>
+        <option value="">Спочатку оберіть, про що відгук</option>
+        <option value="aromadiffusers">Аромадифузори</option>
+        <option value="refills">Рефіли</option>
+        <option value="parfums">Парфуми для дому</option>
+        <option value="discovery">Discovery set</option>
+        <option value="candles">Свічки</option>
+        <option value="gift-sets">Подарункові набори</option>
+        <option value="certificates">Подарункові сертифікати</option>
+        <option value="car-sachets">Аромасаше для авто</option>
+        <option value="wardrobe-sachets">Аромасаше для гардеробу</option>
+        <option value="hand-soap">Мило для рук</option>
+        <option value="hand-cream">Крем для рук</option>
+        <option value="shower-gel">Гель для душу</option>
+    </select>
 
     <label for="review-text">Ваш відгук</label>
-    <textarea id="review-text" name="review-text" rows="6" placeholder="Напишіть ваш відгук"></textarea>
+    <textarea
+        id="review-text"
+        name="review-text"
+        rows="7"
+        placeholder="Напишіть ваш відгук"
+    ></textarea>
 
     <button type="submit" class="buy-btn">Надіслати</button>
 </form>
@@ -353,18 +347,36 @@ navCatalog.classList.remove('open');
 </script>
 
 <script>
-const reviewTypeInputs = document.querySelectorAll('input[name="review-type"]');
-const productFields = document.getElementById('review-product-fields');
+const reviewTarget = document.getElementById('review-target');
+const reviewCategory = document.getElementById('review-category');
 
-reviewTypeInputs.forEach(input => {
-    input.addEventListener('change', function () {
+if (reviewTarget && reviewCategory) {
+    reviewTarget.addEventListener('change', function () {
         if (this.value === 'product') {
-            productFields.style.display = 'block';
+            reviewCategory.disabled = false;
+            reviewCategory.innerHTML = `
+                <option value="">Оберіть категорію</option>
+                <option value="aromadiffusers">Аромадифузори</option>
+                <option value="refills">Рефіли</option>
+                <option value="parfums">Парфуми для дому</option>
+                <option value="discovery">Discovery set</option>
+                <option value="candles">Свічки</option>
+                <option value="gift-sets">Подарункові набори</option>
+                <option value="certificates">Подарункові сертифікати</option>
+                <option value="car-sachets">Аромасаше для авто</option>
+                <option value="wardrobe-sachets">Аромасаше для гардеробу</option>
+                <option value="hand-soap">Мило для рук</option>
+                <option value="hand-cream">Крем для рук</option>
+                <option value="shower-gel">Гель для душу</option>
+            `;
         } else {
-            productFields.style.display = 'none';
+            reviewCategory.disabled = true;
+            reviewCategory.innerHTML = `
+                <option value="">Спочатку оберіть, про що відгук</option>
+            `;
         }
     });
-});
+}
 </script>
 
 <script src="../components/sidebar.js"></script>

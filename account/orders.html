@@ -299,6 +299,81 @@ navCatalog.classList.remove('open');
 })();
 </script>
 
+<script>
+function formatOrderDate(dateString) {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("uk-UA");
+}
+function formatOrderAmount(value) {
+    const num = Number(value || 0);
+    return num.toLocaleString("uk-UA");
+}
+function renderOrders(orders) {
+    const ordersList = document.getElementById("orders-list");
+    if (!ordersList) return;
+    if (!orders.length) {
+        ordersList.innerHTML = `
+            <div class="review-card">
+                <p><strong>У вас поки що немає замовлень.</strong></p>
+            </div>
+        `;
+        return;
+    }
+    ordersList.innerHTML = orders.map(order => `
+        <div class="review-card">
+            <p><strong>Замовлення №${order.order_id || order.id}</strong></p>
+            <p>Дата: ${formatOrderDate(order.created_at)}</p>
+            <p>Сума: ${formatOrderAmount(order.total_amount)} грн</p>
+            <p>Оплата: ${order.payment_type || "—"}</p>
+            <p>Доставка: ${order.delivery || "—"}</p>
+            <p><strong>Склад замовлення:</strong></p>
+            <p style="white-space: pre-line;">${order.items_text || "—"}</p>
+        </div>
+    `).join("");
+}
+async function loadUserOrders() {
+    const user = JSON.parse(localStorage.getItem("monal_user") || "null");
+    const ordersList = document.getElementById("orders-list");
+    if (!user || !user.id) {
+        if (ordersList) {
+            ordersList.innerHTML = `
+                <div class="review-card">
+                    <p><strong>Спочатку увійдіть у акаунт.</strong></p>
+                </div>
+            `;
+        }
+        return;
+    }
+    try {
+        const res = await fetch(
+            "https://monal-mono-pay-production.up.railway.app/api/orders/" + user.id
+        );
+        const data = await res.json();
+        if (!data.ok || !Array.isArray(data.orders)) {
+            if (ordersList) {
+                ordersList.innerHTML = `
+                    <div class="review-card">
+                        <p><strong>Не вдалося завантажити замовлення.</strong></p>
+                    </div>
+                `;
+            }
+            return;
+        }
+        renderOrders(data.orders);
+    } catch (err) {
+        console.error("LOAD USER ORDERS ERROR:", err);
+        if (ordersList) {
+            ordersList.innerHTML = `
+                <div class="review-card">
+                    <p><strong>Помилка завантаження замовлень.</strong></p>
+                </div>
+            `;
+        }
+    }
+}
+loadUserOrders();
+</script>
+    
 <script src="../components/sidebar.js"></script>
 
 <script>

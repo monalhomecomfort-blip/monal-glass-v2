@@ -153,14 +153,7 @@ class="nav-logo">
 <a href="/account/account.html" class="back-btn">← Назад</a>
 
 <div class="account-block big">
-<h2>Відгуки</h2>
-<p>
-На цій сторінці ви можете залишити відгук про Monal або про конкретний товар. Усі відгуки проходять модерацію перед публікацією.
-</p>
-</div>
-
-<div class="account-block big">
-<h2>Залишити відгук</h2>
+<h2>Залишити відгук про Monal або про товар.</h2>
 
 <form id="review-form" class="review-form">
 
@@ -425,7 +418,7 @@ if (reviewForm) {
                 alert(data.error || "Не вдалося надіслати відгук");
                 return;
             }
-            alert("Відгук надіслано на модерацію");
+            
             reviewForm.reset();
             resetReviewCategoryState();
         } catch (err) {

@@ -1835,6 +1835,55 @@ stroke: #111;
     flex-shrink: 0;
 }
 
+.account-page .account-block input[type="text"],
+.account-page .account-block input[type="tel"],
+.account-page .account-block input[type="date"],
+.account-page .account-block input[type="email"],
+.account-page .account-block select,
+.account-page .account-block textarea {
+    height: 42px;
+    padding: 0 14px;
+    border-radius: 14px;
+    border: none;
+    background: #e7e4d9;
+    color: #1f1f1f;
+    font-size: 15px;
+    font-family: 'Montserrat', sans-serif;
+    box-sizing: border-box;
+    outline: none;
+    box-shadow:
+        0 1px 0 rgba(255,255,255,0.35) inset,
+        0 2px 8px rgba(0,0,0,0.06);
+}
+
+.account-page .account-block input::placeholder,
+.account-page .account-block textarea::placeholder {
+    color: rgba(31, 31, 31, 0.45);
+}
+
+.account-page .account-block input[type="text"]:focus,
+.account-page .account-block input[type="tel"]:focus,
+.account-page .account-block input[type="date"]:focus,
+.account-page .account-block input[type="email"]:focus,
+.account-page .account-block select:focus,
+.account-page .account-block textarea:focus {
+    box-shadow:
+        0 1px 0 rgba(255,255,255,0.35) inset,
+        0 2px 8px rgba(0,0,0,0.06),
+        0 0 0 2px rgba(231, 228, 217, 0.65);
+}
+
+.account-page .account-block label {
+    font-size: 15px;
+    line-height: 1.7;
+    color: #1f1f1f;
+}
+
+.account-page .account-block p input,
+.account-page .account-block p select {
+    margin-left: 6px;
+    margin-bottom: 6px;
+}
 /* ============================= */
 /* ВХІД І РЕЄСТРАЦІЯ */
 /* ============================= */

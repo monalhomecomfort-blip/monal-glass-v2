@@ -2070,6 +2070,59 @@ stroke: #111;
 .review-card + .review-card {
     border-top: 1px solid rgba(0, 0, 0, 0.14);
 }
+
+/* ===================== GLOBAL MOBILE TAP HIGHLIGHT OFF ===================== */
+
+a,
+button,
+.buy-btn,
+.back-btn,
+.catalog-btn,
+.burger-btn,
+.mobile-cart,
+.mobile-account-trigger,
+.nav-logo-link,
+.subcategory,
+.sub-mini,
+.certificate-option,
+.add-to-set,
+.buy-discovery-btn {
+    -webkit-tap-highlight-color: transparent;
+}
+
+a,
+button,
+.buy-btn,
+.back-btn,
+.catalog-btn,
+.burger-btn,
+.mobile-cart,
+.mobile-account-trigger,
+.nav-logo-link {
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+a:focus,
+a:active,
+button:focus,
+button:active,
+.buy-btn:focus,
+.buy-btn:active,
+.back-btn:focus,
+.back-btn:active,
+.catalog-btn:focus,
+.catalog-btn:active,
+.burger-btn:focus,
+.burger-btn:active,
+.mobile-cart:focus,
+.mobile-cart:active,
+.mobile-account-trigger:focus,
+.mobile-account-trigger:active,
+.nav-logo-link:focus,
+.nav-logo-link:active {
+    outline: none;
+}
 /* ============================= */
 /* MOBILE */
 /* ============================= */

@@ -353,36 +353,118 @@ navCatalog.classList.remove('open');
 </script>
 
 <script>
-const reviewTarget = document.getElementById('review-target');
-const reviewCategory = document.getElementById('review-category');
+const reviewForm = document.getElementById("review-form");
+const reviewTarget = document.getElementById("review-target");
+const reviewCategory = document.getElementById("review-category");
+const reviewText = document.getElementById("review-text");
 
-if (reviewTarget && reviewCategory) {
-    reviewTarget.addEventListener('change', function () {
-        if (this.value === 'product') {
-            reviewCategory.disabled = false;
-            reviewCategory.innerHTML = `
-                <option value="">Оберіть категорію</option>
-                <option value="aromadiffusers">Аромадифузори</option>
-                <option value="refills">Рефіли</option>
-                <option value="parfums">Парфуми для дому</option>
-                <option value="discovery">Discovery set</option>
-                <option value="candles">Свічки</option>
-                <option value="gift-sets">Подарункові набори</option>
-                <option value="certificates">Подарункові сертифікати</option>
-                <option value="car-sachets">Аромасаше для авто</option>
-                <option value="wardrobe-sachets">Аромасаше для гардеробу</option>
-                <option value="hand-soap">Мило для рук</option>
-                <option value="hand-cream">Крем для рук</option>
-                <option value="shower-gel">Гель для душу</option>
-            `;
+function resetReviewCategoryState() {
+    if (!reviewCategory) return;
+
+    reviewCategory.disabled = true;
+    reviewCategory.innerHTML = `
+        <option value="">Спочатку оберіть, про що відгук</option>
+    `;
+}
+
+function enableReviewCategoryState() {
+    if (!reviewCategory) return;
+
+    reviewCategory.disabled = false;
+    reviewCategory.innerHTML = `
+        <option value="">Оберіть категорію</option>
+        <option value="aromadiffusers">Аромадифузори</option>
+        <option value="refills">Рефіли</option>
+        <option value="parfums">Парфуми для дому</option>
+        <option value="discovery">Discovery set</option>
+        <option value="candles">Свічки</option>
+        <option value="gift-sets">Подарункові набори</option>
+        <option value="certificates">Подарункові сертифікати</option>
+        <option value="car-sachets">Аромасаше для авто</option>
+        <option value="wardrobe-sachets">Аромасаше для гардеробу</option>
+        <option value="hand-soap">Мило для рук</option>
+        <option value="hand-cream">Крем для рук</option>
+        <option value="shower-gel">Гель для душу</option>
+    `;
+}
+
+if (reviewTarget) {
+    reviewTarget.addEventListener("change", function () {
+        if (this.value === "product") {
+            enableReviewCategoryState();
         } else {
-            reviewCategory.disabled = true;
-            reviewCategory.innerHTML = `
-                <option value="">Спочатку оберіть, про що відгук</option>
-            `;
+            resetReviewCategoryState();
         }
     });
 }
+
+if (reviewForm) {
+    reviewForm.addEventListener("submit", async function (e) {
+        e.preventDefault();
+
+        const user = JSON.parse(localStorage.getItem("monal_user") || "null");
+
+        if (!user || !user.id) {
+            alert("Спочатку увійдіть у акаунт");
+            return;
+        }
+
+        const reviewType = reviewTarget ? reviewTarget.value : "";
+        const categorySlug = reviewCategory ? reviewCategory.value : "";
+        const reviewTextValue = reviewText ? reviewText.value.trim() : "";
+
+        if (!reviewType) {
+            alert("Оберіть, про що ваш відгук");
+            return;
+        }
+
+        if (reviewType === "product" && !categorySlug) {
+            alert("Оберіть категорію товару");
+            return;
+        }
+
+        if (!reviewTextValue || reviewTextValue.length < 5) {
+            alert("Відгук має містити щонайменше 5 символів");
+            return;
+        }
+
+        try {
+            const res = await fetch(
+                "https://monal-mono-pay-production.up.railway.app/api/reviews",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        userId: user.id,
+                        review_type: reviewType,
+                        category_slug: reviewType === "product" ? categorySlug : null,
+                        review_text: reviewTextValue
+                    })
+                }
+            );
+
+            const data = await res.json();
+
+            if (!data.ok) {
+                alert(data.error || "Не вдалося надіслати відгук");
+                return;
+            }
+
+            alert("Відгук надіслано на модерацію");
+
+            reviewForm.reset();
+            resetReviewCategoryState();
+
+        } catch (err) {
+            console.error(err);
+            alert("Помилка з'єднання");
+        }
+    });
+}
+
+resetReviewCategoryState();
 </script>
 
 <script src="../components/sidebar.js"></script>

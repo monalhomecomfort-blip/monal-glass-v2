@@ -241,3 +241,31 @@
     background: rgba(232, 225, 214, 0.45);
     background-clip: padding-box;
 }
+/* прибрати синє підсвічування при тапі */
+.sidebar-link,
+.sidebar-link *,
+.sidebar-block button,
+#sidebar-close,
+.sidebar-avatar-upload,
+.sidebar-avatar-label,
+.sidebar-avatar-preview,
+#sidebar-avatar-input {
+    -webkit-tap-highlight-color: transparent;
+}
+/* не давати тексту виділятись при тапі */
+.sidebar-link,
+.sidebar-avatar-label {
+    user-select: none;
+    -webkit-user-select: none;
+}
+/* без обводки при тапі/фокусі */
+.sidebar-link:focus,
+.sidebar-link:active,
+.sidebar-avatar-label:focus,
+.sidebar-avatar-label:active,
+.sidebar-block button:focus,
+.sidebar-block button:active,
+#sidebar-close:focus,
+#sidebar-close:active {
+    outline: none;
+}

@@ -300,31 +300,23 @@ navCatalog.classList.remove('open');
     const storedUser = localStorage.getItem("monal_user");
     const navAccountEl = document.getElementById("nav-account");
     const mobileAccountEl = document.getElementById("mobile-account");
-
     const mobileTrigger = document.getElementById("mobile-account-trigger");
     const mobileTriggerLetter = document.getElementById("mobile-account-trigger-letter");
     const mobileTriggerAvatar = document.getElementById("mobile-account-trigger-avatar");
-
     if (mobileTrigger) {
         mobileTrigger.style.display = "none";
     }
-
     if (!storedUser) return;
-
     const userData = JSON.parse(storedUser);
-
     if (navAccountEl && userData.name) {
         navAccountEl.textContent = userData.name;
     }
-
     if (mobileAccountEl && userData.name) {
         mobileAccountEl.textContent = userData.name;
     }
-
     if (mobileTrigger && window.innerWidth <= 600) {
         mobileTrigger.style.display = "inline-flex";
         mobileTrigger.setAttribute("href", "#");
-
         mobileTrigger.addEventListener("click", function (e) {
             e.preventDefault();
             if (typeof openSidebar === "function") {
@@ -332,11 +324,9 @@ navCatalog.classList.remove('open');
             }
         });
     }
-
     if (mobileTriggerAvatar && userData.avatar_data) {
         mobileTriggerAvatar.src = userData.avatar_data;
         mobileTriggerAvatar.style.display = "block";
-
         if (mobileTriggerLetter) {
             mobileTriggerLetter.style.display = "none";
         }
@@ -344,7 +334,6 @@ navCatalog.classList.remove('open');
         mobileTriggerLetter.textContent =
             (userData.name || "К").trim().charAt(0).toUpperCase();
         mobileTriggerLetter.style.display = "flex";
-
         if (mobileTriggerAvatar) {
             mobileTriggerAvatar.style.display = "none";
         }
@@ -357,19 +346,15 @@ const reviewForm = document.getElementById("review-form");
 const reviewTarget = document.getElementById("review-target");
 const reviewCategory = document.getElementById("review-category");
 const reviewText = document.getElementById("review-text");
-
 function resetReviewCategoryState() {
     if (!reviewCategory) return;
-
     reviewCategory.disabled = true;
     reviewCategory.innerHTML = `
         <option value="">Спочатку оберіть, про що відгук</option>
     `;
 }
-
 function enableReviewCategoryState() {
     if (!reviewCategory) return;
-
     reviewCategory.disabled = false;
     reviewCategory.innerHTML = `
         <option value="">Оберіть категорію</option>
@@ -387,7 +372,6 @@ function enableReviewCategoryState() {
         <option value="shower-gel">Гель для душу</option>
     `;
 }
-
 if (reviewTarget) {
     reviewTarget.addEventListener("change", function () {
         if (this.value === "product") {
@@ -397,37 +381,29 @@ if (reviewTarget) {
         }
     });
 }
-
 if (reviewForm) {
     reviewForm.addEventListener("submit", async function (e) {
         e.preventDefault();
-
         const user = JSON.parse(localStorage.getItem("monal_user") || "null");
-
         if (!user || !user.id) {
             alert("Спочатку увійдіть у акаунт");
             return;
         }
-
         const reviewType = reviewTarget ? reviewTarget.value : "";
         const categorySlug = reviewCategory ? reviewCategory.value : "";
         const reviewTextValue = reviewText ? reviewText.value.trim() : "";
-
         if (!reviewType) {
             alert("Оберіть, про що ваш відгук");
             return;
         }
-
         if (reviewType === "product" && !categorySlug) {
             alert("Оберіть категорію товару");
             return;
         }
-
         if (!reviewTextValue || reviewTextValue.length < 5) {
             alert("Відгук має містити щонайменше 5 символів");
             return;
         }
-
         try {
             const res = await fetch(
                 "https://monal-mono-pay-production.up.railway.app/api/reviews",
@@ -444,56 +420,60 @@ if (reviewForm) {
                     })
                 }
             );
-
             const data = await res.json();
-
             if (!data.ok) {
                 alert(data.error || "Не вдалося надіслати відгук");
                 return;
             }
-
             alert("Відгук надіслано на модерацію");
-
             reviewForm.reset();
             resetReviewCategoryState();
-
         } catch (err) {
             console.error(err);
             alert("Помилка з'єднання");
         }
     });
 }
-
 resetReviewCategoryState();
 </script>
 
 <script>
 let approvedReviews = [];
 let visibleReviewsCount = 5;
-
 function formatReviewDate(dateString) {
     const date = new Date(dateString);
     return date.toLocaleDateString("uk-UA");
 }
-
+function getCategoryLabel(categorySlug) {
+    const categories = {
+        aromadiffusers: "Аромадифузори",
+        refills: "Рефіли",
+        parfums: "Парфуми для дому",
+        discovery: "Discovery set",
+        candles: "Свічки",
+        "gift-sets": "Подарункові набори",
+        certificates: "Подарункові сертифікати",
+        "car-sachets": "Аромасаше для авто",
+        "wardrobe-sachets": "Аромасаше для гардеробу",
+        "hand-soap": "Мило для рук",
+        "hand-cream": "Крем для рук",
+        "shower-gel": "Гель для душу"
+    };
+    return categories[categorySlug] || categorySlug;
+}
 function getReviewTypeLabel(review) {
     if (review.review_type === "brand") {
         return "Відгук про Monal";
     }
-
     if (review.review_type === "product" && review.category_slug) {
-        return "Відгук про товар · " + review.category_slug;
+        return "Відгук про товар · " + getCategoryLabel(review.category_slug);
     }
-
     return "Відгук";
 }
-
 function renderApprovedReviews() {
     const reviewsList = document.getElementById("reviews-list");
     const expandBtn = document.getElementById("reviews-expand-btn");
-
     if (!reviewsList || !expandBtn) return;
-
     if (!approvedReviews.length) {
         reviewsList.innerHTML = `
             <div class="review-card">
@@ -503,9 +483,7 @@ function renderApprovedReviews() {
         expandBtn.style.display = "none";
         return;
     }
-
     const visibleReviews = approvedReviews.slice(0, visibleReviewsCount);
-
     reviewsList.innerHTML = visibleReviews.map(review => `
         <div class="review-card">
             <p><strong>${review.name || "Клієнт"}</strong></p>
@@ -514,31 +492,25 @@ function renderApprovedReviews() {
             <p>${formatReviewDate(review.created_at)}</p>
         </div>
     `).join("");
-
     if (approvedReviews.length > visibleReviewsCount) {
         expandBtn.style.display = "inline-flex";
     } else {
         expandBtn.style.display = "none";
     }
 }
-
 async function loadApprovedReviews() {
     try {
         const res = await fetch("https://monal-mono-pay-production.up.railway.app/api/reviews/approved");
         const data = await res.json();
-
         if (!data.ok || !Array.isArray(data.reviews)) {
             return;
         }
-
         approvedReviews = data.reviews;
         renderApprovedReviews();
-
     } catch (err) {
         console.error("LOAD APPROVED REVIEWS ERROR:", err);
     }
 }
-
 const reviewsExpandBtn = document.getElementById("reviews-expand-btn");
 if (reviewsExpandBtn) {
     reviewsExpandBtn.addEventListener("click", function () {
@@ -546,7 +518,6 @@ if (reviewsExpandBtn) {
         renderApprovedReviews();
     });
 }
-
 loadApprovedReviews();
 </script>
     
@@ -557,20 +528,16 @@ fetch("../components/sidebar.html")
   .then(res => res.text())
   .then(html => {
     document.getElementById("sidebar-container").innerHTML = html;
-
     if (typeof initSidebarUserState === "function") {
         initSidebarUserState();
     }
-
     if (typeof initSidebarAvatarPreview === "function") {
         initSidebarAvatarPreview();
     }
-
     if (typeof setSidebarTopOffset === "function") {
         setSidebarTopOffset();
     }
   });
-
 window.addEventListener("resize", function () {
     if (typeof setSidebarTopOffset === "function") {
         setSidebarTopOffset();

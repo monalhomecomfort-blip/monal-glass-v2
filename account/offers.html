@@ -299,6 +299,99 @@ navCatalog.classList.remove('open');
 })();
 </script>
 
+<script>
+function formatOfferAmount(value) {
+    if (value === null || value === undefined || value === "") return null;
+    return Number(value).toLocaleString("uk-UA");
+}
+function getOfferTypeLabel(type) {
+    const labels = {
+        promo: "Промокод",
+        gift: "Подарунок",
+        delivery: "Доставка",
+        discount: "Знижка",
+        other: "Спеціальна пропозиція"
+    };
+    return labels[type] || "Спеціальна пропозиція";
+}
+function getCategoryLabel(categorySlug) {
+    const categories = {
+        aromadiffusers: "Аромадифузори",
+        refills: "Рефіли",
+        parfums: "Парфуми для дому",
+        discovery: "Discovery set",
+        candles: "Свічки",
+        "gift-sets": "Подарункові набори",
+        certificates: "Подарункові сертифікати",
+        "car-sachets": "Аромасаше для авто",
+        "wardrobe-sachets": "Аромасаше для гардеробу",
+        "hand-soap": "Мило для рук",
+        "hand-cream": "Крем для рук",
+        "shower-gel": "Гель для душу"
+    };
+    return categories[categorySlug] || categorySlug;
+}
+function renderOffers(offers) {
+    const offersList = document.getElementById("offers-list");
+    if (!offersList) return;
+    if (!offers.length) {
+        offersList.innerHTML = `
+            <div class="review-card">
+                <p><strong>Поки що немає активних персональних пропозицій.</strong></p>
+            </div>
+        `;
+        return;
+    }
+    offersList.innerHTML = offers.map(offer => {
+        const amountText = formatOfferAmount(offer.min_order_amount);
+        const categoryText = offer.required_category_slug
+            ? getCategoryLabel(offer.required_category_slug)
+            : null;
+        const discountLevelText = offer.required_discount_level
+            ? offer.required_discount_level + "%"
+            : null;
+        return `
+            <div class="review-card">
+                <p><strong>${offer.title || "Персональна пропозиція"}</strong></p>
+                <p>${getOfferTypeLabel(offer.offer_type)}</p>
+                <p>${offer.offer_text || ""}</p>
+                ${offer.promo_code ? `<p><strong>Промокод:</strong> ${offer.promo_code}</p>` : ""}
+                ${amountText ? `<p><strong>Мінімальна сума замовлення:</strong> ${amountText} грн</p>` : ""}
+                ${categoryText ? `<p><strong>Категорія:</strong> ${categoryText}</p>` : ""}
+                ${discountLevelText ? `<p><strong>Рівень персональної знижки:</strong> ${discountLevelText}</p>` : ""}
+            </div>
+        `;
+    }).join("");
+}
+async function loadPersonalOffers() {
+    const offersList = document.getElementById("offers-list");
+    if (!offersList) return;
+    try {
+        const res = await fetch(
+            "https://monal-mono-pay-production.up.railway.app/api/personal-offers"
+        );
+        const data = await res.json();
+        if (!data.ok || !Array.isArray(data.offers)) {
+            offersList.innerHTML = `
+                <div class="review-card">
+                    <p><strong>Не вдалося завантажити персональні пропозиції.</strong></p>
+                </div>
+            `;
+            return;
+        }
+        renderOffers(data.offers);
+    } catch (err) {
+        console.error("LOAD PERSONAL OFFERS ERROR:", err);
+        offersList.innerHTML = `
+            <div class="review-card">
+                <p><strong>Помилка завантаження персональних пропозицій.</strong></p>
+            </div>
+        `;
+    }
+}
+loadPersonalOffers();
+</script>
+    
 <script src="../components/sidebar.js"></script>
 
 <script>

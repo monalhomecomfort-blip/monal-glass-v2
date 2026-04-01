@@ -310,6 +310,50 @@ navCatalog.classList.remove('open');
 })();
 </script>
 
+<script>
+const assortmentWishForm = document.getElementById("assortment-wish-form");
+const assortmentWishText = document.getElementById("assortment-wish-text");
+if (assortmentWishForm) {
+    assortmentWishForm.addEventListener("submit", async function (e) {
+        e.preventDefault();
+        const user = JSON.parse(localStorage.getItem("monal_user") || "null");
+        if (!user || !user.id) {
+            alert("Спочатку увійдіть у акаунт");
+            return;
+        }
+        const wishTextValue = assortmentWishText ? assortmentWishText.value.trim() : "";
+        if (!wishTextValue || wishTextValue.length < 5) {
+            alert("Побажання має містити щонайменше 5 символів");
+            return;
+        }
+        try {
+            const res = await fetch(
+                "https://monal-mono-pay-production.up.railway.app/api/assortment-wishes",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        userId: user.id,
+                        wish_text: wishTextValue
+                    })
+                }
+            );
+            const data = await res.json();
+            if (!data.ok) {
+                alert(data.error || "Не вдалося надіслати побажання");
+                return;
+            }
+            assortmentWishForm.reset();
+        } catch (err) {
+            console.error(err);
+            alert("Помилка з'єднання");
+        }
+    });
+}
+</script>
+    
 <script src="../components/sidebar.js"></script>
 
 <script>

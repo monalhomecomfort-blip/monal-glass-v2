@@ -155,15 +155,26 @@ class="nav-logo">
 <div class="account-block big">
 <h2>Побажання стосовно асортименту</h2>
 <p>
-На цій сторінці ви зможете залишити побажання щодо нових ароматів, форматів, категорій товарів або окремих позицій, які хотіли б бачити в асортименті Monal.
+На цій сторінці ви можете залишити побажання щодо нових ароматів, форматів, категорій товарів або окремих позицій, які хотіли б бачити в асортименті Monal.
 </p>
 </div>
 
 <div class="account-block big">
 <h2>Ваші побажання</h2>
-<p>
-Тут з’явиться форма або історія ваших побажань стосовно асортименту.
-</p>
+
+<form id="assortment-wish-form" class="review-form">
+    <div class="review-form-group">
+        <label for="assortment-wish-text">Що ви хотіли б бачити в асортименті Monal</label>
+        <textarea
+            id="assortment-wish-text"
+            name="assortment-wish-text"
+            rows="7"
+            placeholder="Напишіть ваші побажання стосовно асортименту"
+        ></textarea>
+    </div>
+
+    <button type="submit" class="buy-btn">Надіслати</button>
+</form>
 </div>
 
 </div>

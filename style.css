@@ -1884,6 +1884,80 @@ stroke: #111;
     margin-left: 6px;
     margin-bottom: 6px;
 }
+
+/* ============================= */
+/* REVIEWS FORM */
+/* ============================= */
+.review-form {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    width: 100%;
+}
+.review-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+}
+.review-form label {
+    font-size: 15px;
+    color: #1f1f1f;
+    line-height: 1.4;
+}
+.review-form select,
+.review-form textarea {
+    width: 100%;
+    border: none;
+    outline: none;
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 15px;
+    color: #1f1f1f;
+    background: #e7e4d9;
+    box-shadow:
+        0 1px 0 rgba(255,255,255,0.35) inset,
+        0 2px 8px rgba(0,0,0,0.06);
+}
+.review-form select {
+    height: 52px;
+    padding: 0 16px;
+    border-radius: 18px;
+}
+.review-form textarea {
+    min-height: 220px;
+    padding: 16px 18px;
+    border-radius: 18px;
+    resize: vertical;
+    line-height: 1.5;
+}
+.review-form textarea::placeholder {
+    color: rgba(31, 31, 31, 0.42);
+}
+.review-form select:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+.review-form .buy-btn {
+    align-self: flex-start;
+    margin-top: 2px;
+}
+@media (max-width: 900px) {
+    .review-form {
+        gap: 18px;
+    }
+    .review-form select {
+        height: 50px;
+        border-radius: 16px;
+    }
+    .review-form textarea {
+        min-height: 180px;
+        border-radius: 16px;
+    }
+    .review-form .buy-btn {
+        width: 100%;
+    }
+}
 /* ============================= */
 /* ВХІД І РЕЄСТРАЦІЯ */
 /* ============================= */

@@ -164,37 +164,43 @@ class="nav-logo">
 
 <form id="review-form" class="review-form">
 
-    <label for="review-target">Ваш відгук про</label>
-    <select id="review-target" name="review-target">
-        <option value="">Оберіть варіант</option>
-        <option value="brand">Monal</option>
-        <option value="product">Товар</option>
-    </select>
+    <div class="review-form-group">
+        <label for="review-target">Ваш відгук про</label>
+        <select id="review-target" name="review-target">
+            <option value="">Оберіть варіант</option>
+            <option value="brand">Monal</option>
+            <option value="product">Товар</option>
+        </select>
+    </div>
 
-    <label for="review-category">Виберіть категорію</label>
-    <select id="review-category" name="review-category" disabled>
-        <option value="">Спочатку оберіть, про що відгук</option>
-        <option value="aromadiffusers">Аромадифузори</option>
-        <option value="refills">Рефіли</option>
-        <option value="parfums">Парфуми для дому</option>
-        <option value="discovery">Discovery set</option>
-        <option value="candles">Свічки</option>
-        <option value="gift-sets">Подарункові набори</option>
-        <option value="certificates">Подарункові сертифікати</option>
-        <option value="car-sachets">Аромасаше для авто</option>
-        <option value="wardrobe-sachets">Аромасаше для гардеробу</option>
-        <option value="hand-soap">Мило для рук</option>
-        <option value="hand-cream">Крем для рук</option>
-        <option value="shower-gel">Гель для душу</option>
-    </select>
+    <div class="review-form-group">
+        <label for="review-category">Виберіть категорію</label>
+        <select id="review-category" name="review-category" disabled>
+            <option value="">Спочатку оберіть, про що відгук</option>
+            <option value="aromadiffusers">Аромадифузори</option>
+            <option value="refills">Рефіли</option>
+            <option value="parfums">Парфуми для дому</option>
+            <option value="discovery">Discovery set</option>
+            <option value="candles">Свічки</option>
+            <option value="gift-sets">Подарункові набори</option>
+            <option value="certificates">Подарункові сертифікати</option>
+            <option value="car-sachets">Аромасаше для авто</option>
+            <option value="wardrobe-sachets">Аромасаше для гардеробу</option>
+            <option value="hand-soap">Мило для рук</option>
+            <option value="hand-cream">Крем для рук</option>
+            <option value="shower-gel">Гель для душу</option>
+        </select>
+    </div>
 
-    <label for="review-text">Ваш відгук</label>
-    <textarea
-        id="review-text"
-        name="review-text"
-        rows="7"
-        placeholder="Напишіть ваш відгук"
-    ></textarea>
+    <div class="review-form-group">
+        <label for="review-text">Ваш відгук</label>
+        <textarea
+            id="review-text"
+            name="review-text"
+            rows="7"
+            placeholder="Напишіть ваш відгук"
+        ></textarea>
+    </div>
 
     <button type="submit" class="buy-btn">Надіслати</button>
 </form>

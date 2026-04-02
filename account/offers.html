@@ -300,36 +300,49 @@ navCatalog.classList.remove('open');
 </script>
 
 <script>
-function formatOfferAmount(value) {
-    if (value === null || value === undefined || value === "") return null;
-    return Number(value).toLocaleString("uk-UA");
+let personalOffersMap = {};
+function escapeHtml(value) {
+    return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
 }
-function getOfferTypeLabel(type) {
-    const labels = {
-        promo: "Промокод",
-        gift: "Подарунок",
-        delivery: "Доставка",
-        discount: "Знижка",
-        other: "Спеціальна пропозиція"
+function normalizeOffer(rawOffer) {
+    return {
+        id: rawOffer.id,
+        title: rawOffer.title || "",
+        offer_text: rawOffer.offer_text || "",
+        offer_type: rawOffer.offer_type || "",
+        promo_code: rawOffer.promo_code || "",
+        discount_percent: rawOffer.discount_percent || null,
+        min_order_amount: rawOffer.min_order_amount || null,
+        required_category_slug: rawOffer.required_category_slug || null,
+        required_discount_level: rawOffer.required_discount_level || null
     };
-    return labels[type] || "Спеціальна пропозиція";
 }
-function getCategoryLabel(categorySlug) {
-    const categories = {
-        aromadiffusers: "Аромадифузори",
-        refills: "Рефіли",
-        parfums: "Парфуми для дому",
-        discovery: "Discovery set",
-        candles: "Свічки",
-        "gift-sets": "Подарункові набори",
-        certificates: "Подарункові сертифікати",
-        "car-sachets": "Аромасаше для авто",
-        "wardrobe-sachets": "Аромасаше для гардеробу",
-        "hand-soap": "Мило для рук",
-        "hand-cream": "Крем для рук",
-        "shower-gel": "Гель для душу"
-    };
-    return categories[categorySlug] || categorySlug;
+function getSelectedOffer() {
+    try {
+        return JSON.parse(localStorage.getItem("monal_selected_offer")) || null;
+    } catch (e) {
+        return null;
+    }
+}
+function saveSelectedOffer(offer) {
+    localStorage.setItem("monal_selected_offer", JSON.stringify(offer));
+}
+function clearSelectedOffer() {
+    localStorage.removeItem("monal_selected_offer");
+}
+function updateOfferButtons() {
+    const selectedOffer = getSelectedOffer();
+    const buttons = document.querySelectorAll(".offer-use-btn");
+    buttons.forEach(button => {
+        const offerId = Number(button.dataset.offerId);
+        const isSelected = selectedOffer && Number(selectedOffer.id) === offerId;
+        button.textContent = isSelected ? "Використовується" : "Використати";
+    });
 }
 function renderOffers(offers) {
     const offersList = document.getElementById("offers-list");
@@ -342,27 +355,45 @@ function renderOffers(offers) {
         `;
         return;
     }
-    offersList.innerHTML = offers.map(offer => {
-        const amountText = formatOfferAmount(offer.min_order_amount);
-        const categoryText = offer.required_category_slug
-            ? getCategoryLabel(offer.required_category_slug)
-            : null;
-        const discountLevelText = offer.required_discount_level
-            ? offer.required_discount_level + "%"
-            : null;
+    personalOffersMap = {};
+    offers.forEach(rawOffer => {
+        const offer = normalizeOffer(rawOffer);
+        personalOffersMap[String(offer.id)] = offer;
+    });
+    offersList.innerHTML = offers.map(rawOffer => {
+        const offer = normalizeOffer(rawOffer);
         return `
             <div class="review-card">
-                <p><strong>${offer.title || "Персональна пропозиція"}</strong></p>
-                <p>${getOfferTypeLabel(offer.offer_type)}</p>
-                <p>${offer.offer_text || ""}</p>
-                ${offer.promo_code ? `<p><strong>Промокод:</strong> ${offer.promo_code}</p>` : ""}
-                ${amountText ? `<p><strong>Мінімальна сума замовлення:</strong> ${amountText} грн</p>` : ""}
-                ${categoryText ? `<p><strong>Категорія:</strong> ${categoryText}</p>` : ""}
-                ${discountLevelText ? `<p><strong>Рівень персональної знижки:</strong> ${discountLevelText}</p>` : ""}
+                <p><strong>${escapeHtml(offer.title || "Персональна пропозиція")}</strong></p>
+                <p>${escapeHtml(offer.offer_text)}</p>
+                ${offer.promo_code ? `<p><strong>Промокод:</strong> ${escapeHtml(offer.promo_code)}</p>` : ""}
+                ${offer.discount_percent ? `<p><strong>Знижка:</strong> ${escapeHtml(offer.discount_percent)}%</p>` : ""}
+                <button
+                    type="button"
+                    class="buy-btn offer-use-btn"
+                    data-offer-id="${escapeHtml(offer.id)}"
+                >
+                    Використати
+                </button>
             </div>
         `;
     }).join("");
+    updateOfferButtons();
 }
+document.addEventListener("click", function (e) {
+    const button = e.target.closest(".offer-use-btn");
+    if (!button) return;
+    const offerId = String(button.dataset.offerId);
+    const offer = personalOffersMap[offerId];
+    if (!offer) return;
+    const selectedOffer = getSelectedOffer();
+    if (selectedOffer && Number(selectedOffer.id) === Number(offer.id)) {
+        clearSelectedOffer();
+    } else {
+        saveSelectedOffer(offer);
+    }
+    updateOfferButtons();
+});
 async function loadPersonalOffers() {
     const offersList = document.getElementById("offers-list");
     if (!offersList) return;

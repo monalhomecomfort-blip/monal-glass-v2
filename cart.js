@@ -285,7 +285,8 @@ function removeFromCart(index) {
 function clearCart() {
     // очищаємо кошик
     localStorage.removeItem("cart");
-
+    localStorage.removeItem("monal_selected_offer");
+    
     // очищаємо промокод
     localStorage.removeItem("promo_code");
     PROMO_CODE = "";
@@ -918,6 +919,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (status === "success") {
         localStorage.removeItem("cart");
+        localStorage.removeItem("monal_selected_offer");
 
         if (typeof updateCartCount === "function") {
             updateCartCount();

@@ -654,7 +654,7 @@ function submitOrder() {
     }
 
     const dueAmount = Math.max(0, remainingToPay - payNow);
-
+    const orderNote = getOrderNoteFromSelectedOffer();
     const itemsText = cart
         .map(i => {
 
@@ -713,7 +713,7 @@ ${itemsText}
       paidAmount: payNow,
       dueAmount: dueAmount,
       paymentLabel: paymentLabel,
-      
+      orderNote: orderNote,
       personalDiscount,
       promoDiscount,
       certificateAmount: CERT_APPLIED_AMOUNT

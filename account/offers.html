@@ -319,9 +319,27 @@ function normalizeOffer(rawOffer) {
         discount_percent: rawOffer.discount_percent || null,
         min_order_amount: rawOffer.min_order_amount || null,
         required_category_slug: rawOffer.required_category_slug || null,
-        required_discount_level: rawOffer.required_discount_level || null
+        required_discount_level: rawOffer.required_discount_level || null,
+        starts_at: rawOffer.starts_at || null,
+        ends_at: rawOffer.ends_at || null
     };
 }
+function formatOfferDate(value) {
+    if (!value) return null;
+    const date = new Date(value);
+    if (isNaN(date.getTime())) return null;
+    return String(date.getDate()).padStart(2, "0") + "." +
+           String(date.getMonth() + 1).padStart(2, "0") + "." +
+           date.getFullYear();
+}
+function getOfferPeriodText(offer) {
+    const start = formatOfferDate(offer.starts_at);
+    const end = formatOfferDate(offer.ends_at);
+    if (start && end) return "з " + start + " до " + end;
+    if (start) return "з " + start;
+    if (end) return "до " + end;
+    return null;
+}    
 function getSelectedOffer() {
     try {
         return JSON.parse(localStorage.getItem("monal_selected_offer")) || null;
@@ -362,12 +380,14 @@ function renderOffers(offers) {
     });
     offersList.innerHTML = offers.map(rawOffer => {
         const offer = normalizeOffer(rawOffer);
+        const periodText = getOfferPeriodText(offer);
         return `
             <div class="review-card">
                 <p><strong>${escapeHtml(offer.title || "Персональна пропозиція")}</strong></p>
                 <p>${escapeHtml(offer.offer_text)}</p>
                 ${offer.promo_code ? `<p><strong>Промокод:</strong> ${escapeHtml(offer.promo_code)}</p>` : ""}
                 ${offer.discount_percent ? `<p><strong>Знижка:</strong> ${escapeHtml(offer.discount_percent)}%</p>` : ""}
+                ${periodText ? `<p><strong>Період дії:</strong> ${escapeHtml(periodText)}</p>` : ""}
                 <button
                     type="button"
                     class="buy-btn offer-use-btn"

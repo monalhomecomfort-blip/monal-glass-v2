@@ -430,7 +430,9 @@ document.addEventListener("click", function (e) {
     }
     if (isSameSelected) {
         clearSelectedOffer();
+        localStorage.removeItem("promo_code");
     } else {
+        localStorage.removeItem("promo_code");
         saveSelectedOffer(offer);
     }
     updateOfferButtons();

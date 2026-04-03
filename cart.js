@@ -3,6 +3,33 @@ let PAY_NOW_AMOUNT = 0;
 let CERT_APPLIED_AMOUNT = 0;
 let CERT_CODE_USED = null;
 
+
+
+function getSelectedOffer() {
+    try {
+        return JSON.parse(localStorage.getItem("monal_selected_offer")) || null;
+    } catch (e) {
+        return null;
+    }
+}
+function getOrderNoteFromSelectedOffer() {
+    const offer = getSelectedOffer();
+    if (!offer || offer.offer_type === "promo") {
+        return "";
+    }
+    let note = offer.title || "Персональна пропозиція";
+    if (offer.offer_type === "delivery") {
+        note = "Безкоштовна доставка";
+    }
+    if (offer.offer_type === "gift") {
+        note = "Подарунок до замовлення";
+    }
+    if (offer.offer_text) {
+        note += ` — ${offer.offer_text}`;
+    }
+    return note;
+}
+
 // ===================== PROMO ENGINE =====================
 
 const PROMO = window.PROMO_CONFIG || null;

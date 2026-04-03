@@ -798,7 +798,7 @@ fetch("https://monal-mono-pay-production.up.railway.app/register-order", {
     paidAmount: PAYMENT_CONTEXT.paidAmount || "",
     dueAmount: PAYMENT_CONTEXT.dueAmount || "",
     paymentLabel: PAYMENT_CONTEXT.paymentLabel || "",
-    
+    orderNote: PAYMENT_CONTEXT.orderNote || "",
     personalDiscount: PAYMENT_CONTEXT.personalDiscount || 0,
     promoDiscount: PAYMENT_CONTEXT.promoDiscount || 0,
     certificateAmount: PAYMENT_CONTEXT.certificateAmount || 0,

@@ -409,7 +409,26 @@ document.addEventListener("click", function (e) {
     const offer = personalOffersMap[offerId];
     if (!offer) return;
     const selectedOffer = getSelectedOffer();
-    if (selectedOffer && Number(selectedOffer.id) === Number(offer.id)) {
+    const isSameSelected =
+        selectedOffer && Number(selectedOffer.id) === Number(offer.id);
+    if (offer.offer_type === "promo") {
+        if (isSameSelected) {
+            clearSelectedOffer();
+            localStorage.removeItem("promo_code");
+            updateOfferButtons();
+            return;
+        }
+        saveSelectedOffer(offer);
+        if (offer.promo_code) {
+            localStorage.setItem(
+                "promo_code",
+                String(offer.promo_code).trim().toUpperCase()
+            );
+        }
+        updateOfferButtons();
+        return;
+    }
+    if (isSameSelected) {
         clearSelectedOffer();
     } else {
         saveSelectedOffer(offer);

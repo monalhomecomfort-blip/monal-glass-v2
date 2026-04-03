@@ -997,6 +997,7 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
+        localStorage.removeItem("monal_selected_offer");
         PROMO_CODE = entered;
         localStorage.setItem("promo_code", PROMO_CODE);
 

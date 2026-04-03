@@ -8,8 +8,45 @@ let CERT_CODE_USED = null;
 const PROMO = window.PROMO_CONFIG || null;
 let PROMO_CODE = (localStorage.getItem("promo_code") || "").trim().toUpperCase();
 
-function isPromoActive() {
+if (PROMO && Array.isArray(PROMO.promoDetails)) {
+    const oldCodes = Array.isArray(PROMO.codes) ? PROMO.codes : [];
+    const newCodes = PROMO.promoDetails
+        .map(p => String(p.code || "").trim().toUpperCase())
+        .filter(Boolean);
+
+    PROMO.codes = [...new Set([...oldCodes, ...newCodes])];
+}
+
+function getPromoByCode(code) {
+    if (!PROMO || !Array.isArray(PROMO.promoDetails)) return null;
+
+    const normalizedCode = String(code || "").trim().toUpperCase();
+
+    return PROMO.promoDetails.find(p =>
+        String(p.code || "").trim().toUpperCase() === normalizedCode
+    ) || null;
+}
+
+function isPromoWindowActive(promo) {
     if (!PROMO || !PROMO.active) return false;
+    if (!promo) return false;
+
+    if (!promo.start || !promo.end) return true;
+
+    const now = new Date();
+    const start = new Date(promo.start);
+    const end = new Date(promo.end);
+
+    return now >= start && now <= end;
+}
+
+function isPromoActive(code = PROMO_CODE) {
+    if (!PROMO || !PROMO.active) return false;
+
+    const promoDetailsItem = getPromoByCode(code);
+    if (promoDetailsItem) {
+        return isPromoWindowActive(promoDetailsItem);
+    }
 
     if (!PROMO.start || !PROMO.end) return true;
 
@@ -20,45 +57,88 @@ function isPromoActive() {
     return now >= start && now <= end;
 }
 
-function isExcludedItem(item) {
+function isExcludedItem(item, exclusions = null) {
     const name = String(item?.name || "").toLowerCase();
+    const label = String(item?.label || "").toLowerCase();
+    const rules = exclusions || PROMO?.exclusions || {};
 
-    if (PROMO?.exclusions?.certificates &&
-        (name.includes("сертиф") || String(item?.label || "").toLowerCase().includes("сертиф"))) {
+    if (
+        rules.certificates &&
+        (name.includes("сертиф") || label.includes("сертиф"))
+    ) {
         return true;
     }
 
-    if (PROMO?.exclusions?.discovery &&
-        (name.includes("discovery") || name.includes("діскавер"))) {
+    if (
+        rules.discovery &&
+        (name.includes("discovery") || name.includes("діскавер"))
+    ) {
         return true;
     }
 
-    if (PROMO?.exclusions?.tenMini &&
-        (name.includes("ten mini") || name.includes("10х3"))) {
+    if (
+        rules.tenMini &&
+        (name.includes("ten mini") || name.includes("10х3"))
+    ) {
         return true;
     }
 
     return false;
 }
 
-function calcPromoDiscount(cart) {
-    if (!isPromoActive()) return 0;
-    if (!PROMO_CODE || !PROMO.codes.includes(PROMO_CODE)) return 0;
+function getEligiblePromoSum(cart, code = PROMO_CODE) {
+    const promoDetailsItem = getPromoByCode(code);
+    const exclusions = promoDetailsItem?.exclusions || PROMO?.exclusions || {};
 
     let eligibleSum = 0;
     let hasNonExcluded = false;
 
     cart.forEach(item => {
-        if (!isExcludedItem(item)) {
+        if (!isExcludedItem(item, exclusions)) {
             hasNonExcluded = true;
-            eligibleSum += (Number(item.price) || 0);
+            eligibleSum += Number(item.price) || 0;
         }
     });
 
-    // ❗ Якщо в кошику тільки виключення — знижка не працює
+    return {
+        eligibleSum,
+        hasNonExcluded,
+        promoDetailsItem
+    };
+}
+
+function calcPromoDiscount(cart, code = PROMO_CODE) {
+    const normalizedCode = String(code || "").trim().toUpperCase();
+
+    if (!normalizedCode) return 0;
+    if (!PROMO || !PROMO.codes || !PROMO.codes.includes(normalizedCode)) return 0;
+    if (!isPromoActive(normalizedCode)) return 0;
+
+    const { eligibleSum, hasNonExcluded, promoDetailsItem } = getEligiblePromoSum(cart, normalizedCode);
+
     if (!hasNonExcluded) return 0;
 
-    return Math.min(PROMO.discount, eligibleSum);
+    if (promoDetailsItem) {
+        const minOrderAmount = Number(promoDetailsItem.minOrderAmount || 0);
+        if (eligibleSum < minOrderAmount) return 0;
+
+        const promoType = String(promoDetailsItem.type || "fixed").toLowerCase();
+
+        if (promoType === "percent") {
+            const percentValue = Number(promoDetailsItem.value || 0);
+            if (percentValue <= 0) return 0;
+
+            const discount = Math.round(eligibleSum * (percentValue / 100));
+            return Math.min(discount, eligibleSum);
+        }
+
+        const fixedValue = Number(promoDetailsItem.value || 0);
+        if (fixedValue <= 0) return 0;
+
+        return Math.min(fixedValue, eligibleSum);
+    }
+
+    return Math.min(Number(PROMO.discount || 0), eligibleSum);
 }
 /* ===================== КОШИК ===================== */
 

@@ -1,14 +1,14 @@
 // ===================== PROMO CONFIG =====================
 
 window.PROMO_CONFIG = {
-    active: true,                  // головний перемикач
-    discount: 150,                 // знижка в грн
+    active: true,
+    discount: 150,
 
     // 📅 період дії
     start: "2026-02-28",
     end: "2026-05-31",
 
-    // 🔐 один активний код
+    // 🔐 діючі коди для старої логіки
     codes: [
         "MONALBLOOM"
     ],
@@ -18,12 +18,9 @@ window.PROMO_CONFIG = {
         certificates: true,
         discovery: true,
         tenMini: true
-    }
-};
+    },
 
     // ===================== НОВА ЛОГІКА =====================
-    // Поки просто додаємо структуру.
-    // Вона запрацює після правки cart.js
     promoDetails: [
         {
             code: "MONALBLOOM",
@@ -43,7 +40,7 @@ window.PROMO_CONFIG = {
             type: "fixed",
             value: 200,
             minOrderAmount: 2000,
-            start: "2026-01-01",
+            start: "2099-01-01",
             end: "2099-01-02",
             exclusions: {
                 certificates: true
@@ -65,7 +62,7 @@ window.PROMO_CONFIG = {
             type: "percent",
             value: 10,
             minOrderAmount: 0,
-            start: "2026-01-01",
+            start: "2099-01-01",
             end: "2099-01-02",
             exclusions: {
                 certificates: true

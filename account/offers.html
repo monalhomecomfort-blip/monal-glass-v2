@@ -317,6 +317,7 @@ function normalizeOffer(rawOffer) {
         offer_type: rawOffer.offer_type || "",
         promo_code: rawOffer.promo_code || "",
         discount_percent: rawOffer.discount_percent || null,
+        discount_amount: rawOffer.discount_amount || null,
         min_order_amount: rawOffer.min_order_amount || null,
         required_category_slug: rawOffer.required_category_slug || null,
         required_discount_level: rawOffer.required_discount_level || null,
@@ -387,6 +388,7 @@ function renderOffers(offers) {
                 <p>${escapeHtml(offer.offer_text)}</p>
                 ${offer.promo_code ? `<p><strong>Промокод:</strong> ${escapeHtml(offer.promo_code)}</p>` : ""}
                 ${offer.discount_percent ? `<p><strong>Знижка:</strong> ${escapeHtml(offer.discount_percent)}%</p>` : ""}
+                ${offer.discount_amount ? `<p><strong>Знижка:</strong> ${escapeHtml(offer.discount_amount)} грн</p>` : ""}
                 ${periodText ? `<p><strong>Період дії:</strong> ${escapeHtml(periodText)}</p>` : ""}
                 <button
                     type="button"

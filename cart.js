@@ -958,8 +958,13 @@ document.addEventListener("DOMContentLoaded", () => {
         const minOrderAmount = Number(promoDetailsItem?.minOrderAmount || 0);
 
         if (minOrderAmount > 0 && eligibleSum < minOrderAmount) {
+            PROMO_CODE = "";
+            localStorage.removeItem("promo_code");
+
             promoMessage.textContent =
                 `Для цього промокоду потрібна сума від ${minOrderAmount} грн без врахування сертифікатів`;
+
+            renderCart();
             return;
         }
 

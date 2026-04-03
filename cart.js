@@ -959,7 +959,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (minOrderAmount > 0 && eligibleSum < minOrderAmount) {
             promoMessage.textContent =
-                `Для цього промокоду потрібна сума від ${minOrderAmount} грн`;
+                `Для цього промокоду потрібна сума від ${minOrderAmount} грн без врахування сертифікатів`;
             return;
         }
 

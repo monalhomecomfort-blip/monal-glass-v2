@@ -43,7 +43,7 @@ window.PROMO_CONFIG = {
             type: "fixed",
             value: 200,
             minOrderAmount: 2000,
-            start: "2099-01-01",
+            start: "2026-01-01",
             end: "2099-01-02",
             exclusions: {
                 certificates: true
@@ -65,7 +65,7 @@ window.PROMO_CONFIG = {
             type: "percent",
             value: 10,
             minOrderAmount: 0,
-            start: "2099-01-01",
+            start: "2026-01-01",
             end: "2099-01-02",
             exclusions: {
                 certificates: true

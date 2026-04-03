@@ -154,3 +154,37 @@ async function compressAvatarImage(file, maxSizeKB = 300) {
     }
     return output;
 }
+
+function setActiveSidebarLink() {
+    const sidebarLinks = document.querySelectorAll("#user-sidebar .sidebar-link");
+    if (!sidebarLinks.length) return;
+
+    const currentPath = window.location.pathname.replace(/\/+$/, "");
+
+    sidebarLinks.forEach(link => {
+        link.classList.remove("is-active");
+
+        const linkUrl = new URL(link.href, window.location.origin);
+        const linkPath = linkUrl.pathname.replace(/\/+$/, "");
+
+        if (linkPath === currentPath) {
+            link.classList.add("is-active");
+        }
+    });
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    const sidebarContainer = document.getElementById("sidebar-container");
+    if (!sidebarContainer) return;
+
+    const observer = new MutationObserver(function () {
+        if (sidebarContainer.querySelector(".sidebar-link")) {
+            setActiveSidebarLink();
+        }
+    });
+
+    observer.observe(sidebarContainer, {
+        childList: true,
+        subtree: true
+    });
+});

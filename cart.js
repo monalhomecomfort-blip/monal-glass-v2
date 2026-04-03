@@ -909,7 +909,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (!promoInput || !promoBtn || !promoMessage) return;
 
-    // якщо вже був застосований код — підставляємо
     if (PROMO_CODE) {
         promoInput.value = PROMO_CODE;
     }
@@ -922,25 +921,32 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        if (!isPromoActive()) {
-            promoMessage.textContent = "Промокод наразі не активний";
-            return;
-        }
-
-        if (!PROMO || !PROMO.codes.includes(entered)) {
+        if (!PROMO || !Array.isArray(PROMO.codes) || !PROMO.codes.includes(entered)) {
             promoMessage.textContent = "Невірний промокод";
             return;
         }
 
-        const cart = JSON.parse(localStorage.getItem("cart")) || [];
+        if (!isPromoActive(entered)) {
+            promoMessage.textContent = "Промокод наразі не активний";
+            return;
+        }
 
-        // перевіряємо чи є хоча б один товар,
-        // на який поширюється знижка
+        const cart = JSON.parse(localStorage.getItem("cart")) || [];
+        const promoDetailsItem = typeof getPromoByCode === "function"
+            ? getPromoByCode(entered)
+            : null;
+
         let hasEligible = false;
+        let eligibleSum = 0;
 
         cart.forEach(item => {
-            if (!isExcludedItem(item)) {
+            const excluded = typeof isExcludedItem === "function"
+                ? isExcludedItem(item, promoDetailsItem?.exclusions || null)
+                : false;
+
+            if (!excluded) {
                 hasEligible = true;
+                eligibleSum += Number(item.price) || 0;
             }
         });
 
@@ -949,7 +955,14 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        // якщо є хоча б один підходящий товар — застосовуємо
+        const minOrderAmount = Number(promoDetailsItem?.minOrderAmount || 0);
+
+        if (minOrderAmount > 0 && eligibleSum < minOrderAmount) {
+            promoMessage.textContent =
+                `Для цього промокоду потрібна сума від ${minOrderAmount} грн`;
+            return;
+        }
+
         PROMO_CODE = entered;
         localStorage.setItem("promo_code", PROMO_CODE);
 

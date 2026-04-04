@@ -14,20 +14,73 @@ function getSelectedOffer() {
 }
 function getOrderNoteFromSelectedOffer() {
     const offer = getSelectedOffer();
+
     if (!offer || offer.offer_type === "promo") {
         return "";
     }
-    let note = offer.title || "Персональна пропозиція";
+
+    const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+
+    const eligibleSum = cart
+        .filter(item => {
+            const name = String(item?.name || "").toLowerCase();
+            const label = String(item?.label || "").toLowerCase();
+            return !name.includes("сертиф") && !label.includes("сертиф");
+        })
+        .reduce((sum, item) => sum + (Number(item.price) || 0), 0);
+
+    const minOrderAmount = Number(offer.min_order_amount || 0);
+
+    if (minOrderAmount > 0 && eligibleSum < minOrderAmount) {
+        return "";
+    }
+
+    if (offer.required_category_slug) {
+        const hasCategoryMatch = cart.some(item => {
+            const name = String(item?.name || "").toLowerCase();
+            const label = String(item?.label || "").toLowerCase();
+
+            if (offer.required_category_slug === "aromadiffusers") {
+                return name.includes("аромадифузор");
+            }
+
+            if (offer.required_category_slug === "refills") {
+                return name.includes("рефіл");
+            }
+
+            if (offer.required_category_slug === "parfums") {
+                return name.includes("парфум");
+            }
+
+            if (offer.required_category_slug === "discovery") {
+                return name.includes("discovery");
+            }
+
+            if (offer.required_category_slug === "gift-sets") {
+                return name.includes("подарунковий набір");
+            }
+
+            if (offer.required_category_slug === "certificates") {
+                return name.includes("сертиф") || label.includes("сертиф");
+            }
+
+            return true;
+        });
+
+        if (!hasCategoryMatch) {
+            return "";
+        }
+    }
+
     if (offer.offer_type === "delivery") {
-        note = "Безкоштовна доставка";
+        return "Безкоштовна доставка";
     }
+
     if (offer.offer_type === "gift") {
-        note = "Подарунок до замовлення";
+        return offer.title || "Подарунок до замовлення";
     }
-    if (offer.offer_text) {
-        note += ` — ${offer.offer_text}`;
-    }
-    return note;
+
+    return offer.title || "Персональна пропозиція";
 }
 
 // ===================== PROMO ENGINE =====================

@@ -39,29 +39,30 @@ function getOrderNoteFromSelectedOffer() {
         const hasCategoryMatch = cart.some(item => {
             const name = String(item?.name || "").toLowerCase();
             const label = String(item?.label || "").toLowerCase();
+            const fullText = `${label} ${name}`.toLowerCase();
 
             if (offer.required_category_slug === "aromadiffusers") {
-                return name.includes("аромадифузор");
+                return fullText.includes("аромадифузор");
             }
 
             if (offer.required_category_slug === "refills") {
-                return name.includes("рефіл");
+                return fullText.includes("рефіл");
             }
 
             if (offer.required_category_slug === "parfums") {
-                return name.includes("парфум");
+                return fullText.includes("парфум");
             }
 
             if (offer.required_category_slug === "discovery") {
-                return name.includes("discovery");
+                return fullText.includes("discovery") || fullText.includes("діскавер");
             }
 
             if (offer.required_category_slug === "gift-sets") {
-                return name.includes("подарунковий набір");
+                return fullText.includes("подарунковий набір");
             }
 
             if (offer.required_category_slug === "certificates") {
-                return name.includes("сертиф") || label.includes("сертиф");
+                return fullText.includes("сертиф");
             }
 
             return true;

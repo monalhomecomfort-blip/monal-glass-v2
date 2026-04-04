@@ -251,6 +251,8 @@ function renderCart() {
         ? CERT_APPLIED_AMOUNT
         : 0;
 
+    const orderNote = getOrderNoteFromSelectedOffer();
+
     const finalTotal = Math.max(0, afterPromo - certificateAmount);
 
     /* ===================== ВИВІД ===================== */
@@ -263,6 +265,8 @@ function renderCart() {
 
     if (promoDiscount > 0) {
         html += `Промокод: −${promoDiscount} грн<br>`;
+    } else if (orderNote) {
+        html += `Персональна пропозиція: ${orderNote}<br>`;
     }
 
     if (certificateAmount > 0) {
@@ -758,6 +762,20 @@ function openPaymentModal(orderId, payNow) {
 
     document.getElementById("check-np").textContent =
         npManual ? npManual : npSelect;
+    
+    const orderNote = getOrderNoteFromSelectedOffer();
+    const orderNoteRow = document.getElementById("check-order-note-row");
+    const orderNoteEl = document.getElementById("check-order-note");
+
+    if (orderNoteRow && orderNoteEl) {
+        if (orderNote) {
+            orderNoteEl.textContent = orderNote;
+            orderNoteRow.style.display = "block";
+        } else {
+            orderNoteEl.textContent = "";
+            orderNoteRow.style.display = "none";
+        }
+    }
 
     // тип оплати
     const payChecked = document.querySelector("input[name='pay']:checked");

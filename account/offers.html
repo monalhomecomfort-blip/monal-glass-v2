@@ -354,6 +354,50 @@ function saveSelectedOffer(offer) {
 function clearSelectedOffer() {
     localStorage.removeItem("monal_selected_offer");
 }
+function getCachedOffers() {
+    try {
+        const cached = JSON.parse(localStorage.getItem("monal_cached_offers")) || [];
+        return Array.isArray(cached) ? cached : [];
+    } catch (e) {
+        return [];
+    }
+}
+
+function saveCachedOffers(offers) {
+    localStorage.setItem("monal_cached_offers", JSON.stringify(offers));
+}
+
+function wait(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function fetchOffersWithRetry() {
+    const delays = [0, 1200, 2500];
+
+    for (let i = 0; i < delays.length; i++) {
+        if (delays[i] > 0) {
+            await wait(delays[i]);
+        }
+
+        try {
+            const res = await fetch(
+                "https://monal-mono-pay-production.up.railway.app/api/personal-offers",
+                { cache: "no-store" }
+            );
+
+            const data = await res.json();
+
+            if (data.ok && Array.isArray(data.offers)) {
+                return data.offers;
+            }
+        } catch (err) {
+            console.error("LOAD PERSONAL OFFERS ERROR:", err);
+        }
+    }
+
+    throw new Error("offers fetch failed");
+}
+    
 function updateOfferButtons() {
     const selectedOffer = getSelectedOffer();
     const buttons = document.querySelectorAll(".offer-use-btn");
@@ -440,29 +484,40 @@ document.addEventListener("click", function (e) {
 async function loadPersonalOffers() {
     const offersList = document.getElementById("offers-list");
     if (!offersList) return;
-    try {
-        const res = await fetch(
-            "https://monal-mono-pay-production.up.railway.app/api/personal-offers"
-        );
-        const data = await res.json();
-        if (!data.ok || !Array.isArray(data.offers)) {
-            offersList.innerHTML = `
-                <div class="review-card">
-                    <p><strong>Не вдалося завантажити персональні пропозиції.</strong></p>
-                </div>
-            `;
-            return;
-        }
-        renderOffers(data.offers);
-    } catch (err) {
-        console.error("LOAD PERSONAL OFFERS ERROR:", err);
+
+    const cachedOffers = getCachedOffers();
+
+    if (cachedOffers.length) {
+        renderOffers(cachedOffers);
+    } else {
         offersList.innerHTML = `
             <div class="review-card">
-                <p><strong>Помилка завантаження персональних пропозицій.</strong></p>
+                <p><strong>Завантаження персональних пропозицій…</strong></p>
             </div>
         `;
     }
+
+    try {
+        const freshOffers = await fetchOffersWithRetry();
+        saveCachedOffers(freshOffers);
+        renderOffers(freshOffers);
+    } catch (err) {
+        console.error("FINAL LOAD PERSONAL OFFERS ERROR:", err);
+
+        if (!cachedOffers.length) {
+            offersList.innerHTML = `
+                <div class="review-card">
+                    <p><strong>Не вдалося завантажити персональні пропозиції.</strong></p>
+                    <button type="button" class="buy-btn" onclick="loadPersonalOffers()" style="margin-top:12px;">
+                        Спробувати ще раз
+                    </button>
+                </div>
+            `;
+        }
+    }
 }
+
+window.loadPersonalOffers = loadPersonalOffers;
 loadPersonalOffers();
 </script>
     

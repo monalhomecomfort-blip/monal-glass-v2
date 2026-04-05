@@ -306,6 +306,124 @@ navCatalog.classList.remove('open');
 })();
 </script>
 
+<script>
+function formatCertificateDate(value) {
+    if (!value) return "—";
+
+    const date = new Date(value);
+    if (isNaN(date.getTime())) return "—";
+
+    return String(date.getDate()).padStart(2, "0") + "." +
+           String(date.getMonth() + 1).padStart(2, "0") + "." +
+           date.getFullYear();
+}
+
+function formatCertificateAmount(value) {
+    const amount = Number(value || 0);
+    return amount.toLocaleString("uk-UA");
+}
+
+function renderCertificatesList(containerId, certificates, emptyText, type) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    if (!certificates || !certificates.length) {
+        container.innerHTML = `
+            <div class="review-card">
+                <p><strong>${emptyText}</strong></p>
+            </div>
+        `;
+        return;
+    }
+
+    container.innerHTML = certificates.map(cert => {
+        const createdAt = formatCertificateDate(cert.created_at);
+        const expiresAt = formatCertificateDate(cert.expires_at);
+        const usedAt = formatCertificateDate(cert.used_at);
+        const certType = cert.certificate_type || "—";
+
+        return `
+            <div class="review-card">
+                <p><strong>Код:</strong> ${cert.certificate_code || "—"}</p>
+                <p><strong>Номінал:</strong> ${formatCertificateAmount(cert.nominal)} грн</p>
+                <p><strong>Тип:</strong> ${certType}</p>
+                <p><strong>Дата створення:</strong> ${createdAt}</p>
+                ${
+                    type === "active"
+                        ? `<p><strong>Діє до:</strong> ${expiresAt}</p>`
+                        : `<p><strong>Використано:</strong> ${usedAt}</p>`
+                }
+            </div>
+        `;
+    }).join("");
+}
+
+async function loadUserCertificates() {
+    const activeContainer = document.getElementById("certificates-list");
+    const usedContainer = document.getElementById("promocodes-list");
+
+    if (!activeContainer || !usedContainer) return;
+
+    const storedUser = JSON.parse(localStorage.getItem("monal_user") || "null");
+
+    if (!storedUser || !storedUser.id) {
+        activeContainer.innerHTML = `
+            <div class="review-card">
+                <p><strong>Спочатку увійдіть у акаунт.</strong></p>
+            </div>
+        `;
+        usedContainer.innerHTML = `
+            <div class="review-card">
+                <p><strong>Спочатку увійдіть у акаунт.</strong></p>
+            </div>
+        `;
+        return;
+    }
+
+    try {
+        const res = await fetch(
+            "https://monal-mono-pay-production.up.railway.app/api/certificates/" + storedUser.id
+        );
+
+        const data = await res.json();
+
+        if (!data.ok) {
+            throw new Error("Не вдалося завантажити сертифікати");
+        }
+
+        renderCertificatesList(
+            "certificates-list",
+            data.activeCertificates || [],
+            "У вас поки немає активних сертифікатів.",
+            "active"
+        );
+
+        renderCertificatesList(
+            "promocodes-list",
+            data.usedCertificates || [],
+            "У вас поки немає використаних сертифікатів.",
+            "used"
+        );
+    } catch (err) {
+        console.error("LOAD USER CERTIFICATES ERROR:", err);
+
+        activeContainer.innerHTML = `
+            <div class="review-card">
+                <p><strong>Не вдалося завантажити активні сертифікати.</strong></p>
+            </div>
+        `;
+
+        usedContainer.innerHTML = `
+            <div class="review-card">
+                <p><strong>Не вдалося завантажити використані сертифікати.</strong></p>
+            </div>
+        `;
+    }
+}
+
+loadUserCertificates();
+</script>
+    
 <script src="../components/sidebar.js"></script>
 
 <script>

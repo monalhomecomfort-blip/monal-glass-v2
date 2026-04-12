@@ -58,11 +58,11 @@ if (!user) {
     document.getElementById("acc-total").textContent = user.total_spent;
     const spent = Number(user.total_spent);
     const levels = [
-        { limit: 0, discount: 3 },
-        { limit: 5000, discount: 5 },
-        { limit: 8000, discount: 7 },
-        { limit: 10000, discount: 10 },
-        { limit: 15000, discount: 15 }
+        { limit: 0, discount: 0 },
+        { limit: 3000, discount: 3 },
+        { limit: 6000, discount: 5 },
+        { limit: 9000, discount: 7 },
+        { limit: 12000, discount: 10 }
     ];
     let nextLevel = null;
     for (let i = 0; i < levels.length; i++) {

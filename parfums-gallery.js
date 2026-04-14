@@ -13,7 +13,12 @@ const isGifts = document.body.classList.contains('page-gifts');
 const isAromadiffusers = document.body.classList.contains('page-aromadiffusers');
 
 /* ===================== PARFUMS ===================== */
-const parfumsGalleries = {   
+const parfumsGalleries = {
+    "fairytale": [   
+    "images/gifts/gift_parfum_2.png",
+    "images/gifts/gift_parfum_3.png"   
+  ],
+   
   "golden-rum": [
     "images/perfumes/golden_rum.png",
     "images/perfumes/golden_rum_2.png",

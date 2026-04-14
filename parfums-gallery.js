@@ -227,10 +227,10 @@ const giftsGalleries = {
   ],
 
   "ten-mini": [
-    "images/gifts/discovery_5.png",
-    "images/gifts/discovery_4.png",
-    "images/gifts/discovery_11.png",
-    "images/gifts/discovery_14.png"
+    "images/gifts/ten mini_1 (1).png",
+    "images/gifts/ten mini_3 (1).png",
+    "images/gifts/ten mini_4 (1).png",
+    "images/gifts/ten mini_5 (1).png"
   ]
 };
 

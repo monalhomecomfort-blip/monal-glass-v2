@@ -162,7 +162,7 @@ function refreshUserData() {
 /* ===================== ПЕРЕЗАВАНТАЖЕННЯ ДАНИХ ПРИ ВІДКРИТТІ ===================== */
 document.addEventListener("DOMContentLoaded", () => {
     refreshUserData();
-    setInterval(refreshUserData, 60000);
+    setInterval(refreshUserData, 900000);
 });
 // оновлення коли користувач повернувся у вкладку
 document.addEventListener("visibilitychange", () => {

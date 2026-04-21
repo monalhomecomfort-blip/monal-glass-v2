@@ -342,20 +342,32 @@ function getOfferPeriodText(offer) {
 }    
 function getSelectedOffer() {
     try {
-        return JSON.parse(localStorage.getItem("monal_selected_offer")) || null;
+        const user = JSON.parse(localStorage.getItem("monal_user") || "null");
+        if (!user || !user.id) return null;
+        return JSON.parse(localStorage.getItem("monal_selected_offer_" + user.id)) || null;
     } catch (e) {
         return null;
     }
 }
 function saveSelectedOffer(offer) {
-    localStorage.setItem("monal_selected_offer", JSON.stringify(offer));
+    try {
+        const user = JSON.parse(localStorage.getItem("monal_user") || "null");
+        if (!user || !user.id) return;
+        localStorage.setItem("monal_selected_offer_" + user.id, JSON.stringify(offer));
+    } catch (e) {}
 }
 function clearSelectedOffer() {
-    localStorage.removeItem("monal_selected_offer");
+    try {
+        const user = JSON.parse(localStorage.getItem("monal_user") || "null");
+        if (!user || !user.id) return;
+        localStorage.removeItem("monal_selected_offer_" + user.id);
+    } catch (e) {}
 }
 function getCachedOffers() {
     try {
-        const cached = JSON.parse(localStorage.getItem("monal_cached_offers")) || [];
+        const user = JSON.parse(localStorage.getItem("monal_user") || "null");
+        if (!user || !user.id) return [];
+        const cached = JSON.parse(localStorage.getItem("monal_cached_offers_" + user.id)) || [];
         return Array.isArray(cached) ? cached : [];
     } catch (e) {
         return [];
@@ -363,7 +375,11 @@ function getCachedOffers() {
 }
 
 function saveCachedOffers(offers) {
-    localStorage.setItem("monal_cached_offers", JSON.stringify(offers));
+    try {
+        const user = JSON.parse(localStorage.getItem("monal_user") || "null");
+        if (!user || !user.id) return;
+        localStorage.setItem("monal_cached_offers_" + user.id, JSON.stringify(offers));
+    } catch (e) {}
 }
 
 function wait(ms) {

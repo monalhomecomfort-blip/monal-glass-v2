@@ -89,7 +89,7 @@ if (!user) {
         if (nextLevelEl) {
         nextLevelEl.textContent = remain;
         }
-        text.textContent = "До " + nextLevel.discount + "% залишилось: " + remain + " грн";
+        text.textContent = "До " + nextLevel.discount + "% залишилось: " + remain;
     }
 }
 

@@ -371,7 +371,12 @@ function wait(ms) {
 }
 
 async function fetchOffersWithRetry() {
+    const user = JSON.parse(localStorage.getItem("monal_user") || "null");
     const delays = [0, 1200, 2500];
+
+    if (!user || !user.id) {
+        throw new Error("user not found");
+    }
 
     for (let i = 0; i < delays.length; i++) {
         if (delays[i] > 0) {
@@ -380,7 +385,7 @@ async function fetchOffersWithRetry() {
 
         try {
             const res = await fetch(
-                "https://monal-mono-pay-production.up.railway.app/api/personal-offers",
+                "https://monal-mono-pay-production.up.railway.app/api/personal-offers?userId=" + encodeURIComponent(user.id),
                 { cache: "no-store" }
             );
 

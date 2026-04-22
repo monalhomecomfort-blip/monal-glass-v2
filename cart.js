@@ -7,7 +7,9 @@ let CERT_CODE_USED = null;
 
 function getSelectedOffer() {
     try {
-        return JSON.parse(localStorage.getItem("monal_selected_offer")) || null;
+        const user = JSON.parse(localStorage.getItem("monal_user") || "null");
+        if (!user || !user.id) return null;
+        return JSON.parse(localStorage.getItem("monal_selected_offer_" + user.id)) || null;
     } catch (e) {
         return null;
     }
@@ -343,7 +345,10 @@ function removeFromCart(index) {
 function clearCart() {
     // очищаємо кошик
     localStorage.removeItem("cart");
-    localStorage.removeItem("monal_selected_offer");
+    const user = JSON.parse(localStorage.getItem("monal_user") || "null");
+    if (user && user.id) {
+        localStorage.removeItem("monal_selected_offer_" + user.id);
+    }
     
     // очищаємо промокод
     localStorage.removeItem("promo_code");

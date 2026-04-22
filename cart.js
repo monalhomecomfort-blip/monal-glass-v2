@@ -992,11 +992,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
 document.addEventListener("DOMContentLoaded", () => {
     const params = new URLSearchParams(window.location.search);
-    const status = params.get("status");
+    const status = params.get("status");    
 
     if (status === "success") {
-        localStorage.removeItem("cart");
-        localStorage.removeItem("monal_selected_offer");
+    localStorage.removeItem("cart");
+
+    const user = JSON.parse(localStorage.getItem("monal_user") || "null");
+    if (user && user.id) {
+        localStorage.removeItem("monal_selected_offer_" + user.id);
+    }    
 
         if (typeof updateCartCount === "function") {
             updateCartCount();
@@ -1073,8 +1077,11 @@ document.addEventListener("DOMContentLoaded", () => {
             renderCart();
             return;
         }
-
-        localStorage.removeItem("monal_selected_offer");
+        
+        const user = JSON.parse(localStorage.getItem("monal_user") || "null");
+        if (user && user.id) {
+            localStorage.removeItem("monal_selected_offer_" + user.id);
+        }
         PROMO_CODE = entered;
         localStorage.setItem("promo_code", PROMO_CODE);
 

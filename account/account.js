@@ -55,41 +55,66 @@ if (!user) {
         travelsOftenCheckbox.checked = Number(user.travels_often) === 1;
     }
     document.getElementById("acc-discount").textContent = user.discount;
-    document.getElementById("acc-total").textContent = user.total_spent;
-    const spent = Number(user.total_spent);
-    const levels = [
-        { limit: 0, discount: 0 },
-        { limit: 3000, discount: 3 },
-        { limit: 6000, discount: 5 },
-        { limit: 9000, discount: 7 },
-        { limit: 12000, discount: 10 }
-    ];
-    let nextLevel = null;
-    for (let i = 0; i < levels.length; i++) {
-        if (spent < levels[i].limit) {
-            nextLevel = levels[i];
-            break;
-        }
-    }
-    const bar = document.getElementById("progress-bar");
-    const text = document.getElementById("acc-next-level");
+
+    const totalRow = document.getElementById("acc-total-row");
+    const nextLevelRow = document.getElementById("acc-next-level-row");
+    const progressWrap = document.getElementById("progress-bar-wrap");
+    const totalEl = document.getElementById("acc-total");
     const nextLevelEl = document.getElementById("acc-next-level");
-    if (!nextLevel) {
-        bar.style.width = "100%";
-        if (nextLevelEl) {
-            nextLevelEl.textContent = "0";
+    const bar = document.getElementById("progress-bar");
+
+    const customerStatus = String(user.customer_status || "general").toLowerCase();
+    const isVipStatus =
+        customerStatus === "friends" || customerStatus === "partners";
+
+    if (isVipStatus) {
+        if (totalRow) totalRow.style.display = "none";
+        if (nextLevelRow) nextLevelRow.style.display = "none";
+        if (progressWrap) progressWrap.style.display = "none";
+    } else {
+        if (totalRow) totalRow.style.display = "";
+        if (nextLevelRow) nextLevelRow.style.display = "";
+        if (progressWrap) progressWrap.style.display = "";
+
+        if (totalEl) {
+            totalEl.textContent = user.total_spent;
         }
-        text.textContent = "Максимальний рівень знижки досягнуто";
-    }
-    else {
-        const prevLimit = levels.find(l => l.limit < nextLevel.limit)?.limit || 0;
-        const progress = (spent - prevLimit) / (nextLevel.limit - prevLimit) * 100;
-        bar.style.width = Math.max(0, Math.min(progress, 100)) + "%";
-        const remain = nextLevel.limit - spent;
-        if (nextLevelEl) {
-        nextLevelEl.textContent = remain;
+
+        const spent = Number(user.total_spent);
+        const levels = [
+            { limit: 0, discount: 0 },
+            { limit: 3000, discount: 3 },
+            { limit: 6000, discount: 5 },
+            { limit: 9000, discount: 7 },
+            { limit: 12000, discount: 10 }
+        ];
+
+        let nextLevel = null;
+        for (let i = 0; i < levels.length; i++) {
+            if (spent < levels[i].limit) {
+                nextLevel = levels[i];
+                break;
+            }
         }
-        text.textContent = "До " + nextLevel.discount + "% залишилось: " + remain;
+
+        if (!nextLevel) {
+            if (bar) {
+                bar.style.width = "100%";
+            }
+            if (nextLevelEl) {
+                nextLevelEl.textContent = "Максимальний рівень знижки досягнуто";
+            }
+        } else {
+            const prevLimit = levels.find(l => l.limit < nextLevel.limit)?.limit || 0;
+            const progress = (spent - prevLimit) / (nextLevel.limit - prevLimit) * 100;
+            if (bar) {
+                bar.style.width = Math.max(0, Math.min(progress, 100)) + "%";
+            }
+            const remain = nextLevel.limit - spent;
+            if (nextLevelEl) {
+                nextLevelEl.textContent = "До " + nextLevel.discount + "% залишилось: " + remain + " грн";
+            }
+        }
     }
 }
 
@@ -101,14 +126,71 @@ function refreshUserData() {
         .then(data => {
             if (!data || !data.id) return;
             localStorage.setItem("monal_user", JSON.stringify(data));
-            const totalEl = document.getElementById("acc-total");
-            if (totalEl) {
-                totalEl.textContent = data.total_spent;
+    const discountEl = document.getElementById("acc-discount");
+    if (discountEl) {
+        discountEl.textContent = data.discount;
+    }
+
+    const totalRow = document.getElementById("acc-total-row");
+    const nextLevelRow = document.getElementById("acc-next-level-row");
+    const progressWrap = document.getElementById("progress-bar-wrap");
+    const totalEl = document.getElementById("acc-total");
+    const nextLevelEl = document.getElementById("acc-next-level");
+    const bar = document.getElementById("progress-bar");
+
+    const customerStatus = String(data.customer_status || "general").toLowerCase();
+    const isVipStatus =
+        customerStatus === "friends" || customerStatus === "partners";
+
+    if (isVipStatus) {
+        if (totalRow) totalRow.style.display = "none";
+        if (nextLevelRow) nextLevelRow.style.display = "none";
+        if (progressWrap) progressWrap.style.display = "none";
+    } else {
+        if (totalRow) totalRow.style.display = "";
+        if (nextLevelRow) nextLevelRow.style.display = "";
+        if (progressWrap) progressWrap.style.display = "";
+
+        if (totalEl) {
+            totalEl.textContent = data.total_spent;
+        }
+
+        const spent = Number(data.total_spent);
+        const levels = [
+            { limit: 0, discount: 0 },
+            { limit: 3000, discount: 3 },
+            { limit: 6000, discount: 5 },
+            { limit: 9000, discount: 7 },
+            { limit: 12000, discount: 10 }
+        ];
+
+        let nextLevel = null;
+        for (let i = 0; i < levels.length; i++) {
+            if (spent < levels[i].limit) {
+                nextLevel = levels[i];
+                break;
             }
-            const discountEl = document.getElementById("acc-discount");
-            if (discountEl) {
-                discountEl.textContent = data.discount;
+        }
+
+        if (!nextLevel) {
+            if (bar) {
+                bar.style.width = "100%";
             }
+            if (nextLevelEl) {
+                nextLevelEl.textContent = "Максимальний рівень знижки досягнуто";
+            }
+        } else {
+            const prevLimit = levels.find(l => l.limit < nextLevel.limit)?.limit || 0;
+            const progress = (spent - prevLimit) / (nextLevel.limit - prevLimit) * 100;
+            if (bar) {
+                bar.style.width = Math.max(0, Math.min(progress, 100)) + "%";
+            }
+            const remain = nextLevel.limit - spent;
+            if (nextLevelEl) {
+                nextLevelEl.textContent = "До " + nextLevel.discount + "% залишилось: " + remain + " грн";
+            }
+        }
+    }
             const navAccount = document.getElementById("nav-account");
             if (navAccount && data.name) {
                 navAccount.textContent = data.name;

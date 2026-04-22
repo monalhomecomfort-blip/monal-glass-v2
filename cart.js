@@ -973,37 +973,47 @@ function sendOrderToTelegram(ctx) {
 
 /* ===================== INIT ===================== */
 
-document.addEventListener("DOMContentLoaded", async () => {
+async function validateSelectedOfferInCart() {
+    const cartList = document.getElementById("cart-list");
+    if (!cartList) return;
+
     const user = JSON.parse(localStorage.getItem("monal_user") || "null");
     const selectedOffer = getSelectedOffer();
 
-    if (user && user.id && selectedOffer && selectedOffer.id) {
-        try {
-            const res = await fetch(
-                "https://monal-mono-pay-production.up.railway.app/api/personal-offers?userId=" + encodeURIComponent(user.id),
-                { cache: "no-store" }
+    if (!(user && user.id && selectedOffer && selectedOffer.id)) return;
+
+    try {
+        const res = await fetch(
+            "https://monal-mono-pay-production.up.railway.app/api/personal-offers?userId=" + encodeURIComponent(user.id),
+            { cache: "no-store" }
+        );
+
+        const data = await res.json();
+
+        if (data.ok && Array.isArray(data.offers)) {
+            const stillActive = data.offers.some(
+                offer => Number(offer.id) === Number(selectedOffer.id)
             );
 
-            const data = await res.json();
+            if (!stillActive) {
+                localStorage.removeItem("monal_selected_offer_" + user.id);
 
-            if (data.ok && Array.isArray(data.offers)) {
-                const stillActive = data.offers.some(
-                    offer => Number(offer.id) === Number(selectedOffer.id)
-                );
-
-                if (!stillActive) {
-                    localStorage.removeItem("monal_selected_offer_" + user.id);
-
-                    if (selectedOffer.offer_type === "promo" || selectedOffer.promo_code) {
-                        PROMO_CODE = "";
-                        localStorage.removeItem("promo_code");
-                    }
+                if (selectedOffer.offer_type === "promo" || selectedOffer.promo_code) {
+                    PROMO_CODE = "";
+                    localStorage.removeItem("promo_code");
                 }
+
+                updateCartCount();
+                renderCart();
             }
-        } catch (err) {
-            console.error("VALIDATE SELECTED OFFER ERROR:", err);
         }
+    } catch (err) {
+        console.error("VALIDATE SELECTED OFFER ERROR:", err);
     }
+}
+
+document.addEventListener("DOMContentLoaded", async () => {
+    await validateSelectedOfferInCart();
 
     updateCartCount();
     renderCart();
@@ -1015,6 +1025,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     const phoneInput = document.getElementById("inp-phone");
     if (phoneInput && typeof formatPhone === "function") {
         phoneInput.addEventListener("input", formatPhone);
+    }
+
+    if (document.getElementById("cart-list")) {
+        setInterval(() => {
+            if (document.visibilityState === "visible") {
+                validateSelectedOfferInCart();
+            }
+        }, 10000);
     }
 });
 

@@ -973,7 +973,38 @@ function sendOrderToTelegram(ctx) {
 
 /* ===================== INIT ===================== */
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
+    const user = JSON.parse(localStorage.getItem("monal_user") || "null");
+    const selectedOffer = getSelectedOffer();
+
+    if (user && user.id && selectedOffer && selectedOffer.id) {
+        try {
+            const res = await fetch(
+                "https://monal-mono-pay-production.up.railway.app/api/personal-offers?userId=" + encodeURIComponent(user.id),
+                { cache: "no-store" }
+            );
+
+            const data = await res.json();
+
+            if (data.ok && Array.isArray(data.offers)) {
+                const stillActive = data.offers.some(
+                    offer => Number(offer.id) === Number(selectedOffer.id)
+                );
+
+                if (!stillActive) {
+                    localStorage.removeItem("monal_selected_offer_" + user.id);
+
+                    if (selectedOffer.offer_type === "promo" || selectedOffer.promo_code) {
+                        PROMO_CODE = "";
+                        localStorage.removeItem("promo_code");
+                    }
+                }
+            }
+        } catch (err) {
+            console.error("VALIDATE SELECTED OFFER ERROR:", err);
+        }
+    }
+
     updateCartCount();
     renderCart();
 
@@ -986,7 +1017,6 @@ document.addEventListener("DOMContentLoaded", () => {
         phoneInput.addEventListener("input", formatPhone);
     }
 });
-
 
 /* ===== CLEAR CART AFTER MONO PAYMENT ===== */
 

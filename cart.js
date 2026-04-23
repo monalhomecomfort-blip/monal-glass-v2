@@ -377,8 +377,30 @@ function clearCart() {
     updateCartCount();
 }
 
+function syncCertificatePaymentRules() {
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    const hasCertificate = cart.some(i => i.label === "Сертифікат");
+
+    const onlineRadio = document.querySelector('input[name="pay"][value="Картка онлайн"]');
+    const prepayRadio = document.querySelector('input[name="pay"][value="Передплата 150 грн"]');
+
+    if (!onlineRadio || !prepayRadio) return;
+
+    if (hasCertificate) {
+        prepayRadio.checked = false;
+        prepayRadio.disabled = true;
+
+        if (!onlineRadio.checked) {
+            onlineRadio.checked = true;
+        }
+    } else {
+        prepayRadio.disabled = false;
+    }
+}
+
 function showCheckout() {
     document.getElementById("checkout").style.display = "block";
+    syncCertificatePaymentRules();
     window.scrollTo(0, document.body.scrollHeight);
 }
 
@@ -623,6 +645,8 @@ function submitOrder() {
 
     if (!cart.length) return;
 
+    syncCertificatePaymentRules();
+
     const last  = document.getElementById("inp-last")?.value.trim() || "";
     const first = document.getElementById("inp-first")?.value.trim() || "";
     const phone = document.getElementById("inp-phone")?.value.trim() || "";
@@ -701,17 +725,7 @@ function submitOrder() {
 
     const pay = document.querySelector("input[name='pay']:checked");
 
-    if (hasCertificate) {
-        const prepayRadio = document.querySelector(
-            "input[name='pay'][value='Передплата 150 грн']"
-        );
-
-        if (prepayRadio) {
-            prepayRadio.checked = false;
-            prepayRadio.disabled = true;
-        }
-    }
-
+    
     if (!last || !first || !phone || !city || !np || (remainingToPay > 0 && !pay)) {
         alert("Заповніть всі поля");
         return;

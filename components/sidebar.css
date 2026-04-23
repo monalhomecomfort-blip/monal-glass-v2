@@ -248,38 +248,24 @@
     height: auto;
     padding: 0;
 
-    background: linear-gradient(
-        180deg,
-        #fff8cf 0%,
-        #f8df7a 18%,
-        #e0b94a 42%,
-        #c9961f 62%,
-        #f3dc86 82%,
-        #fff5bf 100%
-    );
+    background: transparent;
     border: none;
     box-shadow: none;
     border-radius: 0;
 
-    top: 4px;
-    right: 4px;
+    top: -6px;
+    right: -6px;
 
-    font-size: 38px;
-    font-weight: 900;
-    line-height: 1;
-    letter-spacing: 0;
-
+    line-height: 0;
     color: transparent;
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
+    filter: none;
+}
 
-    text-shadow: none;
-    filter:
-        drop-shadow(0 1px 0 rgba(255, 248, 193, 0.95))
-        drop-shadow(0 2px 0 rgba(201, 150, 31, 0.95))
-        drop-shadow(0 4px 6px rgba(0, 0, 0, 0.28))
-        drop-shadow(0 0 8px rgba(255, 220, 120, 0.35));
+.sidebar-status-badge.is-friends svg {
+    display: block;
+    width: 58px;
+    height: 58px;
+    overflow: visible;
 }
 .sidebar-status-badge.is-partners {
     min-width: 52px;

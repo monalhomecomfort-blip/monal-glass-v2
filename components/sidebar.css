@@ -268,8 +268,27 @@
     overflow: visible;
 }
 .sidebar-status-badge.is-partners {
-    min-width: 52px;
-    font-size: 12px;
+    min-width: auto;
+    height: 38px;
+    padding: 0 14px;
+
+    top: 2px;
+    right: 2px;
+
+    border-radius: 999px;
+    background: linear-gradient(180deg, #f6ebcf 0%, #ead7a8 100%);
+    color: #1b160e;
+    border: 1px solid rgba(90, 68, 26, 0.18);
+
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    line-height: 1;
+
+    box-shadow:
+        0 8px 18px rgba(0, 0, 0, 0.20),
+        inset 0 1px 0 rgba(255, 255, 255, 0.42),
+        inset 0 -1px 0 rgba(120, 92, 36, 0.10);
 }
 .sidebar-avatar-edit {
     font-size: 13px;

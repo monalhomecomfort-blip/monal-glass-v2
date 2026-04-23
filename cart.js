@@ -409,6 +409,27 @@ function clearCart() {
     updateCartCount();
 }
 
+async function refreshStoredUserAfterOrder() {
+    const user = JSON.parse(localStorage.getItem("monal_user") || "null");
+
+    if (!user || !user.id) return;
+
+    try {
+        const res = await fetch(
+            "https://monal-mono-pay-production.up.railway.app/api/user/" + user.id,
+            { cache: "no-store" }
+        );
+
+        const data = await res.json();
+
+        if (!data || !data.id) return;
+
+        localStorage.setItem("monal_user", JSON.stringify(data));
+    } catch (err) {
+        console.error("REFRESH USER AFTER ORDER ERROR:", err);
+    }
+}
+
 function syncCertificatePaymentRules() {
     const cart = JSON.parse(localStorage.getItem("cart")) || [];
     const hasCertificate = cart.some(i => i.label === "Сертифікат");
@@ -981,7 +1002,8 @@ fetch("https://monal-mono-pay-production.up.railway.app/register-order", {
     .then(res2 => {
       if (!res2.ok) throw new Error("send-free-order failed");
     })
-    .then(() => {
+    .then(async () => {
+      await refreshStoredUserAfterOrder();  
       clearCart();
       closePaymentModal();
 
@@ -1115,17 +1137,19 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 /* ===== CLEAR CART AFTER MONO PAYMENT ===== */
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
     const params = new URLSearchParams(window.location.search);
     const status = params.get("status");    
 
     if (status === "success") {
-    localStorage.removeItem("cart");
+        await refreshStoredUserAfterOrder();
 
-    const user = JSON.parse(localStorage.getItem("monal_user") || "null");
-    if (user && user.id) {
-        localStorage.removeItem("monal_selected_offer_" + user.id);
-    }    
+        localStorage.removeItem("cart");
+
+        const user = JSON.parse(localStorage.getItem("monal_user") || "null");
+        if (user && user.id) {
+            localStorage.removeItem("monal_selected_offer_" + user.id);
+        }    
 
         if (typeof updateCartCount === "function") {
             updateCartCount();

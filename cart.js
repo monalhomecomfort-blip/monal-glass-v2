@@ -255,6 +255,40 @@ function addToCart(name, price, label = "", items = null, extra = null) {
     updateCartCount();
 }
 
+function calcUserCartDiscount(cart, user) {
+    if (!user) return 0;
+
+    const customerStatus = String(user.customer_status || "general").toLowerCase();
+    const welcomeDiscountUsed = Boolean(user.welcome_discount_used);
+
+    const eligibleTotal = cart
+        .filter(item => {
+            const name = String(item?.name || "").toLowerCase();
+            const label = String(item?.label || "").toLowerCase();
+
+            return !name.includes("сертиф") && !label.includes("сертиф");
+        })
+        .reduce((sum, item) => sum + (Number(item.price) || 0), 0);
+
+    if (eligibleTotal <= 0) return 0;
+
+    const canUseWelcomeDiscount =
+        customerStatus === "general" &&
+        !welcomeDiscountUsed;
+
+    if (canUseWelcomeDiscount) {
+        return Math.round(eligibleTotal * 0.10);
+    }
+
+    const personalPercent = Number(user.discount || 0);
+
+    if (personalPercent > 0) {
+        return Math.round(eligibleTotal * (personalPercent / 100));
+    }
+
+    return 0;
+}
+
 function renderCart() {
 
     const cart = JSON.parse(localStorage.getItem("cart")) || [];
@@ -290,18 +324,7 @@ function renderCart() {
 
     /* ===================== ПЕРСОНАЛЬНА ЗНИЖКА ===================== */
 
-    let personalDiscount = 0;
-
-    if (user && user.discount) {
-
-        const eligibleTotal = cart
-            .filter(i => i.label !== "Сертифікат")
-            .reduce((s, i) => s + Number(i.price), 0);
-
-        personalDiscount = Math.round(
-            eligibleTotal * (Number(user.discount) / 100)
-        );
-    }
+    const personalDiscount = calcUserCartDiscount(cart, user);
 
     const afterPersonal = total - personalDiscount;
 
@@ -602,17 +625,7 @@ function recalcAfterCertificate() {
 
     const total = cart.reduce((s, i) => s + Number(i.price), 0);
 
-    let personalDiscount = 0;
-
-    if (user && user.discount) {
-        const eligibleTotal = cart
-            .filter(i => i.label !== "Сертифікат")
-            .reduce((s, i) => s + Number(i.price), 0);
-
-        personalDiscount = Math.round(
-            eligibleTotal * (Number(user.discount) / 100)
-        );
-    }
+    const personalDiscount = calcUserCartDiscount(cart, user);
 
     const promoDiscount =
         typeof calcPromoDiscount === "function"
@@ -705,15 +718,7 @@ function submitOrder() {
 
     const total = cart.reduce((s, i) => s + Number(i.price), 0);
 
-    let personalDiscount = 0;
-
-    if (savedUser && savedUser.discount) {
-        const eligibleSum = cart
-            .filter(i => i.label !== "Сертифікат" && i.name !== "Сертифікат")
-            .reduce((s, i) => s + Number(i.price), 0);
-
-        personalDiscount = Math.round(eligibleSum * (savedUser.discount / 100));
-    }
+    const personalDiscount = calcUserCartDiscount(cart, savedUser);
 
     const promoDiscount = typeof calcPromoDiscount === "function"
         ? calcPromoDiscount(cart)

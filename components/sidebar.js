@@ -4,6 +4,7 @@ function initSidebarUserState() {
     const logoutBlock = document.getElementById("sidebar-logout");
     const userName = document.getElementById("sidebar-user-name");
     const userDiscount = document.getElementById("sidebar-user-discount");
+    const userNextLevel = document.getElementById("sidebar-user-next-level");
     const statusBadge = document.getElementById("sidebar-status-badge");
     if (!userBlock) return;
     if (userData) {
@@ -18,6 +19,36 @@ function initSidebarUserState() {
         if (userDiscount) {
             userDiscount.textContent = "Знижка: " + (user.discount || 0) + "%";
         }
+
+        if (userNextLevel) {
+            const sidebarCustomerStatus = String(user.customer_status || "general").toLowerCase();
+
+            if (sidebarCustomerStatus === "general") {
+                const spent = Number(user.total_spent || 0);
+                const levels = [
+                    { limit: 3000, discount: 3 },
+                    { limit: 6000, discount: 5 },
+                    { limit: 9000, discount: 7 },
+                    { limit: 12000, discount: 10 }
+                ];
+
+                const nextLevel = levels.find(level => spent < level.limit);
+
+                if (nextLevel) {
+                    const remain = nextLevel.limit - spent;
+                    userNextLevel.textContent =
+                        "До " + nextLevel.discount + "% залишилось: " + remain + " грн";
+                } else {
+                    userNextLevel.textContent = "Максимальний рівень знижки досягнуто";
+                }
+
+                userNextLevel.style.display = "block";
+            } else {
+                userNextLevel.textContent = "";
+                userNextLevel.style.display = "none";
+            }
+        }
+        
         const avatarPreview = document.getElementById("sidebar-avatar-preview");
         if (avatarPreview && user.avatar_data) {
             avatarPreview.src = user.avatar_data;

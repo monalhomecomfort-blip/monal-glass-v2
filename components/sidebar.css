@@ -273,8 +273,8 @@
     height: auto;
     padding: 0;
 
-    top: 8px;
-    right: 10px;
+    top: -2px;
+    right: -8px;
 
     background: none;
     border: none;
@@ -283,19 +283,21 @@
 
     display: inline-block;
     line-height: 1;
+    z-index: 3;
 
-    font-size: 28px;
+    font-size: 24px;
     font-weight: 800;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
 
     background-image: linear-gradient(
         180deg,
-        #fff7d6 0%,
-        #f6df9a 22%,
-        #d8aa43 48%,
-        #fff2bf 68%,
-        #b88322 100%
+        #fffbe8 0%,
+        #f8e8b3 18%,
+        #e2bf68 42%,
+        #fff1bf 60%,
+        #c58f2a 82%,
+        #8c5c16 100%
     );
     -webkit-background-clip: text;
     background-clip: text;
@@ -303,10 +305,14 @@
     color: transparent;
 
     text-shadow:
-        0 1px 0 rgba(255,255,255,0.35),
-        0 2px 3px rgba(90, 60, 10, 0.18),
-        0 4px 10px rgba(0,0,0,0.22);
-    filter: drop-shadow(0 2px 6px rgba(0,0,0,0.18));
+        0 1px 0 rgba(255,255,255,0.50),
+        0 2px 0 rgba(233, 205, 122, 0.32),
+        0 4px 10px rgba(86, 58, 12, 0.26),
+        0 0 14px rgba(255, 221, 126, 0.26);
+
+    filter:
+        drop-shadow(0 2px 4px rgba(0,0,0,0.18))
+        drop-shadow(0 0 10px rgba(243, 210, 108, 0.18));
 }
 .sidebar-avatar-edit {
     font-size: 13px;

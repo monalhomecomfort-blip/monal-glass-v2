@@ -30,7 +30,56 @@ function initSidebarUserState() {
             statusBadge.classList.remove("is-friends", "is-partners");
 
             if (customerStatus === "friends") {
-                statusBadge.textContent = "★";
+                statusBadge.innerHTML = `
+                    <svg viewBox="0 0 80 80" width="58" height="58" aria-hidden="true">
+                        <defs>
+                            <radialGradient id="friendStarCore" cx="50%" cy="50%" r="50%">
+                                <stop offset="0%" stop-color="#ffffff"/>
+                                <stop offset="18%" stop-color="#fffdf2"/>
+                                <stop offset="38%" stop-color="#f9e8b2"/>
+                                <stop offset="62%" stop-color="#e8c86e"/>
+                                <stop offset="100%" stop-color="#c9972e" stop-opacity="0"/>
+                            </radialGradient>
+
+                            <radialGradient id="friendStarGlow" cx="50%" cy="50%" r="50%">
+                                <stop offset="0%" stop-color="#fffef8" stop-opacity="0.95"/>
+                                <stop offset="35%" stop-color="#f6df95" stop-opacity="0.75"/>
+                                <stop offset="70%" stop-color="#d5a63d" stop-opacity="0.28"/>
+                                <stop offset="100%" stop-color="#c08b24" stop-opacity="0"/>
+                            </radialGradient>
+
+                            <filter id="friendStarBlur" x="-80%" y="-80%" width="260%" height="260%">
+                                <feGaussianBlur stdDeviation="2.4"/>
+                            </filter>
+
+                            <filter id="friendStarSoft" x="-80%" y="-80%" width="260%" height="260%">
+                                <feGaussianBlur stdDeviation="1.2"/>
+                            </filter>
+                        </defs>
+
+                        <circle cx="40" cy="40" r="22" fill="url(#friendStarGlow)" filter="url(#friendStarBlur)"/>
+
+                        <ellipse cx="40" cy="40" rx="2.1" ry="24" fill="#fff6cf" filter="url(#friendStarSoft)"/>
+                        <ellipse cx="40" cy="40" rx="0.9" ry="28" fill="#fffdf6"/>
+
+                        <ellipse cx="40" cy="40" rx="24" ry="2.1" fill="#fff6cf" filter="url(#friendStarSoft)"/>
+                        <ellipse cx="40" cy="40" rx="28" ry="0.9" fill="#fffdf6"/>
+
+                        <g transform="rotate(45 40 40)">
+                            <ellipse cx="40" cy="40" rx="17" ry="1.5" fill="#f7df9d" filter="url(#friendStarSoft)"/>
+                            <ellipse cx="40" cy="40" rx="20" ry="0.7" fill="#fffdf6"/>
+                        </g>
+
+                        <g transform="rotate(-45 40 40)">
+                            <ellipse cx="40" cy="40" rx="17" ry="1.5" fill="#f7df9d" filter="url(#friendStarSoft)"/>
+                            <ellipse cx="40" cy="40" rx="20" ry="0.7" fill="#fffdf6"/>
+                        </g>
+
+                        <circle cx="40" cy="40" r="6.4" fill="url(#friendStarCore)"/>
+                        <circle cx="40" cy="40" r="2.6" fill="#ffffff"/>
+                        <circle cx="36.8" cy="36.8" r="1.2" fill="#fffdf4" opacity="0.9"/>
+                    </svg>
+                `;
                 statusBadge.classList.add("is-friends");
                 statusBadge.style.display = "inline-flex";
             } else if (customerStatus === "partners") {

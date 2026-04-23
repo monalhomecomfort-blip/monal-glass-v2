@@ -468,6 +468,71 @@ window.addEventListener("resize", function () {
     }
 });
 </script>
-    
+
+<script>
+async function submitPartnerForm() {
+    const nameEl = document.getElementById("partner-name");
+    const emailEl = document.getElementById("partner-email");
+    const phoneEl = document.getElementById("partner-phone");
+    const messageEl = document.getElementById("partner-message");
+    const statusEl = document.getElementById("partner-form-message");
+
+    if (!nameEl || !emailEl || !phoneEl || !messageEl || !statusEl) return;
+
+    const name = nameEl.value.trim();
+    const email = emailEl.value.trim();
+    const phone = phoneEl.value.trim();
+    const message = messageEl.value.trim();
+
+    if (!name || !email || !phone || !message) {
+        statusEl.textContent = "Заповніть всі поля";
+        statusEl.style.color = "#b00020";
+        return;
+    }
+
+    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    if (!emailOk) {
+        statusEl.textContent = "Введіть коректний e-mail";
+        statusEl.style.color = "#b00020";
+        return;
+    }
+
+    statusEl.textContent = "Надсилаємо...";
+    statusEl.style.color = "#555";
+
+    try {
+        const res = await fetch("https://monal-mono-pay-production.up.railway.app/api/partnership-request", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                name,
+                email,
+                phone,
+                message
+            })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok || !data.ok) {
+            throw new Error(data.error || "submit failed");
+        }
+
+        statusEl.textContent = "Заявку надіслано";
+        statusEl.style.color = "#3d5a40";
+
+        nameEl.value = "";
+        emailEl.value = "";
+        phoneEl.value = "";
+        messageEl.value = "";
+    } catch (err) {
+        console.error("PARTNER FORM ERROR:", err);
+        statusEl.textContent = "Не вдалося надіслати заявку";
+        statusEl.style.color = "#b00020";
+    }
+}
+</script>    
 </body>
 </html>

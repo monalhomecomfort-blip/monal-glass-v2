@@ -351,7 +351,16 @@ function renderCart() {
     let html = `Загальна сума: ${total} грн<br>`;
 
     if (personalDiscount > 0) {
-        html += `Персональна знижка: −${personalDiscount} грн<br>`;
+        const isWelcomeDiscount =
+            user &&
+            String(user.customer_status || "general").toLowerCase() === "general" &&
+            !Boolean(user.welcome_discount_used);
+
+        html += `${
+            isWelcomeDiscount
+                ? "Welcome-знижка 10%"
+                : "Персональна знижка"
+        }: −${personalDiscount} грн<br>`;
     }
 
     if (promoDiscount > 0) {
@@ -797,7 +806,15 @@ function submitOrder() {
 📦 НП: ${np}
 
 💰 Загальна сума: ${total} грн
-${personalDiscount > 0 ? `👤 Персональна знижка: −${personalDiscount} грн\n` : ""}
+${personalDiscount > 0
+  ? `👤 ${
+      savedUser &&
+      String(savedUser.customer_status || "general").toLowerCase() === "general" &&
+      !Boolean(savedUser.welcome_discount_used)
+          ? "Welcome-знижка 10%"
+          : "Персональна знижка"
+    }: −${personalDiscount} грн\n`
+  : ""}
 ${promoDiscount > 0 ? `🏷 Промокод: −${promoDiscount} грн\n` : ""}
 ${(typeof CERT_CODE_USED === "string" && CERT_CODE_USED)
   ? `🎟 Сертифікат: ${CERT_CODE_USED} (−${CERT_APPLIED_AMOUNT} грн)\n`
@@ -819,6 +836,8 @@ ${itemsText}
       orderId,
       userId: savedUser ? savedUser.id : null,
       userEmail: savedUser ? savedUser.email : null,
+      customerStatus: savedUser ? savedUser.customer_status : null,
+      welcomeDiscountUsed: savedUser ? Boolean(savedUser.welcome_discount_used) : false,  
       text,
       payNow,
       certificates: certificatesData.length ? certificatesData : null,
@@ -938,7 +957,9 @@ fetch("https://monal-mono-pay-production.up.railway.app/register-order", {
     certificateAmount: PAYMENT_CONTEXT.certificateAmount || 0,
     
     userId: PAYMENT_CONTEXT.userId || null,
-    userEmail: PAYMENT_CONTEXT.userEmail || null    
+    userEmail: PAYMENT_CONTEXT.userEmail || null,
+    customerStatus: PAYMENT_CONTEXT.customerStatus || null,
+    welcomeDiscountUsed: Boolean(PAYMENT_CONTEXT.welcomeDiscountUsed)  
   })
 })
 

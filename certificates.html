@@ -179,20 +179,31 @@
             </p>
 
             <p>
-                Сертифікат електронний, дійсний для використання на сайті.
-                Після оплати унікальний код надходить адміністратору
-                та активується вручну.
+            Подарунковий сертифікат доступний у двох форматах:
+            електронний для швидкого подарунка та фізичний для вручення особисто.
+            Після оплати унікальний код надходить адміністратору
+            та активується вручну.
             </p>
+
+            <!-- CERTIFICATE TYPE -->
+            <div style="margin:20px 0;">
+                <strong>Оберіть тип сертифікату:</strong>
+
+            <div class="certificate-type-row" style="margin-top:10px;">
+                <button type="button" class="certificate-option" data-cert-type="електронний">Електронний</button>
+                <button type="button" class="certificate-option" data-cert-type="фізичний">Фізичний</button>
+            </div>
+            </div>
 
             <!-- NOMINALS -->
             <div style="margin:20px 0;">
                 <strong>Оберіть номінал:</strong>
 
                 <div class="nominal-row" style="margin-top:10px;">
-                        <button type="button" class="certificate-option" data-price="1000">1000 грн</button>
-                        <button type="button" class="certificate-option" data-price="2500">2500 грн</button>
-                        <button type="button" class="certificate-option" data-price="3500">3500 грн</button>
-                        <button type="button" class="certificate-option" data-price="5000">5000 грн</button>
+                    <button type="button" class="certificate-option" data-price="1000">1000 грн</button>
+                    <button type="button" class="certificate-option" data-price="2500">2500 грн</button>
+                    <button type="button" class="certificate-option" data-price="3500">3500 грн</button>
+                    <button type="button" class="certificate-option" data-price="5000">5000 грн</button>
                 </div>
             </div>
 
@@ -307,31 +318,54 @@
 /* ===================== CERTIFICATE LOGIC ===================== */
 
 let selectedNominal = null;
+let selectedCertificateType = null;
 
-const nominalButtons = document.querySelectorAll(".certificate-option");
+const nominalButtons = document.querySelectorAll(".nominal-row .certificate-option");
+const typeButtons = document.querySelectorAll(".certificate-type-row .certificate-option");
 const buyBtn = document.getElementById("buy-certificate");
 const priceEl = document.getElementById("cert-price");
+
+function updateCertificateBuyState() {
+  buyBtn.disabled = !(selectedNominal && selectedCertificateType);
+
+  if (selectedNominal && selectedCertificateType) {
+    priceEl.textContent = `${selectedNominal} грн`;
+  } else if (selectedNominal) {
+    priceEl.textContent = `${selectedNominal} грн`;
+  } else {
+    priceEl.textContent = "—";
+  }
+}
+
+typeButtons.forEach(btn => {
+  btn.addEventListener("click", () => {
+    typeButtons.forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+
+    selectedCertificateType = btn.dataset.certType;
+    updateCertificateBuyState();
+  });
+});
 
 nominalButtons.forEach(btn => {
   btn.addEventListener("click", () => {
     nominalButtons.forEach(b => b.classList.remove("active"));
     btn.classList.add("active");
 
-    selectedNominal = Number(btn.dataset.price); // <-- data-price
-    priceEl.textContent = `${selectedNominal} грн`;
-
-    buyBtn.disabled = false;
+    selectedNominal = Number(btn.dataset.price);
+    updateCertificateBuyState();
   });
 });
 
 buyBtn.addEventListener("click", () => {
-  if (!selectedNominal) return;
+  if (!selectedNominal || !selectedCertificateType) return;
 
   addToCart(
     "Подарунковий сертифікат Mōnal",
     selectedNominal,
     "Сертифікат",
-    `Номінал: ${selectedNominal} грн`
+    `Номінал: ${selectedNominal} грн`,
+    { certificateType: selectedCertificateType }
   );
 });
 </script>

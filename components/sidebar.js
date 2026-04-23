@@ -31,73 +31,54 @@ function initSidebarUserState() {
 
             if (customerStatus === "friends") {
                 statusBadge.innerHTML = `
-                <svg viewBox="0 0 64 64" width="44" height="44" aria-hidden="true">
-                    <defs>
-                    <radialGradient id="starCore" cx="50%" cy="50%" r="50%">
-                      <stop offset="0%" stop-color="#fffef7"/>
-                      <stop offset="32%" stop-color="#fff2b8"/>
-                      <stop offset="62%" stop-color="#f3c95f"/>
-                      <stop offset="100%" stop-color="#b8841e"/>
-                    </radialGradient>
+                    <svg viewBox="0 0 80 80" width="58" height="58" aria-hidden="true">
+                        <defs>
+                            <radialGradient id="friendStarCore" cx="50%" cy="50%" r="50%">
+                                <stop offset="0%" stop-color="#ffffff"/>
+                                <stop offset="18%" stop-color="#fffdf2"/>
+                                <stop offset="38%" stop-color="#f9e8b2"/>
+                                <stop offset="62%" stop-color="#e8c86e"/>
+                                <stop offset="100%" stop-color="#c9972e" stop-opacity="0"/>
+                            </radialGradient>
 
-                    <linearGradient id="starRay" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stop-color="#fffdf2"/>
-                      <stop offset="45%" stop-color="#f8de86"/>
-                      <stop offset="100%" stop-color="#c7922b"/>
-                    </linearGradient>
+                            <radialGradient id="friendStarGlow" cx="50%" cy="50%" r="50%">
+                                <stop offset="0%" stop-color="#fffef8" stop-opacity="0.95"/>
+                                <stop offset="35%" stop-color="#f6df95" stop-opacity="0.75"/>
+                                <stop offset="70%" stop-color="#d5a63d" stop-opacity="0.28"/>
+                                <stop offset="100%" stop-color="#c08b24" stop-opacity="0"/>
+                            </radialGradient>
 
-                    <filter id="starSoftGlow" x="-60%" y="-60%" width="220%" height="220%">
-                      <feGaussianBlur stdDeviation="2.2" result="blur"/>
-                      <feMerge>
-                        <feMergeNode in="blur"/>
-                        <feMergeNode in="SourceGraphic"/>
-                      </feMerge>
-                    </filter>
+                            <filter id="friendStarBlur" x="-80%" y="-80%" width="260%" height="260%">
+                                <feGaussianBlur stdDeviation="2.4"/>
+                            </filter>
 
-                    <filter id="starTinyGlow" x="-50%" y="-50%" width="200%" height="200%">
-                      <feGaussianBlur stdDeviation="1.1" result="blur2"/>
-                      <feMerge>
-                        <feMergeNode in="blur2"/>
-                        <feMergeNode in="SourceGraphic"/>
-                      </feMerge>
-                    </filter>
-                  </defs>
+                            <filter id="friendStarSoft" x="-80%" y="-80%" width="260%" height="260%">
+                                <feGaussianBlur stdDeviation="1.6"/>
+                            </filter>
+                        </defs>
 
-                  <!-- м'яке зовнішнє сяйво -->
-                  <circle cx="32" cy="32" r="11.5" fill="#f4d36c" opacity="0.28" filter="url(#starSoftGlow)"/>
+                        <circle cx="40" cy="40" r="22" fill="url(#friendStarGlow)" filter="url(#friendStarBlur)"/>
 
-                  <!-- тонкі промені -->
-                  <g stroke="url(#starRay)" stroke-linecap="round" filter="url(#starTinyGlow)" opacity="0.95">
-                    <line x1="32" y1="8"  x2="32" y2="56" stroke-width="1.8"/>
-                    <line x1="8"  y1="32" x2="56" y2="32" stroke-width="1.8"/>
-                    <line x1="15.5" y1="15.5" x2="48.5" y2="48.5" stroke-width="1.25"/>
-                    <line x1="48.5" y1="15.5" x2="15.5" y2="48.5" stroke-width="1.25"/>
-                  </g>
+                        <ellipse cx="40" cy="40" rx="1.5" ry="24" fill="#fff6cf" filter="url(#friendStarSoft)"/>
+                        <ellipse cx="40" cy="40" rx="0.55" ry="28" fill="#fffdf6" opacity="0.82"/>
 
-                  <!-- центральна зірка -->
-                  <g filter="url(#starTinyGlow)">
-                    <path
-                      d="M32 21.8
-                         L34.9 28.3
-                         L42.1 29
-                         L36.7 33.7
-                         L38.2 40.7
-                         L32 37.1
-                         L25.8 40.7
-                         L27.3 33.7
-                         L21.9 29
-                         L29.1 28.3
-                         Z"
-                      fill="url(#starCore)"
-                      stroke="#fff7d0"
-                      stroke-width="0.9"
-                      stroke-linejoin="round"
-                    />
-                  </g>
+                        <ellipse cx="40" cy="40" rx="24" ry="1.5" fill="#fff6cf" filter="url(#friendStarSoft)"/>
+                        <ellipse cx="40" cy="40" rx="28" ry="0.55" fill="#fffdf6" opacity="0.82"/>
+                        
+                        <g transform="rotate(45 40 40)">
+                            <ellipse cx="40" cy="40" rx="17" ry="1.0" fill="#f7df9d" filter="url(#friendStarSoft)"/>
+                            <ellipse cx="40" cy="40" rx="20" ry="0.45" fill="#fffdf6" opacity="0.78"/>
+                        </g>
 
-                  <!-- яскраве ядро -->
-                  <circle cx="32" cy="32" r="2.5" fill="#fffdf6" opacity="0.95"/>
-                </svg>
+                        <g transform="rotate(-45 40 40)">
+                            <ellipse cx="40" cy="40" rx="17" ry="1.0" fill="#f7df9d" filter="url(#friendStarSoft)"/>
+                            <ellipse cx="40" cy="40" rx="20" ry="0.45" fill="#fffdf6" opacity="0.78"/>
+                        </g>
+
+                        <circle cx="40" cy="40" r="6.4" fill="url(#friendStarCore)"/>
+                        <circle cx="40" cy="40" r="2.6" fill="#ffffff"/>
+                        <circle cx="36.8" cy="36.8" r="1.2" fill="#fffdf4" opacity="0.9"/>
+                    </svg>
                 `;
                 statusBadge.classList.add("is-friends");
                 statusBadge.style.display = "inline-flex";

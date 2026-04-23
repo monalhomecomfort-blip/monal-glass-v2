@@ -100,6 +100,13 @@
     opacity: 0.95;
     margin-top: 8px;
 }
+#sidebar-user-next-level {
+    font-size: 14px;
+    line-height: 1.35;
+    color: #e8e1d6;
+    opacity: 0.9;
+    margin-top: 6px;
+}
 .sidebar-link {
     display: flex;
     align-items: center;

@@ -190,7 +190,7 @@
                 <strong>Оберіть тип сертифікату:</strong>
 
             <div class="certificate-type-row" style="margin-top:10px;">
-                <button type="button" class="certificate-option" data-cert-type="електронний">Електронний</button>
+                <button type="button" class="certificate-option active" data-cert-type="електронний">Електронний</button>
                 <button type="button" class="certificate-option" data-cert-type="фізичний">Фізичний</button>
             </div>
             </div>
@@ -318,7 +318,7 @@
 /* ===================== CERTIFICATE LOGIC ===================== */
 
 let selectedNominal = null;
-let selectedCertificateType = null;
+let selectedCertificateType = "електронний";    
 
 const nominalButtons = document.querySelectorAll(".nominal-row .certificate-option");
 const typeButtons = document.querySelectorAll(".certificate-type-row .certificate-option");

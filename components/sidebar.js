@@ -4,6 +4,7 @@ function initSidebarUserState() {
     const logoutBlock = document.getElementById("sidebar-logout");
     const userName = document.getElementById("sidebar-user-name");
     const userDiscount = document.getElementById("sidebar-user-discount");
+    const statusBadge = document.getElementById("sidebar-status-badge");
     if (!userBlock) return;
     if (userData) {
         const user = JSON.parse(userData);        
@@ -20,6 +21,23 @@ function initSidebarUserState() {
         const avatarPreview = document.getElementById("sidebar-avatar-preview");
         if (avatarPreview && user.avatar_data) {
             avatarPreview.src = user.avatar_data;
+        }
+        if (statusBadge) {
+            const customerStatus = String(user.customer_status || "general").toLowerCase();
+
+            statusBadge.style.display = "none";
+            statusBadge.textContent = "";
+            statusBadge.classList.remove("is-friends", "is-partners");
+
+            if (customerStatus === "friends") {
+                statusBadge.textContent = "★";
+                statusBadge.classList.add("is-friends");
+                statusBadge.style.display = "inline-flex";
+            } else if (customerStatus === "partners") {
+                statusBadge.textContent = "VIP";
+                statusBadge.classList.add("is-partners");
+                statusBadge.style.display = "inline-flex";
+            }
         }
     }
 }

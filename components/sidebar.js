@@ -59,25 +59,25 @@ function initSidebarUserState() {
 
                         <circle cx="40" cy="40" r="22" fill="url(#friendStarGlow)" filter="url(#friendStarBlur)"/>
 
-                        <ellipse cx="40" cy="40" rx="1.5" ry="24" fill="#fff6cf" filter="url(#friendStarSoft)"/>
-                        <ellipse cx="40" cy="40" rx="0.55" ry="28" fill="#fffdf6" opacity="0.82"/>
+                        <ellipse cx="40" cy="40" rx="1.15" ry="24" fill="#fff6cf" filter="url(#friendStarSoft)"/>
+                        <ellipse cx="40" cy="40" rx="0.34" ry="28" fill="#fffdf6" opacity="0.72"/>
 
-                        <ellipse cx="40" cy="40" rx="24" ry="1.5" fill="#fff6cf" filter="url(#friendStarSoft)"/>
-                        <ellipse cx="40" cy="40" rx="28" ry="0.55" fill="#fffdf6" opacity="0.82"/>
+                        <ellipse cx="40" cy="40" rx="24" ry="1.15" fill="#fff6cf" filter="url(#friendStarSoft)"/>
+                        <ellipse cx="40" cy="40" rx="28" ry="0.34" fill="#fffdf6" opacity="0.72"/>
                         
                         <g transform="rotate(45 40 40)">
-                            <ellipse cx="40" cy="40" rx="17" ry="1.0" fill="#f7df9d" filter="url(#friendStarSoft)"/>
-                            <ellipse cx="40" cy="40" rx="20" ry="0.45" fill="#fffdf6" opacity="0.78"/>
+                            <ellipse cx="40" cy="40" rx="17" ry="0.72" fill="#f7df9d" filter="url(#friendStarSoft)"/>
+                            <ellipse cx="40" cy="40" rx="20" ry="0.28" fill="#fffdf6" opacity="0.68"/>
                         </g>
 
                         <g transform="rotate(-45 40 40)">
-                            <ellipse cx="40" cy="40" rx="17" ry="1.0" fill="#f7df9d" filter="url(#friendStarSoft)"/>
-                            <ellipse cx="40" cy="40" rx="20" ry="0.45" fill="#fffdf6" opacity="0.78"/>
+                            <ellipse cx="40" cy="40" rx="17" ry="0.72" fill="#f7df9d" filter="url(#friendStarSoft)"/>
+                            <ellipse cx="40" cy="40" rx="20" ry="0.28" fill="#fffdf6" opacity="0.68"/>
                         </g>
 
-                        <circle cx="40" cy="40" r="6.4" fill="url(#friendStarCore)"/>
-                        <circle cx="40" cy="40" r="2.6" fill="#ffffff"/>
-                        <circle cx="36.8" cy="36.8" r="1.2" fill="#fffdf4" opacity="0.9"/>
+                        <circle cx="40" cy="40" r="7.2" fill="url(#friendStarCore)" filter="url(#friendStarSoft)" opacity="0.92"/>
+                        <circle cx="40" cy="40" r="2.1" fill="#ffffff" opacity="0.78"/>
+                        <circle cx="36.8" cy="36.8" r="0.9" fill="#fffdf4" opacity="0.58"/>
                     </svg>
                 `;
                 statusBadge.classList.add("is-friends");

@@ -238,11 +238,16 @@ function updateCartCount() {
     if (mobileCount) mobileCount.textContent = text;
 }
 
-function addToCart(name, price, label = "", items = null) {
+function addToCart(name, price, label = "", items = null, extra = null) {
     const cart = JSON.parse(localStorage.getItem("cart")) || [];
 
     const item = { name, price, label };
+
     if (items) item.items = items;
+
+    if (extra && typeof extra === "object") {
+        Object.assign(item, extra);
+    }
 
     cart.push(item);
     localStorage.setItem("cart", JSON.stringify(cart));
@@ -266,13 +271,20 @@ function renderCart() {
         return;
     }
 
-    list.innerHTML = cart.map((item, index) => `
-        <div class="cart-item">
-            <span>${item.label ? item.label + " " : ""}${item.name}</span>
-            <span>${item.price} грн</span>
-            <button onclick="removeFromCart(${index})">X</button>
-        </div>
-    `).join("");
+    list.innerHTML = cart.map((item, index) => {
+        const certificateTypeText =
+            item.label === "Сертифікат" && item.certificateType
+                ? ` (${item.certificateType})`
+                : "";
+
+        return `
+            <div class="cart-item">
+                <span>${item.label ? item.label + " " : ""}${item.name}${certificateTypeText}</span>
+                <span>${item.price} грн</span>
+                <button onclick="removeFromCart(${index})">X</button>
+            </div>
+        `;
+    }).join("");
 
     const total = cart.reduce((s, i) => s + Number(i.price), 0);
 
@@ -626,13 +638,31 @@ function submitOrder() {
         ? `✍️ ВРУЧНУ: ${npManual}`
         : npSelect;
 
-    const hasCertificate = cart.some(i => i.label === "Сертифікат");
+    const certificateItems = cart.filter(i => i.label === "Сертифікат");
+    const hasCertificate = certificateItems.length > 0;
 
     let certificateType = null;
 
     if (hasCertificate) {
-        const certTypeInput = document.querySelector('input[name="certType"]:checked');
-        certificateType = certTypeInput ? certTypeInput.value : "електронний";
+        const uniqueCertificateTypes = [
+            ...new Set(
+                certificateItems
+                    .map(i => String(i.certificateType || "").trim().toLowerCase())
+                    .filter(Boolean)
+            )
+        ];
+
+        if (!uniqueCertificateTypes.length) {
+            alert("Для сертифіката не вибрано тип. Видаліть його з кошика і додайте заново зі сторінки сертифікатів.");
+            return;
+        }
+
+        if (uniqueCertificateTypes.length > 1) {
+            alert("У одному замовленні сертифікати мають бути лише одного типу. Розділіть електронні та фізичні сертифікати на різні замовлення.");
+            return;
+        }
+
+        certificateType = uniqueCertificateTypes[0];
     }
 
     if (hasCertificate) {
@@ -727,6 +757,13 @@ function submitOrder() {
                     `• ${i.name} — ${i.price} грн\n` +
                     discoveryItems.map(a => `   ↳ ${a}`).join("\n")
                 );
+            }
+
+            if (i.label === "Сертифікат") {
+                const certTypeText = i.certificateType
+                    ? ` (${i.certificateType})`
+                    : "";
+                return `• ${i.name}${certTypeText} — ${i.price} грн`;
             }
 
             return `• ${i.name} — ${i.price} грн`;

@@ -269,26 +269,44 @@
 }
 .sidebar-status-badge.is-partners {
     min-width: auto;
-    height: 38px;
-    padding: 0 14px;
+    width: auto;
+    height: auto;
+    padding: 0;
 
-    top: 2px;
-    right: 2px;
+    top: 8px;
+    right: 10px;
 
-    border-radius: 999px;
-    background: linear-gradient(180deg, #f6ebcf 0%, #ead7a8 100%);
-    color: #1b160e;
-    border: 1px solid rgba(90, 68, 26, 0.18);
+    background: none;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
 
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
+    display: inline-block;
     line-height: 1;
 
-    box-shadow:
-        0 8px 18px rgba(0, 0, 0, 0.20),
-        inset 0 1px 0 rgba(255, 255, 255, 0.42),
-        inset 0 -1px 0 rgba(120, 92, 36, 0.10);
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+
+    background-image: linear-gradient(
+        180deg,
+        #fff7d6 0%,
+        #f6df9a 22%,
+        #d8aa43 48%,
+        #fff2bf 68%,
+        #b88322 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+
+    text-shadow:
+        0 1px 0 rgba(255,255,255,0.35),
+        0 2px 3px rgba(90, 60, 10, 0.18),
+        0 4px 10px rgba(0,0,0,0.22);
+    filter: drop-shadow(0 2px 6px rgba(0,0,0,0.18));
 }
 .sidebar-avatar-edit {
     font-size: 13px;

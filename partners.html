@@ -167,28 +167,54 @@
         </p>
     </div>
 
-    <!-- Малий блок -->
-    <div class="about-block small">
-        <h2>Промо-партнерства</h2>
-        <p>
-            Ми запускаємо спільні сезонні акції,
-            створюємо промокоди для клієнтів партнерських просторів
-            та інтегруємо аромати у події й концепції локацій.
-        </p>
-    </div>
 
-    <!-- Малий блок -->
-    <div class="about-block small">
-        <h2>Стати партнером</h2>
-        <p>
-            Якщо ваш простір близький до естетики mōnal —
-            напишіть нам:
-            <br><br>
-            <a href="mailto:monalofficial.ua@gmail.com">monalofficial.ua@gmail.com</a><br>
-            <a href="https://t.me/monalofficial1" target="_blank">Telegram</a><br>
-            <a href="tel:+380930109000">+380 93 010 90 00</a>
-        </p>
-    </div>
+    <div class="about-block big">
+    <h2>Якщо ваш простір близький до естетики mōnal — Пропозиція партнерства</h2>
+
+<form id="partner-form" class="review-form">
+    <input
+        type="text"
+        id="partner-name"
+        class="input"
+        placeholder="Ім'я контактної особи"
+        required
+    >
+
+    <input
+        type="email"
+        id="partner-email"
+        class="input"
+        placeholder="E-mail"
+        required
+    >
+
+    <input
+        type="tel"
+        id="partner-phone"
+        class="input"
+        placeholder="Номер телефону"
+        required
+    >
+
+    <textarea
+        id="partner-message"
+        class="input"
+        placeholder="Запрошуємо до співпраці постачальників, партнерів для взаємореклами"
+        required
+        style="min-height:180px; resize:vertical;"
+    ></textarea>
+
+    <div id="partner-form-message" style="font-size:14px; min-height:20px;"></div>
+
+    <button
+        type="button"
+        class="buy-btn"
+        onclick="submitPartnerForm()"
+    >
+        Надіслати
+    </button>
+</form>
+</div>
 
     <!-- Великий блок -->
 <div class="about-block big">

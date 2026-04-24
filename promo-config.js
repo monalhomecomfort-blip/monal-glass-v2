@@ -41,7 +41,7 @@ window.PROMO_CONFIG = {
             value: 200,
             minOrderAmount: 2000,
             start: "2026-04-01",
-            end: "2026-05-01",
+            end: "2026-04-23",
             exclusions: {
                 certificates: true
             }

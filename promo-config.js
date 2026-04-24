@@ -51,8 +51,8 @@ window.PROMO_CONFIG = {
             type: "fixed",
             value: 500,
             minOrderAmount: 3000,
-            start: "2099-01-01",
-            end: "2099-01-02",
+            start: "2025-01-01",
+            end: "2026-01-02",
             exclusions: {
                 certificates: true
             }
@@ -63,7 +63,7 @@ window.PROMO_CONFIG = {
             value: 10,
             minOrderAmount: 0,
             start: "2026-04-01",
-            end: "2026-05-01",
+            end: "2026-04-23",
             exclusions: {
                 certificates: true
             }

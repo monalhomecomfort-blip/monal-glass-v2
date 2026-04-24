@@ -3,7 +3,26 @@ let PAY_NOW_AMOUNT = 0;
 let CERT_APPLIED_AMOUNT = 0;
 let CERT_CODE_USED = null;
 
+let PUBLIC_PROMO_CAMPAIGNS = [];
 
+async function loadPublicPromoCampaigns() {
+    try {
+        const res = await fetch(
+            "https://monal-mono-pay-production.up.railway.app/api/public-promo-campaigns",
+            { cache: "no-store" }
+        );
+
+        const data = await res.json();
+
+        PUBLIC_PROMO_CAMPAIGNS =
+            data && data.ok && Array.isArray(data.campaigns)
+                ? data.campaigns
+                : [];
+    } catch (err) {
+        console.error("LOAD PUBLIC PROMO CAMPAIGNS ERROR:", err);
+        PUBLIC_PROMO_CAMPAIGNS = [];
+    }
+}
 
 function getSelectedOffer() {
     try {
@@ -166,6 +185,10 @@ function isExcludedItem(item, exclusions = null) {
         return true;
     }
 
+    if (isFocusProductItem(item)) {
+        return true;
+    }
+
     return false;
 }
 
@@ -255,6 +278,46 @@ function addToCart(name, price, label = "", items = null, extra = null) {
     updateCartCount();
 }
 
+function getFocusProductCampaign() {
+    return PUBLIC_PROMO_CAMPAIGNS.find(c =>
+        c.promo_type === "focus_product" &&
+        c.product_name &&
+        c.product_label
+    ) || null;
+}
+
+function isFocusProductItem(item) {
+    const campaign = getFocusProductCampaign();
+
+    if (!campaign || !item) return false;
+
+    const itemName = String(item.name || "").trim().toLowerCase();
+    const itemLabel = String(item.label || "").trim().toLowerCase();
+
+    const campaignName = String(campaign.product_name || "").trim().toLowerCase();
+    const campaignLabel = String(campaign.product_label || "").trim().toLowerCase();
+
+    return itemName === campaignName && itemLabel === campaignLabel;
+}
+
+function calcFocusProductDiscount(cart) {
+    const campaign = getFocusProductCampaign();
+
+    if (!campaign) return 0;
+
+    const discountPercent = Number(campaign.discount_percent || 0);
+
+    if (discountPercent <= 0) return 0;
+
+    const eligibleTotal = cart
+        .filter(item => isFocusProductItem(item))
+        .reduce((sum, item) => sum + (Number(item.price) || 0), 0);
+
+    if (eligibleTotal <= 0) return 0;
+
+    return Math.round(eligibleTotal * (discountPercent / 100));
+}
+
 function calcUserCartDiscount(cart, user) {
     if (!user) return 0;
 
@@ -266,7 +329,11 @@ function calcUserCartDiscount(cart, user) {
             const name = String(item?.name || "").toLowerCase();
             const label = String(item?.label || "").toLowerCase();
 
-            return !name.includes("сертиф") && !label.includes("сертиф");
+            return (
+                !name.includes("сертиф") &&
+                !label.includes("сертиф") &&
+                !isFocusProductItem(item)
+            );
         })
         .reduce((sum, item) => sum + (Number(item.price) || 0), 0);
 
@@ -322,11 +389,18 @@ function renderCart() {
 
     const total = cart.reduce((s, i) => s + Number(i.price), 0);
 
+    
+    /* ===================== АРОМАТ ДНЯ ===================== */
+
+    const focusProductDiscount = calcFocusProductDiscount(cart);
+
+    const afterFocusProduct = total - focusProductDiscount;
+
     /* ===================== ПЕРСОНАЛЬНА ЗНИЖКА ===================== */
 
     const personalDiscount = calcUserCartDiscount(cart, user);
 
-    const afterPersonal = total - personalDiscount;
+    const afterPersonal = afterFocusProduct - personalDiscount;
 
     /* ===================== ПРОМОКОД ===================== */
 
@@ -349,6 +423,10 @@ function renderCart() {
     /* ===================== ВИВІД ===================== */
 
     let html = `Загальна сума: ${total} грн<br>`;
+
+    if (focusProductDiscount > 0) {
+        html += `Аромат дня: −${focusProductDiscount} грн<br>`;
+    }    
 
     if (personalDiscount > 0) {
         const isWelcomeDiscount =
@@ -655,6 +733,8 @@ function recalcAfterCertificate() {
 
     const total = cart.reduce((s, i) => s + Number(i.price), 0);
 
+    const focusProductDiscount = calcFocusProductDiscount(cart);
+
     const personalDiscount = calcUserCartDiscount(cart, user);
 
     const promoDiscount =
@@ -662,7 +742,10 @@ function recalcAfterCertificate() {
             ? calcPromoDiscount(cart)
             : 0;
 
-    const afterDiscounts = Math.max(0, total - personalDiscount - promoDiscount);
+    const afterDiscounts = Math.max(
+        0,
+        total - focusProductDiscount - personalDiscount - promoDiscount
+    );
 
     const remaining = Math.max(0, afterDiscounts - CERT_APPLIED_AMOUNT);
 
@@ -748,16 +831,21 @@ function submitOrder() {
 
     const total = cart.reduce((s, i) => s + Number(i.price), 0);
 
+    const focusProductDiscount = calcFocusProductDiscount(cart);
+
     const personalDiscount = calcUserCartDiscount(cart, savedUser);
 
     const promoDiscount = typeof calcPromoDiscount === "function"
         ? calcPromoDiscount(cart)
         : 0;
 
-    const afterDiscounts = Math.max(0, total - personalDiscount - promoDiscount);
+    const afterDiscounts = Math.max(
+        0,
+        total - focusProductDiscount - personalDiscount - promoDiscount
+    );
 
     const remainingToPay = Math.max(0, afterDiscounts - CERT_APPLIED_AMOUNT);
-
+    
     const pay = document.querySelector("input[name='pay']:checked");
 
     
@@ -827,6 +915,7 @@ function submitOrder() {
 📦 НП: ${np}
 
 💰 Загальна сума: ${total} грн
+${focusProductDiscount > 0 ? `🌿 Аромат дня: −${focusProductDiscount} грн\n` : ""}
 ${personalDiscount > 0
   ? `👤 ${
       savedUser &&
@@ -874,6 +963,7 @@ ${itemsText}
       dueAmount: dueAmount,
       paymentLabel: paymentLabel,
       orderNote: orderNote,
+      focusProductDiscount,  
       personalDiscount,
       promoDiscount,
       certificateAmount: CERT_APPLIED_AMOUNT
@@ -973,6 +1063,7 @@ fetch("https://monal-mono-pay-production.up.railway.app/register-order", {
     dueAmount: PAYMENT_CONTEXT.dueAmount || "",
     paymentLabel: PAYMENT_CONTEXT.paymentLabel || "",
     orderNote: PAYMENT_CONTEXT.orderNote || "",
+    focusProductDiscount: PAYMENT_CONTEXT.focusProductDiscount || 0,  
     personalDiscount: PAYMENT_CONTEXT.personalDiscount || 0,
     promoDiscount: PAYMENT_CONTEXT.promoDiscount || 0,
     certificateAmount: PAYMENT_CONTEXT.certificateAmount || 0,
@@ -1112,6 +1203,7 @@ async function validateSelectedOfferInCart() {
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
+    await loadPublicPromoCampaigns();
     await validateSelectedOfferInCart();
 
     updateCartCount();

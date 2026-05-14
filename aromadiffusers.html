@@ -1285,7 +1285,40 @@
   }
 </script>
 
-<script src="./parfums-gallery.js"></script>    
+<script src="./parfums-gallery.js"></script>
+
+<script>
+(function () {
+    const filterButtons = document.querySelectorAll('.page-filters .filter-btn[data-filter]');
+    const productRows = document.querySelectorAll('main .product-row[data-volume]');
+
+    if (!filterButtons.length || !productRows.length) return;
+
+    function applyFilter(filterValue) {
+        productRows.forEach(row => {
+            const volume = row.dataset.volume || "";
+
+            if (filterValue === "all" || volume === filterValue) {
+                row.style.display = "";
+            } else {
+                row.style.display = "none";
+            }
+        });
+    }
+
+    filterButtons.forEach(button => {
+        button.addEventListener('click', function () {
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+
+            applyFilter(this.dataset.filter);
+        });
+    });
+
+    const activeButton = document.querySelector('.page-filters .filter-btn.active[data-filter]');
+    applyFilter(activeButton ? activeButton.dataset.filter : "all");
+})();
+</script>    
 
 <script type="application/ld+json">
 {

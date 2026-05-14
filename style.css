@@ -1535,6 +1535,10 @@ a.sub-mini {
 
     transition: background 0.3s ease;
 }
+.filter-btn.active {
+    background: #d8d2c6;
+    border: 1px solid #c9c1b3;
+}
 .back-btn:hover {
     background: #d8d2c2;
 }

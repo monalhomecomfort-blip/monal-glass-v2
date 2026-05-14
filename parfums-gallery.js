@@ -68,7 +68,48 @@ const parfumsGalleries = {
     "images/perfumes/rosalya.png",
     "images/perfumes/rosalya_2.png",
     "images/perfumes/rosalya_3.png"
-  ]
+  ],
+  /* ===================== PARFUMS 15 ML ===================== */
+  "golden-rum-15": [
+    "images/perfumes/travel_golden_rum.png",
+    "images/perfumes/travel_golden_rum_.png"
+  ],
+  "stone-salt-15": [
+    "images/perfumes/travel_stone_salt.png",
+    "images/perfumes/travel_stone_salt_.png"
+  ],
+  "drift-15": [
+    "images/perfumes/travel_drift.png",
+    "images/perfumes/travel_drift_.png"
+  ],
+  "freedom-15": [
+    "images/perfumes/travel_freedom.png",
+    "images/perfumes/travel_freedom_.png"
+  ],
+  "green-haven-15": [
+    "images/perfumes/travel_green_haven.png",
+    "images/perfumes/travel_green_haven_.png"
+  ],
+  "nocturne-15": [
+    "images/perfumes/travel_nocturne.png",
+    "images/perfumes/travel_nocturne_.png"
+  ],
+  "crown-of-olive-15": [
+    "images/perfumes/travel_crown_of_olive.png",
+    "images/perfumes/travel_crown_of_olive_.png"
+  ],
+  "shadow-of-fig-15": [
+    "images/perfumes/travel_shadow_of_fig.png",
+    "images/perfumes/travel_shadow_of_fig_.png"
+  ],
+  "vesper-15": [
+    "images/perfumes/travel_vesper.png",
+    "images/perfumes/travel_vesper_.png"
+  ],
+  "rosalya-15": [
+    "images/perfumes/travel_rosalya.png",
+    "images/perfumes/travel_rosalya_.png"
+  ] 
 };
 
 /* ===================== REFILLS ===================== */

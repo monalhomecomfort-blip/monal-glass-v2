@@ -168,25 +168,25 @@
                 <div id="cart-list" style="margin-bottom:14px;"></div>
 
                 <!-- PROMO CODE BLOCK -->
-                <div id="promo-block" style="margin-bottom:18px;">
+                <div id="promo-block" style="margin-bottom:10px;">
                     <label for="promo-input" style="display:block; margin-bottom:6px;">
                         Промокод
                     </label>
 
-                    <div style="display:flex; gap:8px;">
+                    <div style="display:grid; grid-template-columns: 2fr 1fr; gap:8px; align-items:center;">
                         <input 
                             id="promo-input" 
                             type="text" 
                             class="input"
                             placeholder="Введіть промокод"
-                            style="flex:2; min-width:0;"
+                            style="width:100%; min-width:0; margin:0;"
                         >
 
                         <button 
                             id="promo-apply-btn" 
                             type="button" 
                             class="buy-btn"
-                            style="flex:1; white-space:nowrap;"
+                            style="width:100%; margin:0; white-space:nowrap;"
                         >
                             Застосувати
                         </button>
@@ -195,33 +195,37 @@
                     <div id="promo-message" style="margin-top:6px; font-size:14px; color:#cfc7b8;"></div>
                 </div>
 
-    <!-- СЕРТИФІКАТ -->
-    <div style="margin-top:14px;">
-        <label for="cert-code" style="display:block; margin-bottom:6px;">
-            Сертифікат
-        </label>
+                <!-- СЕРТИФІКАТ -->
+                <div style="margin-bottom:18px;">
+                    <label for="cert-code" style="display:block; margin-bottom:6px;">
+                        Сертифікат
+                    </label>
 
-        <div style="display:flex; gap:8px;">
-            <input
-                id="cert-code"
-                class="input"
-                placeholder="Введіть код сертифіката"
-            >
+                    <div style="display:grid; grid-template-columns: 2fr 1fr; gap:8px; align-items:center;">
+                        <input
+                            id="cert-code"
+                            class="input"
+                            placeholder="Введіть код сертифіката"
+                            style="width:100%; min-width:0; margin:0;"
+                        >
 
-            <button
-                type="button"
-                class="buy-btn"
-                onclick="applyCertificate()"
-            >
-                Застосувати
-            </button>
-        </div>
+                        <button
+                            type="button"
+                            class="buy-btn"
+                            onclick="applyCertificate()"
+                            style="width:100%; margin:0; white-space:nowrap;"
+                        >
+                            Застосувати
+                        </button>
+                    </div>
 
-        <div
-            id="cert-info"
-            style="margin-top:6px; font-size:14px; color:#555;"
-        ></div>
-    </div>                
+                    <div
+                        id="cert-info"
+                        style="margin-top:6px; font-size:14px; color:#cfc7b8;"
+                    ></div>
+                </div>
+
+                
 
                 <h2>Сума</h2>
                 <div id="cart-total" style="font-size:20px; margin-bottom:18px;"></div>

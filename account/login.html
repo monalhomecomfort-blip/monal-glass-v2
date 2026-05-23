@@ -184,20 +184,45 @@ class="nav-logo">
 <form id="loginForm">
 
 <input
-type="email"
+type="text"
 id="email"
-placeholder="Email"
+placeholder="Email або телефон"
+autocomplete="username"
 required
 >
 
 <br><br>
 
-<input
-type="password"
-id="password"
-placeholder="Пароль"
-required
->
+<div style="position: relative;">
+    <input
+    type="password"
+    id="password"
+    placeholder="Пароль"
+    autocomplete="current-password"
+    required
+    style="padding-right: 52px;"
+    >
+
+    <button
+    type="button"
+    aria-label="Показати пароль"
+    onclick="
+        const p = document.getElementById('password');
+        p.type = p.type === 'password' ? 'text' : 'password';
+        this.textContent = p.type === 'password' ? '👁' : '🙈';
+    "
+    style="
+        position: absolute;
+        right: 16px;
+        top: 50%;
+        transform: translateY(-50%);
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        font-size: 18px;
+    "
+    >👁</button>
+</div>
 
 <br><br>
 

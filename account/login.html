@@ -208,20 +208,45 @@ required
     aria-label="Показати пароль"
     onclick="
         const p = document.getElementById('password');
-        p.type = p.type === 'password' ? 'text' : 'password';
-        this.textContent = p.type === 'password' ? '👁' : '🙈';
+        const eye = this.querySelector('.eye-open');
+        const eyeOff = this.querySelector('.eye-off');
+
+        if (p.type === 'password') {
+            p.type = 'text';
+            eye.style.display = 'none';
+            eyeOff.style.display = 'block';
+        } else {
+            p.type = 'password';
+            eye.style.display = 'block';
+            eyeOff.style.display = 'none';
+        }
     "
     style="
         position: absolute;
-        right: 16px;
+        right: 18px;
         top: 50%;
         transform: translateY(-50%);
         border: none;
         background: transparent;
         cursor: pointer;
-        font-size: 18px;
+        padding: 0;
+        width: 26px;
+        height: 26px;
+        color: #222;
     "
-    >👁</button>
+    >
+        <svg class="eye-open" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6z"></path>
+            <circle cx="12" cy="12" r="3"></circle>
+        </svg>
+
+        <svg class="eye-off" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
+            <path d="M2 12s3.5-6 10-6c2 0 3.7.5 5.1 1.3"></path>
+            <path d="M22 12s-3.5 6-10 6c-2 0-3.7-.5-5.1-1.3"></path>
+            <path d="M4 4l16 16"></path>
+            <path d="M9.5 9.5A3 3 0 0 0 14.5 14.5"></path>
+        </svg>
+    </button>
 </div>
 
 <br><br>

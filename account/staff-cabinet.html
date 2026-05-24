@@ -359,6 +359,19 @@ if (saleProductSearch && saleProductDropdown && saleProductId) {
         renderProductDropdown(saleProductSearch.value);
     });
 
+    if (saleProductPicker) {
+        saleProductPicker.addEventListener("click", async (e) => {
+            const rect = saleProductPicker.getBoundingClientRect();
+            const clickedArrowZone = e.clientX >= rect.right - 52;
+
+            if (!clickedArrowZone) return;
+
+            await loadStaffProducts();
+            renderProductDropdown("");
+            saleProductSearch.focus();
+        });
+    }
+
     saleProductDropdown.addEventListener("click", (e) => {
         const option = e.target.closest(".staff-product-option");
         if (!option) return;

@@ -802,3 +802,56 @@
         width: 100%;
     }
 }
+
+.staff-stock-table-wrap {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.staff-stock-table-wrap h3 {
+    font-weight: 300;
+    margin: 0 0 16px;
+}
+
+.staff-stock-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 980px;
+    font-size: 14px;
+}
+
+.staff-stock-table th,
+.staff-stock-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+    text-align: left;
+    vertical-align: middle;
+}
+
+.staff-stock-table th {
+    font-weight: 400;
+    opacity: 0.75;
+}
+
+.staff-stock-table input[type="number"] {
+    width: 110px;
+    height: 38px;
+    padding: 0 12px;
+    border-radius: 12px;
+    border: none;
+    background: #e7e4d9;
+    color: #1f1f1f;
+    font-size: 14px;
+    font-family: 'Montserrat', sans-serif;
+    outline: none;
+}
+
+.staff-stock-table input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+#save-stock-balances-btn {
+    margin-top: 18px;
+}

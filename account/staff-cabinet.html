@@ -350,7 +350,10 @@ const showCreateWarehouseFormBtn = document.getElementById("show-create-warehous
 const createWarehouseBox = document.getElementById("create-warehouse-box");
 const newWarehouseNameInput = document.getElementById("new-warehouse-name");
 const createWarehouseBtn = document.getElementById("create-warehouse-btn");
-const stockManageResult = document.getElementById("stock-manage-result");    
+const stockManageResult = document.getElementById("stock-manage-result");
+const stockReportWarehouseFilter = document.getElementById("stock-report-warehouse-filter");
+
+let STAFF_WAREHOUSES = [];    
 const clientsSection = document.getElementById("clients-section");
 const openClientsSectionBtn = document.getElementById("open-clients-section");
 const clientSearchInput = document.getElementById("staff-client-search");
@@ -563,6 +566,73 @@ if (saleClientSearchBtn) {
         }
     });
 }    
+
+function fillWarehouseSelects(warehouses) {
+    STAFF_WAREHOUSES = Array.isArray(warehouses) ? warehouses : [];
+
+    if (stockReportWarehouseFilter) {
+        stockReportWarehouseFilter.innerHTML = `
+            <option value="">Всі склади</option>
+        `;
+
+        STAFF_WAREHOUSES.forEach(warehouse => {
+            const option = document.createElement("option");
+            option.value = warehouse.warehouse_id;
+            option.textContent = `${warehouse.warehouse_name} ID ${warehouse.warehouse_id}`;
+            stockReportWarehouseFilter.appendChild(option);
+        });
+    }
+
+    if (stockManageWarehouseSelect) {
+        stockManageWarehouseSelect.innerHTML = `
+            <option value="">Оберіть склад</option>
+        `;
+
+        STAFF_WAREHOUSES.forEach(warehouse => {
+            const option = document.createElement("option");
+            option.value = warehouse.warehouse_id;
+            option.textContent = `${warehouse.warehouse_name} ID ${warehouse.warehouse_id}`;
+            stockManageWarehouseSelect.appendChild(option);
+        });
+    }
+}
+
+async function loadStaffWarehouses() {
+    try {
+        const response = await fetch(
+            "https://monal-mono-pay-production.up.railway.app/api/staff/stock-warehouses",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    staffId: staff.id
+                })
+            }
+        );
+
+        const data = await response.json();
+
+        if (!data.ok) {
+            if (stockManageResult) {
+                stockManageResult.classList.remove("staff-hidden");
+                stockManageResult.innerHTML = data.error || "Не вдалося завантажити склади.";
+            }
+            return;
+        }
+
+        fillWarehouseSelects(data.warehouses || []);
+
+    } catch (err) {
+        console.error(err);
+
+        if (stockManageResult) {
+            stockManageResult.classList.remove("staff-hidden");
+            stockManageResult.innerHTML = "Помилка зʼєднання при завантаженні складів.";
+        }
+    }
+}
     
 function showStaffSection(section) {
     document.querySelectorAll(".staff-section").forEach(item => {
@@ -583,14 +653,16 @@ if (openSalesSectionBtn && salesSection) {
 }
 
 if (openStockSectionBtn && stockSection) {
-    openStockSectionBtn.addEventListener("click", () => {
+    openStockSectionBtn.addEventListener("click", async () => {
         showStaffSection(stockSection);
+        await loadStaffWarehouses();
     });
 }
 
 if (openStockManageSectionBtn && stockManageSection) {
-    openStockManageSectionBtn.addEventListener("click", () => {
+    openStockManageSectionBtn.addEventListener("click", async () => {
         showStaffSection(stockManageSection);
+        await loadStaffWarehouses();
     });
 }
     
@@ -757,7 +829,7 @@ if (chooseStockWarehouseBtn && stockManageWarehouseSelect && stockManageResult) 
 }
 
 if (createWarehouseBtn && newWarehouseNameInput && stockManageResult) {
-    createWarehouseBtn.addEventListener("click", () => {
+    createWarehouseBtn.addEventListener("click", async () => {
         const warehouseName = newWarehouseNameInput.value.trim();
 
         stockManageResult.classList.remove("staff-hidden");
@@ -767,9 +839,52 @@ if (createWarehouseBtn && newWarehouseNameInput && stockManageResult) {
             return;
         }
 
-        stockManageResult.innerHTML = "Створення складу підключимо наступним кроком.";
+        stockManageResult.innerHTML = "Створюю склад…";
+
+        try {
+            const response = await fetch(
+                "https://monal-mono-pay-production.up.railway.app/api/staff/create-warehouse",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        staffId: staff.id,
+                        warehouseName
+                    })
+                }
+            );
+
+            const data = await response.json();
+
+            if (!data.ok) {
+                stockManageResult.innerHTML = data.error || "Не вдалося створити склад.";
+                return;
+            }
+
+            newWarehouseNameInput.value = "";
+            createWarehouseBox.classList.add("staff-hidden");
+
+            await loadStaffWarehouses();
+
+            if (stockManageWarehouseSelect && data.warehouse?.warehouse_id) {
+                stockManageWarehouseSelect.value = data.warehouse.warehouse_id;
+            }
+
+            stockManageResult.innerHTML = `
+                <strong>Склад створено</strong><br>
+                Назва: ${data.warehouse.warehouse_name}<br>
+                ID: ${data.warehouse.warehouse_id}<br>
+                Товарних рядків створено: ${data.insertedRows || 0}
+            `;
+
+        } catch (err) {
+            console.error(err);
+            stockManageResult.innerHTML = "Помилка зʼєднання при створенні складу.";
+        }
     });
-}    
+}
 
 document.getElementById("staff-logout").addEventListener("click", () => {
     localStorage.removeItem("monal_staff_user");

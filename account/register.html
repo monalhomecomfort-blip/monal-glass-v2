@@ -196,17 +196,82 @@ required
 type="email"
 id="email"
 placeholder="Email"
-required
+autocomplete="email"
 >
 
 <br><br>
 
 <input
-type="password"
-id="password"
-placeholder="Пароль"
-required
+type="tel"
+id="phone"
+placeholder="Телефон"
+autocomplete="tel"
 >
+
+<br><br>
+
+<div style="position: relative;">
+    <input
+    type="password"
+    id="password"
+    placeholder="Пароль"
+    autocomplete="new-password"
+    required
+    style="padding-right: 52px;"
+    >
+
+    <button
+    type="button"
+    aria-label="Показати пароль"
+    onclick="
+        const p = document.getElementById('password');
+        const eye = this.querySelector('.eye-open');
+        const eyeOff = this.querySelector('.eye-off');
+
+        if (p.type === 'password') {
+            p.type = 'text';
+            eye.style.display = 'none';
+            eyeOff.style.display = 'block';
+        } else {
+            p.type = 'password';
+            eye.style.display = 'block';
+            eyeOff.style.display = 'none';
+        }
+    "
+    style="
+        position: absolute;
+        right: 22px;
+        top: 50%;
+        transform: translateY(-50%);
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        padding: 0;
+        width: 30px;
+        height: 30px;
+        color: rgba(35, 35, 32, 0.62);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    "
+    >
+        <svg class="eye-open" width="28" height="28" viewBox="0 0 24 24" fill="none">
+            <path d="M3.6 12C5.45 8.85 8.15 7.25 12 7.25C15.85 7.25 18.55 8.85 20.4 12C18.55 15.15 15.85 16.75 12 16.75C8.15 16.75 5.45 15.15 3.6 12Z"
+                  stroke="currentColor" stroke-width="1.15" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="12" cy="12" r="2.35"
+                    stroke="currentColor" stroke-width="1.15"/>
+        </svg>
+
+        <svg class="eye-off" width="28" height="28" viewBox="0 0 24 24" fill="none" style="display:none;">
+            <path d="M4.2 12C5.15 10.35 6.35 9.15 7.8 8.4C9 7.75 10.4 7.45 12 7.45C15.75 7.45 18.45 9 20.4 12C19.55 13.35 18.55 14.45 17.35 15.25"
+                  stroke="currentColor" stroke-width="1.15" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M9.3 9.65C8.85 10.15 8.6 10.8 8.6 11.5C8.6 13.05 9.85 14.3 11.4 14.3C12.1 14.3 12.75 14.05 13.25 13.6"
+                  stroke="currentColor" stroke-width="1.15" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M5 5L19 19"
+                  stroke="currentColor" stroke-width="1.15" stroke-linecap="round"/>
+        </svg>
+    </button>
+</div>
 
 <br><br>
 

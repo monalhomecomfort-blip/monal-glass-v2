@@ -231,89 +231,78 @@ Email:
 
 <!-- 3. Безпека акаунту -->
 <div class="account-block big">
-<h2>Безпека акаунту</h2>
-<p>
+<h2>
+Безпека акаунту
+<span id="edit-password-btn" class="edit-icon" style="display:inline-flex; align-items:center; gap:6px; font-size:16px; font-weight:400;">
+<span>Змінити пароль</span>
+<svg viewBox="0 0 24 24" style="width:16px; height:16px;">
+<path d="M3 17.25V21h3.75L19.81 7.94l-3.75-3.75L3 17.25z"/>
+<path d="M14.06 4.19l3.75 3.75"/>
+</svg>
+</span>
+
+<span id="save-password-btn" style="cursor:pointer; margin-left:6px; display:none; font-size:16px; font-weight:400;">
+Зберегти ✔
+</span>
+</h2>
+
+<p id="password-info">
 Пароль можна змінити без введення старого паролю, якщо ви вже увійшли в акаунт.
 </p>
 
-<button id="change-password-btn" class="buy-btn" type="button">
-Змінити пароль
-</button>
-</div>
+<div id="password-edit-area" style="display:none; margin-top:14px; max-width:420px;">
+    <div style="position:relative;">
+        <input
+            type="password"
+            id="new-password-input"
+            placeholder="Введіть новий пароль"
+            autocomplete="new-password"
+            style="padding-right:52px;"
+        >
 
-<div id="change-password-modal" style="display:none; position:fixed; inset:0; z-index:99999;">
-    <div id="change-password-overlay" style="position:absolute; inset:0; background:rgba(0,0,0,0.72);"></div>
+        <button
+            type="button"
+            id="toggle-new-password"
+            aria-label="Показати пароль"
+            style="
+                position:absolute;
+                right:22px;
+                top:50%;
+                transform:translateY(-50%);
+                border:none;
+                background:transparent;
+                cursor:pointer;
+                padding:0;
+                width:30px;
+                height:30px;
+                color:rgba(35,35,32,0.62);
+                display:flex;
+                align-items:center;
+                justify-content:center;
+            "
+        >
+            <svg class="eye-open" width="28" height="28" viewBox="0 0 24 24" fill="none">
+                <path d="M3.6 12C5.45 8.85 8.15 7.25 12 7.25C15.85 7.25 18.55 8.85 20.4 12C18.55 15.15 15.85 16.75 12 16.75C8.15 16.75 5.45 15.15 3.6 12Z"
+                      stroke="currentColor" stroke-width="1.15" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="12" cy="12" r="2.35"
+                        stroke="currentColor" stroke-width="1.15"/>
+            </svg>
 
-    <div style="
-        position:relative;
-        width:min(420px, calc(100% - 40px));
-        margin:12vh auto 0;
-        background:#f4f1ea;
-        color:#171717;
-        border-radius:22px;
-        padding:30px 26px;
-        box-shadow:0 24px 70px rgba(0,0,0,0.35);
-    ">
-        <h2 style="margin-top:0;">Змінити пароль</h2>
-
-        <div style="position:relative;">
-            <input
-                type="password"
-                id="new-password-input"
-                placeholder="Введіть новий пароль"
-                autocomplete="new-password"
-                style="padding-right:52px;"
-            >
-
-            <button
-                type="button"
-                id="toggle-new-password"
-                aria-label="Показати пароль"
-                style="
-                    position:absolute;
-                    right:22px;
-                    top:50%;
-                    transform:translateY(-50%);
-                    border:none;
-                    background:transparent;
-                    cursor:pointer;
-                    padding:0;
-                    width:30px;
-                    height:30px;
-                    color:rgba(35,35,32,0.62);
-                    display:flex;
-                    align-items:center;
-                    justify-content:center;
-                "
-            >
-                <svg class="eye-open" width="28" height="28" viewBox="0 0 24 24" fill="none">
-                    <path d="M3.6 12C5.45 8.85 8.15 7.25 12 7.25C15.85 7.25 18.55 8.85 20.4 12C18.55 15.15 15.85 16.75 12 16.75C8.15 16.75 5.45 15.15 3.6 12Z"
-                          stroke="currentColor" stroke-width="1.15" stroke-linecap="round" stroke-linejoin="round"/>
-                    <circle cx="12" cy="12" r="2.35"
-                            stroke="currentColor" stroke-width="1.15"/>
-                </svg>
-
-                <svg class="eye-off" width="28" height="28" viewBox="0 0 24 24" fill="none" style="display:none;">
-                    <path d="M4.2 12C5.15 10.35 6.35 9.15 7.8 8.4C9 7.75 10.4 7.45 12 7.45C15.75 7.45 18.45 9 20.4 12C19.55 13.35 18.55 14.45 17.35 15.25"
-                          stroke="currentColor" stroke-width="1.15" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M9.3 9.65C8.85 10.15 8.6 10.8 8.6 11.5C8.6 13.05 9.85 14.3 11.4 14.3C12.1 14.3 12.75 14.05 13.25 13.6"
-                          stroke="currentColor" stroke-width="1.15" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M5 5L19 19"
-                          stroke="currentColor" stroke-width="1.15" stroke-linecap="round"/>
-                </svg>
-            </button>
-        </div>
-
-        <div style="display:flex; gap:12px; margin-top:18px;">
-            <button id="save-new-password-btn" class="buy-btn" type="button">
-                Зберегти
-            </button>
-
-            <button id="cancel-new-password-btn" class="buy-btn" type="button">
-                Скасувати
-            </button>
-        </div>
+            <svg class="eye-off" width="28" height="28" viewBox="0 0 24 24" fill="none" style="display:none;">
+                <path d="M4.2 12C5.15 10.35 6.35 9.15 7.8 8.4C9 7.75 10.4 7.45 12 7.45C15.75 7.45 18.45 9 20.4 12C19.55 13.35 18.55 14.45 17.35 15.25"
+                      stroke="currentColor" stroke-width="1.15" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M9.3 9.65C8.85 10.15 8.6 10.8 8.6 11.5C8.6 13.05 9.85 14.3 11.4 14.3C12.1 14.3 12.75 14.05 13.25 13.6"
+                      stroke="currentColor" stroke-width="1.15" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M5 5L19 19"
+                      stroke="currentColor" stroke-width="1.15" stroke-linecap="round"/>
+            </svg>
+        </button>
     </div>
+
+    <div id="password-save-message" style="display:none; margin-top:10px; font-size:15px;">
+        Пароль змінено
+    </div>
+</div>
 </div>
   
 <!-- 4. Основна адреса доставки -->

@@ -352,6 +352,8 @@ const newWarehouseNameInput = document.getElementById("new-warehouse-name");
 const createWarehouseBtn = document.getElementById("create-warehouse-btn");
 const stockManageResult = document.getElementById("stock-manage-result");
 const stockReportWarehouseFilter = document.getElementById("stock-report-warehouse-filter");
+const loadStockReportBtn = document.getElementById("load-stock-report-btn");
+const stockReportResult = document.getElementById("stock-report-result");    
 
 let STAFF_WAREHOUSES = [];    
 const clientsSection = document.getElementById("clients-section");
@@ -722,6 +724,55 @@ function renderStockManageTable(data) {
             <button id="save-stock-balances-btn" class="buy-btn" type="button">
                 Зберегти залишки
             </button>
+        </div>
+    `;
+}
+
+function renderStockReportTable(data) {
+    if (!stockReportResult) return;
+
+    const items = Array.isArray(data.items) ? data.items : [];
+
+    stockReportResult.classList.remove("staff-hidden");
+
+    if (!items.length) {
+        stockReportResult.innerHTML = "Залишків не знайдено.";
+        return;
+    }
+
+    stockReportResult.innerHTML = `
+        <div class="staff-stock-table-wrap">
+            <table class="staff-stock-table">
+                <thead>
+                    <tr>
+                        <th>Склад</th>
+                        <th>Товар</th>
+                        <th>РЦ</th>
+                        <th>СВ</th>
+                        <th>Ціна реалізації</th>
+                        <th>Початковий залишок</th>
+                        <th>Продажі</th>
+                        <th>Кінцевий залишок</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${items.map(item => `
+                        <tr>
+                            <td>
+                                ${item.warehouse_name || "—"}<br>
+                                <small>ID ${item.warehouse_id}</small>
+                            </td>
+                            <td>${item.product_display_name || "—"}</td>
+                            <td>${item.retail_price ?? "—"} грн</td>
+                            <td>${item.cost_price ?? "—"}</td>
+                            <td>${item.realization_price ?? "—"}</td>
+                            <td>${item.initial_quantity ?? 0}</td>
+                            <td>${item.sales_quantity ?? 0}</td>
+                            <td>${item.final_quantity ?? 0}</td>
+                        </tr>
+                    `).join("")}
+                </tbody>
+            </table>
         </div>
     `;
 }
@@ -1115,6 +1166,44 @@ if (createWarehouseBtn && newWarehouseNameInput && stockManageResult) {
     });
 }
 
+if (loadStockReportBtn && stockReportWarehouseFilter && stockReportResult) {
+    loadStockReportBtn.addEventListener("click", async () => {
+        const warehouseId = stockReportWarehouseFilter.value;
+
+        stockReportResult.classList.remove("staff-hidden");
+        stockReportResult.innerHTML = "Завантажую звіт по залишках…";
+
+        try {
+            const response = await fetch(
+                "https://monal-mono-pay-production.up.railway.app/api/staff/stock-report",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        staffId: staff.id,
+                        warehouseId: warehouseId || null
+                    })
+                }
+            );
+
+            const data = await response.json();
+
+            if (!data.ok) {
+                stockReportResult.innerHTML = data.error || "Не вдалося завантажити звіт.";
+                return;
+            }
+
+            renderStockReportTable(data);
+
+        } catch (err) {
+            console.error(err);
+            stockReportResult.innerHTML = "Помилка зʼєднання при завантаженні звіту.";
+        }
+    });
+}
+    
 document.getElementById("staff-logout").addEventListener("click", () => {
     localStorage.removeItem("monal_staff_user");
     localStorage.removeItem("monal_staff_login_time");

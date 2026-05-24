@@ -6,62 +6,17 @@
 
 <link rel="icon" type="image/png" sizes="32x32" href="../favicon32_only_o.png">
 <link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="../components/sidebar.css">
 
 <title>Staff кабінет | Mōnal</title>
 <meta name="robots" content="noindex, nofollow">
-
-<style>
-.staff-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(260px, 1fr));
-    gap: 20px;
-}
-
-.staff-card {
-    padding: 22px 24px;
-    border-radius: 18px;
-    background: #f4efe6;
-    color: #1f1f1f;
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    box-shadow:
-        0 1px 0 rgba(255, 255, 255, 0.35) inset,
-        0 0 0 1px rgba(0, 0, 0, 0.04),
-        0 10px 24px rgba(0, 0, 0, 0.10),
-        0 2px 6px rgba(0, 0, 0, 0.04);
-}
-
-.staff-card h3 {
-    margin-top: 0;
-    font-weight: 300;
-    font-size: 22px;
-}
-
-.staff-card p {
-    font-size: 15px;
-    line-height: 1.45;
-}
-
-.staff-card button {
-    margin-top: 12px;
-}
-
-.staff-hidden {
-    display: none !important;
-}
-
-@media (max-width: 800px) {
-    .staff-grid {
-        grid-template-columns: 1fr;
-    }
-}
-</style>
 </head>
 
-<body class="account-page">
+<body class="account-page staff-page">
 
-<div class="container account-container" style="display:block; max-width:1200px; padding:110px 40px;">
+<div class="container account-container">
 
-    <div class="account-main" style="max-width:1160px; margin:0 auto;">
+    <div class="account-main">
 
         <div class="account-block big">
             <h2>Staff кабінет Mōnal</h2>
@@ -124,7 +79,63 @@
 
         </div>
 
-        <button id="staff-logout" class="buy-btn" style="margin-top:28px;">
+        <section id="clients-section" class="staff-section staff-hidden">
+
+            <div class="account-block big">
+                <h2>Клієнти</h2>
+
+                <p>
+                    Пошук клієнта по телефону або email.
+                </p>
+
+                <div class="staff-search-row">
+                    <input
+                        type="text"
+                        id="staff-client-search"
+                        placeholder="Телефон або email"
+                    >
+
+                    <button id="staff-client-search-btn" class="buy-btn" type="button">
+                        Знайти
+                    </button>
+                </div>
+
+                <div id="staff-client-result" class="staff-result staff-hidden"></div>
+
+                <div id="staff-client-create-box" class="staff-create-box staff-hidden">
+                    <h3>Створити клієнта</h3>
+
+                    <input
+                        type="text"
+                        id="new-client-name"
+                        placeholder="Імʼя клієнта"
+                    >
+
+                    <input
+                        type="tel"
+                        id="new-client-phone"
+                        placeholder="Телефон"
+                    >
+
+                    <input
+                        type="email"
+                        id="new-client-email"
+                        placeholder="Email, необовʼязково"
+                    >
+
+                    <p class="staff-hint">
+                        Пароль буде створено автоматично: останні 4 цифри телефону.
+                    </p>
+
+                    <button id="create-client-btn" class="buy-btn" type="button">
+                        Створити клієнта
+                    </button>
+                </div>
+            </div>
+
+        </section>
+
+        <button id="staff-logout" class="buy-btn staff-logout-btn">
             Вийти
         </button>
 
@@ -154,6 +165,59 @@ document.querySelectorAll("[data-access]").forEach(card => {
         card.classList.add("staff-hidden");
     }
 });
+
+const clientsSection = document.getElementById("clients-section");
+const openClientsSectionBtn = document.getElementById("open-clients-section");
+const clientSearchInput = document.getElementById("staff-client-search");
+const clientSearchBtn = document.getElementById("staff-client-search-btn");
+const clientResult = document.getElementById("staff-client-result");
+const clientCreateBox = document.getElementById("staff-client-create-box");
+
+function showStaffSection(section) {
+    document.querySelectorAll(".staff-section").forEach(item => {
+        item.classList.add("staff-hidden");
+    });
+
+    if (section) {
+        section.classList.remove("staff-hidden");
+        section.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+}
+
+if (openClientsSectionBtn && clientsSection) {
+    openClientsSectionBtn.addEventListener("click", () => {
+        showStaffSection(clientsSection);
+    });
+}
+
+if (clientSearchBtn) {
+    clientSearchBtn.addEventListener("click", () => {
+        const searchValue = clientSearchInput.value.trim();
+
+        if (!searchValue) {
+            clientResult.classList.remove("staff-hidden");
+            clientResult.innerHTML = "Введіть телефон або email клієнта.";
+            clientCreateBox.classList.add("staff-hidden");
+            return;
+        }
+
+        clientResult.classList.remove("staff-hidden");
+        clientResult.innerHTML = "Пошук клієнта буде підключено наступним кроком.";
+
+        clientCreateBox.classList.remove("staff-hidden");
+
+        const phoneInput = document.getElementById("new-client-phone");
+        const emailInput = document.getElementById("new-client-email");
+
+        if (/^\+?\d[\d\s().-]*$/.test(searchValue)) {
+            phoneInput.value = searchValue;
+            emailInput.value = "";
+        } else {
+            emailInput.value = searchValue;
+            phoneInput.value = "";
+        }
+    });
+}
 
 document.getElementById("staff-logout").addEventListener("click", () => {
     localStorage.removeItem("monal_staff_user");

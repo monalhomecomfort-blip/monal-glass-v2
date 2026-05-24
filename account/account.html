@@ -250,14 +250,25 @@ Email:
 Пароль можна змінити без введення старого паролю, якщо ви вже увійшли в акаунт.
 </p>
 
-<div id="password-edit-area" style="display:none; margin-top:14px; max-width:420px;">
-    <div style="position:relative;">
+<div id="password-edit-area" style="display:none; margin-top:18px;">
+    <div style="position:relative; width:240px;">
         <input
             type="password"
             id="new-password-input"
             placeholder="Введіть новий пароль"
             autocomplete="new-password"
-            style="padding-right:52px;"
+            style="
+                width:100%;
+                box-sizing:border-box;
+                border:none;
+                outline:none;
+                border-radius:14px;
+                background:rgba(218,214,198,0.45);
+                box-shadow:0 8px 18px rgba(0,0,0,0.06);
+                padding:13px 52px 13px 18px;
+                font-size:16px;
+                color:#171717;
+            "
         >
 
         <button
@@ -266,7 +277,7 @@ Email:
             aria-label="Показати пароль"
             style="
                 position:absolute;
-                right:22px;
+                right:14px;
                 top:50%;
                 transform:translateY(-50%);
                 border:none;

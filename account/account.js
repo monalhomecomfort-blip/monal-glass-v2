@@ -19,7 +19,7 @@ if (!user) {
     const nameEl = document.getElementById("acc-fullname");
     if (nameEl) nameEl.textContent = user.name;
     const emailEl = document.getElementById("acc-email");
-    if (emailEl) emailEl.textContent = user.email;
+    if (emailEl) emailEl.textContent = user.email || "не вказано";
     const phoneEl = document.getElementById("acc-phone");
     if (phoneEl && user.phone) phoneEl.textContent = user.phone;    
     const birthdayEl = document.getElementById("acc-birthday");
@@ -262,6 +262,198 @@ if (logoutBtn) {
         localStorage.removeItem("user_id");
         window.location.href = "/account/login.html";
 
+    });
+}
+
+/* ===================== EDIT ACCOUNT BLOCK ===================== */
+
+const editAccountBtn = document.getElementById("edit-account-btn");
+const saveAccountBtn = document.getElementById("save-account-btn");
+const accountEmailSpan = document.getElementById("acc-email");
+
+if (editAccountBtn && saveAccountBtn && accountEmailSpan) {
+    editAccountBtn.addEventListener("click", () => {
+        let emailValue = accountEmailSpan.textContent.trim();
+
+        if (emailValue === "не вказано" || emailValue === "—") {
+            emailValue = "";
+        }
+
+        accountEmailSpan.innerHTML = `
+            <input
+                type="email"
+                id="account-email-input"
+                value="${emailValue}"
+                placeholder="Email"
+                autocomplete="email"
+            >
+        `;
+
+        editAccountBtn.style.display = "none";
+        saveAccountBtn.style.display = "inline-flex";
+    });
+
+    saveAccountBtn.addEventListener("click", async () => {
+        const emailInput = document.getElementById("account-email-input");
+        if (!emailInput) return;
+
+        const email = emailInput.value.trim();
+
+        const user = JSON.parse(localStorage.getItem("monal_user") || "null");
+        if (!user || !user.id) {
+            alert("Помилка користувача");
+            return;
+        }
+
+        try {
+            const response = await fetch(
+                "https://monal-mono-pay-production.up.railway.app/api/update-profile",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        userId: user.id,
+                        email: email || null
+                    })
+                }
+            );
+
+            const data = await response.json();
+
+            if (!data.ok) {
+                alert(data.error || "Не вдалося зберегти email");
+                return;
+            }
+
+            accountEmailSpan.textContent = email || "не вказано";
+
+            const updatedUser = {
+                ...user,
+                email: email || null
+            };
+
+            localStorage.setItem("monal_user", JSON.stringify(updatedUser));
+
+            editAccountBtn.style.display = "inline-flex";
+            saveAccountBtn.style.display = "none";
+
+        } catch (err) {
+            console.error(err);
+            alert("Помилка збереження");
+        }
+    });
+}
+
+/* ===================== CHANGE PASSWORD ===================== */
+
+const changePasswordBtn = document.getElementById("change-password-btn");
+const changePasswordModal = document.getElementById("change-password-modal");
+const changePasswordOverlay = document.getElementById("change-password-overlay");
+const newPasswordInput = document.getElementById("new-password-input");
+const saveNewPasswordBtn = document.getElementById("save-new-password-btn");
+const cancelNewPasswordBtn = document.getElementById("cancel-new-password-btn");
+const toggleNewPasswordBtn = document.getElementById("toggle-new-password");
+
+function closeChangePasswordModal() {
+    if (changePasswordModal) {
+        changePasswordModal.style.display = "none";
+    }
+
+    if (newPasswordInput) {
+        newPasswordInput.value = "";
+        newPasswordInput.type = "password";
+    }
+
+    if (toggleNewPasswordBtn) {
+        const eye = toggleNewPasswordBtn.querySelector(".eye-open");
+        const eyeOff = toggleNewPasswordBtn.querySelector(".eye-off");
+
+        if (eye) eye.style.display = "block";
+        if (eyeOff) eyeOff.style.display = "none";
+    }
+}
+
+if (changePasswordBtn && changePasswordModal) {
+    changePasswordBtn.addEventListener("click", () => {
+        changePasswordModal.style.display = "block";
+
+        if (newPasswordInput) {
+            newPasswordInput.focus();
+        }
+    });
+}
+
+if (changePasswordOverlay) {
+    changePasswordOverlay.addEventListener("click", closeChangePasswordModal);
+}
+
+if (cancelNewPasswordBtn) {
+    cancelNewPasswordBtn.addEventListener("click", closeChangePasswordModal);
+}
+
+if (toggleNewPasswordBtn && newPasswordInput) {
+    toggleNewPasswordBtn.addEventListener("click", () => {
+        const eye = toggleNewPasswordBtn.querySelector(".eye-open");
+        const eyeOff = toggleNewPasswordBtn.querySelector(".eye-off");
+
+        if (newPasswordInput.type === "password") {
+            newPasswordInput.type = "text";
+            if (eye) eye.style.display = "none";
+            if (eyeOff) eyeOff.style.display = "block";
+        } else {
+            newPasswordInput.type = "password";
+            if (eye) eye.style.display = "block";
+            if (eyeOff) eyeOff.style.display = "none";
+        }
+    });
+}
+
+if (saveNewPasswordBtn && newPasswordInput) {
+    saveNewPasswordBtn.addEventListener("click", async () => {
+        const newPassword = newPasswordInput.value.trim();
+
+        if (!newPassword) {
+            alert("Введіть новий пароль");
+            return;
+        }
+
+        const user = JSON.parse(localStorage.getItem("monal_user") || "null");
+        if (!user || !user.id) {
+            alert("Помилка користувача");
+            return;
+        }
+
+        try {
+            const response = await fetch(
+                "https://monal-mono-pay-production.up.railway.app/api/change-password",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        userId: user.id,
+                        newPassword
+                    })
+                }
+            );
+
+            const data = await response.json();
+
+            if (!data.ok) {
+                alert(data.error || "Не вдалося змінити пароль");
+                return;
+            }
+
+            alert("Пароль змінено");
+            closeChangePasswordModal();
+
+        } catch (err) {
+            console.error(err);
+            alert("Помилка збереження");
+        }
     });
 }
 

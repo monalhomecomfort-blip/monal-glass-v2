@@ -96,6 +96,12 @@
             Реєстрація продажу продукції Mōnal.
         </p>
 
+        <div id="sale-warehouse-row" class="staff-search-row staff-hidden">
+            <select id="sale-warehouse-select">
+                <option value="">Оберіть склад продажу</option>
+            </select>
+        </div>
+
         <div class="staff-create-box">
 
             <h3>Клієнт</h3>
@@ -393,6 +399,8 @@ const saleResult = document.getElementById("sale-result");
 const saleClientSearchInput = document.getElementById("sale-client-search");
 const saleClientSearchBtn = document.getElementById("sale-client-search-btn");
 const saleClientResult = document.getElementById("sale-client-result");
+const saleWarehouseRow = document.getElementById("sale-warehouse-row");
+const saleWarehouseSelect = document.getElementById("sale-warehouse-select");    
 
 let SALE_SELECTED_CUSTOMER = null;    
 
@@ -616,6 +624,19 @@ function fillWarehouseSelects(warehouses) {
             stockManageWarehouseSelect.appendChild(option);
         });
     }
+
+    if (saleWarehouseSelect) {
+    saleWarehouseSelect.innerHTML = `
+        <option value="">Оберіть склад продажу</option>
+    `;
+
+    STAFF_WAREHOUSES.forEach(warehouse => {
+        const option = document.createElement("option");
+        option.value = warehouse.warehouse_id;
+        option.textContent = `${warehouse.warehouse_name} ID ${warehouse.warehouse_id}`;
+        saleWarehouseSelect.appendChild(option);
+    });
+}
 }
 
 async function loadStaffWarehouses() {
@@ -854,6 +875,18 @@ if (openSalesSectionBtn && salesSection) {
     openSalesSectionBtn.addEventListener("click", async () => {
         showStaffSection(salesSection);
         await loadStaffProducts();
+
+        if (String(staff?.role || "") === "admin") {
+            if (saleWarehouseRow) {
+                saleWarehouseRow.classList.remove("staff-hidden");
+            }
+
+            await loadStaffWarehouses();
+        } else {
+            if (saleWarehouseRow) {
+                saleWarehouseRow.classList.add("staff-hidden");
+            }
+        }
     });
 }
 

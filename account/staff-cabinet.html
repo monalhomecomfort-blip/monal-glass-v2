@@ -314,20 +314,19 @@ function renderProductDropdown(searchText = "") {
 
     const query = String(searchText || "").trim().toLowerCase();
 
-    if (!query) {
-        saleProductDropdown.classList.add("staff-hidden");
-        saleProductDropdown.innerHTML = "";
-        return;
-    }
+    const matches = STAFF_PRODUCTS.filter(product => {
+        const title = String(product.display_name || "").toLowerCase();
+        const key = String(product.product_key || "").toLowerCase();
+        const category = String(product.category_slug || "").toLowerCase();
 
-    const matches = STAFF_PRODUCTS
-        .filter(product => {
-            const title = String(product.display_name || "").toLowerCase();
-            const key = String(product.product_key || "").toLowerCase();
+        if (!query) return true;
 
-            return title.includes(query) || key.includes(query);
-        })
-        .slice(0, 12);
+        return (
+            title.includes(query) ||
+            key.includes(query) ||
+            category.includes(query)
+        );
+    });
 
     saleProductDropdown.classList.remove("staff-hidden");
 

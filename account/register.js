@@ -3,7 +3,18 @@ document.getElementById("registerForm").addEventListener("submit", async functio
 
     const name = document.getElementById("name").value.trim();
     const email = document.getElementById("email").value.trim();
+    const phone = document.getElementById("phone").value.trim();
     const password = document.getElementById("password").value.trim();
+
+    if (!name || !password) {
+        alert("Введіть імʼя та пароль");
+        return;
+    }
+
+    if (!email && !phone) {
+        alert("Вкажіть email або телефон");
+        return;
+    }
 
     try {
         const registerResponse = await fetch(
@@ -15,7 +26,8 @@ document.getElementById("registerForm").addEventListener("submit", async functio
                 },
                 body: JSON.stringify({
                     name,
-                    email,
+                    email: email || null,
+                    phone: phone || null,
                     password
                 })
             }
@@ -28,6 +40,8 @@ document.getElementById("registerForm").addEventListener("submit", async functio
             return;
         }
 
+        const loginValue = email || phone;
+
         const loginResponse = await fetch(
             "https://monal-mono-pay-production.up.railway.app/api/login",
             {
@@ -36,7 +50,8 @@ document.getElementById("registerForm").addEventListener("submit", async functio
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    email,
+                    login: loginValue,
+                    email: loginValue,
                     password
                 })
             }

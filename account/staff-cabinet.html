@@ -117,15 +117,6 @@
                     autocomplete="off"
                 >
 
-                <button
-                    type="button"
-                    id="sale-product-toggle"
-                    class="staff-product-toggle"
-                    aria-label="Показати всі товари"
-                >
-                    ▾
-                </button>
-
                 <input
                     type="hidden"
                     id="sale-product-id"
@@ -269,6 +260,7 @@ const newClientPhoneInput = document.getElementById("new-client-phone");
 const newClientEmailInput = document.getElementById("new-client-email");
 const createClientBtn = document.getElementById("create-client-btn");
 const createClientResult = document.getElementById("staff-client-create-result");
+const saleProductPicker = document.querySelector("#sales-section .staff-product-picker");
 const saleProductSearch = document.getElementById("sale-product-search");
 const saleProductId = document.getElementById("sale-product-id");
 const saleProductDropdown = document.getElementById("sale-product-dropdown");

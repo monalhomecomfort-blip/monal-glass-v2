@@ -245,6 +245,22 @@
     </div>
 
 </section>
+
+<section id="my-stock-section" class="staff-section staff-hidden">
+
+    <div class="account-block big">
+        <h2>Мої залишки</h2>
+
+        <p>
+            Залишки по складу, привʼязаному до вашого staff-акаунта.
+        </p>
+
+        <div id="my-stock-result" class="staff-result staff-hidden">
+            Таблицю залишків по вашому складу підключимо наступним кроком.
+        </div>
+    </div>
+
+</section>
         
 <section id="clients-section" class="staff-section staff-hidden">
 
@@ -353,7 +369,10 @@ const createWarehouseBtn = document.getElementById("create-warehouse-btn");
 const stockManageResult = document.getElementById("stock-manage-result");
 const stockReportWarehouseFilter = document.getElementById("stock-report-warehouse-filter");
 const loadStockReportBtn = document.getElementById("load-stock-report-btn");
-const stockReportResult = document.getElementById("stock-report-result");    
+const stockReportResult = document.getElementById("stock-report-result");
+const myStockSection = document.getElementById("my-stock-section");
+const openMyStockSectionBtn = document.getElementById("open-my-stock-section");
+const myStockResult = document.getElementById("my-stock-result");    
 
 let STAFF_WAREHOUSES = [];    
 const clientsSection = document.getElementById("clients-section");
@@ -810,6 +829,17 @@ if (openStockManageSectionBtn && stockManageSection) {
         await loadStaffWarehouses();
     });
 }
+
+if (openMyStockSectionBtn && myStockSection) {
+    openMyStockSectionBtn.addEventListener("click", () => {
+        showStaffSection(myStockSection);
+
+        if (myStockResult) {
+            myStockResult.classList.remove("staff-hidden");
+            myStockResult.innerHTML = "Залишки по вашому складу підключимо наступним кроком.";
+        }
+    });
+}    
     
 if (openClientsSectionBtn && clientsSection) {
     openClientsSectionBtn.addEventListener("click", () => {

@@ -79,6 +79,72 @@
 
         </div>
 
+<section id="sales-section" class="staff-section staff-hidden">
+
+    <div class="account-block big">
+        <h2>Продажі</h2>
+
+        <p>
+            Реєстрація продажу продукції Mōnal.
+        </p>
+
+        <div class="staff-create-box">
+
+            <h3>Клієнт</h3>
+
+            <div class="staff-register-row">
+                <input
+                    type="text"
+                    id="sale-client-search"
+                    placeholder="Телефон або email клієнта"
+                >
+
+                <button id="sale-client-search-btn" class="buy-btn" type="button">
+                    Знайти
+                </button>
+            </div>
+
+            <div id="sale-client-result" class="staff-result staff-hidden"></div>
+
+            <h3>Товар</h3>
+
+            <div class="staff-register-row">
+                <select id="sale-product-select">
+                    <option value="">Товари підключимо наступним кроком</option>
+                </select>
+
+                <input
+                    type="number"
+                    id="sale-product-quantity"
+                    placeholder="Кількість"
+                    min="1"
+                    value="1"
+                >
+
+                <select id="sale-payment-type">
+                    <option value="">Тип оплати</option>
+                    <option value="cash">Готівка</option>
+                    <option value="card_transfer">Переказ на карту</option>
+                    <option value="mono_qr">Mono QR / посилання</option>
+                    <option value="certificate">Сертифікат</option>
+                </select>
+
+                <button id="create-sale-btn" class="buy-btn" type="button">
+                    Провести
+                </button>
+            </div>
+
+            <p class="staff-hint">
+                Після проведення продажу система автоматично скоригує залишки.
+            </p>
+
+            <div id="sale-result" class="staff-result staff-hidden"></div>
+
+        </div>
+    </div>
+
+</section>
+        
 <section id="clients-section" class="staff-section staff-hidden">
 
     <div class="account-block big">

@@ -248,7 +248,82 @@ const newClientPhoneInput = document.getElementById("new-client-phone");
 const newClientEmailInput = document.getElementById("new-client-email");
 const createClientBtn = document.getElementById("create-client-btn");
 const createClientResult = document.getElementById("staff-client-create-result");
+const saleProductSelect = document.getElementById("sale-product-select");
+const saleResult = document.getElementById("sale-result");
 
+let STAFF_PRODUCTS_LOADED = false;
+let STAFF_PRODUCTS = [];    
+
+async function loadStaffProducts() {
+    if (STAFF_PRODUCTS_LOADED) return;
+
+    if (!saleProductSelect) return;
+
+    saleProductSelect.innerHTML = `
+        <option value="">Завантажую товари…</option>
+    `;
+
+    try {
+        const response = await fetch(
+            "https://monal-mono-pay-production.up.railway.app/api/staff/products",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    staffId: staff.id
+                })
+            }
+        );
+
+        const data = await response.json();
+
+        if (!data.ok) {
+            saleProductSelect.innerHTML = `
+                <option value="">Не вдалося завантажити товари</option>
+            `;
+            return;
+        }
+
+        STAFF_PRODUCTS = Array.isArray(data.products) ? data.products : [];
+
+        if (!STAFF_PRODUCTS.length) {
+            saleProductSelect.innerHTML = `
+                <option value="">Активних товарів немає</option>
+            `;
+            return;
+        }
+
+        saleProductSelect.innerHTML = `
+            <option value="">Оберіть товар</option>
+        `;
+
+        STAFF_PRODUCTS.forEach(product => {
+            const option = document.createElement("option");
+
+            option.value = product.id;
+            option.dataset.productKey = product.product_key || "";
+            option.dataset.price = product.price || 0;
+            option.dataset.costPrice = product.cost_price || "";
+            option.dataset.realizationPrice = product.realization_price || "";
+
+            option.textContent = `${product.display_name || product.product_key} — ${product.price || 0} грн`;
+
+            saleProductSelect.appendChild(option);
+        });
+
+        STAFF_PRODUCTS_LOADED = true;
+
+    } catch (err) {
+        console.error(err);
+
+        saleProductSelect.innerHTML = `
+            <option value="">Помилка зʼєднання</option>
+        `;
+    }
+}
+    
 function showStaffSection(section) {
     document.querySelectorAll(".staff-section").forEach(item => {
         item.classList.add("staff-hidden");
@@ -261,8 +336,9 @@ function showStaffSection(section) {
 }
 
 if (openSalesSectionBtn && salesSection) {
-    openSalesSectionBtn.addEventListener("click", () => {
+    openSalesSectionBtn.addEventListener("click", async () => {
         showStaffSection(salesSection);
+        await loadStaffProducts();
     });
 }
     

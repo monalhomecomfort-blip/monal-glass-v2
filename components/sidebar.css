@@ -696,3 +696,36 @@
         grid-template-columns: 1fr;
     }
 }
+
+#sales-section .staff-product-picker {
+    position: relative;
+}
+
+#sales-section .staff-product-picker input[type="text"] {
+    padding-right: 46px;
+    cursor: pointer;
+}
+
+#sales-section .staff-product-picker::after {
+    content: "";
+    position: absolute;
+    right: 18px;
+    top: 50%;
+    transform: translateY(-35%);
+
+    width: 0;
+    height: 0;
+
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 6px solid #111;
+
+    opacity: 0.9;
+    pointer-events: none;
+    z-index: 5;
+}
+
+/* якщо стара кнопка-стрілка десь лишилась, прибиваємо */
+#sales-section .staff-product-toggle {
+    display: none !important;
+}

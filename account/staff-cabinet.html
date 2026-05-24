@@ -236,6 +236,8 @@ document.querySelectorAll("[data-access]").forEach(card => {
     }
 });
 
+const salesSection = document.getElementById("sales-section");
+const openSalesSectionBtn = document.getElementById("open-sales-section");    
 const clientsSection = document.getElementById("clients-section");
 const openClientsSectionBtn = document.getElementById("open-clients-section");
 const clientSearchInput = document.getElementById("staff-client-search");
@@ -258,6 +260,12 @@ function showStaffSection(section) {
     }
 }
 
+if (openSalesSectionBtn && salesSection) {
+    openSalesSectionBtn.addEventListener("click", () => {
+        showStaffSection(salesSection);
+    });
+}
+    
 if (openClientsSectionBtn && clientsSection) {
     openClientsSectionBtn.addEventListener("click", () => {
         showStaffSection(clientsSection);

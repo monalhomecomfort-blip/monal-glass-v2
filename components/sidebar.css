@@ -729,3 +729,29 @@
 #sales-section .staff-product-toggle {
     display: none !important;
 }
+
+/* ===== STAFF SALE: однакова стрілка для товару і типу оплати ===== */
+
+#sales-section .staff-product-picker::after {
+    content: none !important;
+    display: none !important;
+}
+
+#sales-section #sale-product-search,
+#sales-section #sale-payment-type {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+
+    background-color: #e7e4d9;
+    background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1.5 1.5L6 6L10.5 1.5' fill='none' stroke='%23111' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 18px center;
+    background-size: 12px 8px;
+
+    padding-right: 48px;
+}
+
+#sales-section #sale-payment-type::-ms-expand {
+    display: none;
+}

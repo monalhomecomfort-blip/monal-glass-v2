@@ -265,6 +265,11 @@ const saleProductSearch = document.getElementById("sale-product-search");
 const saleProductId = document.getElementById("sale-product-id");
 const saleProductDropdown = document.getElementById("sale-product-dropdown");
 const saleResult = document.getElementById("sale-result");
+const saleClientSearchInput = document.getElementById("sale-client-search");
+const saleClientSearchBtn = document.getElementById("sale-client-search-btn");
+const saleClientResult = document.getElementById("sale-client-result");
+
+let SALE_SELECTED_CUSTOMER = null;    
 
 let STAFF_PRODUCTS_LOADED = false;
 let STAFF_PRODUCTS = [];    
@@ -391,7 +396,72 @@ if (saleProductSearch && saleProductDropdown && saleProductId) {
             saleProductDropdown.classList.add("staff-hidden");
         }
     });
-} 
+}
+
+if (saleClientSearchBtn) {
+    saleClientSearchBtn.addEventListener("click", async () => {
+        const searchValue = saleClientSearchInput.value.trim();
+
+        SALE_SELECTED_CUSTOMER = null;
+
+        if (!searchValue) {
+            saleClientResult.classList.remove("staff-hidden");
+            saleClientResult.innerHTML = "Введіть телефон або email клієнта.";
+            return;
+        }
+
+        saleClientResult.classList.remove("staff-hidden");
+        saleClientResult.innerHTML = "Шукаю клієнта…";
+
+        try {
+            const response = await fetch(
+                "https://monal-mono-pay-production.up.railway.app/api/staff/search-customer",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        staffId: staff.id,
+                        searchValue
+                    })
+                }
+            );
+
+            const data = await response.json();
+
+            if (!data.ok) {
+                saleClientResult.innerHTML = data.error || "Помилка пошуку клієнта.";
+                return;
+            }
+
+            if (!data.found || !data.customer) {
+                saleClientResult.innerHTML = `
+                    <strong>Клієнта не знайдено.</strong><br>
+                    Спочатку створіть клієнта в секції “Клієнти”.
+                `;
+                return;
+            }
+
+            const c = data.customer;
+            SALE_SELECTED_CUSTOMER = c;
+
+            saleClientResult.innerHTML = `
+                <strong>Клієнта обрано</strong><br>
+                ID: ${c.id}<br>
+                Імʼя: ${c.name || "—"}<br>
+                Email: ${c.email || "—"}<br>
+                Телефон: ${c.phone || "—"}<br>
+                Знижка: ${c.discount || 0}%<br>
+                Накопичено: ${c.total_spent || 0} грн
+            `;
+
+        } catch (err) {
+            console.error(err);
+            saleClientResult.innerHTML = "Помилка зʼєднання.";
+        }
+    });
+}    
     
 function showStaffSection(section) {
     document.querySelectorAll(".staff-section").forEach(item => {

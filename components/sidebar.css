@@ -755,3 +755,50 @@
 #sales-section #sale-payment-type::-ms-expand {
     display: none;
 }
+
+.staff-stock-actions {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: 22px;
+}
+
+.staff-stock-select-row,
+.staff-stock-create-row {
+    display: grid;
+    grid-template-columns: minmax(280px, 1fr) auto;
+    gap: 14px;
+    align-items: center;
+}
+
+.staff-stock-select-row select,
+.staff-stock-create-row input {
+    height: 44px;
+    padding: 0 16px;
+    border-radius: 14px;
+    border: none;
+    background: #e7e4d9;
+    color: #1f1f1f;
+    font-size: 15px;
+    font-family: 'Montserrat', sans-serif;
+    outline: none;
+    box-shadow:
+        0 1px 0 rgba(255,255,255,0.35) inset,
+        0 2px 8px rgba(0,0,0,0.06);
+}
+
+#stock-manage-section .staff-create-box {
+    max-width: none;
+    width: 100%;
+}
+
+@media (max-width: 900px) {
+    .staff-stock-actions,
+    .staff-stock-select-row,
+    .staff-stock-create-row {
+        display: grid;
+        grid-template-columns: 1fr;
+        width: 100%;
+    }
+}

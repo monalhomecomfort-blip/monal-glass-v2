@@ -7,18 +7,64 @@
 <link rel="icon" type="image/png" sizes="32x32" href="../favicon32_only_o.png">
 <link rel="stylesheet" href="../style.css">
 
-<title>Адмін кабінет | Mōnal</title>
+<title>Staff кабінет | Mōnal</title>
 <meta name="robots" content="noindex, nofollow">
+
+<style>
+.staff-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(260px, 1fr));
+    gap: 20px;
+}
+
+.staff-card {
+    padding: 22px 24px;
+    border-radius: 18px;
+    background: #f4efe6;
+    color: #1f1f1f;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.35) inset,
+        0 0 0 1px rgba(0, 0, 0, 0.04),
+        0 10px 24px rgba(0, 0, 0, 0.10),
+        0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+.staff-card h3 {
+    margin-top: 0;
+    font-weight: 300;
+    font-size: 22px;
+}
+
+.staff-card p {
+    font-size: 15px;
+    line-height: 1.45;
+}
+
+.staff-card button {
+    margin-top: 12px;
+}
+
+.staff-hidden {
+    display: none !important;
+}
+
+@media (max-width: 800px) {
+    .staff-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
 </head>
 
 <body class="account-page">
 
-<div class="container account-container">
+<div class="container account-container" style="display:block; max-width:1200px; padding:110px 40px;">
 
-    <div class="account-main">
+    <div class="account-main" style="max-width:1160px; margin:0 auto;">
 
         <div class="account-block big">
-            <h2>Адмін кабінет Mōnal</h2>
+            <h2>Staff кабінет Mōnal</h2>
             <p>
                 <strong id="staff-name">—</strong><br>
                 Роль: <span id="staff-role">—</span><br>
@@ -26,12 +72,59 @@
             </p>
         </div>
 
-        <div class="account-block big">
-            <h2>Меню</h2>
-            <p>Тут буде керування продажами, клієнтами та залишками.</p>
+        <div class="staff-grid">
+
+            <div class="staff-card" data-access="admin,manager,partner">
+                <h3>Продажі</h3>
+                <p>Реєстрація продажу, вибір товарів, клієнта, типу оплати.</p>
+                <button class="buy-btn" type="button" id="open-sales-section">
+                    Перейти
+                </button>
+            </div>
+
+            <div class="staff-card" data-access="admin,manager,partner">
+                <h3>Клієнти</h3>
+                <p>Пошук клієнта по телефону або email, створення нового клієнта.</p>
+                <button class="buy-btn" type="button" id="open-clients-section">
+                    Перейти
+                </button>
+            </div>
+
+            <div class="staff-card" data-access="admin">
+                <h3>Залишки</h3>
+                <p>Внесення початкових залишків, перегляд залишків по складах.</p>
+                <button class="buy-btn" type="button" id="open-stock-section">
+                    Перейти
+                </button>
+            </div>
+
+            <div class="staff-card" data-access="manager,partner">
+                <h3>Мої залишки</h3>
+                <p>Перегляд залишків по складу, привʼязаному до вашого акаунта.</p>
+                <button class="buy-btn" type="button" id="open-my-stock-section">
+                    Перейти
+                </button>
+            </div>
+
+            <div class="staff-card" data-access="admin">
+                <h3>Акції та пропозиції</h3>
+                <p>Керування промокодами, персональними пропозиціями та акціями.</p>
+                <button class="buy-btn" type="button" id="open-promos-section">
+                    Перейти
+                </button>
+            </div>
+
+            <div class="staff-card" data-access="admin">
+                <h3>Staff users</h3>
+                <p>Перегляд внутрішніх користувачів: адмінів, менеджерів, партнерів.</p>
+                <button class="buy-btn" type="button" id="open-staff-section">
+                    Перейти
+                </button>
+            </div>
+
         </div>
 
-        <button id="staff-logout" class="buy-btn">
+        <button id="staff-logout" class="buy-btn" style="margin-top:28px;">
             Вийти
         </button>
 
@@ -52,6 +145,15 @@ document.getElementById("staff-warehouse").textContent =
     staff?.warehouse_id !== null && staff?.warehouse_id !== undefined
         ? staff.warehouse_id
         : "—";
+
+document.querySelectorAll("[data-access]").forEach(card => {
+    const allowedRoles = card.dataset.access.split(",").map(r => r.trim());
+    const role = String(staff?.role || "").trim();
+
+    if (!allowedRoles.includes(role)) {
+        card.classList.add("staff-hidden");
+    }
+});
 
 document.getElementById("staff-logout").addEventListener("click", () => {
     localStorage.removeItem("monal_staff_user");

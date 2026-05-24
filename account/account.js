@@ -348,80 +348,69 @@ if (editAccountBtn && saveAccountBtn && accountEmailSpan) {
 
 /* ===================== CHANGE PASSWORD ===================== */
 
-const changePasswordBtn = document.getElementById("change-password-btn");
-const changePasswordModal = document.getElementById("change-password-modal");
-const changePasswordOverlay = document.getElementById("change-password-overlay");
+const editPasswordBtn = document.getElementById("edit-password-btn");
+const savePasswordBtn = document.getElementById("save-password-btn");
+const passwordEditArea = document.getElementById("password-edit-area");
+const passwordInfo = document.getElementById("password-info");
 const newPasswordInput = document.getElementById("new-password-input");
-const saveNewPasswordBtn = document.getElementById("save-new-password-btn");
-const cancelNewPasswordBtn = document.getElementById("cancel-new-password-btn");
+const passwordSaveMessage = document.getElementById("password-save-message");
 const toggleNewPasswordBtn = document.getElementById("toggle-new-password");
 
-function closeChangePasswordModal() {
-    if (changePasswordModal) {
-        changePasswordModal.style.display = "none";
-    }
+function resetPasswordEye() {
+    if (!toggleNewPasswordBtn || !newPasswordInput) return;
 
-    if (newPasswordInput) {
+    newPasswordInput.type = "password";
+
+    const eye = toggleNewPasswordBtn.querySelector(".eye-open");
+    const eyeOff = toggleNewPasswordBtn.querySelector(".eye-off");
+
+    if (eye) eye.style.display = "block";
+    if (eyeOff) eyeOff.style.display = "none";
+}
+
+if (editPasswordBtn && savePasswordBtn && passwordEditArea && newPasswordInput) {
+    editPasswordBtn.addEventListener("click", () => {
+        passwordEditArea.style.display = "block";
+        editPasswordBtn.style.display = "none";
+        savePasswordBtn.style.display = "inline-flex";
+
+        if (passwordInfo) {
+            passwordInfo.textContent = "Введіть новий пароль і натисніть “Зберегти”.";
+        }
+
+        if (passwordSaveMessage) {
+            passwordSaveMessage.style.display = "none";
+            passwordSaveMessage.textContent = "";
+        }
+
         newPasswordInput.value = "";
-        newPasswordInput.type = "password";
-    }
-
-    if (toggleNewPasswordBtn) {
-        const eye = toggleNewPasswordBtn.querySelector(".eye-open");
-        const eyeOff = toggleNewPasswordBtn.querySelector(".eye-off");
-
-        if (eye) eye.style.display = "block";
-        if (eyeOff) eyeOff.style.display = "none";
-    }
-}
-
-if (changePasswordBtn && changePasswordModal) {
-    changePasswordBtn.addEventListener("click", () => {
-        changePasswordModal.style.display = "block";
-
-        if (newPasswordInput) {
-            newPasswordInput.focus();
-        }
+        resetPasswordEye();
+        newPasswordInput.focus();
     });
-}
 
-if (changePasswordOverlay) {
-    changePasswordOverlay.addEventListener("click", closeChangePasswordModal);
-}
-
-if (cancelNewPasswordBtn) {
-    cancelNewPasswordBtn.addEventListener("click", closeChangePasswordModal);
-}
-
-if (toggleNewPasswordBtn && newPasswordInput) {
-    toggleNewPasswordBtn.addEventListener("click", () => {
-        const eye = toggleNewPasswordBtn.querySelector(".eye-open");
-        const eyeOff = toggleNewPasswordBtn.querySelector(".eye-off");
-
-        if (newPasswordInput.type === "password") {
-            newPasswordInput.type = "text";
-            if (eye) eye.style.display = "none";
-            if (eyeOff) eyeOff.style.display = "block";
-        } else {
-            newPasswordInput.type = "password";
-            if (eye) eye.style.display = "block";
-            if (eyeOff) eyeOff.style.display = "none";
-        }
-    });
-}
-
-if (saveNewPasswordBtn && newPasswordInput) {
-    saveNewPasswordBtn.addEventListener("click", async () => {
+    savePasswordBtn.addEventListener("click", async () => {
         const newPassword = newPasswordInput.value.trim();
 
+        if (passwordSaveMessage) {
+            passwordSaveMessage.style.display = "none";
+            passwordSaveMessage.textContent = "";
+        }
+
         if (!newPassword) {
-            alert("Введіть новий пароль");
+            if (passwordSaveMessage) {
+                passwordSaveMessage.textContent = "Введіть новий пароль";
+                passwordSaveMessage.style.display = "block";
+            }
             return;
         }
 
         const user = JSON.parse(localStorage.getItem("monal_user") || "null");
+
         if (!user || !user.id) {
-            alert("Помилка користувача");
+            if (passwordSaveMessage) {
+                passwordSaveMessage.textContent = "Помилка користувача";
+                passwordSaveMessage.style.display = "block";
+            }
             return;
         }
 
@@ -443,16 +432,48 @@ if (saveNewPasswordBtn && newPasswordInput) {
             const data = await response.json();
 
             if (!data.ok) {
-                alert(data.error || "Не вдалося змінити пароль");
+                if (passwordSaveMessage) {
+                    passwordSaveMessage.textContent = data.error || "Не вдалося змінити пароль";
+                    passwordSaveMessage.style.display = "block";
+                }
                 return;
             }
 
-            alert("Пароль змінено");
-            closeChangePasswordModal();
+            newPasswordInput.value = "";
+            resetPasswordEye();
+
+            passwordEditArea.style.display = "none";
+            savePasswordBtn.style.display = "none";
+            editPasswordBtn.style.display = "inline-flex";
+
+            if (passwordInfo) {
+                passwordInfo.textContent = "Пароль змінено.";
+            }
 
         } catch (err) {
             console.error(err);
-            alert("Помилка збереження");
+
+            if (passwordSaveMessage) {
+                passwordSaveMessage.textContent = "Помилка збереження";
+                passwordSaveMessage.style.display = "block";
+            }
+        }
+    });
+}
+
+if (toggleNewPasswordBtn && newPasswordInput) {
+    toggleNewPasswordBtn.addEventListener("click", () => {
+        const eye = toggleNewPasswordBtn.querySelector(".eye-open");
+        const eyeOff = toggleNewPasswordBtn.querySelector(".eye-off");
+
+        if (newPasswordInput.type === "password") {
+            newPasswordInput.type = "text";
+            if (eye) eye.style.display = "none";
+            if (eyeOff) eyeOff.style.display = "block";
+        } else {
+            newPasswordInput.type = "password";
+            if (eye) eye.style.display = "block";
+            if (eyeOff) eyeOff.style.display = "none";
         }
     });
 }

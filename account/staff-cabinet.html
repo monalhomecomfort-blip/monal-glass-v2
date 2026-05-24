@@ -109,9 +109,21 @@
             <h3>Товар</h3>
 
             <div class="staff-register-row">
-                <select id="sale-product-select">
-                    <option value="">Товари підключимо наступним кроком</option>
-                </select>
+            <div class="staff-product-picker">
+                <input
+                    type="text"
+                    id="sale-product-search"
+                    placeholder="Почніть вводити назву товару"
+                    autocomplete="off"
+                >
+
+                <input
+                    type="hidden"
+                    id="sale-product-id"
+                >
+
+                <div id="sale-product-dropdown" class="staff-product-dropdown staff-hidden"></div>
+            </div>
 
                 <input
                     type="number"
@@ -248,7 +260,9 @@ const newClientPhoneInput = document.getElementById("new-client-phone");
 const newClientEmailInput = document.getElementById("new-client-email");
 const createClientBtn = document.getElementById("create-client-btn");
 const createClientResult = document.getElementById("staff-client-create-result");
-const saleProductSelect = document.getElementById("sale-product-select");
+const saleProductSearch = document.getElementById("sale-product-search");
+const saleProductId = document.getElementById("sale-product-id");
+const saleProductDropdown = document.getElementById("sale-product-dropdown");
 const saleResult = document.getElementById("sale-result");
 
 let STAFF_PRODUCTS_LOADED = false;
@@ -257,11 +271,9 @@ let STAFF_PRODUCTS = [];
 async function loadStaffProducts() {
     if (STAFF_PRODUCTS_LOADED) return;
 
-    if (!saleProductSelect) return;
+    if (!saleProductSearch || !saleProductDropdown) return;
 
-    saleProductSelect.innerHTML = `
-        <option value="">Завантажую товари…</option>
-    `;
+    saleProductSearch.placeholder = "Завантажую товари…";
 
     try {
         const response = await fetch(
@@ -280,49 +292,93 @@ async function loadStaffProducts() {
         const data = await response.json();
 
         if (!data.ok) {
-            saleProductSelect.innerHTML = `
-                <option value="">Не вдалося завантажити товари</option>
-            `;
+            saleProductSearch.placeholder = "Не вдалося завантажити товари";
             return;
         }
 
         STAFF_PRODUCTS = Array.isArray(data.products) ? data.products : [];
-
-        if (!STAFF_PRODUCTS.length) {
-            saleProductSelect.innerHTML = `
-                <option value="">Активних товарів немає</option>
-            `;
-            return;
-        }
-
-        saleProductSelect.innerHTML = `
-            <option value="">Оберіть товар</option>
-        `;
-
-        STAFF_PRODUCTS.forEach(product => {
-            const option = document.createElement("option");
-
-            option.value = product.id;
-            option.dataset.productKey = product.product_key || "";
-            option.dataset.price = product.price || 0;
-            option.dataset.costPrice = product.cost_price || "";
-            option.dataset.realizationPrice = product.realization_price || "";
-
-            option.textContent = `${product.display_name || product.product_key} — ${product.price || 0} грн`;
-
-            saleProductSelect.appendChild(option);
-        });
-
         STAFF_PRODUCTS_LOADED = true;
+
+        saleProductSearch.placeholder = STAFF_PRODUCTS.length
+            ? "Почніть вводити назву товару"
+            : "Активних товарів немає";
 
     } catch (err) {
         console.error(err);
-
-        saleProductSelect.innerHTML = `
-            <option value="">Помилка зʼєднання</option>
-        `;
+        saleProductSearch.placeholder = "Помилка зʼєднання";
     }
 }
+
+function renderProductDropdown(searchText = "") {
+    if (!saleProductDropdown) return;
+
+    const query = String(searchText || "").trim().toLowerCase();
+
+    if (!query) {
+        saleProductDropdown.classList.add("staff-hidden");
+        saleProductDropdown.innerHTML = "";
+        return;
+    }
+
+    const matches = STAFF_PRODUCTS
+        .filter(product => {
+            const title = String(product.display_name || "").toLowerCase();
+            const key = String(product.product_key || "").toLowerCase();
+
+            return title.includes(query) || key.includes(query);
+        })
+        .slice(0, 12);
+
+    saleProductDropdown.classList.remove("staff-hidden");
+
+    if (!matches.length) {
+        saleProductDropdown.innerHTML = `
+            <div class="staff-product-empty">Товар не знайдено</div>
+        `;
+        return;
+    }
+
+    saleProductDropdown.innerHTML = matches.map(product => `
+        <div
+            class="staff-product-option"
+            data-product-id="${product.id}"
+            data-product-title="${product.display_name || product.product_key}"
+        >
+            ${product.display_name || product.product_key} · ${product.price || 0} грн
+        </div>
+    `).join("");
+}
+
+if (saleProductSearch && saleProductDropdown && saleProductId) {
+    saleProductSearch.addEventListener("input", () => {
+        saleProductId.value = "";
+        renderProductDropdown(saleProductSearch.value);
+    });
+
+    saleProductSearch.addEventListener("focus", () => {
+        renderProductDropdown(saleProductSearch.value);
+    });
+
+    saleProductDropdown.addEventListener("click", (e) => {
+        const option = e.target.closest(".staff-product-option");
+        if (!option) return;
+
+        saleProductId.value = option.dataset.productId;
+        saleProductSearch.value = option.dataset.productTitle;
+
+        saleProductDropdown.classList.add("staff-hidden");
+        saleProductDropdown.innerHTML = "";
+    });
+
+    document.addEventListener("click", (e) => {
+        if (
+            !saleProductSearch.contains(e.target) &&
+            !saleProductDropdown.contains(e.target)
+        ) {
+            saleProductDropdown.classList.add("staff-hidden");
+        }
+    });
+} 
     
 function showStaffSection(section) {
     document.querySelectorAll(".staff-section").forEach(item => {

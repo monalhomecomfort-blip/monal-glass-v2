@@ -919,20 +919,27 @@ if (stockManageResult) {
 
         const rows = stockManageResult.querySelectorAll("tr[data-stock-id]");
 
-        const items = Array.from(rows).map(row => {
-            const enabled = row.querySelector(".stock-item-enabled")?.checked || false;
-            const costPrice = row.querySelector(".stock-cost-price")?.value || "";
-            const realizationPrice = row.querySelector(".stock-realization-price")?.value || "";
-            const initialQuantity = row.querySelector(".stock-initial-quantity")?.value || 0;
+const items = Array.from(rows)
+    .map(row => {
+        const enabled = row.querySelector(".stock-item-enabled")?.checked || false;
+        const costPrice = row.querySelector(".stock-cost-price")?.value || "";
+        const realizationPrice = row.querySelector(".stock-realization-price")?.value || "";
+        const initialQuantity = row.querySelector(".stock-initial-quantity")?.value || 0;
 
-            return {
-                stockId: row.dataset.stockId,
-                enabled,
-                costPrice,
-                realizationPrice,
-                initialQuantity
-            };
-        });
+        return {
+            stockId: row.dataset.stockId,
+            enabled,
+            costPrice,
+            realizationPrice,
+            initialQuantity
+        };
+    })
+    .filter(item =>
+        item.enabled ||
+        Number(item.initialQuantity || 0) > 0 ||
+        item.costPrice !== "" ||
+        item.realizationPrice !== ""
+    );
 
         if (!items.length) {
             stockManageResult.innerHTML = "Немає товарів для збереження.";

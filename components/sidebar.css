@@ -381,3 +381,124 @@
 #sidebar-close:active {
     outline: none;
 }
+
+/* ===================== STAFF CABINET ===================== */
+
+.staff-page .account-container {
+    display: block;
+    max-width: 1200px;
+    padding: 110px 40px;
+}
+
+.staff-page .account-main {
+    max-width: 1160px;
+    margin: 0 auto;
+}
+
+.staff-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(260px, 1fr));
+    gap: 20px;
+}
+
+.staff-card {
+    padding: 22px 24px;
+    border-radius: 18px;
+    background: #f4efe6;
+    color: #1f1f1f;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.35) inset,
+        0 0 0 1px rgba(0, 0, 0, 0.04),
+        0 10px 24px rgba(0, 0, 0, 0.10),
+        0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+.staff-card h3 {
+    margin-top: 0;
+    font-weight: 300;
+    font-size: 22px;
+}
+
+.staff-card p {
+    font-size: 15px;
+    line-height: 1.45;
+}
+
+.staff-card button {
+    margin-top: 12px;
+}
+
+.staff-section {
+    margin-top: 24px;
+}
+
+.staff-search-row {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    margin-top: 18px;
+    max-width: 640px;
+}
+
+.staff-search-row input,
+.staff-create-box input {
+    height: 44px;
+    padding: 0 16px;
+    border-radius: 14px;
+    border: none;
+    background: #e7e4d9;
+    color: #1f1f1f;
+    font-size: 15px;
+    font-family: 'Montserrat', sans-serif;
+    outline: none;
+    box-shadow:
+        0 1px 0 rgba(255,255,255,0.35) inset,
+        0 2px 8px rgba(0,0,0,0.06);
+}
+
+.staff-search-row input {
+    flex: 1;
+}
+
+.staff-result {
+    margin-top: 20px;
+    padding: 16px 18px;
+    border-radius: 16px;
+    background: rgba(231, 228, 217, 0.65);
+    line-height: 1.55;
+}
+
+.staff-create-box {
+    margin-top: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 520px;
+}
+
+.staff-create-box h3 {
+    margin-bottom: 4px;
+    font-weight: 300;
+}
+
+.staff-hint {
+    font-size: 14px;
+    opacity: 0.75;
+    margin: 0;
+}
+
+.staff-hidden {
+    display: none !important;
+}
+
+@media (max-width: 800px) {
+    .staff-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .staff-search-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}

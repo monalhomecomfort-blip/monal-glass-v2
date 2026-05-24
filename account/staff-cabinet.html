@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon32_only_o.png">
+<link rel="stylesheet" href="../style.css">
+
+<title>Адмін кабінет | Mōnal</title>
+<meta name="robots" content="noindex, nofollow">
+</head>
+
+<body class="account-page">
+
+<div class="container account-container">
+
+    <div class="account-main">
+
+        <div class="account-block big">
+            <h2>Адмін кабінет Mōnal</h2>
+            <p>
+                <strong id="staff-name">—</strong><br>
+                Роль: <span id="staff-role">—</span><br>
+                Склад ID: <span id="staff-warehouse">—</span>
+            </p>
+        </div>
+
+        <div class="account-block big">
+            <h2>Меню</h2>
+            <p>Тут буде керування продажами, клієнтами та залишками.</p>
+        </div>
+
+        <button id="staff-logout" class="buy-btn">
+            Вийти
+        </button>
+
+    </div>
+
+</div>
+
+<script>
+const staff = JSON.parse(localStorage.getItem("monal_staff_user") || "null");
+
+if (!staff) {
+    window.location.href = "/account/login.html";
+}
+
+document.getElementById("staff-name").textContent = staff?.name || "—";
+document.getElementById("staff-role").textContent = staff?.role || "—";
+document.getElementById("staff-warehouse").textContent =
+    staff?.warehouse_id !== null && staff?.warehouse_id !== undefined
+        ? staff.warehouse_id
+        : "—";
+
+document.getElementById("staff-logout").addEventListener("click", () => {
+    localStorage.removeItem("monal_staff_user");
+    localStorage.removeItem("monal_staff_login_time");
+    window.location.href = "/account/login.html";
+});
+</script>
+
+</body>
+</html>

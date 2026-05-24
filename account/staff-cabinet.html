@@ -198,25 +198,31 @@
         <h2>Керування залишками</h2>
 
         <p>
-            Створення складу, вибір складу та внесення початкових кількостей.
+            Виберіть склад для редагування залишків або створіть новий склад.
         </p>
 
-        <div class="staff-create-box">
+        <div class="staff-stock-actions">
 
-            <h3>Склад</h3>
-
-            <div class="staff-register-row">
+            <div class="staff-stock-select-row">
                 <select id="stock-manage-warehouse-select">
                     <option value="">Оберіть склад</option>
                 </select>
 
-                <input
-                    type="number"
-                    id="new-warehouse-id"
-                    placeholder="ID складу"
-                    min="1"
-                >
+                <button id="choose-stock-warehouse-btn" class="buy-btn" type="button">
+                    Обрати
+                </button>
+            </div>
 
+            <button id="show-create-warehouse-form-btn" class="buy-btn" type="button">
+                Створити склад
+            </button>
+
+        </div>
+
+        <div id="create-warehouse-box" class="staff-create-box staff-hidden">
+            <h3>Новий склад</h3>
+
+            <div class="staff-stock-create-row">
                 <input
                     type="text"
                     id="new-warehouse-name"
@@ -229,13 +235,12 @@
             </div>
 
             <p class="staff-hint">
-                Назва має бути зрозуміла: “Склад фіз.точка”, “Склад партнера Брусніца” тощо.
+                Наприклад: “Склад фіз.точка”, “Склад партнера Брусніца”.
             </p>
+        </div>
 
-            <div id="stock-manage-result" class="staff-result staff-hidden">
-                Таблицю товарів для внесення залишків підключимо наступним кроком.
-            </div>
-
+        <div id="stock-manage-result" class="staff-result staff-hidden">
+            Оберіть склад, щоб завантажити товари для керування залишками.
         </div>
     </div>
 
@@ -338,7 +343,14 @@ const stockSection = document.getElementById("stock-section");
 const openStockSectionBtn = document.getElementById("open-stock-section");
 
 const stockManageSection = document.getElementById("stock-manage-section");
-const openStockManageSectionBtn = document.getElementById("open-stock-manage-section");    
+const openStockManageSectionBtn = document.getElementById("open-stock-manage-section");
+const stockManageWarehouseSelect = document.getElementById("stock-manage-warehouse-select");
+const chooseStockWarehouseBtn = document.getElementById("choose-stock-warehouse-btn");
+const showCreateWarehouseFormBtn = document.getElementById("show-create-warehouse-form-btn");
+const createWarehouseBox = document.getElementById("create-warehouse-box");
+const newWarehouseNameInput = document.getElementById("new-warehouse-name");
+const createWarehouseBtn = document.getElementById("create-warehouse-btn");
+const stockManageResult = document.getElementById("stock-manage-result");    
 const clientsSection = document.getElementById("clients-section");
 const openClientsSectionBtn = document.getElementById("open-clients-section");
 const clientSearchInput = document.getElementById("staff-client-search");
@@ -718,6 +730,46 @@ if (createClientBtn) {
         }
     });
 }
+
+if (showCreateWarehouseFormBtn && createWarehouseBox) {
+    showCreateWarehouseFormBtn.addEventListener("click", () => {
+        createWarehouseBox.classList.toggle("staff-hidden");
+
+        if (!createWarehouseBox.classList.contains("staff-hidden") && newWarehouseNameInput) {
+            newWarehouseNameInput.focus();
+        }
+    });
+}
+
+if (chooseStockWarehouseBtn && stockManageWarehouseSelect && stockManageResult) {
+    chooseStockWarehouseBtn.addEventListener("click", () => {
+        const warehouseId = stockManageWarehouseSelect.value;
+
+        stockManageResult.classList.remove("staff-hidden");
+
+        if (!warehouseId) {
+            stockManageResult.innerHTML = "Оберіть склад.";
+            return;
+        }
+
+        stockManageResult.innerHTML = "Таблицю товарів для цього складу підключимо наступним кроком.";
+    });
+}
+
+if (createWarehouseBtn && newWarehouseNameInput && stockManageResult) {
+    createWarehouseBtn.addEventListener("click", () => {
+        const warehouseName = newWarehouseNameInput.value.trim();
+
+        stockManageResult.classList.remove("staff-hidden");
+
+        if (!warehouseName) {
+            stockManageResult.innerHTML = "Введіть назву складу.";
+            return;
+        }
+
+        stockManageResult.innerHTML = "Створення складу підключимо наступним кроком.";
+    });
+}    
 
 document.getElementById("staff-logout").addEventListener("click", () => {
     localStorage.removeItem("monal_staff_user");

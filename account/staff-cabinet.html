@@ -79,61 +79,65 @@
 
         </div>
 
-        <section id="clients-section" class="staff-section staff-hidden">
+<section id="clients-section" class="staff-section staff-hidden">
 
-            <div class="account-block big">
-                <h2>Клієнти</h2>
+    <div class="account-block big">
+        <h2>Клієнти</h2>
 
-                <p>
-                    Пошук клієнта по телефону або email.
-                </p>
+        <p>
+            Пошук клієнта по телефону або email.
+        </p>
 
-                <div class="staff-search-row">
-                    <input
-                        type="text"
-                        id="staff-client-search"
-                        placeholder="Телефон або email"
-                    >
+        <div class="staff-search-row">
+            <input
+                type="text"
+                id="staff-client-search"
+                placeholder="Телефон або email"
+            >
 
-                    <button id="staff-client-search-btn" class="buy-btn" type="button">
-                        Знайти
-                    </button>
-                </div>
+            <button id="staff-client-search-btn" class="buy-btn" type="button">
+                Знайти
+            </button>
+        </div>
 
-                <div id="staff-client-result" class="staff-result staff-hidden"></div>
+        <div id="staff-client-result" class="staff-result staff-hidden"></div>
 
-                <div id="staff-client-create-box" class="staff-create-box staff-hidden">
-                    <h3>Створити клієнта</h3>
+        <div class="staff-create-box">
+            <h3>Реєстрація нового клієнта</h3>
 
-                    <input
-                        type="text"
-                        id="new-client-name"
-                        placeholder="Імʼя клієнта"
-                    >
+            <div class="staff-register-row">
+                <input
+                    type="text"
+                    id="new-client-name"
+                    placeholder="Імʼя клієнта"
+                >
 
-                    <input
-                        type="tel"
-                        id="new-client-phone"
-                        placeholder="Телефон"
-                    >
+                <input
+                    type="tel"
+                    id="new-client-phone"
+                    placeholder="Телефон"
+                >
 
-                    <input
-                        type="email"
-                        id="new-client-email"
-                        placeholder="Email, необовʼязково"
-                    >
+                <input
+                    type="email"
+                    id="new-client-email"
+                    placeholder="Email, необовʼязково"
+                >
 
-                    <p class="staff-hint">
-                        Пароль буде створено автоматично: останні 4 цифри телефону.
-                    </p>
-
-                    <button id="create-client-btn" class="buy-btn" type="button">
-                        Створити клієнта
-                    </button>
-                </div>
+                <button id="create-client-btn" class="buy-btn" type="button">
+                    Створити
+                </button>
             </div>
 
-        </section>
+            <p class="staff-hint">
+                Пароль буде створено автоматично: останні 4 цифри телефону.
+            </p>
+
+            <div id="staff-client-create-result" class="staff-result staff-hidden"></div>
+        </div>
+    </div>
+
+</section>
 
         <button id="staff-logout" class="buy-btn staff-logout-btn">
             Вийти

@@ -191,7 +191,7 @@ if (openClientsSectionBtn && clientsSection) {
 }
 
 if (clientSearchBtn) {
-    clientSearchBtn.addEventListener("click", () => {
+    clientSearchBtn.addEventListener("click", async () => {
         const searchValue = clientSearchInput.value.trim();
 
         if (!searchValue) {
@@ -202,19 +202,71 @@ if (clientSearchBtn) {
         }
 
         clientResult.classList.remove("staff-hidden");
-        clientResult.innerHTML = "Пошук клієнта буде підключено наступним кроком.";
+        clientResult.innerHTML = "Шукаю клієнта…";
+        clientCreateBox.classList.add("staff-hidden");
 
-        clientCreateBox.classList.remove("staff-hidden");
+        try {
+            const response = await fetch(
+                "https://monal-mono-pay-production.up.railway.app/api/staff/search-customer",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        staffId: staff.id,
+                        searchValue
+                    })
+                }
+            );
 
-        const phoneInput = document.getElementById("new-client-phone");
-        const emailInput = document.getElementById("new-client-email");
+            const data = await response.json();
 
-        if (/^\+?\d[\d\s().-]*$/.test(searchValue)) {
-            phoneInput.value = searchValue;
-            emailInput.value = "";
-        } else {
-            emailInput.value = searchValue;
-            phoneInput.value = "";
+            if (!data.ok) {
+                clientResult.innerHTML = data.error || "Помилка пошуку клієнта.";
+                return;
+            }
+
+            if (data.found && data.customer) {
+                const c = data.customer;
+
+                clientResult.innerHTML = `
+                    <strong>Клієнта знайдено</strong><br>
+                    ID: ${c.id}<br>
+                    Імʼя: ${c.name || "—"}<br>
+                    Email: ${c.email || "—"}<br>
+                    Телефон: ${c.phone || "—"}<br>
+                    Статус: ${c.customer_status || "general"}<br>
+                    Знижка: ${c.discount || 0}%<br>
+                    Накопичено: ${c.total_spent || 0} грн
+                `;
+
+                clientCreateBox.classList.add("staff-hidden");
+                return;
+            }
+
+            clientResult.innerHTML = `
+                <strong>Клієнта не знайдено.</strong><br>
+                Можна створити нового клієнта.
+            `;
+
+            clientCreateBox.classList.remove("staff-hidden");
+
+            const phoneInput = document.getElementById("new-client-phone");
+            const emailInput = document.getElementById("new-client-email");
+
+            if (/^\+?\d[\d\s().-]*$/.test(searchValue)) {
+                phoneInput.value = searchValue;
+                emailInput.value = "";
+            } else {
+                emailInput.value = searchValue;
+                phoneInput.value = "";
+            }
+
+        } catch (err) {
+            console.error(err);
+            clientResult.innerHTML = "Помилка зʼєднання.";
+            clientCreateBox.classList.add("staff-hidden");
         }
     });
 }

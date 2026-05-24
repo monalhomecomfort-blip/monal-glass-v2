@@ -164,6 +164,82 @@
     </div>
 
 </section>
+
+<section id="stock-section" class="staff-section staff-hidden">
+
+    <div class="account-block big">
+        <h2>Залишки</h2>
+
+        <p>
+            Звіт по залишках у розрізі складів, товарів, цін та руху.
+        </p>
+
+        <div class="staff-search-row">
+            <select id="stock-report-warehouse-filter">
+                <option value="">Всі склади</option>
+            </select>
+
+            <button id="load-stock-report-btn" class="buy-btn" type="button">
+                Показати
+            </button>
+        </div>
+
+        <div id="stock-report-result" class="staff-result staff-hidden">
+            Звіт по залишках підключимо наступним кроком.
+        </div>
+    </div>
+
+</section>
+
+
+<section id="stock-manage-section" class="staff-section staff-hidden">
+
+    <div class="account-block big">
+        <h2>Керування залишками</h2>
+
+        <p>
+            Створення складу, вибір складу та внесення початкових кількостей.
+        </p>
+
+        <div class="staff-create-box">
+
+            <h3>Склад</h3>
+
+            <div class="staff-register-row">
+                <select id="stock-manage-warehouse-select">
+                    <option value="">Оберіть склад</option>
+                </select>
+
+                <input
+                    type="number"
+                    id="new-warehouse-id"
+                    placeholder="ID складу"
+                    min="1"
+                >
+
+                <input
+                    type="text"
+                    id="new-warehouse-name"
+                    placeholder="Назва складу"
+                >
+
+                <button id="create-warehouse-btn" class="buy-btn" type="button">
+                    Створити
+                </button>
+            </div>
+
+            <p class="staff-hint">
+                Назва має бути зрозуміла: “Склад фіз.точка”, “Склад партнера Брусніца” тощо.
+            </p>
+
+            <div id="stock-manage-result" class="staff-result staff-hidden">
+                Таблицю товарів для внесення залишків підключимо наступним кроком.
+            </div>
+
+        </div>
+    </div>
+
+</section>
         
 <section id="clients-section" class="staff-section staff-hidden">
 
@@ -257,7 +333,12 @@ document.querySelectorAll("[data-access]").forEach(card => {
 });
 
 const salesSection = document.getElementById("sales-section");
-const openSalesSectionBtn = document.getElementById("open-sales-section");    
+const openSalesSectionBtn = document.getElementById("open-sales-section");
+const stockSection = document.getElementById("stock-section");
+const openStockSectionBtn = document.getElementById("open-stock-section");
+
+const stockManageSection = document.getElementById("stock-manage-section");
+const openStockManageSectionBtn = document.getElementById("open-stock-manage-section");    
 const clientsSection = document.getElementById("clients-section");
 const openClientsSectionBtn = document.getElementById("open-clients-section");
 const clientSearchInput = document.getElementById("staff-client-search");
@@ -486,6 +567,18 @@ if (openSalesSectionBtn && salesSection) {
     openSalesSectionBtn.addEventListener("click", async () => {
         showStaffSection(salesSection);
         await loadStaffProducts();
+    });
+}
+
+if (openStockSectionBtn && stockSection) {
+    openStockSectionBtn.addEventListener("click", () => {
+        showStaffSection(stockSection);
+    });
+}
+
+if (openStockManageSectionBtn && stockManageSection) {
+    openStockManageSectionBtn.addEventListener("click", () => {
+        showStaffSection(stockManageSection);
     });
 }
     

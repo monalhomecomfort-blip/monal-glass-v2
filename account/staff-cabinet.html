@@ -797,6 +797,47 @@ function renderStockReportTable(data) {
         </div>
     `;
 }
+
+function renderMyStockTable(data) {
+    if (!myStockResult) return;
+
+    const items = Array.isArray(data.items) ? data.items : [];
+    const warehouse = data.warehouse || {};
+
+    myStockResult.classList.remove("staff-hidden");
+
+    if (!items.length) {
+        myStockResult.innerHTML = "По вашому складу залишків не знайдено.";
+        return;
+    }
+
+    myStockResult.innerHTML = `
+        <div class="staff-stock-table-wrap">
+            <h3>${warehouse.warehouse_name || "Ваш склад"} · ID ${warehouse.warehouse_id || "—"}</h3>
+
+            <table class="staff-stock-table">
+                <thead>
+                    <tr>
+                        <th>Товар</th>
+                        <th>Початковий залишок</th>
+                        <th>Продажі</th>
+                        <th>Кінцевий залишок</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${items.map(item => `
+                        <tr>
+                            <td>${item.product_display_name || "—"}</td>
+                            <td>${item.initial_quantity ?? 0}</td>
+                            <td>${item.sales_quantity ?? 0}</td>
+                            <td>${item.final_quantity ?? 0}</td>
+                        </tr>
+                    `).join("")}
+                </tbody>
+            </table>
+        </div>
+    `;
+}
     
 function showStaffSection(section) {
     document.querySelectorAll(".staff-section").forEach(item => {
@@ -831,15 +872,43 @@ if (openStockManageSectionBtn && stockManageSection) {
 }
 
 if (openMyStockSectionBtn && myStockSection) {
-    openMyStockSectionBtn.addEventListener("click", () => {
+    openMyStockSectionBtn.addEventListener("click", async () => {
         showStaffSection(myStockSection);
 
-        if (myStockResult) {
-            myStockResult.classList.remove("staff-hidden");
-            myStockResult.innerHTML = "Залишки по вашому складу підключимо наступним кроком.";
+        if (!myStockResult) return;
+
+        myStockResult.classList.remove("staff-hidden");
+        myStockResult.innerHTML = "Завантажую залишки по вашому складу…";
+
+        try {
+            const response = await fetch(
+                "https://monal-mono-pay-production.up.railway.app/api/staff/my-stock",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        staffId: staff.id
+                    })
+                }
+            );
+
+            const data = await response.json();
+
+            if (!data.ok) {
+                myStockResult.innerHTML = data.error || "Не вдалося завантажити мої залишки.";
+                return;
+            }
+
+            renderMyStockTable(data);
+
+        } catch (err) {
+            console.error(err);
+            myStockResult.innerHTML = "Помилка зʼєднання при завантаженні залишків.";
         }
     });
-}    
+}
     
 if (openClientsSectionBtn && clientsSection) {
     openClientsSectionBtn.addEventListener("click", () => {

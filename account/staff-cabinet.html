@@ -1091,6 +1091,21 @@ if (showCreateWarehouseFormBtn && createWarehouseBox) {
 }
 
 if (stockManageResult) {
+    stockManageResult.addEventListener("input", (e) => {
+        const quantityInput = e.target.closest(".stock-movement-quantity");
+        if (!quantityInput) return;
+
+        const row = quantityInput.closest("tr[data-stock-id]");
+        if (!row) return;
+
+        const checkbox = row.querySelector(".stock-item-enabled");
+        if (!checkbox) return;
+
+        checkbox.checked = Number(quantityInput.value || 0) > 0;
+    });
+}
+    
+if (stockManageResult) {
     stockManageResult.addEventListener("click", async (e) => {
         const saveBtn = e.target.closest("#save-stock-balances-btn");
         if (!saveBtn) return;

@@ -1329,26 +1329,57 @@ if (stockManageResult) {
 
             recordBtn.textContent = "Записано";
 
+            const savedDocumentNumber = data.documentNumber;
+            const savedInsertedRows = data.insertedRows || items.length;
+
+            try {
+                const refreshResponse = await fetch(
+                    "https://monal-mono-pay-production.up.railway.app/api/staff/stock-manage-items",
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            staffId: staff.id,
+                            warehouseId
+                        })
+                    }
+                );
+
+                const refreshData = await refreshResponse.json();
+
+                if (refreshData.ok) {
+                    renderStockManageTable(refreshData);
+                }
+            } catch (refreshErr) {
+                console.error(refreshErr);
+            }
+
             stockManageResult.insertAdjacentHTML(
                 "beforeend",
                 `
                 <div id="stock-save-message" class="staff-result">
                     <strong>Залишки оновлено.</strong><br>
-                    Документ: ${data.documentNumber}<br>
-                    Товарних рядків записано: ${data.insertedRows || items.length}
+                    Документ: ${savedDocumentNumber}<br>
+                    Товарних рядків записано: ${savedInsertedRows}
                 </div>
                 `
             );
 
             const printBtn = document.getElementById("print-stock-act-btn");
             if (printBtn) {
-                printBtn.dataset.documentNumber = data.documentNumber;
+                printBtn.dataset.documentNumber = savedDocumentNumber;
                 printBtn.classList.remove("staff-hidden");
             }
 
             setTimeout(() => {
-                recordBtn.disabled = false;
-                recordBtn.textContent = "Записати переміщення";
+                const freshRecordBtn = document.getElementById("record-stock-movement-btn");
+
+                if (freshRecordBtn) {
+                    freshRecordBtn.disabled = false;
+                    freshRecordBtn.textContent = "Записати переміщення";
+                }
             }, 1200);
 
         } catch (err) {

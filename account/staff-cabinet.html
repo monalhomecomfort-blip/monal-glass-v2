@@ -692,7 +692,7 @@ function renderStockManageTable(data) {
             <h3>Новий документ переміщення · ${warehouse.warehouse_name || "Склад"} · ID ${warehouse.warehouse_id}</h3>
 
             <p class="staff-hint">
-                Відмітьте товари, які зараз переміщуються на цей склад, і вкажіть кількість.
+                Відмітьте товари, які зараз переміщуються на цей склад, і вкажіть кількість переміщення.
             </p>
 
             <table class="staff-stock-table">
@@ -703,7 +703,8 @@ function renderStockManageTable(data) {
                         <th>РЦ</th>
                         <th>СВ</th>
                         <th>Ціна реалізації</th>
-                        <th>Кількість</th>
+                        <th>Поточні залишки</th>
+                        <th>Кількість перемістити</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -739,6 +740,8 @@ function renderStockManageTable(data) {
                                     step="0.01"
                                 >
                             </td>
+
+                            <td>${item.final_quantity ?? 0}</td>
 
                             <td>
                                 <input

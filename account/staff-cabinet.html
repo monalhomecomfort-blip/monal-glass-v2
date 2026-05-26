@@ -689,80 +689,77 @@ function renderStockManageTable(data) {
 
     stockManageResult.innerHTML = `
         <div class="staff-stock-table-wrap">
-            <h3>${warehouse.warehouse_name || "Склад"} · ID ${warehouse.warehouse_id}</h3>
+            <h3>Новий документ переміщення · ${warehouse.warehouse_name || "Склад"} · ID ${warehouse.warehouse_id}</h3>
+
+            <p class="staff-hint">
+                Відмітьте товари, які зараз переміщуються на цей склад, і вкажіть кількість.
+            </p>
 
             <table class="staff-stock-table">
                 <thead>
                     <tr>
-                        <th>Є на складі</th>
+                        <th>Додати в документ</th>
                         <th>Товар</th>
                         <th>РЦ</th>
                         <th>СВ</th>
                         <th>Ціна реалізації</th>
-                        <th>Початковий залишок</th>
-                        <th>Продажі</th>
-                        <th>Кінцевий залишок</th>
+                        <th>Кількість</th>
                     </tr>
                 </thead>
                 <tbody>
-                    ${items.map(item => {
-                        const isChecked =
-                            Number(item.initial_quantity || 0) > 0 ||
-                            Number(item.sales_quantity || 0) > 0;
+                    ${items.map(item => `
+                        <tr data-stock-id="${item.id}">
+                            <td>
+                                <input
+                                    type="checkbox"
+                                    class="stock-item-enabled"
+                                >
+                            </td>
 
-                        return `
-                            <tr data-stock-id="${item.id}">
-                                <td>
-                                    <input
-                                        type="checkbox"
-                                        class="stock-item-enabled"
-                                        ${isChecked ? "checked" : ""}
-                                    >
-                                </td>
+                            <td>${item.product_display_name || "—"}</td>
 
-                                <td>${item.product_display_name || "—"}</td>
+                            <td>${Number(item.retail_price || 0)} грн</td>
 
-                                <td>${Number(item.retail_price || 0)} грн</td>
+                            <td>
+                                <input
+                                    type="number"
+                                    class="stock-cost-price"
+                                    value="${item.cost_price ?? ""}"
+                                    placeholder="СВ"
+                                    step="0.01"
+                                >
+                            </td>
 
-                                <td>
-                                    <input
-                                        type="number"
-                                        class="stock-cost-price"
-                                        value="${item.cost_price ?? ""}"
-                                        placeholder="СВ"
-                                        step="0.01"
-                                    >
-                                </td>
+                            <td>
+                                <input
+                                    type="number"
+                                    class="stock-realization-price"
+                                    value="${item.realization_price ?? ""}"
+                                    placeholder="Реалізація"
+                                    step="0.01"
+                                >
+                            </td>
 
-                                <td>
-                                    <input
-                                        type="number"
-                                        class="stock-realization-price"
-                                        value="${item.realization_price ?? ""}"
-                                        placeholder="Реалізація"
-                                        step="0.01"
-                                    >
-                                </td>
-
-                                <td>
-                                    <input
-                                        type="number"
-                                        class="stock-initial-quantity"
-                                        value="${item.initial_quantity || 0}"
-                                        min="0"
-                                    >
-                                </td>
-
-                                <td>${item.sales_quantity || 0}</td>
-                                <td>${item.final_quantity || 0}</td>
-                            </tr>
-                        `;
-                    }).join("")}
+                            <td>
+                                <input
+                                    type="number"
+                                    class="stock-movement-quantity"
+                                    value=""
+                                    placeholder="0"
+                                    min="0"
+                                >
+                            </td>
+                        </tr>
+                    `).join("")}
                 </tbody>
             </table>
 
-            <button id="save-stock-balances-btn" class="buy-btn" type="button">
-                Зберегти залишки
+            <button id="record-stock-movement-btn" class="buy-btn" type="button">
+                Записати переміщення
+            </button>
+
+            <button id="print-stock-act-btn" class="buy-btn staff-hidden" type="button">
+                Сформувати акт
             </button>
         </div>
     `;

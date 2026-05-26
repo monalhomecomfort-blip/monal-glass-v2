@@ -900,7 +900,29 @@ if (openStockSectionBtn && stockSection) {
 if (openStockManageSectionBtn && stockManageSection) {
     openStockManageSectionBtn.addEventListener("click", async () => {
         showStaffSection(stockManageSection);
+
+        if (stockManageWarehouseSelect) {
+            stockManageWarehouseSelect.value = "";
+        }
+
+        if (createWarehouseBox) {
+            createWarehouseBox.classList.add("staff-hidden");
+        }
+
+        if (newWarehouseNameInput) {
+            newWarehouseNameInput.value = "";
+        }
+
+        if (stockManageResult) {
+            stockManageResult.classList.add("staff-hidden");
+            stockManageResult.innerHTML = "Оберіть склад, щоб створити новий документ переміщення.";
+        }
+
         await loadStaffWarehouses();
+
+        if (stockManageWarehouseSelect) {
+            stockManageWarehouseSelect.value = "";
+        }
     });
 }
 

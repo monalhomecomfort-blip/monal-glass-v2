@@ -1107,51 +1107,58 @@ if (stockManageResult) {
     
 if (stockManageResult) {
     stockManageResult.addEventListener("click", async (e) => {
-        const saveBtn = e.target.closest("#save-stock-balances-btn");
-        if (!saveBtn) return;
+        const recordBtn = e.target.closest("#record-stock-movement-btn");
+        if (!recordBtn) return;
 
         const warehouseId = stockManageWarehouseSelect.value;
 
+        const oldMessage = document.getElementById("stock-save-message");
+        if (oldMessage) oldMessage.remove();
+
         if (!warehouseId) {
-            stockManageResult.innerHTML = "Оберіть склад.";
+            stockManageResult.insertAdjacentHTML(
+                "beforeend",
+                `<div id="stock-save-message" class="staff-result">Оберіть склад.</div>`
+            );
             return;
         }
 
         const rows = stockManageResult.querySelectorAll("tr[data-stock-id]");
 
-const items = Array.from(rows)
-    .map(row => {
-        const enabled = row.querySelector(".stock-item-enabled")?.checked || false;
-        const costPrice = row.querySelector(".stock-cost-price")?.value || "";
-        const realizationPrice = row.querySelector(".stock-realization-price")?.value || "";
-        const initialQuantity = row.querySelector(".stock-initial-quantity")?.value || 0;
+        const items = Array.from(rows)
+            .map(row => {
+                const enabled = row.querySelector(".stock-item-enabled")?.checked || false;
+                const costPrice = row.querySelector(".stock-cost-price")?.value || "";
+                const realizationPrice = row.querySelector(".stock-realization-price")?.value || "";
+                const quantity = row.querySelector(".stock-movement-quantity")?.value || 0;
 
-        return {
-            stockId: row.dataset.stockId,
-            enabled,
-            costPrice,
-            realizationPrice,
-            initialQuantity
-        };
-    })
-    .filter(item =>
-        item.enabled ||
-        Number(item.initialQuantity || 0) > 0 ||
-        item.costPrice !== "" ||
-        item.realizationPrice !== ""
-    );
+                return {
+                    stockId: row.dataset.stockId,
+                    enabled,
+                    costPrice,
+                    realizationPrice,
+                    quantity
+                };
+            })
+            .filter(item =>
+                item.enabled &&
+                Number(item.quantity || 0) > 0
+            );
 
         if (!items.length) {
-            stockManageResult.innerHTML = "Немає товарів для збереження.";
+            stockManageResult.insertAdjacentHTML(
+                "beforeend",
+                `<div id="stock-save-message" class="staff-result">Оберіть товари і вкажіть кількість переміщення.</div>`
+            );
             return;
         }
 
-        saveBtn.disabled = true;
-        saveBtn.textContent = "Зберігаю…";
+        recordBtn.disabled = true;
+        recordBtn.textContent = "Записую…";
 
         try {
             const response = await fetch(
-                "https://monal-mono-pay-production.up.railway.app/api/staff/save-stock-balances",
+                "https://monal-mono-pay-production.up.railway.app/api/staff/record-stock-movement",
                 {
                     method: "POST",
                     headers: {
@@ -1168,46 +1175,48 @@ const items = Array.from(rows)
             const data = await response.json();
 
             if (!data.ok) {
-                saveBtn.disabled = false;
-                saveBtn.textContent = "Зберегти залишки";
-
-                const oldMessage = document.getElementById("stock-save-message");
-                if (oldMessage) oldMessage.remove();
+                recordBtn.disabled = false;
+                recordBtn.textContent = "Записати переміщення";
 
                 stockManageResult.insertAdjacentHTML(
                     "beforeend",
-                    `<div id="stock-save-message" class="staff-result">Не вдалося зберегти: ${data.error || "помилка"}</div>`
+                    `<div id="stock-save-message" class="staff-result">Не вдалося записати переміщення: ${data.error || "помилка"}</div>`
                 );
                 return;
             }
 
-            saveBtn.textContent = "Збережено";
-
-            const oldMessage = document.getElementById("stock-save-message");
-            if (oldMessage) oldMessage.remove();
+            recordBtn.textContent = "Записано";
 
             stockManageResult.insertAdjacentHTML(
                 "beforeend",
-                `<div id="stock-save-message" class="staff-result">Залишки збережено.</div>`
+                `
+                <div id="stock-save-message" class="staff-result">
+                    <strong>Залишки оновлено.</strong><br>
+                    Документ: ${data.documentNumber}<br>
+                    Товарних рядків записано: ${data.insertedRows || items.length}
+                </div>
+                `
             );
 
+            const printBtn = document.getElementById("print-stock-act-btn");
+            if (printBtn) {
+                printBtn.classList.remove("staff-hidden");
+            }
+
             setTimeout(() => {
-                saveBtn.disabled = false;
-                saveBtn.textContent = "Зберегти залишки";
+                recordBtn.disabled = false;
+                recordBtn.textContent = "Записати переміщення";
             }, 1200);
 
         } catch (err) {
             console.error(err);
 
-            saveBtn.disabled = false;
-            saveBtn.textContent = "Зберегти залишки";
-
-            const oldMessage = document.getElementById("stock-save-message");
-            if (oldMessage) oldMessage.remove();
+            recordBtn.disabled = false;
+            recordBtn.textContent = "Записати переміщення";
 
             stockManageResult.insertAdjacentHTML(
                 "beforeend",
-                `<div id="stock-save-message" class="staff-result">Помилка зʼєднання при збереженні.</div>`
+                `<div id="stock-save-message" class="staff-result">Помилка зʼєднання при записі переміщення.</div>`
             );
         }
     });

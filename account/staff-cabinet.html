@@ -1340,8 +1340,7 @@ function buildStockActHtml(data) {
                 <td>${index + 1}</td>
                 <td>${escapeActHtml(item.product_display_name || "—")}</td>
                 <td>${quantity}</td>
-                <td>${formatActMoney(item.retail_price)} грн</td>
-                <td>${item.cost_price === null || item.cost_price === undefined ? "—" : formatActMoney(item.cost_price) + " грн"}</td>
+                <td>${formatActMoney(item.retail_price)} грн</td>                
                 <td>${formatActMoney(realizationPrice)} грн</td>
                 <td>${formatActMoney(sum)} грн</td>
             </tr>
@@ -1503,8 +1502,7 @@ function buildStockActHtml(data) {
                         <th>№</th>
                         <th>Найменування товару</th>
                         <th>К-сть</th>
-                        <th>РЦ</th>
-                        <th>СВ</th>
+                        <th>РЦ</th>                        
                         <th>Ціна реалізації</th>
                         <th>Сума</th>
                     </tr>

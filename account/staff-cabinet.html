@@ -235,6 +235,18 @@
             placeholder="Назва складу"
         >
 
+        <input
+            type="text"
+            id="new-warehouse-act-city"
+            placeholder="Місто для акту, наприклад: м.Вінниця"
+        >
+
+        <input
+            type="text"
+            id="new-warehouse-document-basis"
+            placeholder="Згідно документу, наприклад: Договір реалізації продукції №..."
+        >
+
         <textarea
             id="new-warehouse-supplier-details"
             placeholder="Реквізити постачальника"
@@ -253,7 +265,7 @@
     </div>
 
     <p class="staff-hint">
-        Постачальник — наші реквізити. Покупець — реквізити партнера або відповідального на фізичній точці.
+        Місто, документ, постачальник і покупець потрібні для формування акту.
     </p>
 </div>
 
@@ -383,8 +395,10 @@ const chooseStockWarehouseBtn = document.getElementById("choose-stock-warehouse-
 const showCreateWarehouseFormBtn = document.getElementById("show-create-warehouse-form-btn");
 const createWarehouseBox = document.getElementById("create-warehouse-box");
 const newWarehouseNameInput = document.getElementById("new-warehouse-name");
+const newWarehouseActCityInput = document.getElementById("new-warehouse-act-city");
+const newWarehouseDocumentBasisInput = document.getElementById("new-warehouse-document-basis");
 const newWarehouseSupplierDetailsInput = document.getElementById("new-warehouse-supplier-details");
-const newWarehouseBuyerDetailsInput = document.getElementById("new-warehouse-buyer-details");    
+const newWarehouseBuyerDetailsInput = document.getElementById("new-warehouse-buyer-details");
 const createWarehouseBtn = document.getElementById("create-warehouse-btn");
 const stockManageResult = document.getElementById("stock-manage-result");
 const stockReportWarehouseFilter = document.getElementById("stock-report-warehouse-filter");
@@ -1315,13 +1329,25 @@ if (chooseStockWarehouseBtn && stockManageWarehouseSelect && stockManageResult) 
 if (createWarehouseBtn && newWarehouseNameInput && stockManageResult) {
     createWarehouseBtn.addEventListener("click", async () => {
         const warehouseName = newWarehouseNameInput.value.trim();
+        const actCity = newWarehouseActCityInput?.value.trim() || "";
+        const documentBasis = newWarehouseDocumentBasisInput?.value.trim() || "";
         const supplierDetails = newWarehouseSupplierDetailsInput?.value.trim() || "";
         const buyerDetails = newWarehouseBuyerDetailsInput?.value.trim() || "";
-
+        
         stockManageResult.classList.remove("staff-hidden");
 
         if (!warehouseName) {
             stockManageResult.innerHTML = "Введіть назву складу.";
+            return;
+        }
+
+        if (!actCity) {
+            stockManageResult.innerHTML = "Введіть місто для акту.";
+            return;
+        }
+
+        if (!documentBasis) {
+            stockManageResult.innerHTML = "Заповніть поле “Згідно документу”.";
             return;
         }
 
@@ -1347,7 +1373,11 @@ if (createWarehouseBtn && newWarehouseNameInput && stockManageResult) {
                     },
                     body: JSON.stringify({
                         staffId: staff.id,
-                        warehouseName
+                        warehouseName,
+                        actCity,
+                        documentBasis,
+                        supplierDetails,
+                        buyerDetails
                     })
                 }
             );
@@ -1360,6 +1390,14 @@ if (createWarehouseBtn && newWarehouseNameInput && stockManageResult) {
             }
 
             newWarehouseNameInput.value = "";
+
+            if (newWarehouseActCityInput) {
+                newWarehouseActCityInput.value = "";
+            }
+
+            if (newWarehouseDocumentBasisInput) {
+                newWarehouseDocumentBasisInput.value = "";
+            }
 
             if (newWarehouseSupplierDetailsInput) {
                 newWarehouseSupplierDetailsInput.value = "";

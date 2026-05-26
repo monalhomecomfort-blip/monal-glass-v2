@@ -225,25 +225,37 @@
 
         </div>
 
-        <div id="create-warehouse-box" class="staff-create-box staff-hidden">
-            <h3>Новий склад</h3>
+<div id="create-warehouse-box" class="staff-create-box staff-hidden">
+    <h3>Новий склад</h3>
 
-            <div class="staff-stock-create-row">
-                <input
-                    type="text"
-                    id="new-warehouse-name"
-                    placeholder="Назва складу"
-                >
+    <div class="staff-warehouse-form">
+        <input
+            type="text"
+            id="new-warehouse-name"
+            placeholder="Назва складу"
+        >
 
-                <button id="create-warehouse-btn" class="buy-btn" type="button">
-                    Створити
-                </button>
-            </div>
+        <textarea
+            id="new-warehouse-supplier-details"
+            placeholder="Реквізити постачальника"
+            rows="4"
+        ></textarea>
 
-            <p class="staff-hint">
-                Наприклад: “Склад фіз.точка”, “Склад партнера Брусніца”.
-            </p>
-        </div>
+        <textarea
+            id="new-warehouse-buyer-details"
+            placeholder="Реквізити покупця / відповідального"
+            rows="4"
+        ></textarea>
+
+        <button id="create-warehouse-btn" class="buy-btn" type="button">
+            Створити
+        </button>
+    </div>
+
+    <p class="staff-hint">
+        Постачальник — наші реквізити. Покупець — реквізити партнера або відповідального на фізичній точці.
+    </p>
+</div>
 
         <div id="stock-manage-result" class="staff-result staff-hidden">
             Оберіть склад, щоб завантажити товари для керування залишками.
@@ -371,6 +383,8 @@ const chooseStockWarehouseBtn = document.getElementById("choose-stock-warehouse-
 const showCreateWarehouseFormBtn = document.getElementById("show-create-warehouse-form-btn");
 const createWarehouseBox = document.getElementById("create-warehouse-box");
 const newWarehouseNameInput = document.getElementById("new-warehouse-name");
+const newWarehouseSupplierDetailsInput = document.getElementById("new-warehouse-supplier-details");
+const newWarehouseBuyerDetailsInput = document.getElementById("new-warehouse-buyer-details");    
 const createWarehouseBtn = document.getElementById("create-warehouse-btn");
 const stockManageResult = document.getElementById("stock-manage-result");
 const stockReportWarehouseFilter = document.getElementById("stock-report-warehouse-filter");
@@ -913,6 +927,14 @@ if (openStockManageSectionBtn && stockManageSection) {
             newWarehouseNameInput.value = "";
         }
 
+        if (newWarehouseSupplierDetailsInput) {
+            newWarehouseSupplierDetailsInput.value = "";
+        }
+
+        if (newWarehouseBuyerDetailsInput) {
+            newWarehouseBuyerDetailsInput.value = "";
+        }
+
         if (stockManageResult) {
             stockManageResult.classList.add("staff-hidden");
             stockManageResult.innerHTML = "Оберіть склад, щоб створити новий документ переміщення.";
@@ -1267,7 +1289,9 @@ if (chooseStockWarehouseBtn && stockManageWarehouseSelect && stockManageResult) 
                     },
                     body: JSON.stringify({
                         staffId: staff.id,
-                        warehouseId
+                        warehouseId,
+                        supplierDetails,
+                        buyerDetails
                     })
                 }
             );
@@ -1291,11 +1315,23 @@ if (chooseStockWarehouseBtn && stockManageWarehouseSelect && stockManageResult) 
 if (createWarehouseBtn && newWarehouseNameInput && stockManageResult) {
     createWarehouseBtn.addEventListener("click", async () => {
         const warehouseName = newWarehouseNameInput.value.trim();
+        const supplierDetails = newWarehouseSupplierDetailsInput?.value.trim() || "";
+        const buyerDetails = newWarehouseBuyerDetailsInput?.value.trim() || "";
 
         stockManageResult.classList.remove("staff-hidden");
 
         if (!warehouseName) {
             stockManageResult.innerHTML = "Введіть назву складу.";
+            return;
+        }
+
+        if (!supplierDetails) {
+            stockManageResult.innerHTML = "Введіть реквізити постачальника.";
+            return;
+        }
+
+        if (!buyerDetails) {
+            stockManageResult.innerHTML = "Введіть реквізити покупця / відповідального.";
             return;
         }
 
@@ -1324,6 +1360,15 @@ if (createWarehouseBtn && newWarehouseNameInput && stockManageResult) {
             }
 
             newWarehouseNameInput.value = "";
+
+            if (newWarehouseSupplierDetailsInput) {
+                newWarehouseSupplierDetailsInput.value = "";
+            }
+
+            if (newWarehouseBuyerDetailsInput) {
+                newWarehouseBuyerDetailsInput.value = "";
+            }
+
             createWarehouseBox.classList.add("staff-hidden");
 
             await loadStaffWarehouses();

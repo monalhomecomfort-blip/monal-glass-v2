@@ -887,3 +887,15 @@
     min-height: 96px;
     resize: vertical;
 }
+
+#load-stock-acts-btn {
+    margin-top: 0;
+    height: 54px;
+    min-width: 190px;
+    padding: 0 28px;
+    white-space: nowrap;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}

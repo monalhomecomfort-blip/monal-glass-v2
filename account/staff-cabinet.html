@@ -2107,7 +2107,8 @@ if (createSaleBtn && saleResult) {
                         productId,
                         quantity,
                         paymentType,
-                        warehouseId
+                        warehouseId,
+                        certificateCode: SALE_CERTIFICATE?.code || null
                     })
                 }
             );
@@ -2143,7 +2144,8 @@ if (createSaleBtn && saleResult) {
                                 quantity,
                                 paymentType,
                                 warehouseId,
-                                allowOutOfStock: true
+                                allowOutOfStock: true,
+                                certificateCode: SALE_CERTIFICATE?.code || null
                             })
                         }
                     );

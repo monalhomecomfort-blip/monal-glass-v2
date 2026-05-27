@@ -171,6 +171,28 @@
                 </button>
             </div>
 
+            <div id="sale-certificate-box" class="staff-payment-box staff-hidden">
+                <div class="staff-certificate-fields">
+                    <strong>Оплата сертифікатом</strong>
+
+                    <div class="staff-certificate-row">
+                        <input
+                            type="text"
+                            id="sale-certificate-code"
+                            placeholder="Код сертифіката"
+                        >
+
+                        <button id="sale-certificate-check-btn" class="buy-btn" type="button">
+                            Перевірити
+                        </button>
+                    </div>
+
+                    <div id="sale-certificate-result" class="staff-payment-note">
+                        Введіть код сертифіката і натисніть “Перевірити”.
+                    </div>
+                </div>
+            </div>
+
             <p class="staff-hint">
                 Після проведення продажу система автоматично скоригує залишки.
             </p>
@@ -452,10 +474,15 @@ const saleProductQuantityInput = document.getElementById("sale-product-quantity"
 const salePaymentTypeSelect = document.getElementById("sale-payment-type");
 const createSaleBtn = document.getElementById("create-sale-btn");
 const saleCardTransferBox = document.getElementById("sale-card-transfer-box");
-const saleCardTransferPaidBtn = document.getElementById("sale-card-transfer-paid-btn");    
+const saleCardTransferPaidBtn = document.getElementById("sale-card-transfer-paid-btn");
+const saleCertificateBox = document.getElementById("sale-certificate-box");
+const saleCertificateCodeInput = document.getElementById("sale-certificate-code");
+const saleCertificateCheckBtn = document.getElementById("sale-certificate-check-btn");
+const saleCertificateResult = document.getElementById("sale-certificate-result");        
 
 let SALE_SELECTED_CUSTOMER = null;
-let SALE_CARD_TRANSFER_CONFIRMED = false;    
+let SALE_CARD_TRANSFER_CONFIRMED = false;
+let SALE_CERTIFICATE = null;    
 
 let STAFF_PRODUCTS_LOADED = false;
 let STAFF_PRODUCTS = [];    
@@ -584,14 +611,51 @@ if (saleProductSearch && saleProductDropdown && saleProductId) {
     });
 }
 
+function resetSaleCertificateBox() {
+    SALE_CERTIFICATE = null;
+
+    if (saleCertificateCodeInput) {
+        saleCertificateCodeInput.value = "";
+    }
+
+    if (saleCertificateResult) {
+        saleCertificateResult.innerHTML = "Введіть код сертифіката і натисніть “Перевірити”.";
+    }
+}
+
+function getCurrentSaleTotal() {
+    const productId = Number(saleProductId?.value || 0);
+    const quantity = Number(saleProductQuantityInput?.value || 0);
+
+    const product = STAFF_PRODUCTS.find(item =>
+        Number(item.id || 0) === productId
+    );
+
+    const unitPrice = Number(product?.price || 0);
+
+    return {
+        product,
+        quantity,
+        unitPrice,
+        total: unitPrice * quantity
+    };
+}
+
 if (salePaymentTypeSelect && saleCardTransferBox) {
     salePaymentTypeSelect.addEventListener("change", () => {
         SALE_CARD_TRANSFER_CONFIRMED = false;
+        resetSaleCertificateBox();
 
         if (salePaymentTypeSelect.value === "card_transfer") {
             saleCardTransferBox.classList.remove("staff-hidden");
         } else {
             saleCardTransferBox.classList.add("staff-hidden");
+        }
+
+        if (salePaymentTypeSelect.value === "certificate") {
+            saleCertificateBox?.classList.remove("staff-hidden");
+        } else {
+            saleCertificateBox?.classList.add("staff-hidden");
         }
 
         if (saleCardTransferPaidBtn) {
@@ -606,6 +670,90 @@ if (saleCardTransferPaidBtn) {
         SALE_CARD_TRANSFER_CONFIRMED = true;
         saleCardTransferPaidBtn.textContent = "Переказ підтверджено";
         saleCardTransferPaidBtn.classList.add("is-confirmed");
+    });
+}
+
+if (saleCertificateCheckBtn && saleCertificateCodeInput && saleCertificateResult) {
+    saleCertificateCheckBtn.addEventListener("click", async () => {
+        const code = saleCertificateCodeInput.value.trim().toUpperCase();
+        const saleCalc = getCurrentSaleTotal();
+
+        SALE_CERTIFICATE = null;
+        saleCertificateResult.innerHTML = "";
+
+        if (!saleCalc.product) {
+            saleCertificateResult.innerHTML = "Спочатку оберіть товар.";
+            return;
+        }
+
+        if (!saleCalc.quantity || saleCalc.quantity <= 0) {
+            saleCertificateResult.innerHTML = "Вкажіть кількість товару.";
+            return;
+        }
+
+        if (!code) {
+            saleCertificateResult.innerHTML = "Введіть код сертифіката.";
+            return;
+        }
+
+        saleCertificateCheckBtn.disabled = true;
+        saleCertificateCheckBtn.textContent = "Перевіряю…";
+        saleCertificateResult.innerHTML = "Перевіряю сертифікат…";
+
+        try {
+            const response = await fetch(
+                "https://monal-mono-pay-production.up.railway.app/api/staff/check-certificate",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        staffId: staff.id,
+                        code
+                    })
+                }
+            );
+
+            const data = await response.json();
+
+            if (!data.ok || !data.valid) {
+                saleCertificateResult.innerHTML =
+                    data.message || data.error || "Сертифікат недійсний.";
+                saleCertificateCheckBtn.disabled = false;
+                saleCertificateCheckBtn.textContent = "Перевірити";
+                return;
+            }
+
+            const nominal = Number(data.nominal || 0);
+            const coveredAmount = Math.min(nominal, saleCalc.total);
+            const restAmount = Math.max(0, saleCalc.total - nominal);
+
+            SALE_CERTIFICATE = {
+                code: data.code,
+                nominal,
+                coveredAmount,
+                restAmount
+            };
+
+            saleCertificateResult.innerHTML = `
+                <strong>Сертифікат активний.</strong><br>
+                Код: ${data.code}<br>
+                Номінал: ${nominal} грн<br>
+                Сума продажу: ${saleCalc.total} грн<br>
+                Покрито сертифікатом: ${coveredAmount} грн<br>
+                До оплати: ${restAmount} грн
+            `;
+
+            saleCertificateCheckBtn.disabled = false;
+            saleCertificateCheckBtn.textContent = "Перевірити";
+
+        } catch (err) {
+            console.error(err);
+            saleCertificateResult.innerHTML = "Помилка зʼєднання при перевірці сертифіката.";
+            saleCertificateCheckBtn.disabled = false;
+            saleCertificateCheckBtn.textContent = "Перевірити";
+        }
     });
 }
     

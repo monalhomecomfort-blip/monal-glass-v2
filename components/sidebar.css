@@ -928,3 +928,40 @@
 .staff-payment-box .buy-btn.is-confirmed {
     background: #d8d2c2;
 }
+
+.staff-certificate-fields {
+    width: 100%;
+}
+
+.staff-certificate-row {
+    display: grid;
+    grid-template-columns: minmax(260px, 1fr) auto;
+    gap: 12px;
+    align-items: center;
+    margin-top: 12px;
+}
+
+.staff-certificate-row input {
+    height: 44px;
+    padding: 0 16px;
+    border-radius: 14px;
+    border: none;
+    background: #e7e4d9;
+    color: #1f1f1f;
+    font-size: 15px;
+    font-family: 'Montserrat', sans-serif;
+    outline: none;
+    box-shadow:
+        0 1px 0 rgba(255,255,255,0.35) inset,
+        0 2px 8px rgba(0,0,0,0.06);
+}
+
+.staff-certificate-row .buy-btn {
+    margin-top: 0;
+    white-space: nowrap;
+}
+
+.staff-payment-note {
+    margin-top: 12px;
+    line-height: 1.55;
+}

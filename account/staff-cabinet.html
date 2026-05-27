@@ -1858,10 +1858,9 @@ if (createSaleBtn && saleResult) {
 
         saleResult.classList.remove("staff-hidden");
 
-        if (!SALE_SELECTED_CUSTOMER || !SALE_SELECTED_CUSTOMER.id) {
-            saleResult.innerHTML = "Спочатку знайдіть і оберіть клієнта.";
-            return;
-        }
+        const customerId = SALE_SELECTED_CUSTOMER?.id
+            ? Number(SALE_SELECTED_CUSTOMER.id)
+            : 0;
 
         if (!productId) {
             saleResult.innerHTML = "Оберіть товар.";
@@ -1897,7 +1896,7 @@ if (createSaleBtn && saleResult) {
                     },
                     body: JSON.stringify({
                         staffId: staff.id,
-                        customerId: SALE_SELECTED_CUSTOMER.id,
+                        customerId,
                         productId,
                         quantity,
                         paymentType,
@@ -1906,13 +1905,57 @@ if (createSaleBtn && saleResult) {
                 }
             );
 
-            const data = await response.json();
-
+            let data = await response.json();
+            
             if (!data.ok) {
-                saleResult.innerHTML = data.error || "Не вдалося провести продаж.";
-                createSaleBtn.disabled = false;
-                createSaleBtn.textContent = "Провести";
-                return;
+                if (data.code === "out_of_stock_confirm_required") {
+                    const currentBalance = Number(data.currentBalance || 0);
+
+                    const confirmOutOfStock = confirm(
+                        `Товару на залишку ${currentBalance}. Провести оплату?`
+                    );
+
+                    if (!confirmOutOfStock) {
+                        saleResult.innerHTML = "Продаж скасовано. Повернуто до оформлення.";
+                        createSaleBtn.disabled = false;
+                        createSaleBtn.textContent = "Провести";
+                        return;
+                    }
+
+                    const retryResponse = await fetch(
+                        "https://monal-mono-pay-production.up.railway.app/api/staff/create-sale",
+                        {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify({
+                                staffId: staff.id,
+                                customerId,
+                                productId,
+                                quantity,
+                                paymentType,
+                                warehouseId,
+                                allowOutOfStock: true
+                            })
+                        }
+                    );
+
+                    data = await retryResponse.json();
+
+                    if (!data.ok) {
+                        saleResult.innerHTML = data.error || "Не вдалося провести продаж.";
+                        createSaleBtn.disabled = false;
+                        createSaleBtn.textContent = "Провести";
+                        return;
+                    }
+
+                } else {
+                    saleResult.innerHTML = data.error || "Не вдалося провести продаж.";
+                    createSaleBtn.disabled = false;
+                    createSaleBtn.textContent = "Провести";
+                    return;
+                }
             }
 
             const sale = data.sale || {};

@@ -899,3 +899,32 @@
     align-items: center;
     justify-content: center;
 }
+
+.staff-payment-box {
+    margin-top: 14px;
+    padding: 16px 18px;
+    border-radius: 16px;
+    background: rgba(231, 228, 217, 0.72);
+    display: flex;
+    gap: 18px;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.staff-payment-card {
+    display: inline-block;
+    margin-top: 6px;
+    font-size: 18px;
+    letter-spacing: 1.4px;
+    font-weight: 500;
+}
+
+.staff-payment-box .buy-btn {
+    margin-top: 0;
+    white-space: nowrap;
+}
+
+.staff-payment-box .buy-btn.is-confirmed {
+    background: #d8d2c2;
+}

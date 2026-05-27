@@ -1694,19 +1694,19 @@ function buildStockActHtml(data) {
                     margin-bottom: 24px;
                 }
 
-                .act-basis {
-                    margin: 16px 0 22px;
+                .act-intro {
+                    margin: 18px 0 14px;
+                    text-align: left;
                 }
 
-                .parties {
-                    display: grid;
-                    grid-template-columns: 1fr 1fr;
-                    gap: 28px;
-                    margin-bottom: 24px;
+                .act-party-label {
+                    margin: 14px 0 6px;
+                    font-weight: 600;
                 }
 
                 .party-box {
                     white-space: pre-line;
+                    margin-bottom: 14px;
                 }
 
                 table {
@@ -1776,21 +1776,20 @@ function buildStockActHtml(data) {
                 № ${escapeActHtml(act.document_number || "—")}
             </div>
 
-            <div class="act-basis">
-                <strong>Згідно документу:</strong>
-                ${escapeActHtml(documentBasis || "—")}
+            <div class="act-intro">
+                Цей Акт приймання-передачі Товару (надалі по тексту - «Акт») складений Сторонами згідно
+                ${escapeActHtml(documentBasis || "Договору реалізації продукції")}
+                (надалі – «Договір») між:
             </div>
 
-            <div class="parties">
-                <div class="party-box">
-                    <strong>Постачальник:</strong><br>
-                    ${escapeActHtml(supplierDetails || "—")}
-                </div>
+            <div class="act-party-label">Постачальник:</div>
+            <div class="party-box">
+                ${escapeActHtml(supplierDetails || "—")}
+            </div>
 
-                <div class="party-box">
-                    <strong>Покупець / відповідальний:</strong><br>
-                    ${escapeActHtml(buyerDetails || "—")}
-                </div>
+            <div class="act-party-label">Покупець / відповідальний:</div>
+            <div class="party-box">
+                ${escapeActHtml(buyerDetails || "—")}
             </div>
 
             <table>

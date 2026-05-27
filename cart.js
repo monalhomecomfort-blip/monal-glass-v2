@@ -1203,8 +1203,12 @@ async function validateSelectedOfferInCart() {
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
-    await loadPublicPromoCampaigns();
-    await validateSelectedOfferInCart();
+    const isCartPage = Boolean(document.getElementById("cart-list"));
+
+    if (isCartPage) {
+        await loadPublicPromoCampaigns();
+        await validateSelectedOfferInCart();
+    }
 
     updateCartCount();
     renderCart();
@@ -1218,7 +1222,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         phoneInput.addEventListener("input", formatPhone);
     }
 
-    if (document.getElementById("cart-list")) {
+    if (isCartPage) {
         setInterval(() => {
             if (document.visibilityState === "visible") {
                 validateSelectedOfferInCart();

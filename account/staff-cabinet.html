@@ -436,7 +436,10 @@ const saleClientSearchInput = document.getElementById("sale-client-search");
 const saleClientSearchBtn = document.getElementById("sale-client-search-btn");
 const saleClientResult = document.getElementById("sale-client-result");
 const saleWarehouseRow = document.getElementById("sale-warehouse-row");
-const saleWarehouseSelect = document.getElementById("sale-warehouse-select");    
+const saleWarehouseSelect = document.getElementById("sale-warehouse-select");
+const saleProductQuantityInput = document.getElementById("sale-product-quantity");
+const salePaymentTypeSelect = document.getElementById("sale-payment-type");
+const createSaleBtn = document.getElementById("create-sale-btn");    
 
 let SALE_SELECTED_CUSTOMER = null;    
 
@@ -1843,6 +1846,108 @@ if (createWarehouseBtn && newWarehouseNameInput && stockManageResult) {
     });
 }
 
+if (createSaleBtn && saleResult) {
+    createSaleBtn.addEventListener("click", async () => {
+        const productId = Number(saleProductId?.value || 0);
+        const quantity = Number(saleProductQuantityInput?.value || 0);
+        const paymentType = salePaymentTypeSelect?.value || "";
+        const warehouseId =
+            String(staff?.role || "") === "admin"
+                ? Number(saleWarehouseSelect?.value || 0)
+                : Number(staff?.warehouse_id || 0);
+
+        saleResult.classList.remove("staff-hidden");
+
+        if (!SALE_SELECTED_CUSTOMER || !SALE_SELECTED_CUSTOMER.id) {
+            saleResult.innerHTML = "Спочатку знайдіть і оберіть клієнта.";
+            return;
+        }
+
+        if (!productId) {
+            saleResult.innerHTML = "Оберіть товар.";
+            return;
+        }
+
+        if (!quantity || quantity <= 0) {
+            saleResult.innerHTML = "Вкажіть кількість.";
+            return;
+        }
+
+        if (!paymentType) {
+            saleResult.innerHTML = "Оберіть тип оплати.";
+            return;
+        }
+
+        if (!warehouseId) {
+            saleResult.innerHTML = "Оберіть склад продажу.";
+            return;
+        }
+
+        createSaleBtn.disabled = true;
+        createSaleBtn.textContent = "Проводжу…";
+        saleResult.innerHTML = "Проводжу продаж…";
+
+        try {
+            const response = await fetch(
+                "https://monal-mono-pay-production.up.railway.app/api/staff/create-sale",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        staffId: staff.id,
+                        customerId: SALE_SELECTED_CUSTOMER.id,
+                        productId,
+                        quantity,
+                        paymentType,
+                        warehouseId
+                    })
+                }
+            );
+
+            const data = await response.json();
+
+            if (!data.ok) {
+                saleResult.innerHTML = data.error || "Не вдалося провести продаж.";
+                createSaleBtn.disabled = false;
+                createSaleBtn.textContent = "Провести";
+                return;
+            }
+
+            const sale = data.sale || {};
+
+            saleResult.innerHTML = `
+                <strong>Продаж проведено.</strong><br>
+                Замовлення: ${sale.orderId || "—"}<br>
+                Клієнт: ${sale.customerName || "—"}<br>
+                Склад: ${sale.warehouseName || "—"} ID ${sale.warehouseId || "—"}<br>
+                Товар: ${sale.productName || "—"}<br>
+                Кількість: ${sale.quantity || 0}<br>
+                Сума: ${sale.totalAmount || 0} грн<br>
+                Оплата: ${sale.paymentLabel || "—"}<br>
+                Залишок було: ${sale.stockBefore ?? "—"}<br>
+                Залишок стало: ${sale.stockAfter ?? "—"}
+            `;
+
+            saleProductSearch.value = "";
+            saleProductId.value = "";
+            saleProductQuantityInput.value = "1";
+            salePaymentTypeSelect.value = "";
+
+            createSaleBtn.disabled = false;
+            createSaleBtn.textContent = "Провести";
+
+        } catch (err) {
+            console.error(err);
+
+            saleResult.innerHTML = "Помилка зʼєднання при проведенні продажу.";
+            createSaleBtn.disabled = false;
+            createSaleBtn.textContent = "Провести";
+        }
+    });
+}
+    
 if (loadStockActsBtn && stockReportWarehouseFilter && stockActsResult) {
     loadStockActsBtn.addEventListener("click", async () => {
         const warehouseId = stockReportWarehouseFilter.value;

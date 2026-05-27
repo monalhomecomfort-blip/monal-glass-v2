@@ -160,6 +160,17 @@
                 </button>
             </div>
 
+            <div id="sale-card-transfer-box" class="staff-payment-box staff-hidden">
+                <div>
+                    <strong>Переказ на карту</strong><br>
+                    <span class="staff-payment-card">4441 1110 6069 6045</span>
+                </div>
+
+                <button id="sale-card-transfer-paid-btn" class="buy-btn" type="button">
+                    Оплачено
+                </button>
+            </div>
+
             <p class="staff-hint">
                 Після проведення продажу система автоматично скоригує залишки.
             </p>
@@ -439,9 +450,12 @@ const saleWarehouseRow = document.getElementById("sale-warehouse-row");
 const saleWarehouseSelect = document.getElementById("sale-warehouse-select");
 const saleProductQuantityInput = document.getElementById("sale-product-quantity");
 const salePaymentTypeSelect = document.getElementById("sale-payment-type");
-const createSaleBtn = document.getElementById("create-sale-btn");    
+const createSaleBtn = document.getElementById("create-sale-btn");
+const saleCardTransferBox = document.getElementById("sale-card-transfer-box");
+const saleCardTransferPaidBtn = document.getElementById("sale-card-transfer-paid-btn");    
 
-let SALE_SELECTED_CUSTOMER = null;    
+let SALE_SELECTED_CUSTOMER = null;
+let SALE_CARD_TRANSFER_CONFIRMED = false;    
 
 let STAFF_PRODUCTS_LOADED = false;
 let STAFF_PRODUCTS = [];    
@@ -570,6 +584,31 @@ if (saleProductSearch && saleProductDropdown && saleProductId) {
     });
 }
 
+if (salePaymentTypeSelect && saleCardTransferBox) {
+    salePaymentTypeSelect.addEventListener("change", () => {
+        SALE_CARD_TRANSFER_CONFIRMED = false;
+
+        if (salePaymentTypeSelect.value === "card_transfer") {
+            saleCardTransferBox.classList.remove("staff-hidden");
+        } else {
+            saleCardTransferBox.classList.add("staff-hidden");
+        }
+
+        if (saleCardTransferPaidBtn) {
+            saleCardTransferPaidBtn.textContent = "Оплачено";
+            saleCardTransferPaidBtn.classList.remove("is-confirmed");
+        }
+    });
+}
+
+if (saleCardTransferPaidBtn) {
+    saleCardTransferPaidBtn.addEventListener("click", () => {
+        SALE_CARD_TRANSFER_CONFIRMED = true;
+        saleCardTransferPaidBtn.textContent = "Переказ підтверджено";
+        saleCardTransferPaidBtn.classList.add("is-confirmed");
+    });
+}
+    
 if (saleClientSearchBtn) {
     saleClientSearchBtn.addEventListener("click", async () => {
         const searchValue = saleClientSearchInput.value.trim();
@@ -1882,6 +1921,11 @@ if (createSaleBtn && saleResult) {
             return;
         }
 
+        if (paymentType === "card_transfer" && !SALE_CARD_TRANSFER_CONFIRMED) {
+            saleResult.innerHTML = "Підтвердіть переказ кнопкою “Оплачено”.";
+            return;
+        }
+
         createSaleBtn.disabled = true;
         createSaleBtn.textContent = "Проводжу…";
         saleResult.innerHTML = "Проводжу продаж…";
@@ -1977,6 +2021,16 @@ if (createSaleBtn && saleResult) {
             saleProductId.value = "";
             saleProductQuantityInput.value = "1";
             salePaymentTypeSelect.value = "";
+            SALE_CARD_TRANSFER_CONFIRMED = false;
+
+            if (saleCardTransferBox) {
+                saleCardTransferBox.classList.add("staff-hidden");
+            }
+
+            if (saleCardTransferPaidBtn) {
+                saleCardTransferPaidBtn.textContent = "Оплачено";
+                saleCardTransferPaidBtn.classList.remove("is-confirmed");
+            }
 
             createSaleBtn.disabled = false;
             createSaleBtn.textContent = "Провести";

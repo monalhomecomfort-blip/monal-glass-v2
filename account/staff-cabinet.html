@@ -2074,8 +2074,13 @@ if (createSaleBtn && saleResult) {
             return;
         }
 
+        const selectedCertificateCode =
+            paymentType === "certificate"
+                ? String(SALE_CERTIFICATE?.code || saleCertificateCodeInput?.value || "").trim().toUpperCase()
+                : null;
+
         if (paymentType === "certificate") {
-            if (!SALE_CERTIFICATE || !SALE_CERTIFICATE.code) {
+            if (!SALE_CERTIFICATE || !selectedCertificateCode) {
                 saleResult.innerHTML = "Спочатку перевірте сертифікат.";
                 return;
             }
@@ -2088,7 +2093,7 @@ if (createSaleBtn && saleResult) {
                 return;
             }
         }
-
+        
         createSaleBtn.disabled = true;
         createSaleBtn.textContent = "Проводжу…";
         saleResult.innerHTML = "Проводжу продаж…";
@@ -2108,7 +2113,7 @@ if (createSaleBtn && saleResult) {
                         quantity,
                         paymentType,
                         warehouseId,
-                        certificateCode: SALE_CERTIFICATE?.code || null
+                        certificateCode: selectedCertificateCode
                     })
                 }
             );
@@ -2145,7 +2150,7 @@ if (createSaleBtn && saleResult) {
                                 paymentType,
                                 warehouseId,
                                 allowOutOfStock: true,
-                                certificateCode: SALE_CERTIFICATE?.code || null
+                                certificateCode: selectedCertificateCode
                             })
                         }
                     );

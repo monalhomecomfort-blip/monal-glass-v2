@@ -2074,6 +2074,21 @@ if (createSaleBtn && saleResult) {
             return;
         }
 
+        if (paymentType === "certificate") {
+            if (!SALE_CERTIFICATE || !SALE_CERTIFICATE.code) {
+                saleResult.innerHTML = "Спочатку перевірте сертифікат.";
+                return;
+            }
+
+            if (Number(SALE_CERTIFICATE.restAmount || 0) > 0) {
+                saleResult.innerHTML =
+                    `Сертифікат покриває ${SALE_CERTIFICATE.coveredAmount} грн. ` +
+                    `До оплати ще ${SALE_CERTIFICATE.restAmount} грн. ` +
+                    `Спочатку додамо сценарій доплати.`;
+                return;
+            }
+        }
+
         createSaleBtn.disabled = true;
         createSaleBtn.textContent = "Проводжу…";
         saleResult.innerHTML = "Проводжу продаж…";

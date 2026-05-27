@@ -811,7 +811,7 @@ function renderStockReportTable(data) {
     if (!stockReportResult) return;
 
     const items = Array.isArray(data.items)
-    ? data.items.filter(item => Number(item.final_quantity || 0) > 0)
+    ? data.items.filter(item => Number(item.final_quantity || 0) !== 0)
     : [];
 
     stockReportResult.classList.remove("staff-hidden");

@@ -930,7 +930,8 @@ function renderStockManageTable(data) {
                         <th>СВ</th>
                         <th>Ціна реалізації</th>
                         <th>Поточні залишки</th>
-                        <th>Кількість перемістити</th>
+                        <th>Перемістити НА склад</th>
+                        <th>Перемістити ЗІ складу</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -972,7 +973,17 @@ function renderStockManageTable(data) {
                             <td>
                                 <input
                                     type="number"
-                                    class="stock-movement-quantity"
+                                    class="stock-movement-in-quantity"
+                                    value=""
+                                    placeholder="0"
+                                    min="0"
+                                >
+                            </td>
+
+                            <td>
+                                <input
+                                    type="number"
+                                    class="stock-movement-out-quantity"
                                     value=""
                                     placeholder="0"
                                     min="0"
@@ -1424,7 +1435,9 @@ if (showCreateWarehouseFormBtn && createWarehouseBox) {
 
 if (stockManageResult) {
     stockManageResult.addEventListener("input", (e) => {
-        const quantityInput = e.target.closest(".stock-movement-quantity");
+        const quantityInput = e.target.closest(
+            ".stock-movement-in-quantity, .stock-movement-out-quantity"
+        );
         if (!quantityInput) return;
 
         const row = quantityInput.closest("tr[data-stock-id]");
@@ -1433,7 +1446,10 @@ if (stockManageResult) {
         const checkbox = row.querySelector(".stock-item-enabled");
         if (!checkbox) return;
 
-        checkbox.checked = Number(quantityInput.value || 0) > 0;
+        const inQuantity = Number(row.querySelector(".stock-movement-in-quantity")?.value || 0);
+        const outQuantity = Number(row.querySelector(".stock-movement-out-quantity")?.value || 0);
+
+        checkbox.checked = inQuantity > 0 || outQuantity > 0;
     });
 }
     
@@ -1462,20 +1478,38 @@ if (stockManageResult) {
                 const enabled = row.querySelector(".stock-item-enabled")?.checked || false;
                 const costPrice = row.querySelector(".stock-cost-price")?.value || "";
                 const realizationPrice = row.querySelector(".stock-realization-price")?.value || "";
-                const quantity = row.querySelector(".stock-movement-quantity")?.value || 0;
+                const transferInQuantity = row.querySelector(".stock-movement-in-quantity")?.value || 0;
+                const transferOutQuantity = row.querySelector(".stock-movement-out-quantity")?.value || 0;
 
                 return {
                     stockId: row.dataset.stockId,
                     enabled,
                     costPrice,
                     realizationPrice,
-                    quantity
+                    transferInQuantity,
+                    transferOutQuantity
                 };
             })
             .filter(item =>
                 item.enabled &&
-                Number(item.quantity || 0) > 0
+                (
+                    Number(item.transferInQuantity || 0) > 0 ||
+                    Number(item.transferOutQuantity || 0) > 0
+                )
             );
+
+        const mixedDirectionItem = items.find(item =>
+            Number(item.transferInQuantity || 0) > 0 &&
+            Number(item.transferOutQuantity || 0) > 0
+        );
+
+        if (mixedDirectionItem) {
+            stockManageResult.insertAdjacentHTML(
+                "beforeend",
+                `<div id="stock-save-message" class="staff-result">В одному рядку заповніть тільки одну колонку: або “Перемістити НА склад”, або “Перемістити ЗІ складу”.</div>`
+            );
+            return;
+        }
 
         if (!items.length) {
             stockManageResult.insertAdjacentHTML(

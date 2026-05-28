@@ -226,11 +226,31 @@
             </button>
         </div>
 
+        <div class="staff-search-row">
+            <input
+                type="date"
+                id="production-report-start-date"
+            >
+
+            <input
+                type="date"
+                id="production-report-end-date"
+            >
+
+            <button id="load-production-report-btn" class="buy-btn" type="button">
+                Звіт виробництва
+            </button>
+        </div>
+
         <div id="stock-report-result" class="staff-result staff-hidden">
             Звіт по залишках підключимо наступним кроком.
         </div>
         <div id="stock-acts-result" class="staff-result staff-hidden">
             Архів актів руху товару.
+        </div>
+
+        <div id="production-report-result" class="staff-result staff-hidden">
+            Звіт по складу виробництва.
         </div>
     </div>
 
@@ -444,7 +464,11 @@ const stockReportWarehouseFilter = document.getElementById("stock-report-warehou
 const loadStockReportBtn = document.getElementById("load-stock-report-btn");
 const stockReportResult = document.getElementById("stock-report-result");
 const loadStockActsBtn = document.getElementById("load-stock-acts-btn");
-const stockActsResult = document.getElementById("stock-acts-result");    
+const stockActsResult = document.getElementById("stock-acts-result");
+const productionReportStartDateInput = document.getElementById("production-report-start-date");
+const productionReportEndDateInput = document.getElementById("production-report-end-date");
+const loadProductionReportBtn = document.getElementById("load-production-report-btn");
+const productionReportResult = document.getElementById("production-report-result");    
 const myStockSection = document.getElementById("my-stock-section");
 const openMyStockSectionBtn = document.getElementById("open-my-stock-section");
 const myStockResult = document.getElementById("my-stock-result");    
@@ -1118,6 +1142,73 @@ function renderStockActsArchive(data) {
                             </tr>
                         `;
                     }).join("")}
+                </tbody>
+            </table>
+        </div>
+    `;
+}
+
+function renderProductionStockReport(data) {
+    if (!productionReportResult) return;
+
+    const items = Array.isArray(data.items) ? data.items : [];
+    const totals = data.totals || {};
+    const warehouse = data.warehouse || {};
+    const period = data.period || {};
+
+    productionReportResult.classList.remove("staff-hidden");
+
+    if (!items.length) {
+        productionReportResult.innerHTML = `
+            <strong>Звіт виробництва</strong><br>
+            ${warehouse.warehouse_name || "Склад виробництва"}<br>
+            Період: ${period.startDate || "—"} — ${period.endDate || "—"}<br><br>
+            Рухів за період не знайдено.
+        `;
+        return;
+    }
+
+    productionReportResult.innerHTML = `
+        <div class="staff-stock-table-wrap">
+            <h3>
+                Звіт виробництва · ${warehouse.warehouse_name || "Склад виробництва"}
+            </h3>
+
+            <p class="staff-hint">
+                Період: ${period.startDate || "—"} — ${period.endDate || "—"}
+            </p>
+
+            <table class="staff-stock-table">
+                <thead>
+                    <tr>
+                        <th>Товар</th>
+                        <th>Залишок на початок</th>
+                        <th>Прихід</th>
+                        <th>Розхід переміщення</th>
+                        <th>Продажі</th>
+                        <th>Кінцевий залишок</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${items.map(item => `
+                        <tr>
+                            <td>${item.product_display_name || "—"}</td>
+                            <td>${item.opening_quantity ?? 0}</td>
+                            <td>${item.incoming_quantity ?? 0}</td>
+                            <td>${item.transfer_out_quantity ?? 0}</td>
+                            <td>${item.sales_quantity ?? 0}</td>
+                            <td>${item.closing_quantity ?? 0}</td>
+                        </tr>
+                    `).join("")}
+
+                    <tr>
+                        <td><strong>Разом</strong></td>
+                        <td><strong>${totals.opening_quantity ?? 0}</strong></td>
+                        <td><strong>${totals.incoming_quantity ?? 0}</strong></td>
+                        <td><strong>${totals.transfer_out_quantity ?? 0}</strong></td>
+                        <td><strong>${totals.sales_quantity ?? 0}</strong></td>
+                        <td><strong>${totals.closing_quantity ?? 0}</strong></td>
+                    </tr>
                 </tbody>
             </table>
         </div>
@@ -2291,6 +2382,57 @@ if (createSaleBtn && saleResult) {
             saleResult.innerHTML = "Помилка зʼєднання при проведенні продажу.";
             createSaleBtn.disabled = false;
             createSaleBtn.textContent = "Провести";
+        }
+    });
+}
+
+if (
+    loadProductionReportBtn &&
+    productionReportStartDateInput &&
+    productionReportEndDateInput &&
+    productionReportResult
+) {
+    loadProductionReportBtn.addEventListener("click", async () => {
+        const startDate = productionReportStartDateInput.value;
+        const endDate = productionReportEndDateInput.value;
+
+        productionReportResult.classList.remove("staff-hidden");
+
+        if (!startDate || !endDate) {
+            productionReportResult.innerHTML = "Оберіть дату початку і дату кінця періоду.";
+            return;
+        }
+
+        productionReportResult.innerHTML = "Завантажую звіт виробництва…";
+
+        try {
+            const response = await fetch(
+                "https://monal-mono-pay-production.up.railway.app/api/staff/production-stock-report",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        staffId: staff.id,
+                        startDate,
+                        endDate
+                    })
+                }
+            );
+
+            const data = await response.json();
+
+            if (!data.ok) {
+                productionReportResult.innerHTML = data.error || "Не вдалося завантажити звіт виробництва.";
+                return;
+            }
+
+            renderProductionStockReport(data);
+
+        } catch (err) {
+            console.error(err);
+            productionReportResult.innerHTML = "Помилка зʼєднання при завантаженні звіту виробництва.";
         }
     });
 }

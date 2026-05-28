@@ -3114,3 +3114,12 @@ body.home {
   }
 }
 
+/* ===== PRODUCT TITLES — BOLDER ON ALL PRODUCT PAGES ===== */
+.page-aromadiffusers .product-row .product-title,
+.page-parfums .product-row .product-title,
+.page-refills .product-row .product-title,
+.page-discovery .product-row .product-title,
+.page-gifts .product-row .product-title,
+.product-row .product-title {
+    font-weight: 500 !important;
+}

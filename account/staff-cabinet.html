@@ -237,15 +237,12 @@
             </button>
         </div>
 
-        <div id="stock-report-result" class="staff-result staff-hidden">
-            Звіт по залишках підключимо наступним кроком.
-        </div>
         <div id="stock-acts-result" class="staff-result staff-hidden">
             Архів актів руху товару.
         </div>
 
         <div id="production-report-result" class="staff-result staff-hidden">
-            Звіт по складу виробництва.
+            Звіт руху по складах.
         </div>
     </div>
 
@@ -456,8 +453,6 @@ const newWarehouseBuyerDetailsInput = document.getElementById("new-warehouse-buy
 const createWarehouseBtn = document.getElementById("create-warehouse-btn");
 const stockManageResult = document.getElementById("stock-manage-result");
 const stockReportWarehouseFilter = document.getElementById("stock-report-warehouse-filter");
-const loadStockReportBtn = document.getElementById("load-stock-report-btn");
-const stockReportResult = document.getElementById("stock-report-result");
 const loadStockActsBtn = document.getElementById("load-stock-acts-btn");
 const stockActsResult = document.getElementById("stock-acts-result");
 const productionReportStartDateInput = document.getElementById("production-report-start-date");
@@ -1024,57 +1019,6 @@ function renderStockManageTable(data) {
     `;
 }
 
-function renderStockReportTable(data) {
-    if (!stockReportResult) return;
-
-    const items = Array.isArray(data.items)
-    ? data.items.filter(item => Number(item.final_quantity || 0) !== 0)
-    : [];
-
-    stockReportResult.classList.remove("staff-hidden");
-
-    if (!items.length) {
-        stockReportResult.innerHTML = "Залишків не знайдено.";
-        return;
-    }
-
-    stockReportResult.innerHTML = `
-        <div class="staff-stock-table-wrap">
-            <table class="staff-stock-table">
-                <thead>
-                    <tr>
-                        <th>Склад</th>
-                        <th>Товар</th>
-                        <th>РЦ</th>
-                        <th>СВ</th>
-                        <th>Ціна реалізації</th>
-                        <th>Початковий залишок</th>
-                        <th>Продажі</th>
-                        <th>Кінцевий залишок</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${items.map(item => `
-                        <tr>
-                            <td>
-                                ${item.warehouse_name || "—"}<br>
-                                <small>ID ${item.warehouse_id}</small>
-                            </td>
-                            <td>${item.product_display_name || "—"}</td>
-                            <td>${item.retail_price ?? "—"} грн</td>
-                            <td>${item.cost_price ?? "—"}</td>
-                            <td>${item.realization_price ?? "—"}</td>
-                            <td>${item.initial_quantity ?? 0}</td>
-                            <td>${item.sales_quantity ?? 0}</td>
-                            <td>${item.final_quantity ?? 0}</td>
-                        </tr>
-                    `).join("")}
-                </tbody>
-            </table>
-        </div>
-    `;
-}
-
 function renderStockActsArchive(data) {
     if (!stockActsResult) return;
 
@@ -1143,20 +1087,21 @@ function renderStockActsArchive(data) {
     `;
 }
 
-function renderProductionStockReport(data) {
+function renderStockMovementReport(data) {
     if (!productionReportResult) return;
 
     const items = Array.isArray(data.items) ? data.items : [];
     const totals = data.totals || {};
-    const warehouse = data.warehouse || {};
+    const scope = data.scope || {};
     const period = data.period || {};
+    const isAllWarehouses = !scope.warehouse_id;
 
     productionReportResult.classList.remove("staff-hidden");
 
     if (!items.length) {
         productionReportResult.innerHTML = `
-            <strong>Звіт виробництва</strong><br>
-            ${warehouse.warehouse_name || "Склад виробництва"}<br>
+            <strong>Звіт руху</strong><br>
+            ${scope.warehouse_name || "Всі склади"}<br>
             Період: ${period.startDate || "—"} — ${period.endDate || "—"}<br><br>
             Рухів за період не знайдено.
         `;
@@ -1166,7 +1111,7 @@ function renderProductionStockReport(data) {
     productionReportResult.innerHTML = `
         <div class="staff-stock-table-wrap">
             <h3>
-                Звіт виробництва · ${warehouse.warehouse_name || "Склад виробництва"}
+                Звіт руху · ${scope.warehouse_name || "Всі склади"}
             </h3>
 
             <p class="staff-hint">
@@ -1176,6 +1121,7 @@ function renderProductionStockReport(data) {
             <table class="staff-stock-table">
                 <thead>
                     <tr>
+                        ${isAllWarehouses ? "<th>Склад</th>" : ""}
                         <th>Товар</th>
                         <th>Залишок на початок</th>
                         <th>Прихід</th>
@@ -1187,6 +1133,12 @@ function renderProductionStockReport(data) {
                 <tbody>
                     ${items.map(item => `
                         <tr>
+                            ${isAllWarehouses ? `
+                                <td>
+                                    ${item.warehouse_name || "—"}<br>
+                                    <small>ID ${item.warehouse_id || "—"}</small>
+                                </td>
+                            ` : ""}
                             <td>${item.product_display_name || "—"}</td>
                             <td>${item.opening_quantity ?? 0}</td>
                             <td>${item.incoming_quantity ?? 0}</td>
@@ -1197,7 +1149,8 @@ function renderProductionStockReport(data) {
                     `).join("")}
 
                     <tr>
-                        <td><strong>Разом</strong></td>
+                        ${isAllWarehouses ? "<td><strong>Разом</strong></td>" : ""}
+                        <td><strong>${isAllWarehouses ? "" : "Разом"}</strong></td>
                         <td><strong>${totals.opening_quantity ?? 0}</strong></td>
                         <td><strong>${totals.incoming_quantity ?? 0}</strong></td>
                         <td><strong>${totals.transfer_out_quantity ?? 0}</strong></td>
@@ -2385,11 +2338,13 @@ if (
     loadProductionReportBtn &&
     productionReportStartDateInput &&
     productionReportEndDateInput &&
-    productionReportResult
+    productionReportResult &&
+    stockReportWarehouseFilter
 ) {
     loadProductionReportBtn.addEventListener("click", async () => {
         const startDate = productionReportStartDateInput.value;
         const endDate = productionReportEndDateInput.value;
+        const warehouseId = stockReportWarehouseFilter.value;
 
         productionReportResult.classList.remove("staff-hidden");
 
@@ -2398,11 +2353,11 @@ if (
             return;
         }
 
-        productionReportResult.innerHTML = "Завантажую звіт виробництва…";
+        productionReportResult.innerHTML = "Завантажую звіт руху…";
 
         try {
             const response = await fetch(
-                "https://monal-mono-pay-production.up.railway.app/api/staff/production-stock-report",
+                "https://monal-mono-pay-production.up.railway.app/api/staff/stock-movement-report",
                 {
                     method: "POST",
                     headers: {
@@ -2410,6 +2365,7 @@ if (
                     },
                     body: JSON.stringify({
                         staffId: staff.id,
+                        warehouseId: warehouseId || null,
                         startDate,
                         endDate
                     })
@@ -2419,15 +2375,15 @@ if (
             const data = await response.json();
 
             if (!data.ok) {
-                productionReportResult.innerHTML = data.error || "Не вдалося завантажити звіт виробництва.";
+                productionReportResult.innerHTML = data.error || "Не вдалося завантажити звіт руху.";
                 return;
             }
 
-            renderProductionStockReport(data);
+            renderStockMovementReport(data);
 
         } catch (err) {
             console.error(err);
-            productionReportResult.innerHTML = "Помилка зʼєднання при завантаженні звіту виробництва.";
+            productionReportResult.innerHTML = "Помилка зʼєднання при завантаженні звіту руху.";
         }
     });
 }
@@ -2466,44 +2422,6 @@ if (loadStockActsBtn && stockReportWarehouseFilter && stockActsResult) {
         } catch (err) {
             console.error(err);
             stockActsResult.innerHTML = "Помилка зʼєднання при завантаженні актів.";
-        }
-    });
-}
-    
-if (loadStockReportBtn && stockReportWarehouseFilter && stockReportResult) {
-    loadStockReportBtn.addEventListener("click", async () => {
-        const warehouseId = stockReportWarehouseFilter.value;
-
-        stockReportResult.classList.remove("staff-hidden");
-        stockReportResult.innerHTML = "Завантажую звіт по залишках…";
-
-        try {
-            const response = await fetch(
-                "https://monal-mono-pay-production.up.railway.app/api/staff/stock-report",
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        staffId: staff.id,
-                        warehouseId: warehouseId || null
-                    })
-                }
-            );
-
-            const data = await response.json();
-
-            if (!data.ok) {
-                stockReportResult.innerHTML = data.error || "Не вдалося завантажити звіт.";
-                return;
-            }
-
-            renderStockReportTable(data);
-
-        } catch (err) {
-            console.error(err);
-            stockReportResult.innerHTML = "Помилка зʼєднання при завантаженні звіту.";
         }
     });
 }

@@ -965,3 +965,31 @@
     margin-top: 12px;
     line-height: 1.55;
 }
+
+.staff-stock-report-row {
+    display: grid;
+    grid-template-columns: minmax(230px, 1.2fr) 180px 180px auto auto;
+    gap: 14px;
+    align-items: center;
+}
+
+.staff-stock-report-row .buy-btn {
+    margin-top: 0;
+    white-space: nowrap;
+    height: 54px;
+    padding: 0 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.staff-stock-report-row input[type="date"],
+.staff-stock-report-row select {
+    height: 54px;
+}
+
+@media (max-width: 900px) {
+    .staff-stock-report-row {
+        grid-template-columns: 1fr;
+    }
+}

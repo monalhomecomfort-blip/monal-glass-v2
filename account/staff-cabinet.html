@@ -1658,7 +1658,15 @@ function buildStockActHtml(data) {
     const supplierDetails = act.supplier_details || "";
     const buyerDetails = act.buyer_details || "";
 
-    const rowsHtml = items.map((item, index) => {
+    const transferInItems = items.filter(item =>
+        String(item.movement_type || "transfer_in") === "transfer_in"
+    );
+
+    const correctionItems = items.filter(item =>
+        String(item.movement_type || "") === "transfer_return"
+    );
+
+    const rowsHtml = transferInItems.map((item, index) => {
         const quantity = Number(item.quantity || 0);
         const realizationPrice = item.realization_price !== null && item.realization_price !== undefined
             ? Number(item.realization_price || 0)
@@ -1671,14 +1679,26 @@ function buildStockActHtml(data) {
                 <td>${index + 1}</td>
                 <td>${escapeActHtml(item.product_display_name || "—")}</td>
                 <td>${quantity}</td>
-                <td>${formatActMoney(item.retail_price)} грн</td>                
+                <td>${formatActMoney(item.retail_price)} грн</td>
                 <td>${formatActMoney(realizationPrice)} грн</td>
                 <td>${formatActMoney(sum)} грн</td>
             </tr>
         `;
     }).join("");
 
-    const totalSum = items.reduce((sum, item) => {
+    const correctionRowsHtml = correctionItems.map((item, index) => {
+        const quantity = Number(item.quantity || 0);
+
+        return `
+            <tr>
+                <td>${index + 1}</td>
+                <td>${escapeActHtml(item.product_display_name || "—")}</td>
+                <td>${quantity}</td>
+            </tr>
+        `;
+    }).join("");
+
+    const totalSum = transferInItems.reduce((sum, item) => {
         const quantity = Number(item.quantity || 0);
         const realizationPrice = item.realization_price !== null && item.realization_price !== undefined
             ? Number(item.realization_price || 0)
@@ -1804,59 +1824,86 @@ function buildStockActHtml(data) {
                 <div>${actDate}</div>
             </div>
 
-            <h1>Акт приймання-передачі товару</h1>
+            <h1>${transferInItems.length ? "Акт приймання-передачі товару" : "Коригування"}</h1>
 
             <div style="text-align:center;">
                 № ${escapeActHtml(act.document_number || "—")}
             </div>
 
-            <div class="act-intro">
-                Цей Акт приймання-передачі Товару (надалі по тексту - «Акт») складений Сторонами згідно
-                ${escapeActHtml(documentBasis || "Договору реалізації продукції")}
-                (надалі – «Договір») між:
-            </div>
-
-            <div class="act-party-label">Постачальник:</div>
-            <div class="party-box">
-                ${escapeActHtml(supplierDetails || "—")}
-            </div>
-
-            <div class="act-party-label">Покупець / відповідальний:</div>
-            <div class="party-box">
-                ${escapeActHtml(buyerDetails || "—")}
-            </div>
-
-            <table>
-                <thead>
-                    <tr>
-                        <th>№</th>
-                        <th>Найменування товару</th>
-                        <th>К-сть</th>
-                        <th>РЦ</th>                        
-                        <th>Ціна реалізації</th>
-                        <th>Сума</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${rowsHtml}
-                </tbody>
-            </table>
-
-            <div class="total">
-                Разом: ${formatActMoney(totalSum)} грн
-            </div>
-
-            <div class="signatures">
-                <div>
-                    <strong>Постачальник</strong>
-                    <div class="signature-line">підпис</div>
+            ${transferInItems.length ? `
+                <div class="act-intro">
+                    Цей Акт приймання-передачі Товару (надалі по тексту - «Акт») складений Сторонами згідно
+                    ${escapeActHtml(documentBasis || "Договору реалізації продукції")}
+                    (надалі – «Договір») між:
                 </div>
 
-                <div>
-                    <strong>Покупець / відповідальний</strong>
-                    <div class="signature-line">підпис</div>
+                <div class="act-party-label">Постачальник:</div>
+                <div class="party-box">
+                    ${escapeActHtml(supplierDetails || "—")}
                 </div>
-            </div>
+
+                <div class="act-party-label">Покупець / відповідальний:</div>
+                <div class="party-box">
+                    ${escapeActHtml(buyerDetails || "—")}
+                </div>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>№</th>
+                            <th>Найменування товару</th>
+                            <th>К-сть</th>
+                            <th>РЦ</th>
+                            <th>Ціна реалізації</th>
+                            <th>Сума</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${rowsHtml}
+                    </tbody>
+                </table>
+
+                <div class="total">
+                    Разом: ${formatActMoney(totalSum)} грн
+                </div>
+            ` : ""}
+
+            ${correctionItems.length ? `
+                <h2 style="text-align:center; font-size:18px; margin:32px 0 10px; text-transform:uppercase;">
+                    Коригування
+                </h2>
+
+                <p>
+                    Знято з балансу складу: ${escapeActHtml(act.warehouse_name || "—")}
+                </p>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>№</th>
+                            <th>Найменування товару</th>
+                            <th>Знято з балансу, к-сть</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${correctionRowsHtml}
+                    </tbody>
+                </table>
+            ` : ""}
+
+            ${transferInItems.length ? `
+                <div class="signatures">
+                    <div>
+                        <strong>Постачальник</strong>
+                        <div class="signature-line">підпис</div>
+                    </div>
+
+                    <div>
+                        <strong>Покупець / відповідальний</strong>
+                        <div class="signature-line">підпис</div>
+                    </div>
+                </div>
+            ` : ""}
         </body>
         </html>
     `;

@@ -213,20 +213,11 @@
             Звіт по залишках у розрізі складів, товарів, цін та руху.
         </p>
 
-        <div class="staff-search-row">
+        <div class="staff-search-row staff-stock-report-row">
             <select id="stock-report-warehouse-filter">
                 <option value="">Всі склади</option>
             </select>
 
-            <button id="load-stock-report-btn" class="buy-btn" type="button">
-                Показати
-            </button>
-            <button id="load-stock-acts-btn" class="buy-btn" type="button">
-                Акти руху товару
-            </button>
-        </div>
-
-        <div class="staff-search-row">
             <input
                 type="date"
                 id="production-report-start-date"
@@ -238,7 +229,11 @@
             >
 
             <button id="load-production-report-btn" class="buy-btn" type="button">
-                Звіт виробництва
+                Сформувати звіт
+            </button>
+
+            <button id="load-stock-acts-btn" class="buy-btn" type="button">
+                Акти руху товару
             </button>
         </div>
 

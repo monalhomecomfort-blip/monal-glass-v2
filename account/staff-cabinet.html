@@ -231,6 +231,10 @@
             <button id="load-production-report-btn" class="buy-btn" type="button">
                 Сформувати звіт
             </button>
+            
+            <button id="export-stock-report-btn" class="buy-btn" type="button">
+                Експорт Excel
+            </button>
 
             <button id="load-stock-acts-btn" class="buy-btn" type="button">
                 Акти руху товару
@@ -458,6 +462,7 @@ const stockActsResult = document.getElementById("stock-acts-result");
 const productionReportStartDateInput = document.getElementById("production-report-start-date");
 const productionReportEndDateInput = document.getElementById("production-report-end-date");
 const loadProductionReportBtn = document.getElementById("load-production-report-btn");
+const exportStockReportBtn = document.getElementById("export-stock-report-btn");    
 const productionReportResult = document.getElementById("production-report-result");    
 const myStockSection = document.getElementById("my-stock-section");
 const openMyStockSectionBtn = document.getElementById("open-my-stock-section");
@@ -1087,6 +1092,74 @@ function renderStockActsArchive(data) {
     `;
 }
 
+function makeCsvCell(value) {
+    const cleanValue = String(value ?? "")
+        .replace(/\s+/g, " ")
+        .trim()
+        .replaceAll('"', '""');
+
+    return `"${cleanValue}"`;
+}
+
+function downloadStockMovementReportCsv() {
+    if (!productionReportResult) return;
+
+    const table = productionReportResult.querySelector("table");
+
+    if (!table) {
+        alert("Спочатку сформуйте звіт.");
+        return;
+    }
+
+    const selectedWarehouseText =
+        stockReportWarehouseFilter?.selectedOptions?.[0]?.textContent?.trim() || "Всі склади";
+
+    const startDate = productionReportStartDateInput?.value || "";
+    const endDate = productionReportEndDateInput?.value || "";
+
+    const metaRows = [
+        ["Звіт руху по складах"],
+        ["Склад", selectedWarehouseText],
+        ["Період", `${startDate || "—"} — ${endDate || "—"}`],
+        []
+    ];
+
+    const tableRows = Array.from(table.querySelectorAll("tr")).map(row =>
+        Array.from(row.querySelectorAll("th, td")).map(cell =>
+            cell.textContent
+        )
+    );
+
+    const csvRows = [...metaRows, ...tableRows];
+
+    const csvText = "\uFEFF" + csvRows
+        .map(row => row.map(makeCsvCell).join(";"))
+        .join("\r\n");
+
+    const blob = new Blob([csvText], {
+        type: "text/csv;charset=utf-8;"
+    });
+
+    const safeWarehouseName = selectedWarehouseText
+        .replace(/[\\/:*?"<>|]+/g, "-")
+        .replace(/\s+/g, "_")
+        .slice(0, 60);
+
+    const fileName =
+        `zvit-ruhu-${safeWarehouseName}-${startDate || "start"}-${endDate || "end"}.csv`;
+
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+
+    link.href = url;
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+}
+    
 function renderStockMovementReport(data) {
     if (!productionReportResult) return;
 
@@ -2385,6 +2458,12 @@ if (
             console.error(err);
             productionReportResult.innerHTML = "Помилка зʼєднання при завантаженні звіту руху.";
         }
+    });
+}
+
+if (exportStockReportBtn) {
+    exportStockReportBtn.addEventListener("click", () => {
+        downloadStockMovementReportCsv();
     });
 }
     

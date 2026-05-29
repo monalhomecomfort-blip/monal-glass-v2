@@ -1017,9 +1017,31 @@ function renderStockManageTable(data) {
                 Записати переміщення
             </button>
 
-            <button id="print-stock-act-btn" class="buy-btn staff-hidden" type="button">
-                Сформувати акт
-            </button>
+            <div id="stock-act-buttons" class="staff-hidden">
+                <button
+                    class="buy-btn print-stock-act-btn"
+                    type="button"
+                    data-act-type="acceptance"
+                >
+                    Акт приймання-передачі
+                </button>
+
+                <button
+                    class="buy-btn print-stock-act-btn"
+                    type="button"
+                    data-act-type="posting"
+                >
+                    Акт оприбуткування
+                </button>
+
+                <button
+                    class="buy-btn print-stock-act-btn"
+                    type="button"
+                    data-act-type="writeoff"
+                >
+                    Акт списання
+                </button>
+            </div>
         </div>
     `;
 }
@@ -1079,8 +1101,27 @@ function renderStockActsArchive(data) {
                                         type="button"
                                         class="buy-btn open-stock-act-archive-btn"
                                         data-document-number="${act.document_number || ""}"
+                                        data-act-type="acceptance"
                                     >
-                                        Відкрити
+                                        Приймання
+                                    </button>
+
+                                    <button
+                                        type="button"
+                                        class="buy-btn open-stock-act-archive-btn"
+                                        data-document-number="${act.document_number || ""}"
+                                        data-act-type="posting"
+                                    >
+                                        Оприбуткування
+                                    </button>
+
+                                    <button
+                                        type="button"
+                                        class="buy-btn open-stock-act-archive-btn"
+                                        data-document-number="${act.document_number || ""}"
+                                        data-act-type="writeoff"
+                                    >
+                                        Списання
                                     </button>
                                 </td>
                             </tr>
@@ -1703,11 +1744,14 @@ if (stockManageResult) {
                 `
             );
 
-            const printBtn = document.getElementById("print-stock-act-btn");
-            if (printBtn) {
-                printBtn.dataset.documentNumber = savedDocumentNumber;
-                printBtn.classList.remove("staff-hidden");
+            const stockActButtons = document.getElementById("stock-act-buttons");
+            if (stockActButtons) {
+                stockActButtons.classList.remove("staff-hidden");
             }
+
+            document.querySelectorAll(".print-stock-act-btn").forEach(btn => {
+                btn.dataset.documentNumber = savedDocumentNumber;
+            });
 
             setTimeout(() => {
                 const freshRecordBtn = document.getElementById("record-stock-movement-btn");
@@ -1760,9 +1804,53 @@ function formatActMoney(value) {
     });
 }
 
-function buildStockActHtml(data) {
+function getStockActConfig(actType) {
+    if (actType === "posting") {
+        return {
+            title: "Акт оприбуткування товару",
+            shortTitle: "Акт оприбуткування Товару",
+            movementType: "transfer_in",
+            withMoney: true,
+            withParties: true,
+            noItemsMessage: "У цьому документі немає товарів для акту оприбуткування."
+        };
+    }
+
+    if (actType === "writeoff") {
+        return {
+            title: "Акт списання товару",
+            shortTitle: "Акт списання Товару",
+            movementType: "transfer_return",
+            withMoney: false,
+            withParties: false,
+            noItemsMessage: "У цьому документі немає товарів для акту списання."
+        };
+    }
+
+    return {
+        title: "Акт приймання-передачі товару",
+        shortTitle: "Акт приймання-передачі Товару",
+        movementType: "transfer_in",
+        withMoney: true,
+        withParties: true,
+        noItemsMessage: "У цьому документі немає товарів для акту приймання-передачі."
+    };
+}
+
+function getStockActItems(items, actType) {
+    const config = getStockActConfig(actType);
+
+    return items.filter(item =>
+        String(item.movement_type || "transfer_in") === config.movementType
+    );
+}
+
+function buildStockActHtml(data, actType = "acceptance") {
     const act = data.act || {};
     const items = Array.isArray(data.items) ? data.items : [];
+
+    const config = getStockActConfig(actType);
+    const actItems = getStockActItems(items, actType);
 
     const actDate = formatActDate(act.created_at);
     const city = act.act_city || "";
@@ -1770,16 +1858,19 @@ function buildStockActHtml(data) {
     const supplierDetails = act.supplier_details || "";
     const buyerDetails = act.buyer_details || "";
 
-    const transferInItems = items.filter(item =>
-        String(item.movement_type || "transfer_in") === "transfer_in"
-    );
-
-    const correctionItems = items.filter(item =>
-        String(item.movement_type || "") === "transfer_return"
-    );
-
-    const rowsHtml = transferInItems.map((item, index) => {
+    const rowsHtml = actItems.map((item, index) => {
         const quantity = Number(item.quantity || 0);
+
+        if (!config.withMoney) {
+            return `
+                <tr>
+                    <td>${index + 1}</td>
+                    <td>${escapeActHtml(item.product_display_name || "—")}</td>
+                    <td>${quantity}</td>
+                </tr>
+            `;
+        }
+
         const realizationPrice = item.realization_price !== null && item.realization_price !== undefined
             ? Number(item.realization_price || 0)
             : Number(item.retail_price || 0);
@@ -1798,19 +1889,9 @@ function buildStockActHtml(data) {
         `;
     }).join("");
 
-    const correctionRowsHtml = correctionItems.map((item, index) => {
-        const quantity = Number(item.quantity || 0);
+    const totalSum = actItems.reduce((sum, item) => {
+        if (!config.withMoney) return sum;
 
-        return `
-            <tr>
-                <td>${index + 1}</td>
-                <td>${escapeActHtml(item.product_display_name || "—")}</td>
-                <td>${quantity}</td>
-            </tr>
-        `;
-    }).join("");
-
-    const totalSum = transferInItems.reduce((sum, item) => {
         const quantity = Number(item.quantity || 0);
         const realizationPrice = item.realization_price !== null && item.realization_price !== undefined
             ? Number(item.realization_price || 0)
@@ -1824,7 +1905,7 @@ function buildStockActHtml(data) {
         <html lang="uk">
         <head>
             <meta charset="UTF-8">
-            <title>Акт руху товару ${escapeActHtml(act.document_number || "")}</title>
+            <title>${escapeActHtml(config.title)} ${escapeActHtml(act.document_number || "")}</title>
 
             <style>
                 body {
@@ -1885,17 +1966,16 @@ function buildStockActHtml(data) {
                 td {
                     border: 1px solid #111;
                     padding: 7px 8px;
-                    vertical-align: top;
                     text-align: left;
+                    vertical-align: top;
                 }
 
                 th {
                     text-align: center;
-                    font-weight: 600;
                 }
 
                 .total {
-                    margin-top: 18px;
+                    margin-top: 14px;
                     text-align: right;
                     font-weight: 600;
                 }
@@ -1903,12 +1983,12 @@ function buildStockActHtml(data) {
                 .signatures {
                     display: grid;
                     grid-template-columns: 1fr 1fr;
-                    gap: 60px;
-                    margin-top: 54px;
+                    gap: 80px;
+                    margin-top: 60px;
                 }
 
                 .signature-line {
-                    margin-top: 44px;
+                    margin-top: 50px;
                     border-top: 1px solid #111;
                     padding-top: 6px;
                     text-align: center;
@@ -1928,25 +2008,25 @@ function buildStockActHtml(data) {
 
         <body>
             <div class="print-actions">
-                <button onclick="window.print()">Друк</button>
+                <button onclick="window.print()">Друкувати</button>
             </div>
 
             <div class="act-meta">
-                <div>${escapeActHtml(city)}</div>
-                <div>${actDate}</div>
+                <div>${escapeActHtml(city || "—")}</div>
+                <div>${escapeActHtml(actDate)}</div>
             </div>
 
-            <h1>${transferInItems.length ? "Акт приймання-передачі товару" : "Коригування"}</h1>
+            <h1>${escapeActHtml(config.title)}</h1>
 
             <div style="text-align:center;">
                 № ${escapeActHtml(act.document_number || "—")}
             </div>
 
-            ${transferInItems.length ? `
+            ${config.withParties ? `
                 <div class="act-intro">
-                    Цей Акт приймання-передачі Товару (надалі по тексту - «Акт») складений Сторонами згідно
-                    ${escapeActHtml(documentBasis || "Договору реалізації продукції")}
-                    (надалі – «Договір») між:
+                    Цей ${escapeActHtml(config.shortTitle)} складений згідно документа:
+                    ${escapeActHtml(documentBasis || "—")}
+                    між:
                 </div>
 
                 <div class="act-party-label">Постачальник:</div>
@@ -1958,70 +2038,54 @@ function buildStockActHtml(data) {
                 <div class="party-box">
                     ${escapeActHtml(buyerDetails || "—")}
                 </div>
+            ` : `
+                <div class="act-intro">
+                    Цей ${escapeActHtml(config.shortTitle)} складений для фіксації зняття товару з балансу складу:
+                    ${escapeActHtml(act.warehouse_name || "—")}.
+                </div>
+            `}
 
-                <table>
-                    <thead>
-                        <tr>
-                            <th>№</th>
-                            <th>Найменування товару</th>
-                            <th>К-сть</th>
+            <table>
+                <thead>
+                    <tr>
+                        <th>№</th>
+                        <th>Найменування товару</th>
+                        <th>${config.withMoney ? "К-сть" : "Списано, к-сть"}</th>
+                        ${config.withMoney ? `
                             <th>РЦ</th>
                             <th>Ціна реалізації</th>
                             <th>Сума</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${rowsHtml}
-                    </tbody>
-                </table>
+                        ` : ""}
+                    </tr>
+                </thead>
+                <tbody>
+                    ${rowsHtml}
+                </tbody>
+            </table>
 
+            ${config.withMoney ? `
                 <div class="total">
                     Разом: ${formatActMoney(totalSum)} грн
                 </div>
             ` : ""}
 
-            ${correctionItems.length ? `
-                <h2 style="text-align:center; font-size:18px; margin:32px 0 10px; text-transform:uppercase;">
-                    Коригування
-                </h2>
-
-                <p>
-                    Знято з балансу складу: ${escapeActHtml(act.warehouse_name || "—")}
-                </p>
-
-                <table>
-                    <thead>
-                        <tr>
-                            <th>№</th>
-                            <th>Найменування товару</th>
-                            <th>Знято з балансу, к-сть</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${correctionRowsHtml}
-                    </tbody>
-                </table>
-            ` : ""}
-
-            ${transferInItems.length ? `
-                <div class="signatures">
-                    <div>
-                        <strong>Постачальник</strong>
-                        <div class="signature-line">підпис</div>
-                    </div>
-
-                    <div>
-                        <strong>Покупець / відповідальний</strong>
-                        <div class="signature-line">підпис</div>
-                    </div>
+            <div class="signatures">
+                <div>
+                    <strong>${config.withParties ? "Постачальник" : "Списав"}</strong>
+                    <div class="signature-line">підпис</div>
                 </div>
-            ` : ""}
+
+                <div>
+                    <strong>${config.withParties ? "Покупець / відповідальний" : "Підтвердив"}</strong>
+                    <div class="signature-line">підпис</div>
+                </div>
+            </div>
         </body>
         </html>
     `;
 }
 
-async function openStockActPrint(documentNumber) {
+async function openStockActPrint(documentNumber, actType = "acceptance") {
     if (!documentNumber) {
         alert("Немає номера документа для акту");
         return;
@@ -2048,6 +2112,14 @@ async function openStockActPrint(documentNumber) {
         return;
     }
 
+    const actItems = getStockActItems(Array.isArray(data.items) ? data.items : [], actType);
+    const config = getStockActConfig(actType);
+
+    if (!actItems.length) {
+        alert(config.noItemsMessage);
+        return;
+    }
+
     const printWindow = window.open("", "_blank");
 
     if (!printWindow) {
@@ -2056,7 +2128,7 @@ async function openStockActPrint(documentNumber) {
     }
 
     printWindow.document.open();
-    printWindow.document.write(buildStockActHtml(data));
+    printWindow.document.write(buildStockActHtml(data, actType));
     printWindow.document.close();
 }
 
@@ -2065,16 +2137,22 @@ if (stockActsResult) {
         const actBtn = e.target.closest(".open-stock-act-archive-btn");
         if (!actBtn) return;
 
-        await openStockActPrint(actBtn.dataset.documentNumber || "");
+        await openStockActPrint(
+            actBtn.dataset.documentNumber || "",
+            actBtn.dataset.actType || "acceptance"
+        );
     });
 }
     
 if (stockManageResult) {
     stockManageResult.addEventListener("click", async (e) => {
-        const printBtn = e.target.closest("#print-stock-act-btn");
+        const printBtn = e.target.closest(".print-stock-act-btn");
         if (!printBtn) return;
 
-        await openStockActPrint(printBtn.dataset.documentNumber || "");
+        await openStockActPrint(
+            printBtn.dataset.documentNumber || "",
+            printBtn.dataset.actType || "acceptance"
+        );
     });
 }
     

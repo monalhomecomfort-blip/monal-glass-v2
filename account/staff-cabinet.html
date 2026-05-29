@@ -184,7 +184,7 @@
                     <span class="staff-payment-card">4441 1110 6069 6045</span>
 
                     <button id="sale-card-transfer-paid-btn" class="buy-btn" type="button">
-                        Оплачено
+                        Переказ підтверджено
                     </button>
                 </div>
 
@@ -196,16 +196,16 @@
                     >
 
                     <button id="sale-certificate-check-btn" class="buy-btn" type="button">
-                        Застосувати
+                        Перевірити
                     </button>
+
+                    <span id="sale-certificate-result" class="staff-payment-note"></span>
                 </div>
 
                 <button id="create-sale-btn" class="buy-btn" type="button">
                     Оплатити
                 </button>
             </div>
-
-            <div id="sale-certificate-result" class="staff-hidden"></div>
 
             <p class="staff-hint">
                 Спочатку додайте товари в чек, потім оберіть тип оплати і натисніть “Оплатити”.
@@ -504,6 +504,7 @@ const saleClientResult = document.getElementById("sale-client-result");
 const saleWarehouseRow = document.getElementById("sale-warehouse-row");
 const saleWarehouseSelect = document.getElementById("sale-warehouse-select");
 const saleProductQuantityInput = document.getElementById("sale-product-quantity");
+const saleTotalAmount = document.getElementById("sale-total-amount");
 const salePaymentTypeSelect = document.getElementById("sale-payment-type");
 const createSaleBtn = document.getElementById("create-sale-btn");
 const saleCardTransferBox = document.getElementById("sale-card-transfer-box");
@@ -515,7 +516,8 @@ const saleCertificateResult = document.getElementById("sale-certificate-result")
 
 let SALE_SELECTED_CUSTOMER = null;
 let SALE_CARD_TRANSFER_CONFIRMED = false;
-let SALE_CERTIFICATE = null;    
+let SALE_CERTIFICATE = null;
+let SALE_CERTIFICATE_CHECKED = null;    
 
 let STAFF_PRODUCTS_LOADED = false;
 let STAFF_PRODUCTS = [];    
@@ -646,13 +648,21 @@ if (saleProductSearch && saleProductDropdown && saleProductId) {
 
 function resetSaleCertificateBox() {
     SALE_CERTIFICATE = null;
+    SALE_CERTIFICATE_CHECKED = null;
 
     if (saleCertificateCodeInput) {
         saleCertificateCodeInput.value = "";
     }
 
     if (saleCertificateResult) {
-        saleCertificateResult.innerHTML = "";
+        saleCertificateResult.textContent = "";
+    }
+
+    if (saleCertificateCheckBtn) {
+        saleCertificateCheckBtn.disabled = false;
+        saleCertificateCheckBtn.textContent = "Перевірити";
+        saleCertificateCheckBtn.dataset.mode = "check";
+        saleCertificateCheckBtn.classList.remove("is-confirmed");
     }
 }
 
@@ -697,7 +707,7 @@ if (salePaymentTypeSelect && saleCardTransferBox) {
         }
 
         if (saleCardTransferPaidBtn) {
-            saleCardTransferPaidBtn.textContent = "Оплачено";
+            saleCardTransferPaidBtn.textContent = "Переказ підтверджено";
             saleCardTransferPaidBtn.classList.remove("is-confirmed");
         }
     });
@@ -706,8 +716,22 @@ if (salePaymentTypeSelect && saleCardTransferBox) {
 if (saleCardTransferPaidBtn) {
     saleCardTransferPaidBtn.addEventListener("click", () => {
         SALE_CARD_TRANSFER_CONFIRMED = true;
-        saleCardTransferPaidBtn.textContent = "Переказ підтверджено";
+        saleCardTransferPaidBtn.textContent = "Переказ підтверджено ✓";
         saleCardTransferPaidBtn.classList.add("is-confirmed");
+    });
+}
+
+if (saleCertificateCodeInput && saleCertificateCheckBtn && saleCertificateResult) {
+    saleCertificateCodeInput.addEventListener("input", () => {
+        SALE_CERTIFICATE = null;
+        SALE_CERTIFICATE_CHECKED = null;
+
+        saleCertificateResult.textContent = "";
+
+        saleCertificateCheckBtn.disabled = false;
+        saleCertificateCheckBtn.textContent = "Перевірити";
+        saleCertificateCheckBtn.dataset.mode = "check";
+        saleCertificateCheckBtn.classList.remove("is-confirmed");
     });
 }
 
@@ -716,27 +740,52 @@ if (saleCertificateCheckBtn && saleCertificateCodeInput && saleCertificateResult
         const code = saleCertificateCodeInput.value.trim().toUpperCase();
         const saleCalc = getCurrentSaleTotal();
 
+        if (saleCertificateCheckBtn.dataset.mode === "apply") {
+            if (!SALE_CERTIFICATE_CHECKED) {
+                saleCertificateResult.textContent = "Спочатку перевірте сертифікат.";
+                saleCertificateCheckBtn.textContent = "Перевірити";
+                saleCertificateCheckBtn.dataset.mode = "check";
+                return;
+            }
+
+            SALE_CERTIFICATE = SALE_CERTIFICATE_CHECKED;
+
+            if (saleTotalAmount) {
+                saleTotalAmount.textContent = `${SALE_CERTIFICATE.restAmount} грн`;
+            }
+
+            saleCertificateResult.textContent =
+                `Сертифікат застосовано. До оплати: ${SALE_CERTIFICATE.restAmount} грн`;
+
+            saleCertificateCheckBtn.textContent = "Застосовано";
+            saleCertificateCheckBtn.disabled = true;
+            saleCertificateCheckBtn.classList.add("is-confirmed");
+
+            return;
+        }
+
         SALE_CERTIFICATE = null;
-        saleCertificateResult.innerHTML = "";
+        SALE_CERTIFICATE_CHECKED = null;
+        saleCertificateResult.textContent = "";
 
         if (!saleCalc.product) {
-            saleCertificateResult.innerHTML = "Спочатку оберіть товар.";
+            saleCertificateResult.textContent = "Спочатку оберіть товар.";
             return;
         }
 
         if (!saleCalc.quantity || saleCalc.quantity <= 0) {
-            saleCertificateResult.innerHTML = "Вкажіть кількість товару.";
+            saleCertificateResult.textContent = "Вкажіть кількість товару.";
             return;
         }
 
         if (!code) {
-            saleCertificateResult.innerHTML = "Введіть код сертифіката.";
+            saleCertificateResult.textContent = "Введіть код сертифіката.";
             return;
         }
 
         saleCertificateCheckBtn.disabled = true;
         saleCertificateCheckBtn.textContent = "Перевіряю…";
-        saleCertificateResult.innerHTML = "Перевіряю сертифікат…";
+        saleCertificateResult.textContent = "Перевіряю сертифікат…";
 
         try {
             const response = await fetch(
@@ -756,10 +805,16 @@ if (saleCertificateCheckBtn && saleCertificateCodeInput && saleCertificateResult
             const data = await response.json();
 
             if (!data.ok || !data.valid) {
-                saleCertificateResult.innerHTML =
+                SALE_CERTIFICATE = null;
+                SALE_CERTIFICATE_CHECKED = null;
+
+                saleCertificateResult.textContent =
                     data.message || data.error || "Сертифікат недійсний.";
+
                 saleCertificateCheckBtn.disabled = false;
                 saleCertificateCheckBtn.textContent = "Перевірити";
+                saleCertificateCheckBtn.dataset.mode = "check";
+
                 return;
             }
 
@@ -767,23 +822,32 @@ if (saleCertificateCheckBtn && saleCertificateCodeInput && saleCertificateResult
             const coveredAmount = Math.min(nominal, saleCalc.total);
             const restAmount = Math.max(0, saleCalc.total - nominal);
 
-            SALE_CERTIFICATE = {
+            SALE_CERTIFICATE_CHECKED = {
                 code: data.code,
                 nominal,
                 coveredAmount,
                 restAmount
             };
 
-            saleCertificateResult.innerHTML = "";
-            
+            saleCertificateResult.textContent =
+                `Сертифікат активний. Номінал: ${nominal} грн`;
+
             saleCertificateCheckBtn.disabled = false;
-            saleCertificateCheckBtn.textContent = "Перевірити";
+            saleCertificateCheckBtn.textContent = "Застосувати";
+            saleCertificateCheckBtn.dataset.mode = "apply";
 
         } catch (err) {
             console.error(err);
-            saleCertificateResult.innerHTML = "Помилка зʼєднання при перевірці сертифіката.";
+
+            SALE_CERTIFICATE = null;
+            SALE_CERTIFICATE_CHECKED = null;
+
+            saleCertificateResult.textContent =
+                "Помилка зʼєднання при перевірці сертифіката.";
+
             saleCertificateCheckBtn.disabled = false;
             saleCertificateCheckBtn.textContent = "Перевірити";
+            saleCertificateCheckBtn.dataset.mode = "check";
         }
     });
 }
@@ -2358,7 +2422,7 @@ if (createSaleBtn && saleResult) {
         }
 
         if (paymentType === "card_transfer" && !SALE_CARD_TRANSFER_CONFIRMED) {
-            saleResult.innerHTML = "Підтвердіть переказ кнопкою “Оплачено”.";
+            saleResult.innerHTML = "Підтвердіть переказ кнопкою “Переказ підтверджено”.";
             return;
         }
 
@@ -2419,7 +2483,7 @@ if (createSaleBtn && saleResult) {
                     if (!confirmOutOfStock) {
                         saleResult.innerHTML = "Продаж скасовано. Повернуто до оформлення.";
                         createSaleBtn.disabled = false;
-                        createSaleBtn.textContent = "Провести";
+                        createSaleBtn.textContent = "Оплатити";
                         return;
                     }
 
@@ -2448,14 +2512,14 @@ if (createSaleBtn && saleResult) {
                     if (!data.ok) {
                         saleResult.innerHTML = data.error || "Не вдалося провести продаж.";
                         createSaleBtn.disabled = false;
-                        createSaleBtn.textContent = "Провести";
+                        createSaleBtn.textContent = "Оплатити";
                         return;
                     }
 
                 } else {
                     saleResult.innerHTML = data.error || "Не вдалося провести продаж.";
                     createSaleBtn.disabled = false;
-                    createSaleBtn.textContent = "Провести";
+                    createSaleBtn.textContent = "Оплатити";
                     return;
                 }
             }
@@ -2486,19 +2550,21 @@ if (createSaleBtn && saleResult) {
             }
 
             if (saleCardTransferPaidBtn) {
-                saleCardTransferPaidBtn.textContent = "Оплачено";
+                saleCardTransferPaidBtn.textContent = "Переказ підтверджено";
                 saleCardTransferPaidBtn.classList.remove("is-confirmed");
             }
 
+            resetSaleCertificateBox();
+
             createSaleBtn.disabled = false;
-            createSaleBtn.textContent = "Провести";
+            createSaleBtn.textContent = "Оплатити";
 
         } catch (err) {
             console.error(err);
 
             saleResult.innerHTML = "Помилка зʼєднання при проведенні продажу.";
             createSaleBtn.disabled = false;
-            createSaleBtn.textContent = "Провести";
+            createSaleBtn.textContent = "Оплатити";
         }
     });
 }

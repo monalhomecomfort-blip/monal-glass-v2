@@ -120,81 +120,97 @@
 
             <div id="sale-client-result" class="staff-result staff-hidden"></div>
 
-            <h3>Товар</h3>
+            <h3>Товари</h3>
 
-            <div class="staff-sale-row">
-            <div class="staff-product-picker">
-                <input
-                    type="text"
-                    id="sale-product-search"
-                    placeholder="Оберіть або почніть вводити товар"
-                    autocomplete="off"
-                >
+            <div class="staff-sale-item-row">
+                <div class="staff-product-picker">
+                    <input
+                        type="text"
+                        id="sale-product-search"
+                        placeholder="Оберіть або почніть вводити товар"
+                        autocomplete="off"
+                    >
 
-                <input
-                    type="hidden"
-                    id="sale-product-id"
-                >
+                    <input
+                        type="hidden"
+                        id="sale-product-id"
+                    >
 
-                <div id="sale-product-dropdown" class="staff-product-dropdown staff-hidden"></div>
-            </div>
+                    <div id="sale-product-dropdown" class="staff-product-dropdown staff-hidden"></div>
+                </div>
 
                 <input
                     type="number"
                     id="sale-product-quantity"
-                    placeholder="Кількість"
+                    placeholder="К-сть"
                     min="1"
                     value="1"
                 >
 
+                <input
+                    type="number"
+                    id="sale-product-price"
+                    placeholder="Ціна"
+                    min="0"
+                    readonly
+                >
+
+                <button id="add-sale-item-btn" class="buy-btn" type="button">
+                    +
+                </button>
+            </div>
+
+            <div id="sale-items-box" class="staff-result staff-hidden">
+                Товари ще не додані.
+            </div>
+
+            <div id="sale-total-box" class="staff-payment-summary">
+                До оплати: <strong id="sale-total-amount">0 грн</strong>
+            </div>
+
+            <div class="staff-sale-payment-row">
                 <select id="sale-payment-type">
                     <option value="">Тип оплати</option>
                     <option value="cash">Готівка</option>
                     <option value="card_transfer">Переказ на карту</option>
                     <option value="mono_qr">Mono QR / посилання</option>
                     <option value="certificate">Сертифікат</option>
+                    <option value="certificate_cash">Сертифікат + готівка</option>
+                    <option value="certificate_mono_qr">Сертифікат + Mono QR</option>
                 </select>
 
                 <button id="create-sale-btn" class="buy-btn" type="button">
-                    Провести
+                    Оплатити
                 </button>
             </div>
 
-            <div id="sale-card-transfer-box" class="staff-payment-box staff-hidden">
-                <div>
-                    <strong>Переказ на карту</strong><br>
-                    <span class="staff-payment-card">4441 1110 6069 6045</span>
-                </div>
+            <div id="sale-card-transfer-box" class="staff-payment-inline staff-hidden">
+                <strong>Карта:</strong>
+                <span class="staff-payment-card">4441 1110 6069 6045</span>
 
                 <button id="sale-card-transfer-paid-btn" class="buy-btn" type="button">
                     Оплачено
                 </button>
             </div>
 
-            <div id="sale-certificate-box" class="staff-payment-box staff-hidden">
-                <div class="staff-certificate-fields">
-                    <strong>Оплата сертифікатом</strong>
+            <div id="sale-certificate-box" class="staff-payment-inline staff-hidden">
+                <input
+                    type="text"
+                    id="sale-certificate-code"
+                    placeholder="Код сертифіката"
+                >
 
-                    <div class="staff-certificate-row">
-                        <input
-                            type="text"
-                            id="sale-certificate-code"
-                            placeholder="Код сертифіката"
-                        >
+                <button id="sale-certificate-check-btn" class="buy-btn" type="button">
+                    Застосувати
+                </button>
 
-                        <button id="sale-certificate-check-btn" class="buy-btn" type="button">
-                            Перевірити
-                        </button>
-                    </div>
-
-                    <div id="sale-certificate-result" class="staff-payment-note">
-                        Введіть код сертифіката і натисніть “Перевірити”.
-                    </div>
+                <div id="sale-certificate-result" class="staff-payment-note">
+                    Введіть код сертифіката.
                 </div>
             </div>
 
             <p class="staff-hint">
-                Після проведення продажу система автоматично скоригує залишки.
+                Спочатку додайте товари в чек, потім оберіть тип оплати і натисніть “Оплатити”.
             </p>
 
             <div id="sale-result" class="staff-result staff-hidden"></div>

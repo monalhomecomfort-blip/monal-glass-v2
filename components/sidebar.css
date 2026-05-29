@@ -386,13 +386,15 @@
 
 .staff-page .account-container {
     display: block;
-    max-width: 1200px;
-    padding: 110px 40px;
+    width: 100%;
+    max-width: none;
+    padding: 110px clamp(24px, 4vw, 64px);
 }
 
 .staff-page .account-main {
-    max-width: 1160px;
-    margin: 0 auto;
+    width: 100%;
+    max-width: none;
+    margin: 0;
 }
 
 .staff-grid {
@@ -971,6 +973,10 @@
     grid-template-columns: minmax(230px, 1.1fr) 170px 170px auto auto auto;
     gap: 14px;
     align-items: center;
+}
+.staff-stock-report-row {
+    max-width: none;
+    flex-wrap: wrap;
 }
 
 .staff-stock-report-row .buy-btn {

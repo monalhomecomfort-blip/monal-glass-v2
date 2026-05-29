@@ -397,6 +397,20 @@
     margin: 0;
 }
 
+.staff-page .account-block {
+    width: 100%;
+    max-width: none;
+}
+
+.staff-page .staff-section {
+    width: 100%;
+}
+
+.staff-page .staff-section .account-block {
+    width: 100%;
+    max-width: none;
+}
+
 .staff-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(260px, 1fr));

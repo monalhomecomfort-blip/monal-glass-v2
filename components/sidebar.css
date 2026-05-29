@@ -968,7 +968,7 @@
 
 .staff-stock-report-row {
     display: grid;
-    grid-template-columns: minmax(230px, 1.2fr) 180px 180px auto auto;
+    grid-template-columns: minmax(230px, 1.1fr) 170px 170px auto auto auto;
     gap: 14px;
     align-items: center;
 }

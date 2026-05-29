@@ -926,6 +926,7 @@ function renderStockManageTable(data) {
 
     const items = Array.isArray(data.items) ? data.items : [];
     const warehouse = data.warehouse || {};
+    const isProductionWarehouse = Number(warehouse.is_production_source || 0) === 1;
 
     if (!items.length) {
         stockManageResult.innerHTML = "Для цього складу товарів немає.";
@@ -948,6 +949,7 @@ function renderStockManageTable(data) {
                         <th>Роздрібна Ціна</th>
                         <th>Собівартість</th>
                         <th>Ціна реалізації</th>
+                        ${!isProductionWarehouse ? "<th>Залишок Склад Виробництво</th>" : ""}
                         <th>Поточні залишки</th>
                         <th>Перемістити НА поточний склад</th>
                         <th>Перемістити З поточного складу</th>
@@ -986,6 +988,10 @@ function renderStockManageTable(data) {
                                     step="0.01"
                                 >
                             </td>
+
+                            ${!isProductionWarehouse ? `
+                                <td>${item.production_final_quantity ?? 0}</td>
+                            ` : ""}
 
                             <td>${item.final_quantity ?? 0}</td>
 

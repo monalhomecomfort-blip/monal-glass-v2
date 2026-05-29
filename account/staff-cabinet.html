@@ -179,35 +179,33 @@
                     <option value="certificate_mono_qr">Сертифікат + Mono QR</option>
                 </select>
 
+                <div id="sale-card-transfer-box" class="staff-payment-inline staff-hidden">
+                    <strong>Карта:</strong>
+                    <span class="staff-payment-card">4441 1110 6069 6045</span>
+
+                    <button id="sale-card-transfer-paid-btn" class="buy-btn" type="button">
+                        Оплачено
+                    </button>
+                </div>
+
+                <div id="sale-certificate-box" class="staff-payment-inline staff-hidden">
+                    <input
+                        type="text"
+                        id="sale-certificate-code"
+                        placeholder="Код сертифіката"
+                    >
+
+                    <button id="sale-certificate-check-btn" class="buy-btn" type="button">
+                        Застосувати
+                    </button>
+                </div>
+
                 <button id="create-sale-btn" class="buy-btn" type="button">
                     Оплатити
                 </button>
             </div>
 
-            <div id="sale-card-transfer-box" class="staff-payment-inline staff-hidden">
-                <strong>Карта:</strong>
-                <span class="staff-payment-card">4441 1110 6069 6045</span>
-
-                <button id="sale-card-transfer-paid-btn" class="buy-btn" type="button">
-                    Оплачено
-                </button>
-            </div>
-
-            <div id="sale-certificate-box" class="staff-payment-inline staff-hidden">
-                <input
-                    type="text"
-                    id="sale-certificate-code"
-                    placeholder="Код сертифіката"
-                >
-
-                <button id="sale-certificate-check-btn" class="buy-btn" type="button">
-                    Застосувати
-                </button>
-
-                <div id="sale-certificate-result" class="staff-payment-note">
-                    Введіть код сертифіката.
-                </div>
-            </div>
+            <div id="sale-certificate-result" class="staff-hidden"></div>
 
             <p class="staff-hint">
                 Спочатку додайте товари в чек, потім оберіть тип оплати і натисніть “Оплатити”.
@@ -654,7 +652,7 @@ function resetSaleCertificateBox() {
     }
 
     if (saleCertificateResult) {
-        saleCertificateResult.innerHTML = "Введіть код сертифіката і натисніть “Перевірити”.";
+        saleCertificateResult.innerHTML = "";
     }
 }
 
@@ -687,7 +685,12 @@ if (salePaymentTypeSelect && saleCardTransferBox) {
             saleCardTransferBox.classList.add("staff-hidden");
         }
 
-        if (salePaymentTypeSelect.value === "certificate") {
+        const needsCertificate =
+            salePaymentTypeSelect.value === "certificate" ||
+            salePaymentTypeSelect.value === "certificate_cash" ||
+            salePaymentTypeSelect.value === "certificate_mono_qr";
+
+        if (needsCertificate) {
             saleCertificateBox?.classList.remove("staff-hidden");
         } else {
             saleCertificateBox?.classList.add("staff-hidden");
@@ -771,15 +774,8 @@ if (saleCertificateCheckBtn && saleCertificateCodeInput && saleCertificateResult
                 restAmount
             };
 
-            saleCertificateResult.innerHTML = `
-                <strong>Сертифікат активний.</strong><br>
-                Код: ${data.code}<br>
-                Номінал: ${nominal} грн<br>
-                Сума продажу: ${saleCalc.total} грн<br>
-                Покрито сертифікатом: ${coveredAmount} грн<br>
-                До оплати: ${restAmount} грн
-            `;
-
+            saleCertificateResult.innerHTML = "";
+            
             saleCertificateCheckBtn.disabled = false;
             saleCertificateCheckBtn.textContent = "Перевірити";
 

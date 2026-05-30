@@ -522,6 +522,7 @@ const saleItemsBox = document.getElementById("sale-items-box");
 const saleCheckTotalAmount = document.getElementById("sale-check-total-amount");
 const saleCertificateAmount = document.getElementById("sale-certificate-amount");
 const saleTotalAmount = document.getElementById("sale-total-amount");
+const saleCustomerSourceSelect = document.getElementById("sale-customer-source");
 const salePaymentTypeSelect = document.getElementById("sale-payment-type");
 const createSaleBtn = document.getElementById("create-sale-btn");
 const saleCardTransferBox = document.getElementById("sale-card-transfer-box");
@@ -2624,6 +2625,7 @@ if (createSaleBtn && saleResult) {
         const salePayload = {
             staffId: staff.id,
             customerId,
+            customerSource: saleCustomerSourceSelect?.value || null,
             items: SALE_ITEMS.map(item => ({
                 productId: item.productId,
                 quantity: item.quantity

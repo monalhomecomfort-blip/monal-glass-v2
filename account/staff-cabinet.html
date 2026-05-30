@@ -1363,6 +1363,32 @@ function initSalesReportCheckboxFilters() {
 }
 
 initSalesReportCheckboxFilters();
+
+function getCheckedSalesReportValues(selector) {
+    const checkboxes = Array.from(document.querySelectorAll(selector));
+    const allCheckbox = checkboxes.find(item => item.value === "all");
+
+    if (!checkboxes.length) return [];
+
+    if (allCheckbox && allCheckbox.checked) {
+        return [];
+    }
+
+    return checkboxes
+        .filter(item => item.checked && item.value !== "all")
+        .map(item => item.value);
+}
+
+function getSalesReportFilters() {
+    return {
+        warehouses: getCheckedSalesReportValues(".sales-report-warehouse-checkbox"),
+        sources: getCheckedSalesReportValues(".sales-report-source-checkbox"),
+        categories: getCheckedSalesReportValues(".sales-report-category-checkbox"),
+        prices: getCheckedSalesReportValues(".sales-report-price-checkbox"),
+        salesTypes: getCheckedSalesReportValues(".sales-report-sales-checkbox"),
+        byDays: Boolean(salesReportByDaysInput?.checked)
+    };
+}
     
 function fillWarehouseSelects(warehouses) {
     STAFF_WAREHOUSES = Array.isArray(warehouses) ? warehouses : [];

@@ -3328,6 +3328,38 @@ function renderSalesReport(data, filters) {
         headHtml += `</tr>`;
     }
 
+let colgroupHtml = `
+    <colgroup>
+        <col class="sales-report-col-source">
+        <col class="sales-report-col-warehouse">
+        <col class="sales-report-col-category">
+        <col class="sales-report-col-product">
+`;
+
+if (!byDays) {
+    colgroupHtml += `<col class="sales-report-col-qty">`;
+
+    if (showRetailPrice) colgroupHtml += `<col class="sales-report-col-money">`;
+    if (showCostPrice) colgroupHtml += `<col class="sales-report-col-money">`;
+    if (showRealizationPrice) colgroupHtml += `<col class="sales-report-col-money-wide">`;
+
+    if (showRetailSales) colgroupHtml += `<col class="sales-report-col-money">`;
+    if (showCostSales) colgroupHtml += `<col class="sales-report-col-money">`;
+    if (showRealizationSales) colgroupHtml += `<col class="sales-report-col-money-wide">`;
+}
+
+if (byDays) {
+    days.forEach(() => {
+        colgroupHtml += `<col class="sales-report-col-qty">`;
+
+        if (showRetailSales) colgroupHtml += `<col class="sales-report-col-money">`;
+        if (showCostSales) colgroupHtml += `<col class="sales-report-col-money">`;
+        if (showRealizationSales) colgroupHtml += `<col class="sales-report-col-money-wide">`;
+    });
+}
+
+colgroupHtml += `</colgroup>`;
+
     const bodyHtml = items.map(item => {
         let rowHtml = `
             <tr>
@@ -3371,7 +3403,9 @@ function renderSalesReport(data, filters) {
     salesReportResult.classList.remove("staff-hidden");
     salesReportResult.innerHTML = `
         <div class="staff-table-scroll">
-            <table class="staff-report-table">
+            <table class="staff-report-table ${byDays ? "sales-report-table-by-days" : "sales-report-table-period"}">
+                ${colgroupHtml}
+
                 <thead>
                     ${headHtml}
                 </thead>

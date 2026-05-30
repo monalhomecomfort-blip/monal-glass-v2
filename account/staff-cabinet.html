@@ -567,6 +567,10 @@ document.querySelectorAll("[data-access]").forEach(card => {
 
 const salesSection = document.getElementById("sales-section");
 const openSalesSectionBtn = document.getElementById("open-sales-section");
+
+const salesReportSection = document.getElementById("sales-report-section");
+const openSalesReportSectionBtn = document.getElementById("open-sales-report-section");
+
 const stockSection = document.getElementById("stock-section");
 const openStockSectionBtn = document.getElementById("open-stock-section");
 
@@ -1707,6 +1711,16 @@ if (openSalesSectionBtn && salesSection) {
     });
 }
 
+if (openSalesReportSectionBtn && salesReportSection) {
+    openSalesReportSectionBtn.addEventListener("click", async () => {
+        showStaffSection(salesReportSection);
+
+        if (String(staff?.role || "") === "admin") {
+            await loadStaffWarehouses();
+        }
+    });
+}
+    
 if (openStockSectionBtn && stockSection) {
     openStockSectionBtn.addEventListener("click", async () => {
         showStaffSection(stockSection);

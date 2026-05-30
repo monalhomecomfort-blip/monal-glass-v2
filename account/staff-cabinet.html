@@ -168,6 +168,16 @@
                 </button>
             </div>
 
+            <div id="sale-discovery-box" class="staff-result staff-hidden">
+                <strong>Аромати в Discovery set</strong>
+
+                <p id="sale-discovery-hint" class="staff-hint">
+                    Оберіть 4 аромати для 1 сету.
+                </p>
+
+                <div id="sale-discovery-list" class="staff-discovery-list"></div>
+            </div>
+
             <div id="sale-items-box" class="staff-result staff-hidden">
                 Товари ще не додані.
             </div>
@@ -716,6 +726,9 @@ const saleWarehouseSelect = document.getElementById("sale-warehouse-select");
 const saleProductQuantityInput = document.getElementById("sale-product-quantity");
 const saleProductPriceInput = document.getElementById("sale-product-price");
 const addSaleItemBtn = document.getElementById("add-sale-item-btn");
+const saleDiscoveryBox = document.getElementById("sale-discovery-box");
+const saleDiscoveryHint = document.getElementById("sale-discovery-hint");
+const saleDiscoveryList = document.getElementById("sale-discovery-list");
 const saleItemsBox = document.getElementById("sale-items-box");
 const saleCheckTotalAmount = document.getElementById("sale-check-total-amount");
 const saleCertificateAmount = document.getElementById("sale-certificate-amount");
@@ -887,6 +900,8 @@ if (saleProductSearch && saleProductDropdown && saleProductId) {
             saleProductPriceInput.value = option.dataset.productPrice || 0;
         }
 
+        renderDiscoverySelector();
+
         saleProductDropdown.classList.add("staff-hidden");
         saleProductDropdown.innerHTML = "";
     });
@@ -955,10 +970,24 @@ function renderSaleItems() {
     saleItemsBox.innerHTML = SALE_ITEMS.map((item, index) => {
         const rowSum = Number(item.price || 0) * Number(item.quantity || 0);
 
+        const discoveryHtml = Array.isArray(item.discoveryAromas) && item.discoveryAromas.length
+            ? `
+                <div class="staff-sale-discovery-selected">
+                    <strong>Аромати:</strong>
+                    ${escapeSaleHtml(item.discoveryAromas.join(", "))}
+                </div>
+            `
+            : "";
+
         return `
             <div class="staff-sale-check-row">
-                <span>${index + 1}. ${escapeSaleHtml(item.title)}</span>
+                <span>
+                    ${index + 1}. ${escapeSaleHtml(item.title)}
+                    ${discoveryHtml}
+                </span>
+
                 <span>${item.quantity} × ${item.price} грн = ${rowSum} грн</span>
+
                 <button
                     type="button"
                     class="buy-btn remove-sale-item-btn"
@@ -994,6 +1023,156 @@ function resetSaleCertificateBox() {
 
     updateSalePaymentSummary();
 }
+
+function isDiscoverySaleProduct(product) {
+    const title = String(product?.display_name || "").trim().toLowerCase();
+    const key = String(product?.product_key || "").trim().toLowerCase();
+    const label = String(product?.product_label || "").trim().toLowerCase();
+    const category = String(product?.category_slug || "").trim().toLowerCase();
+
+    return (
+        category === "discovery" ||
+        category === "discovery-set" ||
+        key.includes("discovery") ||
+        title.includes("discovery") ||
+        title.includes("діскавер") ||
+        label.includes("discovery")
+    );
+}
+
+function getDiscoveryTesterProducts() {
+    return STAFF_PRODUCTS
+        .filter(product => {
+            const title = String(product?.display_name || "").trim().toLowerCase();
+            const key = String(product?.product_key || "").trim().toLowerCase();
+            const label = String(product?.product_label || "").trim().toLowerCase();
+            const category = String(product?.category_slug || "").trim().toLowerCase();
+
+            return (
+                key.startsWith("tester_") ||
+                category.includes("tester") ||
+                category.includes("testers") ||
+                label.includes("тестер") ||
+                title.includes("тестер")
+            );
+        })
+        .sort((a, b) =>
+            String(a.display_name || "").localeCompare(String(b.display_name || ""), "uk")
+        );
+}
+
+function getSelectedSaleProduct() {
+    const productId = Number(saleProductId?.value || 0);
+
+    return STAFF_PRODUCTS.find(product =>
+        Number(product.id || 0) === productId
+    ) || null;
+}
+
+function getDiscoveryRequiredCount() {
+    const selectedProduct = getSelectedSaleProduct();
+
+    if (!isDiscoverySaleProduct(selectedProduct)) {
+        return 0;
+    }
+
+    const quantity = Number(saleProductQuantityInput?.value || 0);
+
+    if (!Number.isInteger(quantity) || quantity <= 0) {
+        return 0;
+    }
+
+    return quantity * 4;
+}
+
+function getSelectedDiscoveryAromas() {
+    if (!saleDiscoveryList) return [];
+
+    return Array.from(
+        saleDiscoveryList.querySelectorAll(".sale-discovery-checkbox:checked")
+    ).map(input => input.dataset.aromaName || input.value);
+}
+
+function syncDiscoverySelectorLimit() {
+    if (!saleDiscoveryBox || !saleDiscoveryHint || !saleDiscoveryList) return;
+
+    const requiredCount = getDiscoveryRequiredCount();
+    const selectedAromas = getSelectedDiscoveryAromas();
+    const selectedCount = selectedAromas.length;
+
+    saleDiscoveryHint.textContent =
+        `Оберіть ${requiredCount} аромати. Обрано: ${selectedCount}/${requiredCount}.`;
+
+    saleDiscoveryList
+        .querySelectorAll(".sale-discovery-checkbox")
+        .forEach(input => {
+            input.disabled =
+                !input.checked &&
+                requiredCount > 0 &&
+                selectedCount >= requiredCount;
+        });
+}
+
+function renderDiscoverySelector() {
+    if (!saleDiscoveryBox || !saleDiscoveryHint || !saleDiscoveryList) return;
+
+    const selectedProduct = getSelectedSaleProduct();
+    const requiredCount = getDiscoveryRequiredCount();
+
+    if (!isDiscoverySaleProduct(selectedProduct)) {
+        saleDiscoveryBox.classList.add("staff-hidden");
+        saleDiscoveryList.innerHTML = "";
+        return;
+    }
+
+    const testers = getDiscoveryTesterProducts();
+
+    saleDiscoveryBox.classList.remove("staff-hidden");
+
+    if (!testers.length) {
+        saleDiscoveryHint.textContent = "Тестери парфумів не знайдені в каталозі.";
+        saleDiscoveryList.innerHTML = "";
+        return;
+    }
+
+    saleDiscoveryHint.textContent =
+        `Оберіть ${requiredCount} аромати. Обрано: 0/${requiredCount}.`;
+
+    saleDiscoveryList.innerHTML = testers.map(product => {
+        const aromaName = String(product.display_name || product.product_name || product.product_key || "")
+            .replace(/^Тестер\s+/i, "")
+            .replace(/\s*3\s*ml\s*/i, "")
+            .trim();
+
+        return `
+            <label class="staff-discovery-option">
+                <input
+                    type="checkbox"
+                    class="sale-discovery-checkbox"
+                    value="${escapeSaleHtml(product.product_key || product.id)}"
+                    data-aroma-name="${escapeSaleHtml(aromaName)}"
+                >
+                ${escapeSaleHtml(aromaName)}
+            </label>
+        `;
+    }).join("");
+
+    syncDiscoverySelectorLimit();
+}
+
+if (saleDiscoveryList) {
+    saleDiscoveryList.addEventListener("change", (event) => {
+        if (!event.target.classList.contains("sale-discovery-checkbox")) return;
+
+        syncDiscoverySelectorLimit();
+    });
+}
+
+if (saleProductQuantityInput) {
+    saleProductQuantityInput.addEventListener("input", () => {
+        renderDiscoverySelector();
+    });
+}    
 
 const CERTIFICATE_PAYMENT_TYPES = [
     "certificate",
@@ -1086,17 +1265,38 @@ if (addSaleItemBtn) {
             return;
         }
 
+        const isDiscovery = isDiscoverySaleProduct(product);
+        const requiredDiscoveryCount = quantity * 4;
+        const selectedDiscoveryAromas = isDiscovery
+            ? getSelectedDiscoveryAromas()
+            : [];
+
+        if (
+            isDiscovery &&
+            selectedDiscoveryAromas.length !== requiredDiscoveryCount
+        ) {
+            saleResult?.classList.remove("staff-hidden");
+            saleResult.innerHTML =
+                `Для Discovery set потрібно обрати ${requiredDiscoveryCount} аромати. ` +
+                `Зараз обрано: ${selectedDiscoveryAromas.length}.`;
+            return;
+        }
+
         SALE_ITEMS.push({
             productId,
             title: product.display_name || product.product_key || "Товар",
             quantity,
-            price
+            price,
+            discoveryAromas: selectedDiscoveryAromas
         });
 
         if (saleProductSearch) saleProductSearch.value = "";
         if (saleProductId) saleProductId.value = "";
         if (saleProductQuantityInput) saleProductQuantityInput.value = 1;
         if (saleProductPriceInput) saleProductPriceInput.value = "";
+
+        if (saleDiscoveryBox) saleDiscoveryBox.classList.add("staff-hidden");
+        if (saleDiscoveryList) saleDiscoveryList.innerHTML = "";
 
         resetSaleCertificateBox();
         renderSaleItems();
@@ -3053,7 +3253,10 @@ if (createSaleBtn && saleResult) {
             customerSource: saleCustomerSourceSelect?.value || null,
             items: SALE_ITEMS.map(item => ({
                 productId: item.productId,
-                quantity: item.quantity
+                quantity: item.quantity,
+                discoveryAromas: Array.isArray(item.discoveryAromas)
+                    ? item.discoveryAromas
+                    : []
             })),
             paymentType,
             warehouseId,

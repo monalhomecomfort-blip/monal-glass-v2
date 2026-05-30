@@ -2643,11 +2643,18 @@ if (createSaleBtn && saleResult) {
 
             if (!data.ok) {
                 if (data.code === "out_of_stock_confirm_required") {
-                    const currentBalance = Number(data.currentBalance || 0);
-                    const productName = data.productName || "товар";
+                    const outOfStockItems = Array.isArray(data.outOfStockItems)
+                        ? data.outOfStockItems
+                        : [];
+
+                    const outOfStockText = outOfStockItems.length
+                        ? outOfStockItems.map(item =>
+                            `• ${item.productName || "товар"}: залишок ${Number(item.currentBalance || 0)}, потрібно ${Number(item.requestedQuantity || 0)}`
+                        ).join("\n")
+                        : `• ${data.productName || "товар"}: залишок ${Number(data.currentBalance || 0)}, потрібно ${Number(data.requestedQuantity || 0)}`;
 
                     const confirmOutOfStock = confirm(
-                        `Товару "${productName}" на залишку ${currentBalance}. Провести оплату?`
+                        `По товарах недостатньо залишку:\n\n${outOfStockText}\n\nПровести оплату?`
                     );
 
                     if (!confirmOutOfStock) {

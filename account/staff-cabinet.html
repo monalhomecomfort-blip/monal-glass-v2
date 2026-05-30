@@ -3250,7 +3250,7 @@ function renderSalesReport(data, filters) {
     const items = Array.isArray(data.items) ? data.items : [];
     const days = Array.isArray(data.days) ? data.days : [];
     const canViewCost = Boolean(data.canViewCost);
-    const byDays = Boolean(filters.byDays);
+    const byDays = Boolean(filters?.byDays);
 
     if (!items.length) {
         salesReportResult.classList.remove("staff-hidden");
@@ -3258,13 +3258,64 @@ function renderSalesReport(data, filters) {
         return;
     }
 
-    const showRetailPrice = isSalesReportSelected(filters.prices, "retail");
-    const showCostPrice = canViewCost && isSalesReportSelected(filters.prices, "cost");
-    const showRealizationPrice = isSalesReportSelected(filters.prices, "realization");
+    const showRetailPrice = isSalesReportSelected(filters?.prices, "retail");
+    const showCostPrice = canViewCost && isSalesReportSelected(filters?.prices, "cost");
+    const showRealizationPrice = isSalesReportSelected(filters?.prices, "realization");
 
-    const showRetailSales = isSalesReportSelected(filters.salesTypes, "retail");
-    const showCostSales = canViewCost && isSalesReportSelected(filters.salesTypes, "cost");
-    const showRealizationSales = isSalesReportSelected(filters.salesTypes, "realization");
+    const showRetailSales = isSalesReportSelected(filters?.salesTypes, "retail");
+    const showCostSales = canViewCost && isSalesReportSelected(filters?.salesTypes, "cost");
+    const showRealizationSales = isSalesReportSelected(filters?.salesTypes, "realization");
+
+    const columnWidths = {
+        source: 115,
+        warehouse: 170,
+        category: 160,
+        product: 310,
+        quantity: 115,
+        money: 130,
+        moneyWide: 165
+    };
+
+    let tableWidth = 0;
+    let colgroupHtml = `<colgroup>`;
+
+    function addReportCol(className, width) {
+        tableWidth += width;
+        colgroupHtml += `<col class="${className}" style="width:${width}px;">`;
+    }
+
+    addReportCol("sales-report-col-source", columnWidths.source);
+    addReportCol("sales-report-col-warehouse", columnWidths.warehouse);
+    addReportCol("sales-report-col-category", columnWidths.category);
+    addReportCol("sales-report-col-product", columnWidths.product);
+
+    if (!byDays) {
+        addReportCol("sales-report-col-qty", columnWidths.quantity);
+
+        if (showRetailPrice) addReportCol("sales-report-col-money", columnWidths.money);
+        if (showCostPrice) addReportCol("sales-report-col-money", columnWidths.money);
+        if (showRealizationPrice) addReportCol("sales-report-col-money-wide", columnWidths.moneyWide);
+
+        if (showRetailSales) addReportCol("sales-report-col-money", columnWidths.money);
+        if (showCostSales) addReportCol("sales-report-col-money", columnWidths.money);
+        if (showRealizationSales) addReportCol("sales-report-col-money-wide", columnWidths.moneyWide);
+    }
+
+    if (byDays) {
+        if (showRetailPrice) addReportCol("sales-report-col-money", columnWidths.money);
+        if (showCostPrice) addReportCol("sales-report-col-money", columnWidths.money);
+        if (showRealizationPrice) addReportCol("sales-report-col-money-wide", columnWidths.moneyWide);
+
+        days.forEach(() => {
+            addReportCol("sales-report-col-qty", columnWidths.quantity);
+
+            if (showRetailSales) addReportCol("sales-report-col-money", columnWidths.money);
+            if (showCostSales) addReportCol("sales-report-col-money", columnWidths.money);
+            if (showRealizationSales) addReportCol("sales-report-col-money-wide", columnWidths.moneyWide);
+        });
+    }
+
+    colgroupHtml += `</colgroup>`;
 
     let headHtml = "";
 
@@ -3275,7 +3326,7 @@ function renderSalesReport(data, filters) {
                 <th>Склад</th>
                 <th>Категорія</th>
                 <th>Товар</th>
-                <th>Продано, к-сть</th>
+                <th>Продано к-сть</th>
         `;
 
         if (showRetailPrice) headHtml += `<th>Ціна РЦ</th>`;
@@ -3304,6 +3355,10 @@ function renderSalesReport(data, filters) {
                 <th rowspan="2">Товар</th>
         `;
 
+        if (showRetailPrice) headHtml += `<th rowspan="2">Ціна РЦ</th>`;
+        if (showCostPrice) headHtml += `<th rowspan="2">Собівартість</th>`;
+        if (showRealizationPrice) headHtml += `<th rowspan="2">Під реалізацію</th>`;
+
         days.forEach(day => {
             headHtml += `
                 <th colspan="${dayColumnCount}" class="sales-report-day-head">
@@ -3318,47 +3373,15 @@ function renderSalesReport(data, filters) {
         `;
 
         days.forEach(() => {
-            headHtml += `<th>К-сть</th>`;
+            headHtml += `<th>Продано к-сть</th>`;
 
-            if (showRetailSales) headHtml += `<th>РЦ</th>`;
-            if (showCostSales) headHtml += `<th>СВ</th>`;
-            if (showRealizationSales) headHtml += `<th>Реалізація</th>`;
+            if (showRetailSales) headHtml += `<th>Продано РЦ</th>`;
+            if (showCostSales) headHtml += `<th>Продано СВ</th>`;
+            if (showRealizationSales) headHtml += `<th>Продано реалізація</th>`;
         });
 
         headHtml += `</tr>`;
     }
-
-let colgroupHtml = `
-    <colgroup>
-        <col class="sales-report-col-source">
-        <col class="sales-report-col-warehouse">
-        <col class="sales-report-col-category">
-        <col class="sales-report-col-product">
-`;
-
-if (!byDays) {
-    colgroupHtml += `<col class="sales-report-col-qty">`;
-
-    if (showRetailPrice) colgroupHtml += `<col class="sales-report-col-money">`;
-    if (showCostPrice) colgroupHtml += `<col class="sales-report-col-money">`;
-    if (showRealizationPrice) colgroupHtml += `<col class="sales-report-col-money-wide">`;
-
-    if (showRetailSales) colgroupHtml += `<col class="sales-report-col-money">`;
-    if (showCostSales) colgroupHtml += `<col class="sales-report-col-money">`;
-    if (showRealizationSales) colgroupHtml += `<col class="sales-report-col-money-wide">`;
-}
-
-if (byDays) {
-    days.forEach(() => {
-        colgroupHtml += `<col class="sales-report-col-qty">`;
-
-        if (showRetailSales) colgroupHtml += `<col class="sales-report-col-money">`;
-        if (showCostSales) colgroupHtml += `<col class="sales-report-col-money">`;
-        if (showRealizationSales) colgroupHtml += `<col class="sales-report-col-money-wide">`;
-    });
-}
-
-colgroupHtml += `</colgroup>`;
 
     const bodyHtml = items.map(item => {
         let rowHtml = `
@@ -3382,6 +3405,10 @@ colgroupHtml += `</colgroup>`;
         }
 
         if (byDays) {
+            if (showRetailPrice) rowHtml += `<td>${formatSalesReportMoney(item.retail_price)}</td>`;
+            if (showCostPrice) rowHtml += `<td>${formatSalesReportMoney(item.cost_price)}</td>`;
+            if (showRealizationPrice) rowHtml += `<td>${formatSalesReportMoney(item.realization_price)}</td>`;
+
             days.forEach(day => {
                 const dayData = item.days && item.days[day]
                     ? item.days[day]
@@ -3403,7 +3430,10 @@ colgroupHtml += `</colgroup>`;
     salesReportResult.classList.remove("staff-hidden");
     salesReportResult.innerHTML = `
         <div class="staff-table-scroll">
-            <table class="staff-report-table ${byDays ? "sales-report-table-by-days" : "sales-report-table-period"}">
+            <table
+                class="staff-report-table ${byDays ? "sales-report-table-by-days" : "sales-report-table-period"}"
+                style="width:${tableWidth}px;"
+            >
                 ${colgroupHtml}
 
                 <thead>
@@ -3417,6 +3447,7 @@ colgroupHtml += `</colgroup>`;
         </div>
     `;
 }
+    
 if (
     loadSalesReportBtn &&
     salesReportStartDateInput &&

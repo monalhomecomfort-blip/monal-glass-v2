@@ -1285,3 +1285,12 @@
     min-width: 82px;
     text-align: left;
 }
+
+/* ===================== SALES REPORT DAY HEADER ===================== */
+
+.staff-page #sales-report-result .staff-report-table th.sales-report-day-head {
+    text-align: center !important;
+    font-weight: 600;
+    white-space: nowrap;
+    background: rgba(231, 228, 217, 0.85);
+}

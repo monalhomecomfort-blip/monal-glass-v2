@@ -1312,3 +1312,21 @@
 .staff-page .staff-stock-table thead th {
     border-bottom: 1px solid var(--staff-table-line-strong);
 }
+
+/* ===================== STAFF DISCOVERY SELECTOR ===================== */
+
+.staff-page .staff-discovery-filter-wrap {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+}
+
+.staff-page .staff-discovery-filter-wrap .staff-hint {
+    flex: 0 0 100%;
+}
+
+.staff-page .staff-discovery-filter {
+    width: 220px;
+}

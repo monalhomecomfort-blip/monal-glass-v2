@@ -1253,6 +1253,51 @@ if (saleClientSearchBtn) {
     });
 }    
 
+function setupSalesReportCheckboxGroup(groupSelector) {
+    document.addEventListener("change", (event) => {
+        const changedCheckbox = event.target.closest(groupSelector);
+
+        if (!changedCheckbox) return;
+
+        const menu = changedCheckbox.closest(".staff-report-filter-menu");
+        if (!menu) return;
+
+        const checkboxes = Array.from(menu.querySelectorAll(groupSelector));
+        const allCheckbox = checkboxes.find(item => item.value === "all");
+        const itemCheckboxes = checkboxes.filter(item => item.value !== "all");
+
+        if (!allCheckbox) return;
+
+        if (changedCheckbox.value === "all" && changedCheckbox.checked) {
+            itemCheckboxes.forEach(item => {
+                item.checked = false;
+            });
+
+            return;
+        }
+
+        if (changedCheckbox.value !== "all" && changedCheckbox.checked) {
+            allCheckbox.checked = false;
+        }
+
+        const hasSpecificChecked = itemCheckboxes.some(item => item.checked);
+
+        if (!hasSpecificChecked) {
+            allCheckbox.checked = true;
+        }
+    });
+}
+
+function initSalesReportCheckboxFilters() {
+    setupSalesReportCheckboxGroup(".sales-report-warehouse-checkbox");
+    setupSalesReportCheckboxGroup(".sales-report-source-checkbox");
+    setupSalesReportCheckboxGroup(".sales-report-category-checkbox");
+    setupSalesReportCheckboxGroup(".sales-report-price-checkbox");
+    setupSalesReportCheckboxGroup(".sales-report-sales-checkbox");
+}
+
+initSalesReportCheckboxFilters();
+    
 function fillWarehouseSelects(warehouses) {
     STAFF_WAREHOUSES = Array.isArray(warehouses) ? warehouses : [];
 

@@ -2552,8 +2552,6 @@ if (createWarehouseBtn && newWarehouseNameInput && stockManageResult) {
 
 if (createSaleBtn && saleResult) {
     createSaleBtn.addEventListener("click", async () => {
-        const productId = Number(saleProductId?.value || 0);
-        const quantity = Number(saleProductQuantityInput?.value || 0);
         const paymentType = salePaymentTypeSelect?.value || "";
         const warehouseId =
             String(staff?.role || "") === "admin"
@@ -2566,13 +2564,8 @@ if (createSaleBtn && saleResult) {
             ? Number(SALE_SELECTED_CUSTOMER.id)
             : 0;
 
-        if (!productId) {
-            saleResult.innerHTML = "Оберіть товар.";
-            return;
-        }
-
-        if (!quantity || quantity <= 0) {
-            saleResult.innerHTML = "Вкажіть кількість.";
+        if (!SALE_ITEMS.length) {
+            saleResult.innerHTML = "Спочатку додайте товари в чек.";
             return;
         }
 
@@ -2591,26 +2584,45 @@ if (createSaleBtn && saleResult) {
             return;
         }
 
-        const selectedCertificateCode =
-            paymentType === "certificate"
-                ? String(SALE_CERTIFICATE?.code || saleCertificateCodeInput?.value || "").trim().toUpperCase()
-                : null;
+        const isCertificatePayment =
+            paymentType === "certificate" ||
+            paymentType === "certificate_cash" ||
+            paymentType === "certificate_mono_qr";
 
-        if (paymentType === "certificate") {
+        const selectedCertificateCode = isCertificatePayment
+            ? String(SALE_CERTIFICATE?.code || saleCertificateCodeInput?.value || "").trim().toUpperCase()
+            : null;
+
+        if (isCertificatePayment) {
             if (!SALE_CERTIFICATE || !selectedCertificateCode) {
-                saleResult.innerHTML = "Спочатку перевірте сертифікат.";
-                return;
-            }
-
-            if (Number(SALE_CERTIFICATE.restAmount || 0) > 0) {
-                saleResult.innerHTML =
-                    `Сертифікат покриває ${SALE_CERTIFICATE.coveredAmount} грн. ` +
-                    `До оплати ще ${SALE_CERTIFICATE.restAmount} грн. ` +
-                    `Спочатку додамо сценарій доплати.`;
+                saleResult.innerHTML = "Спочатку перевірте і застосуйте сертифікат.";
                 return;
             }
         }
-        
+
+        if (
+            paymentType === "certificate" &&
+            Number(SALE_CERTIFICATE?.restAmount || 0) > 0
+        ) {
+            saleResult.innerHTML =
+                `Сертифікат покриває ${SALE_CERTIFICATE.coveredAmount} грн. ` +
+                `До оплати ще ${SALE_CERTIFICATE.restAmount} грн. ` +
+                `Оберіть “Сертифікат + готівка” або “Сертифікат + Mono QR”.`;
+            return;
+        }
+
+        const salePayload = {
+            staffId: staff.id,
+            customerId,
+            items: SALE_ITEMS.map(item => ({
+                productId: item.productId,
+                quantity: item.quantity
+            })),
+            paymentType,
+            warehouseId,
+            certificateCode: selectedCertificateCode
+        };
+
         createSaleBtn.disabled = true;
         createSaleBtn.textContent = "Проводжу…";
         saleResult.innerHTML = "Проводжу продаж…";
@@ -2623,26 +2635,19 @@ if (createSaleBtn && saleResult) {
                     headers: {
                         "Content-Type": "application/json"
                     },
-                    body: JSON.stringify({
-                        staffId: staff.id,
-                        customerId,
-                        productId,
-                        quantity,
-                        paymentType,
-                        warehouseId,
-                        certificateCode: selectedCertificateCode
-                    })
+                    body: JSON.stringify(salePayload)
                 }
             );
 
             let data = await response.json();
-            
+
             if (!data.ok) {
                 if (data.code === "out_of_stock_confirm_required") {
                     const currentBalance = Number(data.currentBalance || 0);
+                    const productName = data.productName || "товар";
 
                     const confirmOutOfStock = confirm(
-                        `Товару на залишку ${currentBalance}. Провести оплату?`
+                        `Товару "${productName}" на залишку ${currentBalance}. Провести оплату?`
                     );
 
                     if (!confirmOutOfStock) {
@@ -2660,14 +2665,8 @@ if (createSaleBtn && saleResult) {
                                 "Content-Type": "application/json"
                             },
                             body: JSON.stringify({
-                                staffId: staff.id,
-                                customerId,
-                                productId,
-                                quantity,
-                                paymentType,
-                                warehouseId,
-                                allowOutOfStock: true,
-                                certificateCode: selectedCertificateCode
+                                ...salePayload,
+                                allowOutOfStock: true
                             })
                         }
                     );
@@ -2690,28 +2689,49 @@ if (createSaleBtn && saleResult) {
             }
 
             const sale = data.sale || {};
+            const saleItems = Array.isArray(sale.items) ? sale.items : [];
+
+            const saleItemsHtml = saleItems.length
+                ? saleItems.map(item => `
+                    ${item.productName || "—"} × ${item.quantity || 0}
+                    — ${item.rowTotal || 0} грн
+                    <br>
+                    Залишок було: ${item.stockBefore ?? "—"},
+                    стало: ${item.stockAfter ?? "—"}
+                `).join("<br><br>")
+                : (sale.itemsText || "—").replaceAll("\n", "<br>");
 
             saleResult.innerHTML = `
                 <strong>Продаж проведено.</strong><br>
                 Замовлення: ${sale.orderId || "—"}<br>
                 Клієнт: ${sale.customerName || "—"}<br>
                 Склад: ${sale.warehouseName || "—"} ID ${sale.warehouseId || "—"}<br>
-                Товар: ${sale.productName || "—"}<br>
-                Кількість: ${sale.quantity || 0}<br>
+                Товарів у чеку: ${saleItems.length || sale.quantity || 0}<br>
                 Сума: ${sale.totalAmount || 0} грн<br>
-                Оплата: ${sale.paymentLabel || "—"}<br>
-                Залишок було: ${sale.stockBefore ?? "—"}<br>
-                Залишок стало: ${sale.stockAfter ?? "—"}
+                Оплата: ${sale.paymentLabel || "—"}<br><br>
+                <strong>Склад чека:</strong><br>
+                ${saleItemsHtml}
             `;
 
-            saleProductSearch.value = "";
-            saleProductId.value = "";
-            saleProductQuantityInput.value = "1";
-            salePaymentTypeSelect.value = "";
+            SALE_ITEMS = [];
+
+            if (saleProductSearch) saleProductSearch.value = "";
+            if (saleProductId) saleProductId.value = "";
+            if (saleProductQuantityInput) saleProductQuantityInput.value = "1";
+            if (saleProductPriceInput) saleProductPriceInput.value = "";
+
+            if (salePaymentTypeSelect) {
+                salePaymentTypeSelect.value = "";
+            }
+
             SALE_CARD_TRANSFER_CONFIRMED = false;
 
             if (saleCardTransferBox) {
                 saleCardTransferBox.classList.add("staff-hidden");
+            }
+
+            if (saleCertificateBox) {
+                saleCertificateBox.classList.add("staff-hidden");
             }
 
             if (saleCardTransferPaidBtn) {
@@ -2720,6 +2740,7 @@ if (createSaleBtn && saleResult) {
             }
 
             resetSaleCertificateBox();
+            renderSaleItems();
 
             createSaleBtn.disabled = false;
             createSaleBtn.textContent = "Оплатити";

@@ -995,6 +995,69 @@ function resetSaleCertificateBox() {
     updateSalePaymentSummary();
 }
 
+const CERTIFICATE_PAYMENT_TYPES = [
+    "certificate",
+    "certificate_cash",
+    "certificate_mono_qr"
+];
+
+function isSaleItemCertificate(item) {
+    const productId = Number(item?.productId || 0);
+
+    const product = STAFF_PRODUCTS.find(productItem =>
+        Number(productItem.id || 0) === productId
+    );
+
+    const title = String(item?.title || "").trim().toLowerCase();
+    const productKey = String(product?.product_key || "").trim().toLowerCase();
+    const displayName = String(product?.display_name || "").trim().toLowerCase();
+    const productLabel = String(product?.product_label || "").trim().toLowerCase();
+    const categorySlug = String(product?.category_slug || "").trim().toLowerCase();
+
+    return (
+        productKey.startsWith("certificate_") ||
+        categorySlug === "certificates" ||
+        productLabel.includes("сертифікат") ||
+        displayName.includes("сертифікат") ||
+        title.includes("сертифікат")
+    );
+}
+
+function saleHasCertificateProduct() {
+    return SALE_ITEMS.some(item => isSaleItemCertificate(item));
+}
+
+function syncSaleCertificatePaymentOptions() {
+    if (!salePaymentTypeSelect) return;
+
+    const hasCertificateProduct = saleHasCertificateProduct();
+
+    CERTIFICATE_PAYMENT_TYPES.forEach(paymentValue => {
+        const option = salePaymentTypeSelect.querySelector(
+            `option[value="${paymentValue}"]`
+        );
+
+        if (option) {
+            option.disabled = hasCertificateProduct;
+        }
+    });
+
+    if (
+        hasCertificateProduct &&
+        CERTIFICATE_PAYMENT_TYPES.includes(salePaymentTypeSelect.value)
+    ) {
+        salePaymentTypeSelect.value = "";
+        resetSaleCertificateBox();
+        saleCertificateBox?.classList.add("staff-hidden");
+
+        if (saleResult) {
+            saleResult.classList.remove("staff-hidden");
+            saleResult.innerHTML =
+                "Сертифікат не можна оплатити іншим сертифікатом. Оберіть готівку, переказ на карту або Mono QR.";
+        }
+    }
+}
+    
 if (addSaleItemBtn) {
     addSaleItemBtn.addEventListener("click", () => {
         const productId = Number(saleProductId?.value || 0);
@@ -1037,6 +1100,7 @@ if (addSaleItemBtn) {
 
         resetSaleCertificateBox();
         renderSaleItems();
+        syncSaleCertificatePaymentOptions();
 
         if (saleResult) {
             saleResult.classList.add("staff-hidden");
@@ -1057,6 +1121,7 @@ if (saleItemsBox) {
         SALE_ITEMS.splice(index, 1);
         resetSaleCertificateBox();
         renderSaleItems();
+        syncSaleCertificatePaymentOptions();
     });
 }
     
@@ -2950,6 +3015,15 @@ if (createSaleBtn && saleResult) {
             paymentType === "certificate" ||
             paymentType === "certificate_cash" ||
             paymentType === "certificate_mono_qr";
+
+        if (
+            saleHasCertificateProduct() &&
+            isCertificatePayment
+        ) {
+            saleResult.innerHTML =
+                "Сертифікат не можна оплатити сертифікатом. Оберіть готівку, переказ на карту або Mono QR.";
+            return;
+        }
 
         const selectedCertificateCode = isCertificatePayment
             ? String(SALE_CERTIFICATE?.code || saleCertificateCodeInput?.value || "").trim().toUpperCase()

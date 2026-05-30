@@ -2623,7 +2623,10 @@ if (createSaleBtn && saleResult) {
             certificateCode: selectedCertificateCode
         };
 
-        if (paymentType === "mono_qr") {
+        if (
+            paymentType === "mono_qr" ||
+            paymentType === "certificate_mono_qr"
+        ) {
             createSaleBtn.disabled = true;
             createSaleBtn.textContent = "Створюю Mono…";
             saleResult.innerHTML = "Створюю Mono QR / посилання…";

@@ -1101,17 +1101,21 @@
 
 /* стрілка справа, як у select */
 .sales-report-filter-row .staff-report-filter summary::after {
-    content: "▾";
+    content: "";
     position: absolute;
-    right: 16px;
+    right: 18px;
     top: 50%;
-    transform: translateY(-50%);
-    font-size: 12px;
-    opacity: 0.75;
+    width: 7px;
+    height: 7px;
+    border-right: 2px solid #1f1f1f;
+    border-bottom: 2px solid #1f1f1f;
+    transform: translateY(-65%) rotate(45deg);
+    opacity: 0.9;
+    pointer-events: none;
 }
 
 .sales-report-filter-row .staff-report-filter[open] summary::after {
-    content: "▴";
+    transform: translateY(-35%) rotate(225deg);
 }
 
 /* випадаючий список */

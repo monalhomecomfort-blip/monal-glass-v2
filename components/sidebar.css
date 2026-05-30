@@ -1192,7 +1192,14 @@
     margin: 0;
 }
 
-/* ===================== SALES REPORT TABLE — COMPACT + HORIZONTAL SCROLL ===================== */
+/* ===================== STAFF TABLES — REPORTS ===================== */
+
+.staff-page {
+    --staff-table-line: rgba(92, 82, 66, 0.16);
+    --staff-table-line-strong: rgba(92, 82, 66, 0.24);
+}
+
+/* ===== SALES REPORT RESULT ===== */
 
 .staff-page #sales-report-result {
     max-width: 100%;
@@ -1223,95 +1230,36 @@
     border-radius: 999px;
 }
 
+/* ===== SALES REPORT TABLE ===== */
+
 .staff-page #sales-report-result .staff-report-table {
-    width: max-content;
-    min-width: 100%;
-    table-layout: auto;
+    table-layout: fixed;
     border-collapse: separate;
     border-spacing: 0;
-    font-size: 13px;
+    font-size: 12px;
     line-height: 1.25;
 }
 
 .staff-page #sales-report-result .staff-report-table th,
 .staff-page #sales-report-result .staff-report-table td {
+    box-sizing: border-box;
     padding: 7px 9px;
-    font-size: 13px;
+    font-size: 12px;
     line-height: 1.25;
     vertical-align: top;
+    border-right: 1px solid var(--staff-table-line);
+    border-bottom: 1px solid var(--staff-table-line);
 }
 
 .staff-page #sales-report-result .staff-report-table th {
     font-weight: 600;
-    white-space: nowrap;
+    text-align: center;
+    white-space: normal;
 }
 
 .staff-page #sales-report-result .staff-report-table td {
+    text-align: center;
     white-space: nowrap;
-}
-
-/* перші текстові колонки можна переносити, щоб не роздували таблицю */
-.staff-page #sales-report-result .staff-report-table th:nth-child(1),
-.staff-page #sales-report-result .staff-report-table td:nth-child(1) {
-    min-width: 90px;
-    max-width: 115px;
-    white-space: normal;
-}
-
-.staff-page #sales-report-result .staff-report-table th:nth-child(2),
-.staff-page #sales-report-result .staff-report-table td:nth-child(2) {
-    min-width: 130px;
-    max-width: 165px;
-    white-space: normal;
-}
-
-.staff-page #sales-report-result .staff-report-table th:nth-child(3),
-.staff-page #sales-report-result .staff-report-table td:nth-child(3) {
-    min-width: 130px;
-    max-width: 165px;
-    white-space: normal;
-}
-
-.staff-page #sales-report-result .staff-report-table th:nth-child(4),
-.staff-page #sales-report-result .staff-report-table td:nth-child(4) {
-    min-width: 230px;
-    max-width: 320px;
-    white-space: normal;
-}
-
-/* денні колонки тримаємо компактними */
-.staff-page #sales-report-result .staff-report-table th:nth-child(n+5),
-.staff-page #sales-report-result .staff-report-table td:nth-child(n+5) {
-    min-width: 82px;
-    text-align: left;
-}
-
-/* ===================== SALES REPORT DAY HEADER ===================== */
-
-.staff-page #sales-report-result .staff-report-table th.sales-report-day-head {
-    text-align: center !important;
-    font-weight: 600;
-    white-space: nowrap;
-    background: rgba(231, 228, 217, 0.85);
-}
-
-/* ===================== STAFF TABLES — SOFT GRID LINES ===================== */
-
-.staff-page {
-    --staff-table-line: rgba(92, 82, 66, 0.16);
-    --staff-table-line-strong: rgba(92, 82, 66, 0.24);
-}
-
-/* таблиця звіту по продажам */
-.staff-page #sales-report-result .staff-report-table {
-    border-collapse: separate;
-    border-spacing: 0;
-}
-
-.staff-page #sales-report-result .staff-report-table th,
-.staff-page #sales-report-result .staff-report-table td {
-    border-right: 1px solid var(--staff-table-line);
-    border-bottom: 1px solid var(--staff-table-line);
 }
 
 .staff-page #sales-report-result .staff-report-table th:last-child,
@@ -1323,17 +1271,14 @@
     border-bottom: 1px solid var(--staff-table-line-strong);
 }
 
-/* денні колонки робимо однаковішими по ширині */
-.staff-page #sales-report-result .staff-report-table th:nth-child(n+5),
-.staff-page #sales-report-result .staff-report-table td:nth-child(n+5) {
-    width: 92px;
-    min-width: 92px;
-    max-width: 92px;
+.staff-page #sales-report-result .staff-report-table th.sales-report-day-head {
     text-align: center;
-    white-space: normal;
+    font-weight: 600;
+    white-space: nowrap;
+    background: rgba(231, 228, 217, 0.85);
 }
 
-/* перші колонки лишаються текстовими */
+/* перші текстові колонки */
 .staff-page #sales-report-result .staff-report-table th:nth-child(1),
 .staff-page #sales-report-result .staff-report-table td:nth-child(1),
 .staff-page #sales-report-result .staff-report-table th:nth-child(2),
@@ -1343,9 +1288,11 @@
 .staff-page #sales-report-result .staff-report-table th:nth-child(4),
 .staff-page #sales-report-result .staff-report-table td:nth-child(4) {
     text-align: left;
+    white-space: normal;
 }
 
-/* таблиці залишків, актів, керування залишками */
+/* ===== STOCK TABLES GRID ===== */
+
 .staff-page .staff-stock-table {
     border-collapse: separate;
     border-spacing: 0;
@@ -1364,59 +1311,4 @@
 
 .staff-page .staff-stock-table thead th {
     border-bottom: 1px solid var(--staff-table-line-strong);
-}
-
-/* ===================== SALES REPORT FIXED COLUMN GRID ===================== */
-
-.staff-page #sales-report-result .staff-report-table {
-    table-layout: fixed !important;
-    width: max-content !important;
-    min-width: 100% !important;
-}
-
-/* скидаємо попередні nth-child ширини, щоб не билися з colgroup */
-.staff-page #sales-report-result .staff-report-table th:nth-child(n+5),
-.staff-page #sales-report-result .staff-report-table td:nth-child(n+5) {
-    width: auto !important;
-    min-width: 0 !important;
-    max-width: none !important;
-    text-align: center;
-    white-space: nowrap;
-}
-
-/* фіксована сітка колонок */
-.staff-page #sales-report-result .staff-report-table col.sales-report-col-source {
-    width: 105px;
-}
-
-.staff-page #sales-report-result .staff-report-table col.sales-report-col-warehouse {
-    width: 150px;
-}
-
-.staff-page #sales-report-result .staff-report-table col.sales-report-col-category {
-    width: 145px;
-}
-
-.staff-page #sales-report-result .staff-report-table col.sales-report-col-product {
-    width: 270px;
-}
-
-.staff-page #sales-report-result .staff-report-table col.sales-report-col-qty {
-    width: 76px;
-}
-
-.staff-page #sales-report-result .staff-report-table col.sales-report-col-money {
-    width: 104px;
-}
-
-.staff-page #sales-report-result .staff-report-table col.sales-report-col-money-wide {
-    width: 118px;
-}
-
-/* текстові перші колонки можна переносити */
-.staff-page #sales-report-result .staff-report-table td:nth-child(1),
-.staff-page #sales-report-result .staff-report-table td:nth-child(2),
-.staff-page #sales-report-result .staff-report-table td:nth-child(3),
-.staff-page #sales-report-result .staff-report-table td:nth-child(4) {
-    white-space: normal;
 }

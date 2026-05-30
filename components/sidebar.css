@@ -1294,3 +1294,74 @@
     white-space: nowrap;
     background: rgba(231, 228, 217, 0.85);
 }
+
+/* ===================== STAFF TABLES — SOFT GRID LINES ===================== */
+
+.staff-page {
+    --staff-table-line: rgba(92, 82, 66, 0.16);
+    --staff-table-line-strong: rgba(92, 82, 66, 0.24);
+}
+
+/* таблиця звіту по продажам */
+.staff-page #sales-report-result .staff-report-table {
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.staff-page #sales-report-result .staff-report-table th,
+.staff-page #sales-report-result .staff-report-table td {
+    border-right: 1px solid var(--staff-table-line);
+    border-bottom: 1px solid var(--staff-table-line);
+}
+
+.staff-page #sales-report-result .staff-report-table th:last-child,
+.staff-page #sales-report-result .staff-report-table td:last-child {
+    border-right: none;
+}
+
+.staff-page #sales-report-result .staff-report-table thead th {
+    border-bottom: 1px solid var(--staff-table-line-strong);
+}
+
+/* денні колонки робимо однаковішими по ширині */
+.staff-page #sales-report-result .staff-report-table th:nth-child(n+5),
+.staff-page #sales-report-result .staff-report-table td:nth-child(n+5) {
+    width: 92px;
+    min-width: 92px;
+    max-width: 92px;
+    text-align: center;
+    white-space: normal;
+}
+
+/* перші колонки лишаються текстовими */
+.staff-page #sales-report-result .staff-report-table th:nth-child(1),
+.staff-page #sales-report-result .staff-report-table td:nth-child(1),
+.staff-page #sales-report-result .staff-report-table th:nth-child(2),
+.staff-page #sales-report-result .staff-report-table td:nth-child(2),
+.staff-page #sales-report-result .staff-report-table th:nth-child(3),
+.staff-page #sales-report-result .staff-report-table td:nth-child(3),
+.staff-page #sales-report-result .staff-report-table th:nth-child(4),
+.staff-page #sales-report-result .staff-report-table td:nth-child(4) {
+    text-align: left;
+}
+
+/* таблиці залишків, актів, керування залишками */
+.staff-page .staff-stock-table {
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.staff-page .staff-stock-table th,
+.staff-page .staff-stock-table td {
+    border-right: 1px solid var(--staff-table-line);
+    border-bottom: 1px solid var(--staff-table-line);
+}
+
+.staff-page .staff-stock-table th:last-child,
+.staff-page .staff-stock-table td:last-child {
+    border-right: none;
+}
+
+.staff-page .staff-stock-table thead th {
+    border-bottom: 1px solid var(--staff-table-line-strong);
+}

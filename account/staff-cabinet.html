@@ -504,6 +504,9 @@ const saleClientResult = document.getElementById("sale-client-result");
 const saleWarehouseRow = document.getElementById("sale-warehouse-row");
 const saleWarehouseSelect = document.getElementById("sale-warehouse-select");
 const saleProductQuantityInput = document.getElementById("sale-product-quantity");
+const saleProductPriceInput = document.getElementById("sale-product-price");
+const addSaleItemBtn = document.getElementById("add-sale-item-btn");
+const saleItemsBox = document.getElementById("sale-items-box");
 const saleTotalAmount = document.getElementById("sale-total-amount");
 const salePaymentTypeSelect = document.getElementById("sale-payment-type");
 const createSaleBtn = document.getElementById("create-sale-btn");
@@ -520,7 +523,8 @@ let SALE_CERTIFICATE = null;
 let SALE_CERTIFICATE_CHECKED = null;    
 
 let STAFF_PRODUCTS_LOADED = false;
-let STAFF_PRODUCTS = [];    
+let STAFF_PRODUCTS = [];
+let SALE_ITEMS = [];    
 
 async function loadStaffProducts() {
     if (STAFF_PRODUCTS_LOADED) return;
@@ -596,6 +600,7 @@ function renderProductDropdown(searchText = "") {
             class="staff-product-option"
             data-product-id="${product.id}"
             data-product-title="${product.display_name || product.product_key}"
+            data-product-price="${product.price || 0}"
         >
             ${product.display_name || product.product_key} · ${product.price || 0} грн
         </div>
@@ -605,6 +610,11 @@ function renderProductDropdown(searchText = "") {
 if (saleProductSearch && saleProductDropdown && saleProductId) {
     saleProductSearch.addEventListener("input", () => {
         saleProductId.value = "";
+
+        if (saleProductPriceInput) {
+            saleProductPriceInput.value = "";
+        }
+
         renderProductDropdown(saleProductSearch.value);
     });
 
@@ -632,6 +642,10 @@ if (saleProductSearch && saleProductDropdown && saleProductId) {
         saleProductId.value = option.dataset.productId;
         saleProductSearch.value = option.dataset.productTitle;
 
+        if (saleProductPriceInput) {
+            saleProductPriceInput.value = option.dataset.productPrice || 0;
+        }
+
         saleProductDropdown.classList.add("staff-hidden");
         saleProductDropdown.innerHTML = "";
     });
@@ -646,6 +660,54 @@ if (saleProductSearch && saleProductDropdown && saleProductId) {
     });
 }
 
+function escapeSaleHtml(value) {
+    return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+}
+
+function getSaleItemsTotal() {
+    return SALE_ITEMS.reduce((sum, item) => {
+        return sum + Number(item.price || 0) * Number(item.quantity || 0);
+    }, 0);
+}
+
+function renderSaleItems() {
+    if (!saleItemsBox || !saleTotalAmount) return;
+
+    if (!SALE_ITEMS.length) {
+        saleItemsBox.classList.add("staff-hidden");
+        saleItemsBox.innerHTML = "Товари ще не додані.";
+        saleTotalAmount.textContent = "0 грн";
+        return;
+    }
+
+    saleItemsBox.classList.remove("staff-hidden");
+
+    saleItemsBox.innerHTML = SALE_ITEMS.map((item, index) => {
+        const rowSum = Number(item.price || 0) * Number(item.quantity || 0);
+
+        return `
+            <div class="staff-sale-check-row">
+                <span>${index + 1}. ${escapeSaleHtml(item.title)}</span>
+                <span>${item.quantity} × ${item.price} грн = ${rowSum} грн</span>
+                <button
+                    type="button"
+                    class="buy-btn remove-sale-item-btn"
+                    data-index="${index}"
+                >
+                    ×
+                </button>
+            </div>
+        `;
+    }).join("");
+
+    saleTotalAmount.textContent = `${getSaleItemsTotal()} грн`;
+}
+    
 function resetSaleCertificateBox() {
     SALE_CERTIFICATE = null;
     SALE_CERTIFICATE_CHECKED = null;
@@ -666,7 +728,81 @@ function resetSaleCertificateBox() {
     }
 }
 
+if (addSaleItemBtn) {
+    addSaleItemBtn.addEventListener("click", () => {
+        const productId = Number(saleProductId?.value || 0);
+        const quantity = Number(saleProductQuantityInput?.value || 0);
+        const price = Number(saleProductPriceInput?.value || 0);
+
+        const product = STAFF_PRODUCTS.find(item =>
+            Number(item.id || 0) === productId
+        );
+
+        if (!product) {
+            saleResult?.classList.remove("staff-hidden");
+            saleResult.innerHTML = "Спочатку оберіть товар зі списку.";
+            return;
+        }
+
+        if (!Number.isInteger(quantity) || quantity <= 0) {
+            saleResult?.classList.remove("staff-hidden");
+            saleResult.innerHTML = "Кількість має бути цілим числом більше 0.";
+            return;
+        }
+
+        if (!price || price <= 0) {
+            saleResult?.classList.remove("staff-hidden");
+            saleResult.innerHTML = "Не підтягнулась ціна товару. Оберіть товар ще раз.";
+            return;
+        }
+
+        SALE_ITEMS.push({
+            productId,
+            title: product.display_name || product.product_key || "Товар",
+            quantity,
+            price
+        });
+
+        if (saleProductSearch) saleProductSearch.value = "";
+        if (saleProductId) saleProductId.value = "";
+        if (saleProductQuantityInput) saleProductQuantityInput.value = 1;
+        if (saleProductPriceInput) saleProductPriceInput.value = "";
+
+        resetSaleCertificateBox();
+        renderSaleItems();
+
+        if (saleResult) {
+            saleResult.classList.add("staff-hidden");
+            saleResult.innerHTML = "";
+        }
+    });
+}
+
+if (saleItemsBox) {
+    saleItemsBox.addEventListener("click", (e) => {
+        const removeBtn = e.target.closest(".remove-sale-item-btn");
+        if (!removeBtn) return;
+
+        const index = Number(removeBtn.dataset.index);
+
+        if (!Number.isInteger(index)) return;
+
+        SALE_ITEMS.splice(index, 1);
+        resetSaleCertificateBox();
+        renderSaleItems();
+    });
+}
+    
 function getCurrentSaleTotal() {
+    if (SALE_ITEMS.length) {
+        return {
+            product: SALE_ITEMS[0],
+            quantity: SALE_ITEMS.reduce((sum, item) => sum + Number(item.quantity || 0), 0),
+            unitPrice: 0,
+            total: getSaleItemsTotal()
+        };
+    }
+
     const productId = Number(saleProductId?.value || 0);
     const quantity = Number(saleProductQuantityInput?.value || 0);
 

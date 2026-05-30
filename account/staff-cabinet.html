@@ -646,6 +646,7 @@ const newWarehouseBuyerDetailsInput = document.getElementById("new-warehouse-buy
 const createWarehouseBtn = document.getElementById("create-warehouse-btn");
 const stockManageResult = document.getElementById("stock-manage-result");
 const stockReportWarehouseFilter = document.getElementById("stock-report-warehouse-filter");
+const salesReportWarehouseList = document.getElementById("sales-report-warehouse-list");    
 const loadStockActsBtn = document.getElementById("load-stock-acts-btn");
 const stockActsResult = document.getElementById("stock-acts-result");
 const productionReportStartDateInput = document.getElementById("production-report-start-date");
@@ -1272,6 +1273,28 @@ function fillWarehouseSelects(warehouses) {
         });
     }
 
+    if (salesReportWarehouseList) {
+        salesReportWarehouseList.innerHTML = "";
+
+        STAFF_WAREHOUSES.forEach(warehouse => {
+            const label = document.createElement("label");
+
+            const checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.className = "sales-report-warehouse-checkbox";
+            checkbox.value = warehouse.warehouse_id;
+
+            const text = document.createTextNode(
+                ` ${warehouse.warehouse_name} ID ${warehouse.warehouse_id}`
+            );
+
+            label.appendChild(checkbox);
+            label.appendChild(text);
+
+            salesReportWarehouseList.appendChild(label);
+        });
+    }
+
     if (stockManageWarehouseSelect) {
         stockManageWarehouseSelect.innerHTML = `
             <option value="">Оберіть склад</option>
@@ -1286,17 +1309,17 @@ function fillWarehouseSelects(warehouses) {
     }
 
     if (saleWarehouseSelect) {
-    saleWarehouseSelect.innerHTML = `
-        <option value="">Оберіть склад продажу</option>
-    `;
+        saleWarehouseSelect.innerHTML = `
+            <option value="">Оберіть склад продажу</option>
+        `;
 
-    STAFF_WAREHOUSES.forEach(warehouse => {
-        const option = document.createElement("option");
-        option.value = warehouse.warehouse_id;
-        option.textContent = `${warehouse.warehouse_name} ID ${warehouse.warehouse_id}`;
-        saleWarehouseSelect.appendChild(option);
-    });
-}
+        STAFF_WAREHOUSES.forEach(warehouse => {
+            const option = document.createElement("option");
+            option.value = warehouse.warehouse_id;
+            option.textContent = `${warehouse.warehouse_name} ID ${warehouse.warehouse_id}`;
+            saleWarehouseSelect.appendChild(option);
+        });
+    }
 }
 
 async function loadStaffWarehouses() {

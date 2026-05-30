@@ -1365,3 +1365,58 @@
 .staff-page .staff-stock-table thead th {
     border-bottom: 1px solid var(--staff-table-line-strong);
 }
+
+/* ===================== SALES REPORT FIXED COLUMN GRID ===================== */
+
+.staff-page #sales-report-result .staff-report-table {
+    table-layout: fixed !important;
+    width: max-content !important;
+    min-width: 100% !important;
+}
+
+/* скидаємо попередні nth-child ширини, щоб не билися з colgroup */
+.staff-page #sales-report-result .staff-report-table th:nth-child(n+5),
+.staff-page #sales-report-result .staff-report-table td:nth-child(n+5) {
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    text-align: center;
+    white-space: nowrap;
+}
+
+/* фіксована сітка колонок */
+.staff-page #sales-report-result .staff-report-table col.sales-report-col-source {
+    width: 105px;
+}
+
+.staff-page #sales-report-result .staff-report-table col.sales-report-col-warehouse {
+    width: 150px;
+}
+
+.staff-page #sales-report-result .staff-report-table col.sales-report-col-category {
+    width: 145px;
+}
+
+.staff-page #sales-report-result .staff-report-table col.sales-report-col-product {
+    width: 270px;
+}
+
+.staff-page #sales-report-result .staff-report-table col.sales-report-col-qty {
+    width: 76px;
+}
+
+.staff-page #sales-report-result .staff-report-table col.sales-report-col-money {
+    width: 104px;
+}
+
+.staff-page #sales-report-result .staff-report-table col.sales-report-col-money-wide {
+    width: 118px;
+}
+
+/* текстові перші колонки можна переносити */
+.staff-page #sales-report-result .staff-report-table td:nth-child(1),
+.staff-page #sales-report-result .staff-report-table td:nth-child(2),
+.staff-page #sales-report-result .staff-report-table td:nth-child(3),
+.staff-page #sales-report-result .staff-report-table td:nth-child(4) {
+    white-space: normal;
+}

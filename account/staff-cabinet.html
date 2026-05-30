@@ -1364,6 +1364,25 @@ function initSalesReportCheckboxFilters() {
 
 initSalesReportCheckboxFilters();
 
+function initSalesReportFilterCloseOnOutsideClick() {
+    document.addEventListener("click", (event) => {
+        const target = event.target;
+
+        if (!(target instanceof Element)) return;
+
+        const clickedFilter = target.closest(".sales-report-filter-row .staff-report-filter");
+
+        document
+            .querySelectorAll(".sales-report-filter-row .staff-report-filter[open]")
+            .forEach(filter => {
+                if (filter !== clickedFilter) {
+                    filter.open = false;
+                }
+            });
+    });
+}
+
+initSalesReportFilterCloseOnOutsideClick();    
 function getCheckedSalesReportValues(selector) {
     const checkboxes = Array.from(document.querySelectorAll(selector));
     const allCheckbox = checkboxes.find(item => item.value === "all");
@@ -3247,16 +3266,17 @@ function renderSalesReport(data, filters) {
     const showCostSales = canViewCost && isSalesReportSelected(filters.salesTypes, "cost");
     const showRealizationSales = isSalesReportSelected(filters.salesTypes, "realization");
 
-    let headHtml = `
-        <tr>
-            <th>Джерело</th>
-            <th>Склад</th>
-            <th>Категорія</th>
-            <th>Товар</th>
-    `;
+    let headHtml = "";
 
     if (!byDays) {
-        headHtml += `<th>Продано, к-сть</th>`;
+        headHtml = `
+            <tr>
+                <th>Джерело</th>
+                <th>Склад</th>
+                <th>Категорія</th>
+                <th>Товар</th>
+                <th>Продано, к-сть</th>
+        `;
 
         if (showRetailPrice) headHtml += `<th>Ціна РЦ</th>`;
         if (showCostPrice) headHtml += `<th>Собівартість</th>`;
@@ -3265,19 +3285,48 @@ function renderSalesReport(data, filters) {
         if (showRetailSales) headHtml += `<th>Продано РЦ</th>`;
         if (showCostSales) headHtml += `<th>Продано СВ</th>`;
         if (showRealizationSales) headHtml += `<th>Продано реалізація</th>`;
+
+        headHtml += `</tr>`;
     }
 
     if (byDays) {
+        const dayColumnCount =
+            1 +
+            (showRetailSales ? 1 : 0) +
+            (showCostSales ? 1 : 0) +
+            (showRealizationSales ? 1 : 0);
+
+        headHtml = `
+            <tr>
+                <th rowspan="2">Джерело</th>
+                <th rowspan="2">Склад</th>
+                <th rowspan="2">Категорія</th>
+                <th rowspan="2">Товар</th>
+        `;
+
         days.forEach(day => {
-            headHtml += `<th>${escapeSaleHtml(day)} к-сть</th>`;
-
-            if (showRetailSales) headHtml += `<th>${escapeSaleHtml(day)} РЦ</th>`;
-            if (showCostSales) headHtml += `<th>${escapeSaleHtml(day)} СВ</th>`;
-            if (showRealizationSales) headHtml += `<th>${escapeSaleHtml(day)} реалізація</th>`;
+            headHtml += `
+                <th colspan="${dayColumnCount}" class="sales-report-day-head">
+                    ${escapeSaleHtml(day)}
+                </th>
+            `;
         });
-    }
 
-    headHtml += `</tr>`;
+        headHtml += `
+            </tr>
+            <tr>
+        `;
+
+        days.forEach(() => {
+            headHtml += `<th>К-сть</th>`;
+
+            if (showRetailSales) headHtml += `<th>РЦ</th>`;
+            if (showCostSales) headHtml += `<th>СВ</th>`;
+            if (showRealizationSales) headHtml += `<th>Реалізація</th>`;
+        });
+
+        headHtml += `</tr>`;
+    }
 
     const bodyHtml = items.map(item => {
         let rowHtml = `
@@ -3334,7 +3383,6 @@ function renderSalesReport(data, filters) {
         </div>
     `;
 }
-
 if (
     loadSalesReportBtn &&
     salesReportStartDateInput &&

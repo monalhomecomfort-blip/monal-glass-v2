@@ -642,7 +642,8 @@ const newWarehouseBuyerDetailsInput = document.getElementById("new-warehouse-buy
 const createWarehouseBtn = document.getElementById("create-warehouse-btn");
 const stockManageResult = document.getElementById("stock-manage-result");
 const stockReportWarehouseFilter = document.getElementById("stock-report-warehouse-filter");
-const salesReportWarehouseList = document.getElementById("sales-report-warehouse-list");    
+const salesReportWarehouseList = document.getElementById("sales-report-warehouse-list");
+const salesReportCategoryList = document.getElementById("sales-report-category-list");    
 const loadStockActsBtn = document.getElementById("load-stock-acts-btn");
 const stockActsResult = document.getElementById("stock-acts-result");
 const productionReportStartDateInput = document.getElementById("production-report-start-date");
@@ -742,6 +743,34 @@ async function loadStaffProducts() {
     }
 }
 
+function renderSalesReportCategoryFilter() {
+    if (!salesReportCategoryList) return;
+
+    const categories = [...new Set(
+        STAFF_PRODUCTS
+            .map(product => String(product.product_label || "").trim())
+            .filter(Boolean)
+    )].sort((a, b) => a.localeCompare(b, "uk"));
+
+    salesReportCategoryList.innerHTML = "";
+
+    categories.forEach(category => {
+        const label = document.createElement("label");
+
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.className = "sales-report-category-checkbox";
+        checkbox.value = category;
+
+        const text = document.createTextNode(" " + category);
+
+        label.appendChild(checkbox);
+        label.appendChild(text);
+
+        salesReportCategoryList.appendChild(label);
+    });
+}
+    
 function renderProductDropdown(searchText = "") {
     if (!saleProductDropdown) return;
 
@@ -1836,6 +1865,9 @@ if (openSalesSectionBtn && salesSection) {
 if (openSalesReportSectionBtn && salesReportSection) {
     openSalesReportSectionBtn.addEventListener("click", async () => {
         showStaffSection(salesReportSection);
+
+        await loadStaffProducts();
+        renderSalesReportCategoryFilter();
 
         if (String(staff?.role || "") === "admin") {
             await loadStaffWarehouses();

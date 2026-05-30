@@ -165,7 +165,9 @@
             </div>
 
             <div id="sale-total-box" class="staff-payment-summary">
-                До оплати: <strong id="sale-total-amount">0 грн</strong>
+                <div>Сума чека: <strong id="sale-check-total-amount">0 грн</strong></div>
+                <div>Сертифікат: <strong id="sale-certificate-amount">0 грн</strong></div>
+                <div>До оплати: <strong id="sale-total-amount">0 грн</strong></div>
             </div>
 
             <div class="staff-sale-payment-row">
@@ -507,6 +509,8 @@ const saleProductQuantityInput = document.getElementById("sale-product-quantity"
 const saleProductPriceInput = document.getElementById("sale-product-price");
 const addSaleItemBtn = document.getElementById("add-sale-item-btn");
 const saleItemsBox = document.getElementById("sale-items-box");
+const saleCheckTotalAmount = document.getElementById("sale-check-total-amount");
+const saleCertificateAmount = document.getElementById("sale-certificate-amount");
 const saleTotalAmount = document.getElementById("sale-total-amount");
 const salePaymentTypeSelect = document.getElementById("sale-payment-type");
 const createSaleBtn = document.getElementById("create-sale-btn");
@@ -675,13 +679,37 @@ function getSaleItemsTotal() {
     }, 0);
 }
 
+function updateSalePaymentSummary() {
+    const checkTotal = getSaleItemsTotal();
+    const certificateCovered = SALE_CERTIFICATE
+        ? Number(SALE_CERTIFICATE.coveredAmount || 0)
+        : 0;
+
+    const payableTotal = Math.max(0, checkTotal - certificateCovered);
+
+    if (saleCheckTotalAmount) {
+        saleCheckTotalAmount.textContent = `${checkTotal} грн`;
+    }
+
+    if (saleCertificateAmount) {
+        saleCertificateAmount.textContent =
+            certificateCovered > 0
+                ? `−${certificateCovered} грн`
+                : "0 грн";
+    }
+
+    if (saleTotalAmount) {
+        saleTotalAmount.textContent = `${payableTotal} грн`;
+    }
+}
+    
 function renderSaleItems() {
     if (!saleItemsBox || !saleTotalAmount) return;
 
     if (!SALE_ITEMS.length) {
         saleItemsBox.classList.add("staff-hidden");
         saleItemsBox.innerHTML = "Товари ще не додані.";
-        saleTotalAmount.textContent = "0 грн";
+        updateSalePaymentSummary();
         return;
     }
 
@@ -705,7 +733,7 @@ function renderSaleItems() {
         `;
     }).join("");
 
-    saleTotalAmount.textContent = `${getSaleItemsTotal()} грн`;
+    updateSalePaymentSummary();
 }
     
 function resetSaleCertificateBox() {
@@ -726,6 +754,8 @@ function resetSaleCertificateBox() {
         saleCertificateCheckBtn.dataset.mode = "check";
         saleCertificateCheckBtn.classList.remove("is-confirmed");
     }
+
+    updateSalePaymentSummary();
 }
 
 if (addSaleItemBtn) {
@@ -868,6 +898,8 @@ if (saleCertificateCodeInput && saleCertificateCheckBtn && saleCertificateResult
         saleCertificateCheckBtn.textContent = "Перевірити";
         saleCertificateCheckBtn.dataset.mode = "check";
         saleCertificateCheckBtn.classList.remove("is-confirmed");
+
+        updateSalePaymentSummary();
     });
 }
 
@@ -886,12 +918,9 @@ if (saleCertificateCheckBtn && saleCertificateCodeInput && saleCertificateResult
 
             SALE_CERTIFICATE = SALE_CERTIFICATE_CHECKED;
 
-            if (saleTotalAmount) {
-                saleTotalAmount.textContent = `${SALE_CERTIFICATE.restAmount} грн`;
-            }
+            updateSalePaymentSummary();
 
-            saleCertificateResult.textContent =
-                `Сертифікат застосовано. До оплати: ${SALE_CERTIFICATE.restAmount} грн`;
+            saleCertificateResult.textContent = "Сертифікат застосовано.";
 
             saleCertificateCheckBtn.textContent = "Застосовано";
             saleCertificateCheckBtn.disabled = true;

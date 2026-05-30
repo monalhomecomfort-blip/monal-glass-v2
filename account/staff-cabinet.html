@@ -3208,6 +3208,194 @@ if (createSaleBtn && saleResult) {
     });
 }
 
+let SALES_REPORT_LAST_DATA = null;
+let SALES_REPORT_LAST_FILTERS = null;
+
+function formatSalesReportMoney(value) {
+    const number = Number(value || 0);
+
+    return `${number.toLocaleString("uk-UA", {
+        maximumFractionDigits: 0
+    })} грн`;
+}
+
+function isSalesReportSelected(selectedValues, value) {
+    return !Array.isArray(selectedValues) ||
+        !selectedValues.length ||
+        selectedValues.includes(value);
+}
+
+function renderSalesReport(data, filters) {
+    if (!salesReportResult) return;
+
+    const items = Array.isArray(data.items) ? data.items : [];
+    const days = Array.isArray(data.days) ? data.days : [];
+    const canViewCost = Boolean(data.canViewCost);
+    const byDays = Boolean(filters.byDays);
+
+    if (!items.length) {
+        salesReportResult.classList.remove("staff-hidden");
+        salesReportResult.innerHTML = "За обраними фільтрами продажів не знайдено.";
+        return;
+    }
+
+    const showRetailPrice = isSalesReportSelected(filters.prices, "retail");
+    const showCostPrice = canViewCost && isSalesReportSelected(filters.prices, "cost");
+    const showRealizationPrice = isSalesReportSelected(filters.prices, "realization");
+
+    const showRetailSales = isSalesReportSelected(filters.salesTypes, "retail");
+    const showCostSales = canViewCost && isSalesReportSelected(filters.salesTypes, "cost");
+    const showRealizationSales = isSalesReportSelected(filters.salesTypes, "realization");
+
+    let headHtml = `
+        <tr>
+            <th>Джерело</th>
+            <th>Склад</th>
+            <th>Категорія</th>
+            <th>Товар</th>
+    `;
+
+    if (!byDays) {
+        headHtml += `<th>Продано, к-сть</th>`;
+
+        if (showRetailPrice) headHtml += `<th>Ціна РЦ</th>`;
+        if (showCostPrice) headHtml += `<th>Собівартість</th>`;
+        if (showRealizationPrice) headHtml += `<th>Під реалізацію</th>`;
+
+        if (showRetailSales) headHtml += `<th>Продано РЦ</th>`;
+        if (showCostSales) headHtml += `<th>Продано СВ</th>`;
+        if (showRealizationSales) headHtml += `<th>Продано реалізація</th>`;
+    }
+
+    if (byDays) {
+        days.forEach(day => {
+            headHtml += `<th>${escapeSaleHtml(day)} к-сть</th>`;
+
+            if (showRetailSales) headHtml += `<th>${escapeSaleHtml(day)} РЦ</th>`;
+            if (showCostSales) headHtml += `<th>${escapeSaleHtml(day)} СВ</th>`;
+            if (showRealizationSales) headHtml += `<th>${escapeSaleHtml(day)} реалізація</th>`;
+        });
+    }
+
+    headHtml += `</tr>`;
+
+    const bodyHtml = items.map(item => {
+        let rowHtml = `
+            <tr>
+                <td>${escapeSaleHtml(item.source || "Не вказано")}</td>
+                <td>${escapeSaleHtml(item.warehouse_name || "")}</td>
+                <td>${escapeSaleHtml(item.category || "Не визначено")}</td>
+                <td>${escapeSaleHtml(item.product_name || "")}</td>
+        `;
+
+        if (!byDays) {
+            rowHtml += `<td>${Number(item.quantity || 0)}</td>`;
+
+            if (showRetailPrice) rowHtml += `<td>${formatSalesReportMoney(item.retail_price)}</td>`;
+            if (showCostPrice) rowHtml += `<td>${formatSalesReportMoney(item.cost_price)}</td>`;
+            if (showRealizationPrice) rowHtml += `<td>${formatSalesReportMoney(item.realization_price)}</td>`;
+
+            if (showRetailSales) rowHtml += `<td>${formatSalesReportMoney(item.retail_amount)}</td>`;
+            if (showCostSales) rowHtml += `<td>${formatSalesReportMoney(item.cost_amount)}</td>`;
+            if (showRealizationSales) rowHtml += `<td>${formatSalesReportMoney(item.realization_amount)}</td>`;
+        }
+
+        if (byDays) {
+            days.forEach(day => {
+                const dayData = item.days && item.days[day]
+                    ? item.days[day]
+                    : {};
+
+                rowHtml += `<td>${Number(dayData.quantity || 0)}</td>`;
+
+                if (showRetailSales) rowHtml += `<td>${formatSalesReportMoney(dayData.retail_amount)}</td>`;
+                if (showCostSales) rowHtml += `<td>${formatSalesReportMoney(dayData.cost_amount)}</td>`;
+                if (showRealizationSales) rowHtml += `<td>${formatSalesReportMoney(dayData.realization_amount)}</td>`;
+            });
+        }
+
+        rowHtml += `</tr>`;
+
+        return rowHtml;
+    }).join("");
+
+    salesReportResult.classList.remove("staff-hidden");
+    salesReportResult.innerHTML = `
+        <div class="staff-table-scroll">
+            <table class="staff-report-table">
+                <thead>
+                    ${headHtml}
+                </thead>
+
+                <tbody>
+                    ${bodyHtml}
+                </tbody>
+            </table>
+        </div>
+    `;
+}
+
+if (
+    loadSalesReportBtn &&
+    salesReportStartDateInput &&
+    salesReportEndDateInput &&
+    salesReportResult
+) {
+    loadSalesReportBtn.addEventListener("click", async () => {
+        const startDate = salesReportStartDateInput.value;
+        const endDate = salesReportEndDateInput.value;
+        const filters = getSalesReportFilters();
+
+        salesReportResult.classList.remove("staff-hidden");
+
+        if (!startDate || !endDate) {
+            salesReportResult.innerHTML = "Оберіть дату початку і дату кінця періоду.";
+            return;
+        }
+
+        salesReportResult.innerHTML = "Завантажую звіт по продажам…";
+
+        try {
+            const response = await fetch(
+                "https://monal-mono-pay-production.up.railway.app/api/staff/sales-report",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        staffId: staff.id,
+                        startDate,
+                        endDate,
+                        warehouses: filters.warehouses,
+                        sources: filters.sources,
+                        categories: filters.categories,
+                        prices: filters.prices,
+                        salesTypes: filters.salesTypes,
+                        byDays: filters.byDays
+                    })
+                }
+            );
+
+            const data = await response.json();
+
+            if (!data.ok) {
+                salesReportResult.innerHTML = data.error || "Не вдалося завантажити звіт по продажам.";
+                return;
+            }
+
+            SALES_REPORT_LAST_DATA = data;
+            SALES_REPORT_LAST_FILTERS = filters;
+
+            renderSalesReport(data, filters);
+
+        } catch (err) {
+            console.error(err);
+            salesReportResult.innerHTML = "Помилка зʼєднання при завантаженні звіту по продажам.";
+        }
+    });
+}
+    
 if (
     loadProductionReportBtn &&
     productionReportStartDateInput &&

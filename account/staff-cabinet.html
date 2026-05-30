@@ -247,78 +247,136 @@
             Сформуйте звіт по вже проведених продажах за обраний період.
         </p>
 
-        <div class="staff-search-row staff-stock-report-row">
-            <input
-                type="date"
-                id="sales-report-start-date"
-            >
+<div class="staff-search-row staff-stock-report-row sales-report-filter-row">
+    <input
+        type="date"
+        id="sales-report-start-date"
+        class="sales-report-date-input"
+    >
 
-            <input
-                type="date"
-                id="sales-report-end-date"
-            >
+    <input
+        type="date"
+        id="sales-report-end-date"
+        class="sales-report-date-input"
+    >
 
-            <select id="sales-report-warehouse-filter" data-access="admin">
-                <option value="">Всі склади</option>
-            </select>
+    <details class="staff-report-filter" data-access="admin">
+        <summary>Склади</summary>
 
-            <select id="sales-report-source-filter">
-                <option value="">Всі джерела</option>
-                <option value="site">Сайт</option>
-                <option value="bot">Бот</option>
-                <option value="staff">Staff</option>
-            </select>
-
-            <details class="staff-multi-filter">
-                <summary>Категорія</summary>
-
-                <label>
-                    <input type="checkbox" class="sales-report-category-checkbox" value="all" checked>
-                    Всі категорії
-                </label>
-
-                <div id="sales-report-category-list"></div>
-            </details>
-
-            <details class="staff-multi-filter">
-                <summary>Ціни</summary>
-
-                <label>
-                    <input type="checkbox" class="sales-report-price-checkbox" value="retail" checked>
-                    РЦ
-                </label>
-
-                <label data-access="admin">
-                    <input type="checkbox" class="sales-report-price-checkbox" value="cost">
-                    Собівартість
-                </label>
-
-                <label>
-                    <input type="checkbox" class="sales-report-price-checkbox" value="realization">
-                    Реалізація
-                </label>
-            </details>
-
-            <select id="sales-report-sales-type">
-                <option value="all">Продажі: всі</option>
-                <option value="retail">Продажі: РЦ</option>
-                <option value="realization">Продажі: реалізація</option>
-                <option value="cost" data-access="admin">Продажі: СВ</option>
-            </select>
-
-            <label class="staff-checkbox-inline">
-                <input type="checkbox" id="sales-report-by-days">
-                По дням
+        <div class="staff-report-filter-menu">
+            <label>
+                <input type="checkbox" class="sales-report-warehouse-checkbox" value="all" checked>
+                Всі склади
             </label>
 
-            <button id="load-sales-report-btn" class="buy-btn" type="button">
-                Сформувати звіт
-            </button>
-
-            <button id="export-sales-report-btn" class="buy-btn" type="button">
-                Експорт Excel
-            </button>
+            <div id="sales-report-warehouse-list"></div>
         </div>
+    </details>
+
+    <details class="staff-report-filter">
+        <summary>Джерела</summary>
+
+        <div class="staff-report-filter-menu">
+            <label>
+                <input type="checkbox" class="sales-report-source-checkbox" value="all" checked>
+                Всі джерела
+            </label>
+
+            <label>
+                <input type="checkbox" class="sales-report-source-checkbox" value="site">
+                Сайт
+            </label>
+
+            <label>
+                <input type="checkbox" class="sales-report-source-checkbox" value="bot">
+                Бот
+            </label>
+
+            <label>
+                <input type="checkbox" class="sales-report-source-checkbox" value="staff">
+                Staff
+            </label>
+        </div>
+    </details>
+
+    <details class="staff-report-filter">
+        <summary>Категорії</summary>
+
+        <div class="staff-report-filter-menu">
+            <label>
+                <input type="checkbox" class="sales-report-category-checkbox" value="all" checked>
+                Всі категорії
+            </label>
+
+            <div id="sales-report-category-list"></div>
+        </div>
+    </details>
+
+    <details class="staff-report-filter">
+        <summary>Ціни</summary>
+
+        <div class="staff-report-filter-menu">
+            <label>
+                <input type="checkbox" class="sales-report-price-checkbox" value="all" checked>
+                Всі ціни
+            </label>
+
+            <label>
+                <input type="checkbox" class="sales-report-price-checkbox" value="retail">
+                Ціна РЦ
+            </label>
+
+            <label data-access="admin">
+                <input type="checkbox" class="sales-report-price-checkbox" value="cost">
+                Собівартість
+            </label>
+
+            <label>
+                <input type="checkbox" class="sales-report-price-checkbox" value="realization">
+                Під реалізацію
+            </label>
+        </div>
+    </details>
+
+    <details class="staff-report-filter">
+        <summary>Продажі</summary>
+
+        <div class="staff-report-filter-menu">
+            <label>
+                <input type="checkbox" class="sales-report-sales-checkbox" value="all" checked>
+                Всі продажі
+            </label>
+
+            <label>
+                <input type="checkbox" class="sales-report-sales-checkbox" value="retail">
+                Продано РЦ
+            </label>
+
+            <label data-access="admin">
+                <input type="checkbox" class="sales-report-sales-checkbox" value="cost">
+                Продано СВ
+            </label>
+
+            <label>
+                <input type="checkbox" class="sales-report-sales-checkbox" value="realization">
+                Продано реалізація
+            </label>
+        </div>
+    </details>
+
+    <label class="staff-checkbox-inline sales-report-days-toggle">
+        <input type="checkbox" id="sales-report-by-days">
+        По дням
+    </label>
+
+    <button id="load-sales-report-btn" class="buy-btn" type="button">
+        Сформувати звіт
+    </button>
+
+    <button id="export-sales-report-btn" class="buy-btn" type="button">
+        Експорт Excel
+    </button>
+</div>
 
         <p class="staff-hint">
             Admin бачить всі склади і собівартість. Manager та partner бачать тільки свій склад без собівартості.

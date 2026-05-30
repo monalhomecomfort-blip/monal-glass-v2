@@ -238,6 +238,99 @@
 
 </section>
 
+<section id="sales-report-section" class="staff-section staff-hidden">
+
+    <div class="account-block big">
+        <h2>Звіт по продажам</h2>
+
+        <p>
+            Сформуйте звіт по вже проведених продажах за обраний період.
+        </p>
+
+        <div class="staff-search-row staff-stock-report-row">
+            <input
+                type="date"
+                id="sales-report-start-date"
+            >
+
+            <input
+                type="date"
+                id="sales-report-end-date"
+            >
+
+            <select id="sales-report-warehouse-filter" data-access="admin">
+                <option value="">Всі склади</option>
+            </select>
+
+            <select id="sales-report-source-filter">
+                <option value="">Всі джерела</option>
+                <option value="site">Сайт</option>
+                <option value="bot">Бот</option>
+                <option value="staff">Staff</option>
+            </select>
+
+            <details class="staff-multi-filter">
+                <summary>Категорія</summary>
+
+                <label>
+                    <input type="checkbox" class="sales-report-category-checkbox" value="all" checked>
+                    Всі категорії
+                </label>
+
+                <div id="sales-report-category-list"></div>
+            </details>
+
+            <details class="staff-multi-filter">
+                <summary>Ціни</summary>
+
+                <label>
+                    <input type="checkbox" class="sales-report-price-checkbox" value="retail" checked>
+                    РЦ
+                </label>
+
+                <label data-access="admin">
+                    <input type="checkbox" class="sales-report-price-checkbox" value="cost">
+                    Собівартість
+                </label>
+
+                <label>
+                    <input type="checkbox" class="sales-report-price-checkbox" value="realization">
+                    Реалізація
+                </label>
+            </details>
+
+            <select id="sales-report-sales-type">
+                <option value="all">Продажі: всі</option>
+                <option value="retail">Продажі: РЦ</option>
+                <option value="realization">Продажі: реалізація</option>
+                <option value="cost" data-access="admin">Продажі: СВ</option>
+            </select>
+
+            <label class="staff-checkbox-inline">
+                <input type="checkbox" id="sales-report-by-days">
+                По дням
+            </label>
+
+            <button id="load-sales-report-btn" class="buy-btn" type="button">
+                Сформувати звіт
+            </button>
+
+            <button id="export-sales-report-btn" class="buy-btn" type="button">
+                Експорт Excel
+            </button>
+        </div>
+
+        <p class="staff-hint">
+            Admin бачить всі склади і собівартість. Manager та partner бачать тільки свій склад без собівартості.
+        </p>
+
+        <div id="sales-report-result" class="staff-result staff-hidden">
+            Тут буде звіт по продажам.
+        </div>
+    </div>
+
+</section>
+
 <section id="stock-section" class="staff-section staff-hidden">
 
     <div class="account-block big">

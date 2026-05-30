@@ -168,14 +168,16 @@
                 </button>
             </div>
 
-            <div id="sale-discovery-box" class="staff-result staff-hidden">
-                <strong>Аромати в Discovery set</strong>
-
+            <div id="sale-discovery-box" class="staff-discovery-filter-wrap staff-hidden">
                 <p id="sale-discovery-hint" class="staff-hint">
                     Оберіть 4 аромати для 1 сету.
                 </p>
 
-                <div id="sale-discovery-list" class="staff-discovery-list"></div>
+                <details class="staff-report-filter staff-discovery-filter">
+                    <summary>Аромати</summary>
+
+                    <div id="sale-discovery-list" class="staff-report-filter-menu"></div>
+                </details>
             </div>
 
             <div id="sale-items-box" class="staff-result staff-hidden">
@@ -1145,7 +1147,7 @@ function renderDiscoverySelector() {
             .trim();
 
         return `
-            <label class="staff-discovery-option">
+            <label>
                 <input
                     type="checkbox"
                     class="sale-discovery-checkbox"
@@ -1156,7 +1158,7 @@ function renderDiscoverySelector() {
             </label>
         `;
     }).join("");
-
+    
     syncDiscoverySelectorLimit();
 }
 
@@ -1167,6 +1169,26 @@ if (saleDiscoveryList) {
         syncDiscoverySelectorLimit();
     });
 }
+
+function initDiscoveryFilterCloseOnOutsideClick() {
+    document.addEventListener("click", (event) => {
+        const target = event.target;
+
+        if (!(target instanceof Element)) return;
+
+        const clickedFilter = target.closest(".staff-discovery-filter");
+
+        document
+            .querySelectorAll(".staff-discovery-filter[open]")
+            .forEach(filter => {
+                if (filter !== clickedFilter) {
+                    filter.open = false;
+                }
+            });
+    });
+}
+
+initDiscoveryFilterCloseOnOutsideClick();    
 
 if (saleProductQuantityInput) {
     saleProductQuantityInput.addEventListener("input", () => {

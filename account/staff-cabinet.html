@@ -3395,6 +3395,114 @@ if (
         }
     });
 }
+
+function getSalesReportCheckedLabels(selector, allLabel) {
+    const checkboxes = Array.from(document.querySelectorAll(selector));
+    const allCheckbox = checkboxes.find(item => item.value === "all");
+
+    if (!checkboxes.length || (allCheckbox && allCheckbox.checked)) {
+        return allLabel;
+    }
+
+    const labels = checkboxes
+        .filter(item => item.checked && item.value !== "all")
+        .map(item => {
+            const label = item.closest("label");
+            return label ? label.textContent.trim() : item.value;
+        })
+        .filter(Boolean);
+
+    return labels.length ? labels.join(", ") : allLabel;
+}
+
+function downloadSalesReportCsv() {
+    if (!salesReportResult) return;
+
+    const table = salesReportResult.querySelector("table");
+
+    if (!table) {
+        alert("Спочатку сформуйте звіт.");
+        return;
+    }
+
+    const startDate = salesReportStartDateInput?.value || "";
+    const endDate = salesReportEndDateInput?.value || "";
+
+    const selectedWarehouses = getSalesReportCheckedLabels(
+        ".sales-report-warehouse-checkbox",
+        "Всі склади"
+    );
+
+    const selectedSources = getSalesReportCheckedLabels(
+        ".sales-report-source-checkbox",
+        "Всі джерела"
+    );
+
+    const selectedCategories = getSalesReportCheckedLabels(
+        ".sales-report-category-checkbox",
+        "Всі категорії"
+    );
+
+    const selectedPrices = getSalesReportCheckedLabels(
+        ".sales-report-price-checkbox",
+        "Всі ціни"
+    );
+
+    const selectedSales = getSalesReportCheckedLabels(
+        ".sales-report-sales-checkbox",
+        "Всі продажі"
+    );
+
+    const byDaysText = salesReportByDaysInput?.checked ? "Так" : "Ні";
+
+    const metaRows = [
+        ["Звіт по продажам"],
+        ["Період", `${startDate || "—"} — ${endDate || "—"}`],
+        ["Склади", selectedWarehouses],
+        ["Джерело", selectedSources],
+        ["Категорії", selectedCategories],
+        ["Ціни", selectedPrices],
+        ["Продажі", selectedSales],
+        ["По дням", byDaysText],
+        []
+    ];
+
+    const tableRows = Array.from(table.querySelectorAll("tr")).map(row =>
+        Array.from(row.querySelectorAll("th, td")).map(cell =>
+            cell.textContent
+        )
+    );
+
+    const csvRows = [...metaRows, ...tableRows];
+
+    const csvText = "\uFEFF" + csvRows
+        .map(row => row.map(makeCsvCell).join(";"))
+        .join("\r\n");
+
+    const blob = new Blob([csvText], {
+        type: "text/csv;charset=utf-8;"
+    });
+
+    const fileName =
+        `zvit-prodazhiv-${startDate || "start"}-${endDate || "end"}.csv`;
+
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+
+    link.href = url;
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+}
+
+if (exportSalesReportBtn) {
+    exportSalesReportBtn.addEventListener("click", () => {
+        downloadSalesReportCsv();
+    });
+}
     
 if (
     loadProductionReportBtn &&

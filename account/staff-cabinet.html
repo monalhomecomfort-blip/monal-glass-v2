@@ -2623,6 +2623,105 @@ if (createSaleBtn && saleResult) {
             certificateCode: selectedCertificateCode
         };
 
+        if (paymentType === "mono_qr") {
+            createSaleBtn.disabled = true;
+            createSaleBtn.textContent = "Створюю Mono…";
+            saleResult.innerHTML = "Створюю Mono QR / посилання…";
+
+            try {
+                const response = await fetch(
+                    "https://monal-mono-pay-production.up.railway.app/api/staff/create-mono-sale",
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(salePayload)
+                    }
+                );
+
+                let data = await response.json();
+
+                if (!data.ok) {
+                    if (data.code === "out_of_stock_confirm_required") {
+                        const outOfStockItems = Array.isArray(data.outOfStockItems)
+                            ? data.outOfStockItems
+                            : [];
+
+                        const outOfStockText = outOfStockItems.length
+                            ? outOfStockItems.map(item =>
+                                `• ${item.productName || "товар"}: залишок ${Number(item.currentBalance || 0)}, потрібно ${Number(item.requestedQuantity || 0)}`
+                            ).join("\n")
+                            : `• ${data.productName || "товар"}: залишок ${Number(data.currentBalance || 0)}, потрібно ${Number(data.requestedQuantity || 0)}`;
+
+                        const confirmOutOfStock = confirm(
+                            `По товарах недостатньо залишку:\n\n${outOfStockText}\n\nСтворити Mono оплату?`
+                        );
+
+                        if (!confirmOutOfStock) {
+                            saleResult.innerHTML = "Створення Mono оплати скасовано.";
+                            createSaleBtn.disabled = false;
+                            createSaleBtn.textContent = "Оплатити";
+                            return;
+                        }
+
+                        const retryResponse = await fetch(
+                            "https://monal-mono-pay-production.up.railway.app/api/staff/create-mono-sale",
+                            {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json"
+                                },
+                                body: JSON.stringify({
+                                    ...salePayload,
+                                    allowOutOfStock: true
+                                })
+                            }
+                        );
+
+                        data = await retryResponse.json();
+
+                        if (!data.ok) {
+                            saleResult.innerHTML = data.error || "Не вдалося створити Mono оплату.";
+                            createSaleBtn.disabled = false;
+                            createSaleBtn.textContent = "Оплатити";
+                            return;
+                        }
+
+                    } else {
+                        saleResult.innerHTML = data.error || "Не вдалося створити Mono оплату.";
+                        createSaleBtn.disabled = false;
+                        createSaleBtn.textContent = "Оплатити";
+                        return;
+                    }
+                }
+
+                saleResult.innerHTML = `
+                    <strong>Mono QR / посилання створено.</strong><br>
+                    Замовлення: ${data.orderId || "—"}<br>
+                    Сума: ${data.paymentAmount || data.totalAmount || 0} грн<br><br>
+                    <a href="${data.pageUrl}" target="_blank" rel="noopener noreferrer" class="buy-btn">
+                        Відкрити оплату Mono
+                    </a><br><br>
+                    <span class="staff-hint">
+                        Продаж ще не проведено. Залишки спишуться після успішної Mono-оплати.
+                    </span>
+                `;
+
+                createSaleBtn.disabled = false;
+                createSaleBtn.textContent = "Оплатити";
+                return;
+
+            } catch (err) {
+                console.error(err);
+
+                saleResult.innerHTML = "Помилка зʼєднання при створенні Mono оплати.";
+                createSaleBtn.disabled = false;
+                createSaleBtn.textContent = "Оплатити";
+                return;
+            }
+        }
+
         createSaleBtn.disabled = true;
         createSaleBtn.textContent = "Проводжу…";
         saleResult.innerHTML = "Проводжу продаж…";

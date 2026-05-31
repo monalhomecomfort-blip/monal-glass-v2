@@ -1411,3 +1411,190 @@
     border-radius: 16px;
     background: rgba(231, 228, 217, 0.65);
 }
+
+/* ===================== STAFF PROMO CAMPAIGNS ===================== */
+
+#promos-section .staff-promo-campaign-block {
+    width: 100%;
+    max-width: none;
+    margin-top: 22px;
+    overflow: visible;
+}
+
+#promos-section .staff-promo-campaign-block h3 {
+    margin: 0 0 16px;
+    font-weight: 300;
+}
+
+#promos-section .staff-promo-table {
+    width: 100%;
+    overflow: visible;
+}
+
+#promos-section .staff-promo-table-head,
+#promos-section .staff-promo-table-row {
+    display: grid;
+    grid-template-columns:
+        minmax(360px, 2fr)
+        90px
+        minmax(190px, 1fr)
+        minmax(190px, 1fr)
+        120px
+        minmax(260px, 1fr);
+    gap: 0;
+    align-items: center;
+    width: 100%;
+}
+
+#promos-section .staff-promo-table-head {
+    color: rgba(31, 31, 31, 0.62);
+    font-size: 14px;
+    line-height: 1.2;
+}
+
+#promos-section .staff-promo-table-head > div,
+#promos-section .staff-promo-cell {
+    min-width: 0;
+    padding: 10px 12px;
+    border-right: 1px solid rgba(0, 0, 0, 0.08);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+#promos-section .staff-promo-table-head > div:last-child,
+#promos-section .staff-promo-cell:last-child {
+    border-right: none;
+}
+
+#promos-section .staff-promo-table-row {
+    position: relative;
+    overflow: visible;
+}
+
+#promos-section .staff-promo-cell {
+    position: relative;
+    overflow: visible;
+}
+
+#promos-section .staff-promo-product-cell {
+    z-index: 50;
+}
+
+#promos-section .staff-promo-product-picker {
+    position: relative;
+    width: 100%;
+    overflow: visible;
+}
+
+#promos-section .staff-promo-table input[type="text"],
+#promos-section .staff-promo-table input[type="number"],
+#promos-section .staff-promo-table input[type="datetime-local"] {
+    width: 100%;
+    min-width: 0;
+    height: 44px;
+    margin: 0;
+    padding: 0 16px;
+    border-radius: 14px;
+    border: none;
+    background: #e7e4d9;
+    color: #1f1f1f;
+    font-size: 15px;
+    font-family: 'Montserrat', sans-serif;
+    outline: none;
+    box-shadow:
+        0 1px 0 rgba(255,255,255,0.35) inset,
+        0 2px 8px rgba(0,0,0,0.06);
+}
+
+#promos-section .staff-promo-table input[type="datetime-local"] {
+    appearance: none;
+    -webkit-appearance: none;
+    color-scheme: light;
+}
+
+#promos-section .staff-promo-table input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    opacity: 0.65;
+}
+
+#promos-section .staff-promo-table input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover {
+    opacity: 1;
+}
+
+#promos-section #focus-promo-product-dropdown {
+    position: absolute;
+    left: 0;
+    right: auto;
+    top: calc(100% + 8px);
+    width: 100%;
+    min-width: 420px;
+    max-height: 360px;
+    overflow-y: auto;
+    z-index: 9999;
+    background: #e7e4d9;
+    border-radius: 14px;
+    box-shadow:
+        0 18px 42px rgba(0,0,0,0.22),
+        0 1px 0 rgba(255,255,255,0.35) inset;
+}
+
+#promos-section .staff-promo-checkbox {
+    height: 44px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    white-space: nowrap;
+    color: #1f1f1f;
+}
+
+#promos-section .staff-promo-checkbox input {
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    box-shadow: none;
+}
+
+#promos-section .staff-promo-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+#promos-section .staff-promo-actions .buy-btn {
+    height: 44px;
+    margin: 0;
+    padding: 0 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+}
+
+#promos-section #focus-promos-list-result {
+    width: 100%;
+    max-width: none;
+}
+
+@media (max-width: 1100px) {
+    #promos-section .staff-promo-table-head,
+    #promos-section .staff-promo-table-row {
+        grid-template-columns: 1fr;
+    }
+
+    #promos-section .staff-promo-table-head {
+        display: none;
+    }
+
+    #promos-section .staff-promo-cell {
+        border-right: none;
+    }
+
+    #promos-section .staff-promo-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    #promos-section .staff-promo-actions .buy-btn {
+        width: 100%;
+    }
+}

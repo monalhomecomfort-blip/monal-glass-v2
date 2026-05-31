@@ -2703,6 +2703,27 @@ function getFocusPromoProductText(campaign) {
     );
 }
 
+function getFocusPromoWarehousesText(campaign) {
+    const warehouses = Array.isArray(campaign.warehouses)
+        ? campaign.warehouses
+        : [];
+
+    if (!warehouses.length) {
+        return "Не вибрано";
+    }
+
+    return warehouses
+        .map(warehouse => {
+            const name = warehouse.warehouse_name || "Склад";
+            const id = warehouse.warehouse_id || "";
+
+            return id
+                ? `${name} ID ${id}`
+                : name;
+        })
+        .join(", ");
+}
+
 function renderFocusPromosList(campaigns) {
     if (!focusPromosListResult) return;
 
@@ -2728,6 +2749,7 @@ function renderFocusPromosList(campaigns) {
                     <div>Початок</div>
                     <div>Кінець</div>
                     <div>Активна</div>
+                    <div>Склади staff</div>
                     <div>Дія</div>
                 </div>
 
@@ -2751,6 +2773,10 @@ function renderFocusPromosList(campaigns) {
 
                         <div class="staff-promo-cell">
                             ${campaign.is_active ? "Так" : "Ні"}
+                        </div>
+
+                        <div class="staff-promo-cell">
+                            ${escapeStaffHtml(getFocusPromoWarehousesText(campaign))}
                         </div>
 
                         <div class="staff-promo-cell staff-promo-actions">

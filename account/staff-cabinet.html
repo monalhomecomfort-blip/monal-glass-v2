@@ -639,68 +639,102 @@
             Керування промо-кампаніями, які застосовуються на сайті.
         </p>
 
-        <h3>Аромат дня</h3>
+        <div class="staff-stock-table-wrap">
+            <h3>Аромат дня</h3>
 
-        <div class="staff-search-row staff-stock-report-row sales-report-filter-row">
+            <table class="staff-stock-table" style="min-width: 1500px;">
+                <thead>
+                    <tr>
+                        <th>Кампанія</th>
+                        <th>Товар</th>
+                        <th>%</th>
+                        <th>Початок</th>
+                        <th>Кінець</th>
+                        <th>Активна</th>
+                        <th>Дія</th>
+                    </tr>
+                </thead>
 
-            <input
-                type="text"
-                id="focus-promo-title"
-                placeholder="Назва кампанії"
-                value="Аромат дня"
-            >
+                <tbody>
+                    <tr>
+                        <td>
+                            <input
+                                type="text"
+                                id="focus-promo-title"
+                                placeholder="Назва кампанії"
+                                value="Аромат дня"
+                                style="width: 180px;"
+                            >
+                        </td>
 
-            <div class="staff-product-picker staff-promo-product-picker">
-                <input
-                    type="text"
-                    id="focus-promo-product-search"
-                    placeholder="Оберіть товар з products_catalog"
-                    autocomplete="off"
-                >
+                        <td>
+                            <div class="staff-product-picker staff-promo-product-picker">
+                                <input
+                                    type="text"
+                                    id="focus-promo-product-search"
+                                    placeholder="Оберіть товар з products_catalog"
+                                    autocomplete="off"
+                                    style="width: 360px;"
+                                >
 
-                <input
-                    type="hidden"
-                    id="focus-promo-product-id"
-                >
+                                <input
+                                    type="hidden"
+                                    id="focus-promo-product-id"
+                                >
 
-                <div id="focus-promo-product-dropdown" class="staff-product-dropdown staff-hidden"></div>
-            </div>
+                                <div id="focus-promo-product-dropdown" class="staff-product-dropdown staff-hidden"></div>
+                            </div>
+                        </td>
 
-            <input
-                type="number"
-                id="focus-promo-discount"
-                placeholder="% знижки"
-                min="1"
-                max="99"
-                value="20"
-            >
+                        <td>
+                            <input
+                                type="number"
+                                id="focus-promo-discount"
+                                placeholder="%"
+                                min="1"
+                                max="99"
+                                value="20"
+                            >
+                        </td>
 
-            <input
-                type="datetime-local"
-                id="focus-promo-start"
-            >
+                        <td>
+                            <input
+                                type="datetime-local"
+                                id="focus-promo-start"
+                                style="width: 190px;"
+                            >
+                        </td>
 
-            <input
-                type="datetime-local"
-                id="focus-promo-end"
-            >
+                        <td>
+                            <input
+                                type="datetime-local"
+                                id="focus-promo-end"
+                                style="width: 190px;"
+                            >
+                        </td>
 
-            <label class="staff-checkbox-inline sales-report-days-toggle">
-                <input
-                    type="checkbox"
-                    id="focus-promo-active"
-                >
-                Активна
-            </label>
+                        <td>
+                            <label class="staff-checkbox-inline" style="margin:0;">
+                                <input
+                                    type="checkbox"
+                                    id="focus-promo-active"
+                                >
+                                Активна
+                            </label>
+                        </td>
 
-            <button id="save-focus-promo-btn" class="buy-btn" type="button">
-                Створити
-            </button>
+                        <td>
+                            <button id="save-focus-promo-btn" class="buy-btn" type="button">
+                                Створити
+                            </button>
 
-            <button id="reset-focus-promo-form-btn" class="buy-btn" type="button">
-                Очистити
-            </button>
-
+                            <button id="reset-focus-promo-form-btn" class="buy-btn" type="button">
+                                Очистити
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
 
         <p class="staff-hint">

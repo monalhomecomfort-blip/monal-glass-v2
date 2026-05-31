@@ -639,81 +639,80 @@
             Керування промо-кампаніями, які застосовуються на сайті.
         </p>
 
-        <div class="staff-create-box">
+        <h3>Аромат дня</h3>
 
-            <h3>Аромат дня</h3>
+        <div class="staff-search-row staff-stock-report-row sales-report-filter-row">
 
-            <div class="staff-register-row staff-promo-form-row">
+            <input
+                type="text"
+                id="focus-promo-title"
+                placeholder="Назва кампанії"
+                value="Аромат дня"
+            >
+
+            <div class="staff-product-picker staff-promo-product-picker">
                 <input
                     type="text"
-                    id="focus-promo-title"
-                    placeholder="Назва кампанії"
-                    value="Аромат дня"
-                >
-
-                <div class="staff-product-picker staff-promo-product-picker">
-                    <input
-                        type="text"
-                        id="focus-promo-product-search"
-                        placeholder="Оберіть товар з products_catalog"
-                        autocomplete="off"
-                    >
-
-                    <input
-                        type="hidden"
-                        id="focus-promo-product-id"
-                    >
-
-                    <div id="focus-promo-product-dropdown" class="staff-product-dropdown staff-hidden"></div>
-                </div>
-
-                <input
-                    type="number"
-                    id="focus-promo-discount"
-                    placeholder="% знижки"
-                    min="1"
-                    max="99"
-                    value="20"
+                    id="focus-promo-product-search"
+                    placeholder="Оберіть товар з products_catalog"
+                    autocomplete="off"
                 >
 
                 <input
-                    type="datetime-local"
-                    id="focus-promo-start"
+                    type="hidden"
+                    id="focus-promo-product-id"
                 >
 
-                <input
-                    type="datetime-local"
-                    id="focus-promo-end"
-                >
-
-                <label class="staff-checkbox-inline">
-                    <input
-                        type="checkbox"
-                        id="focus-promo-active"
-                    >
-                    Активна
-                </label>
-
-                <button id="save-focus-promo-btn" class="buy-btn" type="button">
-                    Створити
-                </button>
-
-                <button id="reset-focus-promo-form-btn" class="buy-btn" type="button">
-                    Очистити
-                </button>
+                <div id="focus-promo-product-dropdown" class="staff-product-dropdown staff-hidden"></div>
             </div>
 
-            <p class="staff-hint">
-                Новий “Аромат дня” створюється окремим рядком у promo_campaigns. Товар записується як focus_product_id з products_catalog.
-            </p>
+            <input
+                type="number"
+                id="focus-promo-discount"
+                placeholder="% знижки"
+                min="1"
+                max="99"
+                value="20"
+            >
 
-            <div id="focus-promo-result" class="staff-result staff-hidden"></div>
+            <input
+                type="datetime-local"
+                id="focus-promo-start"
+            >
+
+            <input
+                type="datetime-local"
+                id="focus-promo-end"
+            >
+
+            <label class="staff-checkbox-inline sales-report-days-toggle">
+                <input
+                    type="checkbox"
+                    id="focus-promo-active"
+                >
+                Активна
+            </label>
+
+            <button id="save-focus-promo-btn" class="buy-btn" type="button">
+                Створити
+            </button>
+
+            <button id="reset-focus-promo-form-btn" class="buy-btn" type="button">
+                Очистити
+            </button>
 
         </div>
+
+        <p class="staff-hint">
+            Новий “Аромат дня” створюється окремим рядком у promo_campaigns. Товар записується як focus_product_id з products_catalog.
+        </p>
+
+        <div id="focus-promo-result" class="staff-result staff-hidden"></div>
 
         <div id="focus-promos-list-result" class="staff-result staff-hidden">
             Тут буде список промо-кампаній “Аромат дня”.
         </div>
+
     </div>
 
 </section>

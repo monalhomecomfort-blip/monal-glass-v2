@@ -2427,6 +2427,187 @@ if (openClientsSectionBtn && clientsSection) {
     });
 }
 
+function escapeStaffHtml(value) {
+    return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+}
+
+function renderStaffWarehouseOptions(selectedWarehouseId = "") {
+    const selectedValue = String(selectedWarehouseId ?? "");
+
+    let html = `
+        <option value="" ${selectedValue === "" ? "selected" : ""}>
+            Всі склади
+        </option>
+    `;
+
+    STAFF_WAREHOUSES.forEach(warehouse => {
+        const warehouseId = String(warehouse.warehouse_id ?? "");
+        const selected = warehouseId === selectedValue ? "selected" : "";
+
+        html += `
+            <option value="${escapeStaffHtml(warehouseId)}" ${selected}>
+                ${escapeStaffHtml(warehouse.warehouse_name || "Склад")} ID ${escapeStaffHtml(warehouseId)}
+            </option>
+        `;
+    });
+
+    return html;
+}
+
+function renderStaffUsersList(users) {
+    if (!staffUsersListResult) return;
+
+    if (!Array.isArray(users) || !users.length) {
+        staffUsersListResult.classList.remove("staff-hidden");
+        staffUsersListResult.innerHTML = "Staff users ще не створені.";
+        return;
+    }
+
+    staffUsersListResult.classList.remove("staff-hidden");
+
+    staffUsersListResult.innerHTML = `
+        <div class="staff-table-wrap">
+            <table class="staff-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Імʼя</th>
+                        <th>Email</th>
+                        <th>Телефон</th>
+                        <th>Новий пароль</th>
+                        <th>Роль</th>
+                        <th>Склад</th>
+                        <th>Активний</th>
+                        <th>Дія</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    ${users.map(user => {
+                        const warehouseId =
+                            user.warehouse_id === null || user.warehouse_id === undefined
+                                ? ""
+                                : String(user.warehouse_id);
+
+                        return `
+                            <tr class="staff-user-edit-row" data-user-id="${escapeStaffHtml(user.id)}">
+                                <td>${escapeStaffHtml(user.id)}</td>
+
+                                <td>
+                                    <input
+                                        type="text"
+                                        class="staff-user-edit-name"
+                                        value="${escapeStaffHtml(user.name || "")}"
+                                    >
+                                </td>
+
+                                <td>
+                                    <input
+                                        type="email"
+                                        class="staff-user-edit-email"
+                                        value="${escapeStaffHtml(user.email || "")}"
+                                        placeholder="Email"
+                                    >
+                                </td>
+
+                                <td>
+                                    <input
+                                        type="tel"
+                                        class="staff-user-edit-phone"
+                                        value="${escapeStaffHtml(user.phone || "")}"
+                                        placeholder="Телефон"
+                                    >
+                                </td>
+
+                                <td>
+                                    <input
+                                        type="password"
+                                        class="staff-user-edit-password"
+                                        value=""
+                                        placeholder="Не змінювати"
+                                    >
+                                </td>
+
+                                <td>
+                                    <select class="staff-user-edit-role">
+                                        <option value="manager" ${user.role === "manager" ? "selected" : ""}>manager</option>
+                                        <option value="partner" ${user.role === "partner" ? "selected" : ""}>partner</option>
+                                        <option value="admin" ${user.role === "admin" ? "selected" : ""}>admin</option>
+                                    </select>
+                                </td>
+
+                                <td>
+                                    <select class="staff-user-edit-warehouse">
+                                        ${renderStaffWarehouseOptions(warehouseId)}
+                                    </select>
+                                </td>
+
+                                <td>
+                                    <input
+                                        type="checkbox"
+                                        class="staff-user-edit-active"
+                                        ${user.is_active ? "checked" : ""}
+                                    >
+                                </td>
+
+                                <td>
+                                    <button
+                                        type="button"
+                                        class="buy-btn save-staff-user-btn"
+                                        data-user-id="${escapeStaffHtml(user.id)}"
+                                    >
+                                        Зберегти
+                                    </button>
+                                </td>
+                            </tr>
+                        `;
+                    }).join("")}
+                </tbody>
+            </table>
+        </div>
+    `;
+}
+
+async function loadStaffUsers() {
+    if (!staffUsersListResult) return;
+
+    staffUsersListResult.classList.remove("staff-hidden");
+    staffUsersListResult.innerHTML = "Завантажую staff users…";
+
+    try {
+        const response = await fetch(
+            "https://monal-mono-pay-production.up.railway.app/api/staff/users-list",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    staffId: staff.id
+                })
+            }
+        );
+
+        const data = await response.json();
+
+        if (!data.ok) {
+            staffUsersListResult.innerHTML = data.error || "Не вдалося завантажити staff users.";
+            return;
+        }
+
+        renderStaffUsersList(data.users || []);
+
+    } catch (err) {
+        console.error(err);
+        staffUsersListResult.innerHTML = "Помилка зʼєднання при завантаженні staff users.";
+    }
+}
+
 if (openStaffSectionBtn && staffUsersSection) {
     openStaffSectionBtn.addEventListener("click", async () => {
         showStaffSection(staffUsersSection);
@@ -2456,12 +2637,143 @@ if (openStaffSectionBtn && staffUsersSection) {
             staffUserCreateResult.innerHTML = "";
         }
 
-        if (staffUsersListResult) {
-            staffUsersListResult.classList.remove("staff-hidden");
-            staffUsersListResult.innerHTML = "Список staff users підключимо наступним кроком.";
+        await loadStaffWarehouses();
+        await loadStaffUsers();
+    });
+}
+
+if (createStaffUserBtn) {
+    createStaffUserBtn.addEventListener("click", async () => {
+        const name = staffUserNameInput?.value.trim() || "";
+        const login = staffUserLoginInput?.value.trim() || "";
+        const password = staffUserPasswordInput?.value.trim() || "";
+        const role = staffUserRoleSelect?.value || "manager";
+        const warehouseId = staffUserWarehouseSelect?.value || "";
+
+        if (!name || !login || !password) {
+            staffUserCreateResult.classList.remove("staff-hidden");
+            staffUserCreateResult.innerHTML = "Вкажіть імʼя, email/телефон і пароль.";
+            return;
         }
 
-        await loadStaffWarehouses();
+        staffUserCreateResult.classList.remove("staff-hidden");
+        staffUserCreateResult.innerHTML = "Створюю staff user…";
+
+        try {
+            const response = await fetch(
+                "https://monal-mono-pay-production.up.railway.app/api/staff/users-create",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        staffId: staff.id,
+                        name,
+                        login,
+                        password,
+                        role,
+                        warehouseId
+                    })
+                }
+            );
+
+            const data = await response.json();
+
+            if (!data.ok) {
+                staffUserCreateResult.innerHTML = data.error || "Не вдалося створити staff user.";
+                return;
+            }
+
+            staffUserNameInput.value = "";
+            staffUserLoginInput.value = "";
+            staffUserPasswordInput.value = "";
+            staffUserRoleSelect.value = "manager";
+            staffUserWarehouseSelect.value = "";
+
+            staffUserCreateResult.innerHTML = "Staff user створений.";
+            await loadStaffUsers();
+
+        } catch (err) {
+            console.error(err);
+            staffUserCreateResult.innerHTML = "Помилка зʼєднання при створенні staff user.";
+        }
+    });
+}
+
+if (staffUsersListResult) {
+    staffUsersListResult.addEventListener("click", async (e) => {
+        const saveBtn = e.target.closest(".save-staff-user-btn");
+
+        if (!saveBtn) return;
+
+        const targetStaffId = Number(saveBtn.dataset.userId || 0);
+        const row = staffUsersListResult.querySelector(
+            `.staff-user-edit-row[data-user-id="${targetStaffId}"]`
+        );
+
+        if (!targetStaffId || !row) return;
+
+        const name = row.querySelector(".staff-user-edit-name")?.value.trim() || "";
+        const email = row.querySelector(".staff-user-edit-email")?.value.trim() || "";
+        const phone = row.querySelector(".staff-user-edit-phone")?.value.trim() || "";
+        const password = row.querySelector(".staff-user-edit-password")?.value.trim() || "";
+        const role = row.querySelector(".staff-user-edit-role")?.value || "manager";
+        const warehouseId = row.querySelector(".staff-user-edit-warehouse")?.value || "";
+        const isActive = row.querySelector(".staff-user-edit-active")?.checked ? 1 : 0;
+
+        if (!name) {
+            alert("Вкажіть імʼя staff user.");
+            return;
+        }
+
+        if (!email && !phone) {
+            alert("Вкажіть email або телефон.");
+            return;
+        }
+
+        saveBtn.disabled = true;
+        saveBtn.textContent = "Зберігаю…";
+
+        try {
+            const response = await fetch(
+                "https://monal-mono-pay-production.up.railway.app/api/staff/users-update",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        staffId: staff.id,
+                        targetStaffId,
+                        name,
+                        email,
+                        phone,
+                        password,
+                        role,
+                        warehouseId,
+                        isActive
+                    })
+                }
+            );
+
+            const data = await response.json();
+
+            if (!data.ok) {
+                alert(data.error || "Не вдалося оновити staff user.");
+                saveBtn.disabled = false;
+                saveBtn.textContent = "Зберегти";
+                return;
+            }
+
+            await loadStaffUsers();
+
+        } catch (err) {
+            console.error(err);
+            alert("Помилка зʼєднання при оновленні staff user.");
+            saveBtn.disabled = false;
+            saveBtn.textContent = "Зберегти";
+        }
     });
 }
 

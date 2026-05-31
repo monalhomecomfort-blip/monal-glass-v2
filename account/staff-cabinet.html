@@ -2895,6 +2895,14 @@ function resetFocusPromoForm() {
     }
 }
 
+function getSelectedFocusPromoWarehouseIds() {
+    return Array.from(
+        document.querySelectorAll(".focus-promo-warehouse-checkbox:checked")
+    )
+        .map(checkbox => Number(checkbox.value || 0))
+        .filter(id => Number.isInteger(id) && id > 0);
+}
+    
 function normalizeFocusPromoDateForApi(value) {
     const cleanValue = String(value || "").trim();
 
@@ -2915,6 +2923,7 @@ async function saveFocusPromo(replaceConflicts = false) {
     const startsAt = normalizeFocusPromoDateForApi(focusPromoStartInput?.value);
     const endsAt = normalizeFocusPromoDateForApi(focusPromoEndInput?.value);
     const isActive = focusPromoActiveInput?.checked ? 1 : 0;
+    const warehouseIds = getSelectedFocusPromoWarehouseIds();
 
     focusPromoResult.classList.remove("staff-hidden");
 
@@ -2952,6 +2961,7 @@ async function saveFocusPromo(replaceConflicts = false) {
                     startsAt,
                     endsAt,
                     isActive,
+                    warehouseIds,
                     replaceConflicts
                 })
             }

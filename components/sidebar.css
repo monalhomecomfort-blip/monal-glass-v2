@@ -1435,12 +1435,13 @@
 #promos-section .staff-promo-table-row {
     display: grid;
     grid-template-columns:
-        minmax(360px, 2fr)
-        90px
-        minmax(190px, 1fr)
-        minmax(190px, 1fr)
-        120px
-        minmax(260px, 1fr);
+        minmax(300px, 1.6fr)
+        74px
+        minmax(165px, 0.85fr)
+        minmax(165px, 0.85fr)
+        105px
+        minmax(155px, 0.8fr)
+        120px;
     gap: 0;
     align-items: center;
     width: 100%;
@@ -1455,7 +1456,7 @@
 #promos-section .staff-promo-table-head > div,
 #promos-section .staff-promo-cell {
     min-width: 0;
-    padding: 10px 12px;
+    padding: 10px 10px;
     border-right: 1px solid rgba(0, 0, 0, 0.08);
     border-bottom: 1px solid rgba(0, 0, 0, 0.08);
 }
@@ -1492,7 +1493,7 @@
     min-width: 0;
     height: 44px;
     margin: 0;
-    padding: 0 16px;
+    padding: 0 14px;
     border-radius: 14px;
     border: none;
     background: #e7e4d9;
@@ -1554,9 +1555,40 @@
     box-shadow: none;
 }
 
+#promos-section .staff-promo-warehouse-filter {
+    position: relative;
+    width: 100%;
+    margin: 0;
+    z-index: 60;
+}
+
+#promos-section .staff-promo-warehouse-filter summary {
+    width: 100%;
+    height: 44px;
+    padding: 0 14px;
+    border-radius: 14px;
+    background: #e7e4d9;
+    color: #1f1f1f;
+    font-size: 14px;
+    line-height: 44px;
+    white-space: nowrap;
+    cursor: pointer;
+    box-shadow:
+        0 1px 0 rgba(255,255,255,0.35) inset,
+        0 2px 8px rgba(0,0,0,0.06);
+}
+
+#promos-section .staff-promo-warehouse-filter .staff-report-filter-menu {
+    min-width: 220px;
+    max-height: none;
+    overflow: visible;
+    z-index: 9998;
+}
+
 #promos-section .staff-promo-actions {
     display: flex;
     align-items: center;
+    justify-content: flex-start;
     gap: 8px;
 }
 

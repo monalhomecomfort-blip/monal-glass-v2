@@ -1042,6 +1042,94 @@ function renderProductDropdown(searchText = "") {
     `).join("");
 }
 
+function renderFocusPromoProductDropdown(searchText = "") {
+    if (!focusPromoProductDropdown) return;
+
+    const query = String(searchText || "").trim().toLowerCase();
+
+    const matches = STAFF_PRODUCTS.filter(product => {
+        const title = String(product.display_name || "").toLowerCase();
+        const key = String(product.product_key || "").toLowerCase();
+        const category = String(product.category_slug || "").toLowerCase();
+
+        if (!query) return true;
+
+        return (
+            title.includes(query) ||
+            key.includes(query) ||
+            category.includes(query)
+        );
+    });
+
+    focusPromoProductDropdown.classList.remove("staff-hidden");
+
+    if (!matches.length) {
+        focusPromoProductDropdown.innerHTML = `
+            <div class="staff-product-empty">Товар не знайдено</div>
+        `;
+        return;
+    }
+
+    focusPromoProductDropdown.innerHTML = matches.map(product => `
+        <div
+            class="staff-product-option"
+            data-product-id="${product.id}"
+            data-product-title="${escapeSaleHtml(product.display_name || product.product_key)}"
+        >
+            ${escapeSaleHtml(product.display_name || product.product_key)} · ${product.price || 0} грн
+        </div>
+    `).join("");
+}
+
+if (focusPromoProductSearch && focusPromoProductDropdown && focusPromoProductId) {
+    focusPromoProductSearch.addEventListener("input", async () => {
+        focusPromoProductId.value = "";
+
+        await loadStaffProducts();
+        renderFocusPromoProductDropdown(focusPromoProductSearch.value);
+    });
+
+    focusPromoProductSearch.addEventListener("focus", async () => {
+        await loadStaffProducts();
+        renderFocusPromoProductDropdown(focusPromoProductSearch.value);
+    });
+
+    const focusPromoProductPicker = document.querySelector("#promos-section .staff-promo-product-picker");
+
+    if (focusPromoProductPicker) {
+        focusPromoProductPicker.addEventListener("click", async (e) => {
+            const rect = focusPromoProductPicker.getBoundingClientRect();
+            const clickedArrowZone = e.clientX >= rect.right - 52;
+
+            if (!clickedArrowZone) return;
+
+            await loadStaffProducts();
+            renderFocusPromoProductDropdown("");
+            focusPromoProductSearch.focus();
+        });
+    }
+
+    focusPromoProductDropdown.addEventListener("click", (e) => {
+        const option = e.target.closest(".staff-product-option");
+        if (!option) return;
+
+        focusPromoProductId.value = option.dataset.productId || "";
+        focusPromoProductSearch.value = option.dataset.productTitle || "";
+
+        focusPromoProductDropdown.classList.add("staff-hidden");
+        focusPromoProductDropdown.innerHTML = "";
+    });
+
+    document.addEventListener("click", (e) => {
+        if (
+            !focusPromoProductSearch.contains(e.target) &&
+            !focusPromoProductDropdown.contains(e.target)
+        ) {
+            focusPromoProductDropdown.classList.add("staff-hidden");
+        }
+    });
+}
+    
 if (saleProductSearch && saleProductDropdown && saleProductId) {
     saleProductSearch.addEventListener("input", () => {
         saleProductId.value = "";

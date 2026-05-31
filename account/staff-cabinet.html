@@ -629,7 +629,69 @@
     </div>
 
 </section>
+        
+<section id="staff-users-section" class="staff-section staff-hidden">
 
+    <div class="account-block big">
+        <h2>Staff users</h2>
+
+        <p>
+            Керування внутрішніми користувачами: реєстрація, роль, склад і активність.
+        </p>
+
+        <div class="staff-create-box">
+
+            <h3>Створити staff user</h3>
+
+            <div class="staff-register-row">
+                <input
+                    type="text"
+                    id="staff-user-name"
+                    placeholder="Імʼя"
+                >
+
+                <input
+                    type="text"
+                    id="staff-user-login"
+                    placeholder="Email або телефон"
+                >
+
+                <input
+                    type="password"
+                    id="staff-user-password"
+                    placeholder="Пароль"
+                >
+
+                <select id="staff-user-role">
+                    <option value="manager">manager</option>
+                    <option value="partner">partner</option>
+                    <option value="admin">admin</option>
+                </select>
+
+                <select id="staff-user-warehouse">
+                    <option value="">Всі склади</option>
+                </select>
+
+                <button id="create-staff-user-btn" class="buy-btn" type="button">
+                    Створити
+                </button>
+            </div>
+
+            <p class="staff-hint">
+                Якщо склад не вказано — користувач бачить всі склади. Якщо склад вказано — тільки цей склад.
+            </p>
+
+            <div id="staff-user-create-result" class="staff-result staff-hidden"></div>
+
+        </div>
+
+        <div id="staff-users-list-result" class="staff-result staff-hidden">
+            Тут буде список staff users.
+        </div>
+    </div>
+
+</section>
+        
         <button id="staff-logout" class="buy-btn staff-logout-btn">
             Вийти
         </button>

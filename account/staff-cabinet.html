@@ -764,7 +764,18 @@ const exportStockReportBtn = document.getElementById("export-stock-report-btn");
 const productionReportResult = document.getElementById("production-report-result");    
 const myStockSection = document.getElementById("my-stock-section");
 const openMyStockSectionBtn = document.getElementById("open-my-stock-section");
-const myStockResult = document.getElementById("my-stock-result");    
+const myStockResult = document.getElementById("my-stock-result");
+
+const staffUsersSection = document.getElementById("staff-users-section");
+const openStaffSectionBtn = document.getElementById("open-staff-section");
+const staffUserNameInput = document.getElementById("staff-user-name");
+const staffUserLoginInput = document.getElementById("staff-user-login");
+const staffUserPasswordInput = document.getElementById("staff-user-password");
+const staffUserRoleSelect = document.getElementById("staff-user-role");
+const staffUserWarehouseSelect = document.getElementById("staff-user-warehouse");
+const createStaffUserBtn = document.getElementById("create-staff-user-btn");
+const staffUserCreateResult = document.getElementById("staff-user-create-result");
+const staffUsersListResult = document.getElementById("staff-users-list-result");    
 
 let STAFF_WAREHOUSES = [];    
 const clientsSection = document.getElementById("clients-section");
@@ -1821,6 +1832,19 @@ function fillWarehouseSelects(warehouses) {
             saleWarehouseSelect.appendChild(option);
         });
     }
+
+    if (staffUserWarehouseSelect) {
+        staffUserWarehouseSelect.innerHTML = `
+            <option value="">Всі склади</option>
+        `;
+
+        STAFF_WAREHOUSES.forEach(warehouse => {
+            const option = document.createElement("option");
+            option.value = warehouse.warehouse_id;
+            option.textContent = `${warehouse.warehouse_name} ID ${warehouse.warehouse_id}`;
+            staffUserWarehouseSelect.appendChild(option);
+        });
+    }
 }
 
 async function loadStaffWarehouses() {
@@ -2400,6 +2424,44 @@ if (openMyStockSectionBtn && myStockSection) {
 if (openClientsSectionBtn && clientsSection) {
     openClientsSectionBtn.addEventListener("click", () => {
         showStaffSection(clientsSection);
+    });
+}
+
+if (openStaffSectionBtn && staffUsersSection) {
+    openStaffSectionBtn.addEventListener("click", async () => {
+        showStaffSection(staffUsersSection);
+
+        if (staffUserNameInput) {
+            staffUserNameInput.value = "";
+        }
+
+        if (staffUserLoginInput) {
+            staffUserLoginInput.value = "";
+        }
+
+        if (staffUserPasswordInput) {
+            staffUserPasswordInput.value = "";
+        }
+
+        if (staffUserRoleSelect) {
+            staffUserRoleSelect.value = "manager";
+        }
+
+        if (staffUserWarehouseSelect) {
+            staffUserWarehouseSelect.value = "";
+        }
+
+        if (staffUserCreateResult) {
+            staffUserCreateResult.classList.add("staff-hidden");
+            staffUserCreateResult.innerHTML = "";
+        }
+
+        if (staffUsersListResult) {
+            staffUsersListResult.classList.remove("staff-hidden");
+            staffUsersListResult.innerHTML = "Список staff users підключимо наступним кроком.";
+        }
+
+        await loadStaffWarehouses();
     });
 }
 

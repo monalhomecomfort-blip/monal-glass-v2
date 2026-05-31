@@ -2459,117 +2459,178 @@ function renderStaffWarehouseOptions(selectedWarehouseId = "") {
     return html;
 }
 
+let STAFF_USERS_CACHE = [];
+let STAFF_USERS_FILTER = "active";
+
+function setStaffUsersFilter(filter) {
+    STAFF_USERS_FILTER = ["active", "inactive", "all"].includes(filter)
+        ? filter
+        : "active";
+
+    renderStaffUsersList(STAFF_USERS_CACHE);
+}
+
 function renderStaffUsersList(users) {
     if (!staffUsersListResult) return;
 
-    if (!Array.isArray(users) || !users.length) {
+    STAFF_USERS_CACHE = Array.isArray(users) ? users : [];
+
+    if (!STAFF_USERS_CACHE.length) {
         staffUsersListResult.classList.remove("staff-hidden");
         staffUsersListResult.innerHTML = "Staff users ще не створені.";
         return;
     }
 
+    const visibleUsers = STAFF_USERS_CACHE.filter(user => {
+        if (STAFF_USERS_FILTER === "active") {
+            return Boolean(user.is_active);
+        }
+
+        if (STAFF_USERS_FILTER === "inactive") {
+            return !Boolean(user.is_active);
+        }
+
+        return true;
+    });
+
     staffUsersListResult.classList.remove("staff-hidden");
 
+    const tableHtml = visibleUsers.length
+        ? `
+            <div class="staff-table-wrap">
+                <table class="staff-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Імʼя</th>
+                            <th>Email</th>
+                            <th>Телефон</th>
+                            <th>Новий пароль</th>
+                            <th>Роль</th>
+                            <th>Склад</th>
+                            <th>Активний</th>
+                            <th>Дія</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        ${visibleUsers.map(user => {
+                            const warehouseId =
+                                user.warehouse_id === null || user.warehouse_id === undefined
+                                    ? ""
+                                    : String(user.warehouse_id);
+
+                            return `
+                                <tr class="staff-user-edit-row" data-user-id="${escapeStaffHtml(user.id)}">
+                                    <td>${escapeStaffHtml(user.id)}</td>
+
+                                    <td>
+                                        <input
+                                            type="text"
+                                            class="staff-user-edit-name"
+                                            value="${escapeStaffHtml(user.name || "")}"
+                                        >
+                                    </td>
+
+                                    <td>
+                                        <input
+                                            type="email"
+                                            class="staff-user-edit-email"
+                                            value="${escapeStaffHtml(user.email || "")}"
+                                            placeholder="Email"
+                                        >
+                                    </td>
+
+                                    <td>
+                                        <input
+                                            type="tel"
+                                            class="staff-user-edit-phone"
+                                            value="${escapeStaffHtml(user.phone || "")}"
+                                            placeholder="Телефон"
+                                        >
+                                    </td>
+
+                                    <td>
+                                        <input
+                                            type="password"
+                                            class="staff-user-edit-password"
+                                            value=""
+                                            placeholder="Не змінювати"
+                                        >
+                                    </td>
+
+                                    <td>
+                                        <select class="staff-user-edit-role">
+                                            <option value="manager" ${user.role === "manager" ? "selected" : ""}>manager</option>
+                                            <option value="partner" ${user.role === "partner" ? "selected" : ""}>partner</option>
+                                            <option value="admin" ${user.role === "admin" ? "selected" : ""}>admin</option>
+                                        </select>
+                                    </td>
+
+                                    <td>
+                                        <select class="staff-user-edit-warehouse">
+                                            ${renderStaffWarehouseOptions(warehouseId)}
+                                        </select>
+                                    </td>
+
+                                    <td>
+                                        <input
+                                            type="checkbox"
+                                            class="staff-user-edit-active"
+                                            ${user.is_active ? "checked" : ""}
+                                        >
+                                    </td>
+
+                                    <td>
+                                        <button
+                                            type="button"
+                                            class="buy-btn save-staff-user-btn"
+                                            data-user-id="${escapeStaffHtml(user.id)}"
+                                        >
+                                            Зберегти
+                                        </button>
+                                    </td>
+                                </tr>
+                            `;
+                        }).join("")}
+                    </tbody>
+                </table>
+            </div>
+        `
+        : `
+            <div class="staff-empty-state">
+                Staff users за цим фільтром немає.
+            </div>
+        `;
+
     staffUsersListResult.innerHTML = `
-        <div class="staff-table-wrap">
-            <table class="staff-table">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Імʼя</th>
-                        <th>Email</th>
-                        <th>Телефон</th>
-                        <th>Новий пароль</th>
-                        <th>Роль</th>
-                        <th>Склад</th>
-                        <th>Активний</th>
-                        <th>Дія</th>
-                    </tr>
-                </thead>
+        <div class="staff-users-filter-bar">
+            <button
+                type="button"
+                class="buy-btn staff-users-filter-btn ${STAFF_USERS_FILTER === "active" ? "is-active" : ""}"
+                onclick="setStaffUsersFilter('active')"
+            >
+                Активні
+            </button>
 
-                <tbody>
-                    ${users.map(user => {
-                        const warehouseId =
-                            user.warehouse_id === null || user.warehouse_id === undefined
-                                ? ""
-                                : String(user.warehouse_id);
+            <button
+                type="button"
+                class="buy-btn staff-users-filter-btn ${STAFF_USERS_FILTER === "inactive" ? "is-active" : ""}"
+                onclick="setStaffUsersFilter('inactive')"
+            >
+                Неактивні
+            </button>
 
-                        return `
-                            <tr class="staff-user-edit-row" data-user-id="${escapeStaffHtml(user.id)}">
-                                <td>${escapeStaffHtml(user.id)}</td>
-
-                                <td>
-                                    <input
-                                        type="text"
-                                        class="staff-user-edit-name"
-                                        value="${escapeStaffHtml(user.name || "")}"
-                                    >
-                                </td>
-
-                                <td>
-                                    <input
-                                        type="email"
-                                        class="staff-user-edit-email"
-                                        value="${escapeStaffHtml(user.email || "")}"
-                                        placeholder="Email"
-                                    >
-                                </td>
-
-                                <td>
-                                    <input
-                                        type="tel"
-                                        class="staff-user-edit-phone"
-                                        value="${escapeStaffHtml(user.phone || "")}"
-                                        placeholder="Телефон"
-                                    >
-                                </td>
-
-                                <td>
-                                    <input
-                                        type="password"
-                                        class="staff-user-edit-password"
-                                        value=""
-                                        placeholder="Не змінювати"
-                                    >
-                                </td>
-
-                                <td>
-                                    <select class="staff-user-edit-role">
-                                        <option value="manager" ${user.role === "manager" ? "selected" : ""}>manager</option>
-                                        <option value="partner" ${user.role === "partner" ? "selected" : ""}>partner</option>
-                                        <option value="admin" ${user.role === "admin" ? "selected" : ""}>admin</option>
-                                    </select>
-                                </td>
-
-                                <td>
-                                    <select class="staff-user-edit-warehouse">
-                                        ${renderStaffWarehouseOptions(warehouseId)}
-                                    </select>
-                                </td>
-
-                                <td>
-                                    <input
-                                        type="checkbox"
-                                        class="staff-user-edit-active"
-                                        ${user.is_active ? "checked" : ""}
-                                    >
-                                </td>
-
-                                <td>
-                                    <button
-                                        type="button"
-                                        class="buy-btn save-staff-user-btn"
-                                        data-user-id="${escapeStaffHtml(user.id)}"
-                                    >
-                                        Зберегти
-                                    </button>
-                                </td>
-                            </tr>
-                        `;
-                    }).join("")}
-                </tbody>
-            </table>
+            <button
+                type="button"
+                class="buy-btn staff-users-filter-btn ${STAFF_USERS_FILTER === "all" ? "is-active" : ""}"
+                onclick="setStaffUsersFilter('all')"
+            >
+                Всі
+            </button>
         </div>
+
+        ${tableHtml}
     `;
 }
 

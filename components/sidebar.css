@@ -1585,19 +1585,21 @@
 }
 
 #promos-section .staff-promo-warehouse-filter summary::after {
-    content: "⌄";
+    content: "";
     position: absolute;
-    right: 14px;
+    right: 18px;
     top: 50%;
-    transform: translateY(-52%);
-    font-size: 16px;
-    line-height: 1;
-    color: #1f1f1f;
+    width: 7px;
+    height: 7px;
+    border-right: 2px solid #1f1f1f;
+    border-bottom: 2px solid #1f1f1f;
+    transform: translateY(-65%) rotate(45deg);
+    opacity: 0.9;
     pointer-events: none;
 }
 
 #promos-section .staff-promo-warehouse-filter[open] summary::after {
-    transform: translateY(-45%) rotate(180deg);
+    transform: translateY(-35%) rotate(225deg);
 }
 
 #promos-section .staff-promo-warehouse-filter .staff-report-filter-menu {

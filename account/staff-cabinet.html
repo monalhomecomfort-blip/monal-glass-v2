@@ -2638,6 +2638,132 @@ if (openMyStockSectionBtn && myStockSection) {
     });
 }
     
+function formatFocusPromoDate(value) {
+    if (!value) return "—";
+
+    const date = new Date(value);
+
+    if (Number.isNaN(date.getTime())) {
+        return String(value).replace("T", " ").slice(0, 16);
+    }
+
+    return date.toLocaleString("uk-UA", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit"
+    });
+}
+
+function getFocusPromoProductText(campaign) {
+    const product = campaign.product || {};
+
+    return (
+        product.display_name ||
+        product.product_name ||
+        product.product_key ||
+        "—"
+    );
+}
+
+function renderFocusPromosList(campaigns) {
+    if (!focusPromosListResult) return;
+
+    FOCUS_PROMOS_CACHE = Array.isArray(campaigns) ? campaigns : [];
+
+    focusPromosListResult.classList.remove("staff-hidden");
+
+    if (!FOCUS_PROMOS_CACHE.length) {
+        focusPromosListResult.innerHTML = `
+            <p>Поки що немає створених рядків для кампанії “Аромат дня”.</p>
+        `;
+        return;
+    }
+
+    focusPromosListResult.innerHTML = `
+        <div class="staff-promo-campaign-block">
+            <h3>Створені рядки “Аромат дня”</h3>
+
+            <div class="staff-promo-table">
+                <div class="staff-promo-table-head">
+                    <div>Товар</div>
+                    <div>%</div>
+                    <div>Початок</div>
+                    <div>Кінець</div>
+                    <div>Активна</div>
+                    <div>Дія</div>
+                </div>
+
+                ${FOCUS_PROMOS_CACHE.map(campaign => `
+                    <div class="staff-promo-table-row">
+                        <div class="staff-promo-cell">
+                            ${escapeStaffHtml(getFocusPromoProductText(campaign))}
+                        </div>
+
+                        <div class="staff-promo-cell">
+                            ${escapeStaffHtml(campaign.discount_percent)}%
+                        </div>
+
+                        <div class="staff-promo-cell">
+                            ${escapeStaffHtml(formatFocusPromoDate(campaign.starts_at))}
+                        </div>
+
+                        <div class="staff-promo-cell">
+                            ${escapeStaffHtml(formatFocusPromoDate(campaign.ends_at))}
+                        </div>
+
+                        <div class="staff-promo-cell">
+                            ${campaign.is_active ? "Так" : "Ні"}
+                        </div>
+
+                        <div class="staff-promo-cell staff-promo-actions">
+                            <span>—</span>
+                        </div>
+                    </div>
+                `).join("")}
+            </div>
+        </div>
+    `;
+}
+
+async function loadFocusPromos() {
+    if (!focusPromosListResult) return;
+
+    focusPromosListResult.classList.remove("staff-hidden");
+    focusPromosListResult.innerHTML = "Завантажую рядки кампанії “Аромат дня”…";
+
+    try {
+        const response = await fetch(
+            "https://monal-mono-pay-production.up.railway.app/api/staff/focus-promos-list",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    staffId: staff.id
+                })
+            }
+        );
+
+        const data = await response.json();
+
+        if (!data.ok) {
+            focusPromosListResult.innerHTML =
+                data.error || "Не вдалося завантажити список “Аромат дня”.";
+            return;
+        }
+
+        renderFocusPromosList(data.campaigns || []);
+
+    } catch (err) {
+        console.error(err);
+        focusPromosListResult.innerHTML =
+            "Помилка зʼєднання при завантаженні списку “Аромат дня”.";
+    }
+}
+
 if (openPromosSectionBtn && promosSection) {
     openPromosSectionBtn.addEventListener("click", async () => {
         showStaffSection(promosSection);
@@ -2686,12 +2812,8 @@ if (openPromosSectionBtn && promosSection) {
             focusPromoResult.innerHTML = "";
         }
 
-        if (focusPromosListResult) {
-            focusPromosListResult.classList.remove("staff-hidden");
-            focusPromosListResult.innerHTML = "Список промо-кампаній “Аромат дня” підключимо наступним кроком.";
-        }
-
         await loadStaffProducts();
+        await loadFocusPromos();
     });
 }
 

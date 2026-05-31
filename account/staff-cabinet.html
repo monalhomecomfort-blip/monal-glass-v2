@@ -629,6 +629,94 @@
     </div>
 
 </section>
+
+<section id="promos-section" class="staff-section staff-hidden">
+
+    <div class="account-block big">
+        <h2>Акції та пропозиції</h2>
+
+        <p>
+            Керування промо-кампаніями, які застосовуються на сайті.
+        </p>
+
+        <div class="staff-create-box">
+
+            <h3>Аромат дня</h3>
+
+            <div class="staff-register-row staff-promo-form-row">
+                <input
+                    type="text"
+                    id="focus-promo-title"
+                    placeholder="Назва кампанії"
+                    value="Аромат дня"
+                >
+
+                <div class="staff-product-picker staff-promo-product-picker">
+                    <input
+                        type="text"
+                        id="focus-promo-product-search"
+                        placeholder="Оберіть товар з products_catalog"
+                        autocomplete="off"
+                    >
+
+                    <input
+                        type="hidden"
+                        id="focus-promo-product-id"
+                    >
+
+                    <div id="focus-promo-product-dropdown" class="staff-product-dropdown staff-hidden"></div>
+                </div>
+
+                <input
+                    type="number"
+                    id="focus-promo-discount"
+                    placeholder="% знижки"
+                    min="1"
+                    max="99"
+                    value="20"
+                >
+
+                <input
+                    type="datetime-local"
+                    id="focus-promo-start"
+                >
+
+                <input
+                    type="datetime-local"
+                    id="focus-promo-end"
+                >
+
+                <label class="staff-checkbox-inline">
+                    <input
+                        type="checkbox"
+                        id="focus-promo-active"
+                    >
+                    Активна
+                </label>
+
+                <button id="save-focus-promo-btn" class="buy-btn" type="button">
+                    Створити
+                </button>
+
+                <button id="reset-focus-promo-form-btn" class="buy-btn" type="button">
+                    Очистити
+                </button>
+            </div>
+
+            <p class="staff-hint">
+                Новий “Аромат дня” створюється окремим рядком у promo_campaigns. Товар записується як focus_product_id з products_catalog.
+            </p>
+
+            <div id="focus-promo-result" class="staff-result staff-hidden"></div>
+
+        </div>
+
+        <div id="focus-promos-list-result" class="staff-result staff-hidden">
+            Тут буде список промо-кампаній “Аромат дня”.
+        </div>
+    </div>
+
+</section>
         
 <section id="staff-users-section" class="staff-section staff-hidden">
 
@@ -775,7 +863,25 @@ const staffUserRoleSelect = document.getElementById("staff-user-role");
 const staffUserWarehouseSelect = document.getElementById("staff-user-warehouse");
 const createStaffUserBtn = document.getElementById("create-staff-user-btn");
 const staffUserCreateResult = document.getElementById("staff-user-create-result");
-const staffUsersListResult = document.getElementById("staff-users-list-result");    
+const staffUsersListResult = document.getElementById("staff-users-list-result");
+
+const promosSection = document.getElementById("promos-section");
+const openPromosSectionBtn = document.getElementById("open-promos-section");
+const focusPromoTitleInput = document.getElementById("focus-promo-title");
+const focusPromoProductSearch = document.getElementById("focus-promo-product-search");
+const focusPromoProductId = document.getElementById("focus-promo-product-id");
+const focusPromoProductDropdown = document.getElementById("focus-promo-product-dropdown");
+const focusPromoDiscountInput = document.getElementById("focus-promo-discount");
+const focusPromoStartInput = document.getElementById("focus-promo-start");
+const focusPromoEndInput = document.getElementById("focus-promo-end");
+const focusPromoActiveInput = document.getElementById("focus-promo-active");
+const saveFocusPromoBtn = document.getElementById("save-focus-promo-btn");
+const resetFocusPromoFormBtn = document.getElementById("reset-focus-promo-form-btn");
+const focusPromoResult = document.getElementById("focus-promo-result");
+const focusPromosListResult = document.getElementById("focus-promos-list-result");
+
+let FOCUS_PROMO_EDIT_ID = 0;
+let FOCUS_PROMOS_CACHE = [];
 
 let STAFF_WAREHOUSES = [];    
 const clientsSection = document.getElementById("clients-section");
@@ -2421,6 +2527,63 @@ if (openMyStockSectionBtn && myStockSection) {
     });
 }
     
+if (openPromosSectionBtn && promosSection) {
+    openPromosSectionBtn.addEventListener("click", async () => {
+        showStaffSection(promosSection);
+
+        FOCUS_PROMO_EDIT_ID = 0;
+
+        if (focusPromoTitleInput) {
+            focusPromoTitleInput.value = "Аромат дня";
+        }
+
+        if (focusPromoProductSearch) {
+            focusPromoProductSearch.value = "";
+        }
+
+        if (focusPromoProductId) {
+            focusPromoProductId.value = "";
+        }
+
+        if (focusPromoProductDropdown) {
+            focusPromoProductDropdown.classList.add("staff-hidden");
+            focusPromoProductDropdown.innerHTML = "";
+        }
+
+        if (focusPromoDiscountInput) {
+            focusPromoDiscountInput.value = "20";
+        }
+
+        if (focusPromoStartInput) {
+            focusPromoStartInput.value = "";
+        }
+
+        if (focusPromoEndInput) {
+            focusPromoEndInput.value = "";
+        }
+
+        if (focusPromoActiveInput) {
+            focusPromoActiveInput.checked = false;
+        }
+
+        if (saveFocusPromoBtn) {
+            saveFocusPromoBtn.textContent = "Створити";
+        }
+
+        if (focusPromoResult) {
+            focusPromoResult.classList.add("staff-hidden");
+            focusPromoResult.innerHTML = "";
+        }
+
+        if (focusPromosListResult) {
+            focusPromosListResult.classList.remove("staff-hidden");
+            focusPromosListResult.innerHTML = "Список промо-кампаній “Аромат дня” підключимо наступним кроком.";
+        }
+
+        await loadStaffProducts();
+    });
+}
+
 if (openClientsSectionBtn && clientsSection) {
     openClientsSectionBtn.addEventListener("click", () => {
         showStaffSection(clientsSection);

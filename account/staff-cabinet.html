@@ -1955,10 +1955,14 @@ function initSalesReportFilterCloseOnOutsideClick() {
 
         if (!(target instanceof Element)) return;
 
-        const clickedFilter = target.closest(".sales-report-filter-row .staff-report-filter");
+        const clickedFilter = target.closest(
+            ".sales-report-filter-row .staff-report-filter, #promos-section .staff-promo-warehouse-filter"
+        );
 
         document
-            .querySelectorAll(".sales-report-filter-row .staff-report-filter[open]")
+            .querySelectorAll(
+                ".sales-report-filter-row .staff-report-filter[open], #promos-section .staff-promo-warehouse-filter[open]"
+            )
             .forEach(filter => {
                 if (filter !== clickedFilter) {
                     filter.open = false;
@@ -1966,6 +1970,8 @@ function initSalesReportFilterCloseOnOutsideClick() {
             });
     });
 }
+
+initSalesReportFilterCloseOnOutsideClick();
 
 initSalesReportFilterCloseOnOutsideClick();    
 function getCheckedSalesReportValues(selector) {

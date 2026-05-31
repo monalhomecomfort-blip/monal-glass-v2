@@ -909,6 +909,7 @@ const saveFocusPromoBtn = document.getElementById("save-focus-promo-btn");
 const resetFocusPromoFormBtn = document.getElementById("reset-focus-promo-form-btn");
 const focusPromoResult = document.getElementById("focus-promo-result");
 const focusPromosListResult = document.getElementById("focus-promos-list-result");
+const focusPromoWarehouseList = document.getElementById("focus-promo-warehouse-list");
 
 let FOCUS_PROMO_EDIT_ID = 0;
 let FOCUS_PROMOS_CACHE = [];
@@ -2031,6 +2032,28 @@ function fillWarehouseSelects(warehouses) {
         });
     }
 
+    if (focusPromoWarehouseList) {
+        focusPromoWarehouseList.innerHTML = "";
+
+        STAFF_WAREHOUSES.forEach(warehouse => {
+            const label = document.createElement("label");
+
+            const checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.className = "focus-promo-warehouse-checkbox";
+            checkbox.value = warehouse.warehouse_id;
+
+            const text = document.createTextNode(
+                ` ${warehouse.warehouse_name} ID ${warehouse.warehouse_id}`
+            );
+
+            label.appendChild(checkbox);
+            label.appendChild(text);
+
+            focusPromoWarehouseList.appendChild(label);
+        });
+    }
+
     if (stockManageWarehouseSelect) {
         stockManageWarehouseSelect.innerHTML = `
             <option value="">Оберіть склад</option>
@@ -2820,6 +2843,7 @@ if (openPromosSectionBtn && promosSection) {
         }
 
         await loadStaffProducts();
+        await loadStaffWarehouses();
         await loadFocusPromos();
     });
 }

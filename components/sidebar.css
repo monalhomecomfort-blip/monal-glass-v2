@@ -1435,13 +1435,13 @@
 #promos-section .staff-promo-table-row {
     display: grid;
     grid-template-columns:
-        minmax(300px, 1.65fr)
-        96px
-        minmax(140px, 0.7fr)
-        minmax(140px, 0.7fr)
-        96px
-        minmax(110px, 0.5fr)
-        140px;
+        minmax(240px, 1.25fr)
+        72px
+        minmax(150px, 0.68fr)
+        minmax(150px, 0.68fr)
+        124px
+        minmax(150px, 0.68fr)
+        132px;
     gap: 0;
     align-items: center;
     width: 100%;
@@ -1456,7 +1456,7 @@
 #promos-section .staff-promo-table-head > div,
 #promos-section .staff-promo-cell {
     min-width: 0;
-    padding: 10px 10px;
+    padding: 10px 8px;
     border-right: 1px solid rgba(0, 0, 0, 0.08);
     border-bottom: 1px solid rgba(0, 0, 0, 0.08);
 }
@@ -1539,13 +1539,15 @@
 }
 
 #promos-section .staff-promo-checkbox {
+    width: 100%;
     height: 44px;
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
     margin: 0;
     white-space: nowrap;
     color: #1f1f1f;
+    font-size: 14px;
 }
 
 #promos-section .staff-promo-checkbox input {
@@ -1612,20 +1614,21 @@
 #promos-section .staff-promo-actions {
     display: flex;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: center;
     gap: 8px;
 }
 
 #promos-section .staff-promo-actions .buy-btn {
     width: 100%;
+    max-width: 116px;
     height: 44px;
     margin: 0;
-    padding: 0 12px;
+    padding: 0 10px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     white-space: nowrap;
-    font-size: 14px;
+    font-size: 13px;
 }
 
 #promos-section #focus-promos-list-result {

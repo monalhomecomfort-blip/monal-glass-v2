@@ -4723,6 +4723,20 @@ if (createSaleBtn && saleResult) {
             const sale = data.sale || {};
             const saleItems = Array.isArray(sale.items) ? sale.items : [];
 
+            const grossTotalAmount = Number(sale.grossTotalAmount || sale.totalAmount || 0);
+            const focusProductDiscountAmount = Number(sale.focusProductDiscountAmount || 0);
+            const finalTotalAmount = Number(sale.totalAmount || 0);
+
+            const saleTotalsHtml = focusProductDiscountAmount > 0
+                ? `
+                    Сума до знижки: ${grossTotalAmount} грн<br>
+                    Аромат дня: −${focusProductDiscountAmount} грн<br>
+                    До оплати: ${finalTotalAmount} грн<br>
+                `
+                : `
+                    Сума: ${finalTotalAmount} грн<br>
+                `;
+
             const saleItemsHtml = saleItems.length
                 ? saleItems.map(item => `
                     ${item.productName || "—"} × ${item.quantity || 0}
@@ -4739,7 +4753,7 @@ if (createSaleBtn && saleResult) {
                 Клієнт: ${sale.customerName || "—"}<br>
                 Склад: ${sale.warehouseName || "—"} ID ${sale.warehouseId || "—"}<br>
                 Товарів у чеку: ${saleItems.length || sale.quantity || 0}<br>
-                Сума: ${sale.totalAmount || 0} грн<br>
+                ${saleTotalsHtml}
                 Оплата: ${sale.paymentLabel || "—"}<br><br>
                 <strong>Склад чека:</strong><br>
                 ${saleItemsHtml}

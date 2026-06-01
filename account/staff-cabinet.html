@@ -894,6 +894,10 @@ const staffUserWarehouseSelect = document.getElementById("staff-user-warehouse")
 const createStaffUserBtn = document.getElementById("create-staff-user-btn");
 const staffUserCreateResult = document.getElementById("staff-user-create-result");
 const staffUsersListResult = document.getElementById("staff-users-list-result");
+const staffUsersCreateBox = staffUsersSection
+    ? staffUsersSection.querySelector(".staff-create-box")
+    : null;
+const CAN_MANAGE_STAFF_USERS = Boolean(staff?.can_manage_staff_users);
 
 const promosSection = document.getElementById("promos-section");
 const openPromosSectionBtn = document.getElementById("open-promos-section");
@@ -3361,6 +3365,8 @@ function renderStaffUsersList(users) {
 
     staffUsersListResult.classList.remove("staff-hidden");
 
+    const disabledAttr = CAN_MANAGE_STAFF_USERS ? "" : "disabled";
+
     const tableHtml = visibleUsers.length
         ? `
             <div class="staff-table-wrap">
@@ -3395,6 +3401,7 @@ function renderStaffUsersList(users) {
                                             type="text"
                                             class="staff-user-edit-name"
                                             value="${escapeStaffHtml(user.name || "")}"
+                                            ${disabledAttr}
                                         >
                                     </td>
 
@@ -3404,6 +3411,7 @@ function renderStaffUsersList(users) {
                                             class="staff-user-edit-email"
                                             value="${escapeStaffHtml(user.email || "")}"
                                             placeholder="Email"
+                                            ${disabledAttr}
                                         >
                                     </td>
 
@@ -3413,6 +3421,7 @@ function renderStaffUsersList(users) {
                                             class="staff-user-edit-phone"
                                             value="${escapeStaffHtml(user.phone || "")}"
                                             placeholder="Телефон"
+                                            ${disabledAttr}
                                         >
                                     </td>
 
@@ -3422,11 +3431,12 @@ function renderStaffUsersList(users) {
                                             class="staff-user-edit-password"
                                             value=""
                                             placeholder="Не змінювати"
+                                            ${disabledAttr}
                                         >
                                     </td>
 
                                     <td>
-                                        <select class="staff-user-edit-role">
+                                        <select class="staff-user-edit-role" ${disabledAttr}>
                                             <option value="manager" ${user.role === "manager" ? "selected" : ""}>manager</option>
                                             <option value="partner" ${user.role === "partner" ? "selected" : ""}>partner</option>
                                             <option value="admin" ${user.role === "admin" ? "selected" : ""}>admin</option>
@@ -3434,7 +3444,7 @@ function renderStaffUsersList(users) {
                                     </td>
 
                                     <td>
-                                        <select class="staff-user-edit-warehouse">
+                                        <select class="staff-user-edit-warehouse" ${disabledAttr}>
                                             ${renderStaffWarehouseOptions(warehouseId)}
                                         </select>
                                     </td>
@@ -3444,17 +3454,28 @@ function renderStaffUsersList(users) {
                                             type="checkbox"
                                             class="staff-user-edit-active"
                                             ${user.is_active ? "checked" : ""}
+                                            ${disabledAttr}
                                         >
                                     </td>
 
                                     <td>
-                                        <button
-                                            type="button"
-                                            class="buy-btn save-staff-user-btn"
-                                            data-user-id="${escapeStaffHtml(user.id)}"
-                                        >
-                                            Зберегти
-                                        </button>
+                                        ${
+                                            CAN_MANAGE_STAFF_USERS
+                                                ? `
+                                                    <button
+                                                        type="button"
+                                                        class="buy-btn save-staff-user-btn"
+                                                        data-user-id="${escapeStaffHtml(user.id)}"
+                                                    >
+                                                        Зберегти
+                                                    </button>
+                                                `
+                                                : `
+                                                    <span class="staff-readonly-note">
+                                                        Перегляд
+                                                    </span>
+                                                `
+                                        }
                                     </td>
                                 </tr>
                             `;
@@ -3496,10 +3517,19 @@ function renderStaffUsersList(users) {
             </button>
         </div>
 
+        ${
+            CAN_MANAGE_STAFF_USERS
+                ? ""
+                : `
+                    <div class="staff-readonly-banner">
+                        У вас доступ тільки на перегляд Staff users. Редагування доступне лише адміну зі спеціальним правом.
+                    </div>
+                `
+        }
+
         ${tableHtml}
     `;
 }
-
 async function loadStaffUsers() {
     if (!staffUsersListResult) return;
 
@@ -3538,6 +3568,13 @@ async function loadStaffUsers() {
 if (openStaffSectionBtn && staffUsersSection) {
     openStaffSectionBtn.addEventListener("click", async () => {
         showStaffSection(staffUsersSection);
+        
+        if (staffUsersCreateBox) {
+            staffUsersCreateBox.classList.toggle(
+                "staff-hidden",
+                !CAN_MANAGE_STAFF_USERS
+            );
+        }
 
         if (staffUserNameInput) {
             staffUserNameInput.value = "";
@@ -3571,6 +3608,14 @@ if (openStaffSectionBtn && staffUsersSection) {
 
 if (createStaffUserBtn) {
     createStaffUserBtn.addEventListener("click", async () => {
+        if (!CAN_MANAGE_STAFF_USERS) {
+            if (staffUserCreateResult) {
+                staffUserCreateResult.classList.remove("staff-hidden");
+                staffUserCreateResult.innerHTML = "Немає права створювати Staff users.";
+            }
+
+            return;
+        }
         const name = staffUserNameInput?.value.trim() || "";
         const login = staffUserLoginInput?.value.trim() || "";
         const password = staffUserPasswordInput?.value.trim() || "";

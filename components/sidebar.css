@@ -1436,7 +1436,7 @@
     display: grid;
     grid-template-columns:
         minmax(240px, 1.25fr)
-        72px
+        104px
         minmax(150px, 0.68fr)
         minmax(150px, 0.68fr)
         124px

@@ -2724,6 +2724,128 @@ function getFocusPromoWarehousesText(campaign) {
         .join(", ");
 }
 
+function getFocusPromoWarehouseIds(campaign) {
+    if (Array.isArray(campaign.warehouse_ids)) {
+        return campaign.warehouse_ids
+            .map(id => Number(id || 0))
+            .filter(id => Number.isInteger(id) && id > 0);
+    }
+
+    if (Array.isArray(campaign.warehouses)) {
+        return campaign.warehouses
+            .map(warehouse => Number(warehouse.warehouse_id || 0))
+            .filter(id => Number.isInteger(id) && id > 0);
+    }
+
+    return [];
+}
+
+function formatFocusPromoDateForInput(value) {
+    const cleanValue = String(value || "").trim();
+
+    if (!cleanValue) return "";
+
+    return cleanValue
+        .replace(" ", "T")
+        .slice(0, 16);
+}
+
+function isFutureFocusPromo(campaign) {
+    const startValue = formatFocusPromoDateForInput(campaign.starts_at);
+
+    if (!startValue) return false;
+
+    const startDate = new Date(startValue);
+
+    if (Number.isNaN(startDate.getTime())) return false;
+
+    return startDate.getTime() > Date.now();
+}
+
+function setFocusPromoWarehouseSelection(warehouseIds = []) {
+    const selectedIds = new Set(
+        warehouseIds
+            .map(id => Number(id || 0))
+            .filter(id => Number.isInteger(id) && id > 0)
+    );
+
+    document
+        .querySelectorAll(".focus-promo-warehouse-checkbox")
+        .forEach(checkbox => {
+            checkbox.checked = selectedIds.has(Number(checkbox.value || 0));
+        });
+}
+
+function startEditFocusPromo(promoId) {
+    const campaign = FOCUS_PROMOS_CACHE.find(item =>
+        Number(item.id || 0) === Number(promoId || 0)
+    );
+
+    if (!campaign) return;
+
+    if (!isFutureFocusPromo(campaign)) {
+        return;
+    }
+
+    FOCUS_PROMO_EDIT_ID = Number(campaign.id || 0);
+
+    if (focusPromoTitleInput) {
+        focusPromoTitleInput.value = "Аромат дня";
+    }
+
+    if (focusPromoProductSearch) {
+        focusPromoProductSearch.value = getFocusPromoProductText(campaign);
+    }
+
+    if (focusPromoProductId) {
+        focusPromoProductId.value =
+            campaign.focus_product_id ||
+            campaign.product?.id ||
+            "";
+    }
+
+    if (focusPromoProductDropdown) {
+        focusPromoProductDropdown.classList.add("staff-hidden");
+        focusPromoProductDropdown.innerHTML = "";
+    }
+
+    if (focusPromoDiscountInput) {
+        focusPromoDiscountInput.value = Number(campaign.discount_percent || 20);
+    }
+
+    if (focusPromoStartInput) {
+        focusPromoStartInput.value = formatFocusPromoDateForInput(campaign.starts_at);
+    }
+
+    if (focusPromoEndInput) {
+        focusPromoEndInput.value = formatFocusPromoDateForInput(campaign.ends_at);
+    }
+
+    if (focusPromoActiveInput) {
+        focusPromoActiveInput.checked = Boolean(campaign.is_active);
+    }
+
+    setFocusPromoWarehouseSelection(
+        getFocusPromoWarehouseIds(campaign)
+    );
+
+    if (saveFocusPromoBtn) {
+        saveFocusPromoBtn.textContent = "Зберегти";
+    }
+
+    if (focusPromoResult) {
+        focusPromoResult.classList.remove("staff-hidden");
+        focusPromoResult.innerHTML = "Редагуємо майбутній рядок “Аромат дня”.";
+    }
+
+    if (focusPromoProductSearch) {
+        focusPromoProductSearch.scrollIntoView({
+            behavior: "smooth",
+            block: "center"
+        });
+    }
+}
+
 function renderFocusPromosList(campaigns) {
     if (!focusPromosListResult) return;
 
@@ -2753,40 +2875,61 @@ function renderFocusPromosList(campaigns) {
                     <div>Дія</div>
                 </div>
 
-                ${FOCUS_PROMOS_CACHE.map(campaign => `
-                    <div class="staff-promo-table-row">
-                        <div class="staff-promo-cell">
-                            ${escapeStaffHtml(getFocusPromoProductText(campaign))}
-                        </div>
+                ${FOCUS_PROMOS_CACHE.map(campaign => {
+                    const canEdit = isFutureFocusPromo(campaign);
 
-                        <div class="staff-promo-cell">
-                            ${escapeStaffHtml(campaign.discount_percent)}%
-                        </div>
+                    return `
+                        <div class="staff-promo-table-row">
+                            <div class="staff-promo-cell">
+                                ${escapeStaffHtml(getFocusPromoProductText(campaign))}
+                            </div>
 
-                        <div class="staff-promo-cell">
-                            ${escapeStaffHtml(formatFocusPromoDate(campaign.starts_at))}
-                        </div>
+                            <div class="staff-promo-cell">
+                                ${escapeStaffHtml(campaign.discount_percent)}%
+                            </div>
 
-                        <div class="staff-promo-cell">
-                            ${escapeStaffHtml(formatFocusPromoDate(campaign.ends_at))}
-                        </div>
+                            <div class="staff-promo-cell">
+                                ${escapeStaffHtml(formatFocusPromoDate(campaign.starts_at))}
+                            </div>
 
-                        <div class="staff-promo-cell">
-                            ${campaign.is_active ? "Так" : "Ні"}
-                        </div>
+                            <div class="staff-promo-cell">
+                                ${escapeStaffHtml(formatFocusPromoDate(campaign.ends_at))}
+                            </div>
 
-                        <div class="staff-promo-cell">
-                            ${escapeStaffHtml(getFocusPromoWarehousesText(campaign))}
-                        </div>
+                            <div class="staff-promo-cell">
+                                ${campaign.is_active ? "Так" : "Ні"}
+                            </div>
 
-                        <div class="staff-promo-cell staff-promo-actions">
-                            <span>—</span>
+                            <div class="staff-promo-cell">
+                                ${escapeStaffHtml(getFocusPromoWarehousesText(campaign))}
+                            </div>
+
+                            <div class="staff-promo-cell staff-promo-actions">
+                                <button
+                                    type="button"
+                                    class="buy-btn staff-promo-edit-btn"
+                                    data-focus-promo-edit-id="${campaign.id}"
+                                    ${canEdit ? "" : "disabled"}
+                                >
+                                    Редагувати
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                `).join("")}
+                    `;
+                }).join("")}
             </div>
         </div>
     `;
+}
+
+if (focusPromosListResult) {
+    focusPromosListResult.addEventListener("click", event => {
+        const editButton = event.target.closest(".staff-promo-edit-btn");
+
+        if (!editButton || editButton.disabled) return;
+
+        startEditFocusPromo(editButton.dataset.focusPromoEditId);
+    });
 }
 
 async function loadFocusPromos() {

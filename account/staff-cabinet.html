@@ -240,7 +240,7 @@
             </div>
 
             <p class="staff-hint">
-                Спочатку додайте товари в чек, потім оберіть тип оплати і натисніть “Оплатити”.
+                Додайте товари в чек через "+", потім оберіть тип оплати і натисніть “Оплатити”.
             </p>
 
             <div id="sale-result" class="staff-result staff-hidden"></div>
@@ -1231,6 +1231,125 @@ function getSaleItemsTotal() {
     }, 0);
 }
 
+function getCurrentSaleWarehouseId() {
+    return String(staff?.role || "") === "admin"
+        ? Number(saleWarehouseSelect?.value || 0)
+        : Number(staff?.warehouse_id || 0);
+}
+
+function getSalePreviewItemsPayload() {
+    return SALE_ITEMS.map(item => ({
+        productId: Number(item.productId || 0),
+        quantity: Number(item.quantity || 0),
+        discoveryAromas: Array.isArray(item.discoveryAromas)
+            ? item.discoveryAromas
+            : []
+    }));
+}
+
+async function updateSalePaymentSummary() {
+    const checkTotal = getSaleItemsTotal();
+
+    if (!SALE_ITEMS.length) {
+        if (saleCheckTotalAmount) {
+            saleCheckTotalAmount.textContent = "0 грн";
+        }
+
+        if (saleCertificateAmount) {
+            saleCertificateAmount.textContent = "0 грн";
+        }
+
+        if (saleTotalAmount) {
+            saleTotalAmount.textContent = "0 грн";
+        }
+
+        return;
+    }
+
+    const warehouseId = getCurrentSaleWarehouseId();
+
+    let grossTotalAmount = checkTotal;
+    let focusProductDiscountAmount = 0;
+    let totalAfterFocusPromo = checkTotal;
+
+    if (saleCheckTotalAmount) {
+        saleCheckTotalAmount.textContent = `${checkTotal} грн`;
+    }
+
+    const requestId = (updateSalePaymentSummary.requestId || 0) + 1;
+    updateSalePaymentSummary.requestId = requestId;
+
+    if (warehouseId) {
+        try {
+            const response = await fetch(
+                "https://monal-mono-pay-production.up.railway.app/api/staff/sale-preview",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        staffId: staff.id,
+                        warehouseId,
+                        items: getSalePreviewItemsPayload()
+                    })
+                }
+            );
+
+            const data = await response.json();
+
+            if (
+                requestId === updateSalePaymentSummary.requestId &&
+                data &&
+                data.ok
+            ) {
+                grossTotalAmount = Number(data.grossTotalAmount || checkTotal);
+                focusProductDiscountAmount = Number(data.focusProductDiscountAmount || 0);
+                totalAfterFocusPromo = Number(data.totalAmount || grossTotalAmount);
+            }
+
+        } catch (err) {
+            console.error("SALE PREVIEW ERROR:", err);
+        }
+    }
+
+    const certificateNominal = SALE_CERTIFICATE
+        ? Number(SALE_CERTIFICATE.nominal || SALE_CERTIFICATE.coveredAmount || 0)
+        : 0;
+
+    const certificateCovered = Math.min(
+        certificateNominal,
+        totalAfterFocusPromo
+    );
+
+    const payableTotal = Math.max(
+        0,
+        totalAfterFocusPromo - certificateCovered
+    );
+
+    if (saleCheckTotalAmount) {
+        saleCheckTotalAmount.innerHTML = focusProductDiscountAmount > 0
+            ? `
+                ${grossTotalAmount} грн<br>
+                <span style="font-weight:400;">
+                    Аромат дня: −${focusProductDiscountAmount} грн
+                </span>
+            `
+            : `${grossTotalAmount} грн`;
+    }
+
+    if (saleCertificateAmount) {
+        saleCertificateAmount.textContent =
+            certificateCovered > 0
+                ? `−${certificateCovered} грн`
+                : "0 грн";
+    }
+
+    if (saleTotalAmount) {
+        saleTotalAmount.textContent = `${payableTotal} грн`;
+    }
+}
+
 function updateSalePaymentSummary() {
     const checkTotal = getSaleItemsTotal();
     const certificateCovered = SALE_CERTIFICATE
@@ -1672,6 +1791,13 @@ function getCurrentSaleTotal() {
     };
 }
 
+if (saleWarehouseSelect) {
+    saleWarehouseSelect.addEventListener("change", () => {
+        resetSaleCertificateBox();
+        updateSalePaymentSummary();
+    });
+}
+    
 if (salePaymentTypeSelect && saleCardTransferBox) {
     salePaymentTypeSelect.addEventListener("change", () => {
         SALE_CARD_TRANSFER_CONFIRMED = false;

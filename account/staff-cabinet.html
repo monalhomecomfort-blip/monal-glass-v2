@@ -1349,30 +1349,6 @@ async function updateSalePaymentSummary() {
         saleTotalAmount.textContent = `${payableTotal} грн`;
     }
 }
-
-function updateSalePaymentSummary() {
-    const checkTotal = getSaleItemsTotal();
-    const certificateCovered = SALE_CERTIFICATE
-        ? Number(SALE_CERTIFICATE.coveredAmount || 0)
-        : 0;
-
-    const payableTotal = Math.max(0, checkTotal - certificateCovered);
-
-    if (saleCheckTotalAmount) {
-        saleCheckTotalAmount.textContent = `${checkTotal} грн`;
-    }
-
-    if (saleCertificateAmount) {
-        saleCertificateAmount.textContent =
-            certificateCovered > 0
-                ? `−${certificateCovered} грн`
-                : "0 грн";
-    }
-
-    if (saleTotalAmount) {
-        saleTotalAmount.textContent = `${payableTotal} грн`;
-    }
-}
     
 function renderSaleItems() {
     if (!saleItemsBox || !saleTotalAmount) return;

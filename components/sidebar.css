@@ -1426,31 +1426,27 @@
     font-weight: 300;
 }
 
+#promos-section {
+    --staff-promo-columns:
+        minmax(220px, 1fr)
+        104px
+        minmax(145px, 0.66fr)
+        minmax(145px, 0.66fr)
+        126px
+        minmax(160px, 0.72fr)
+        136px;
+}
+
 #promos-section .staff-promo-table {
     width: 100%;
+    display: grid;
+    grid-template-columns: var(--staff-promo-columns);
     overflow: visible;
 }
 
 #promos-section .staff-promo-table-head,
 #promos-section .staff-promo-table-row {
-    display: grid;
-    grid-template-columns:
-        minmax(240px, 1.25fr)
-        104px
-        minmax(150px, 0.68fr)
-        minmax(150px, 0.68fr)
-        124px
-        minmax(150px, 0.68fr)
-        132px;
-    gap: 0;
-    align-items: center;
-    width: 100%;
-}
-
-#promos-section .staff-promo-table-head {
-    color: rgba(31, 31, 31, 0.62);
-    font-size: 14px;
-    line-height: 1.2;
+    display: contents;
 }
 
 #promos-section .staff-promo-table-head > div,
@@ -1459,21 +1455,19 @@
     padding: 10px 8px;
     border-right: 1px solid rgba(0, 0, 0, 0.08);
     border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    position: relative;
+    overflow: visible;
 }
 
-#promos-section .staff-promo-table-head > div:last-child,
-#promos-section .staff-promo-cell:last-child {
+#promos-section .staff-promo-table-head > div {
+    color: rgba(31, 31, 31, 0.62);
+    font-size: 14px;
+    line-height: 1.2;
+}
+
+#promos-section .staff-promo-table-head > div:nth-child(7),
+#promos-section .staff-promo-cell:nth-child(7) {
     border-right: none;
-}
-
-#promos-section .staff-promo-table-row {
-    position: relative;
-    overflow: visible;
-}
-
-#promos-section .staff-promo-cell {
-    position: relative;
-    overflow: visible;
 }
 
 #promos-section .staff-promo-product-cell {
@@ -1634,6 +1628,12 @@
 #promos-section #focus-promos-list-result {
     width: 100%;
     max-width: none;
+    padding: 0;
+    background: transparent;
+}
+
+#promos-section #focus-promos-list-result .staff-promo-campaign-block {
+    margin-top: 0;
 }
 
 #promos-section #focus-promo-warehouse-list {

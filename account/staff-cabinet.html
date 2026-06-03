@@ -917,6 +917,19 @@ const focusPromoWarehouseList = document.getElementById("focus-promo-warehouse-l
 
 let FOCUS_PROMO_EDIT_ID = 0;
 let FOCUS_PROMOS_CACHE = [];
+let FOCUS_PROMOS_FILTER = "active";
+
+function isFocusPromoActive(campaign) {
+    return Number(campaign?.is_active || 0) === 1 || campaign?.is_active === true;
+}
+
+function setFocusPromosFilter(filter) {
+    FOCUS_PROMOS_FILTER = ["active", "inactive", "all"].includes(filter)
+        ? filter
+        : "active";
+
+    renderFocusPromosList(FOCUS_PROMOS_CACHE);
+}
 
 let STAFF_WAREHOUSES = [];    
 const clientsSection = document.getElementById("clients-section");
@@ -2985,10 +2998,22 @@ function renderFocusPromosList(campaigns) {
         return;
     }
 
-    focusPromosListResult.innerHTML = `
-        <div class="staff-promo-campaign-block">
-            <h3>Створені рядки “Аромат дня”</h3>
+    const visibleCampaigns = FOCUS_PROMOS_CACHE.filter(campaign => {
+        const isActive = isFocusPromoActive(campaign);
 
+        if (FOCUS_PROMOS_FILTER === "active") {
+            return isActive;
+        }
+
+        if (FOCUS_PROMOS_FILTER === "inactive") {
+            return !isActive;
+        }
+
+        return true;
+    });
+
+    const tableHtml = visibleCampaigns.length
+        ? `
             <div class="staff-promo-table">
                 <div class="staff-promo-table-head">
                     <div>Товар</div>
@@ -3000,8 +3025,9 @@ function renderFocusPromosList(campaigns) {
                     <div>Дія</div>
                 </div>
 
-                ${FOCUS_PROMOS_CACHE.map(campaign => {
+                ${visibleCampaigns.map(campaign => {
                     const canEdit = isFutureFocusPromo(campaign);
+                    const isActive = isFocusPromoActive(campaign);
 
                     return `
                         <div class="staff-promo-table-row">
@@ -3022,7 +3048,7 @@ function renderFocusPromosList(campaigns) {
                             </div>
 
                             <div class="staff-promo-cell">
-                                ${campaign.is_active ? "Так" : "Ні"}
+                                ${isActive ? "Так" : "Ні"}
                             </div>
 
                             <div class="staff-promo-cell">
@@ -3043,6 +3069,42 @@ function renderFocusPromosList(campaigns) {
                     `;
                 }).join("")}
             </div>
+        `
+        : `
+            <p>Рядків “Аромат дня” за цим фільтром немає.</p>
+        `;
+
+    focusPromosListResult.innerHTML = `
+        <div class="staff-promo-campaign-block">
+            <h3>Створені рядки “Аромат дня”</h3>
+
+            <div class="staff-users-filter-bar">
+                <button
+                    type="button"
+                    class="buy-btn staff-users-filter-btn ${FOCUS_PROMOS_FILTER === "active" ? "is-active" : ""}"
+                    onclick="setFocusPromosFilter('active')"
+                >
+                    Активні
+                </button>
+
+                <button
+                    type="button"
+                    class="buy-btn staff-users-filter-btn ${FOCUS_PROMOS_FILTER === "inactive" ? "is-active" : ""}"
+                    onclick="setFocusPromosFilter('inactive')"
+                >
+                    Неактивні
+                </button>
+
+                <button
+                    type="button"
+                    class="buy-btn staff-users-filter-btn ${FOCUS_PROMOS_FILTER === "all" ? "is-active" : ""}"
+                    onclick="setFocusPromosFilter('all')"
+                >
+                    Всі
+                </button>
+            </div>
+
+            ${tableHtml}
         </div>
     `;
 }

@@ -2657,12 +2657,12 @@ function initSalesReportFilterCloseOnOutsideClick() {
         if (!(target instanceof Element)) return;
 
         const clickedFilter = target.closest(
-            ".sales-report-filter-row .staff-report-filter, #promos-section .staff-promo-warehouse-filter"
+            ".sales-report-filter-row .staff-report-filter, #promos-section .staff-promo-warehouse-filter, #promos-section .staff-personal-status-filter"
         );
 
         document
             .querySelectorAll(
-                ".sales-report-filter-row .staff-report-filter[open], #promos-section .staff-promo-warehouse-filter[open]"
+                ".sales-report-filter-row .staff-report-filter[open], #promos-section .staff-promo-warehouse-filter[open], #promos-section .staff-personal-status-filter[open]"
             )
             .forEach(filter => {
                 if (filter !== clickedFilter) {

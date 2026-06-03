@@ -1274,7 +1274,8 @@ async function updateSalePaymentSummary() {
 
     let grossTotalAmount = checkTotal;
     let focusProductDiscountAmount = 0;
-    let totalAfterFocusPromo = checkTotal;
+    let welcomeDiscountAmount = 0;
+    let totalAfterDiscounts = checkTotal;
 
     if (saleCheckTotalAmount) {
         saleCheckTotalAmount.textContent = `${checkTotal} грн`;
@@ -1294,6 +1295,7 @@ async function updateSalePaymentSummary() {
                     },
                     body: JSON.stringify({
                         staffId: staff.id,
+                        customerId: Number(SALE_SELECTED_CUSTOMER?.id || 0),
                         warehouseId,
                         items: getSalePreviewItemsPayload()
                     })
@@ -1309,7 +1311,8 @@ async function updateSalePaymentSummary() {
             ) {
                 grossTotalAmount = Number(data.grossTotalAmount || checkTotal);
                 focusProductDiscountAmount = Number(data.focusProductDiscountAmount || 0);
-                totalAfterFocusPromo = Number(data.totalAmount || grossTotalAmount);
+                welcomeDiscountAmount = Number(data.welcomeDiscountAmount || 0);
+                totalAfterDiscounts = Number(data.totalAmount || grossTotalAmount);
             }
 
         } catch (err) {
@@ -1323,21 +1326,37 @@ async function updateSalePaymentSummary() {
 
     const certificateCovered = Math.min(
         certificateNominal,
-        totalAfterFocusPromo
+        totalAfterDiscounts
     );
 
     const payableTotal = Math.max(
         0,
-        totalAfterFocusPromo - certificateCovered
+        totalAfterDiscounts - certificateCovered
     );
 
+    const discountLines = [];
+
+    if (focusProductDiscountAmount > 0) {
+        discountLines.push(`
+            <span style="font-weight:400;">
+                Аромат дня: −${focusProductDiscountAmount} грн
+            </span>
+        `);
+    }
+
+    if (welcomeDiscountAmount > 0) {
+        discountLines.push(`
+            <span style="font-weight:400;">
+                Welcome-знижка 10%: −${welcomeDiscountAmount} грн
+            </span>
+        `);
+    }
+
     if (saleCheckTotalAmount) {
-        saleCheckTotalAmount.innerHTML = focusProductDiscountAmount > 0
+        saleCheckTotalAmount.innerHTML = discountLines.length
             ? `
                 ${grossTotalAmount} грн<br>
-                <span style="font-weight:400;">
-                    Аромат дня: −${focusProductDiscountAmount} грн
-                </span>
+                ${discountLines.join("<br>")}
             `
             : `${grossTotalAmount} грн`;
     }

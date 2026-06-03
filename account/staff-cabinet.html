@@ -819,12 +819,51 @@
                     </div>
 
                     <div class="staff-promo-cell">
-                        <input
-                            type="text"
+                        <details
+                            class="staff-report-filter staff-personal-status-filter"
                             id="personal-promo-code-customer-status"
-                            placeholder="all / general / friends / partners"
-                            value="all"
                         >
+                            <summary>Обрати</summary>
+
+                            <div class="staff-report-filter-menu staff-personal-status-menu">
+                                <label>
+                                    <input
+                                        type="checkbox"
+                                        class="personal-promo-code-status-checkbox"
+                                        value="all"
+                                        checked
+                                    >
+                                    Всі клієнти
+                                </label>
+
+                                <label>
+                                    <input
+                                        type="checkbox"
+                                        class="personal-promo-code-status-checkbox"
+                                        value="general"
+                                    >
+                                    Зареєстровані
+                                </label>
+
+                                <label>
+                                    <input
+                                        type="checkbox"
+                                        class="personal-promo-code-status-checkbox"
+                                        value="friends"
+                                    >
+                                    Друзі
+                                </label>
+
+                                <label>
+                                    <input
+                                        type="checkbox"
+                                        class="personal-promo-code-status-checkbox"
+                                        value="partners"
+                                    >
+                                    Партнери
+                                </label>
+                            </div>
+                        </details>
                     </div>
 
                     <div class="staff-promo-cell staff-promo-actions">
@@ -841,6 +880,146 @@
 
             <div id="personal-promo-code-list-result" class="staff-result staff-hidden">
                 Список персональних промокодів підключимо наступним кроком.
+            </div>
+            
+        </div>
+
+                <div class="staff-promo-campaign-block" id="personal-percent-offer-block">
+
+            <h3>Персональна % знижка</h3>
+
+            <input
+                type="hidden"
+                id="personal-percent-offer-type"
+                value="promo"
+            >
+
+            <div class="staff-promo-table">
+
+                <div class="staff-promo-table-head">
+                    <div>Назва / текст</div>
+                    <div>%</div>
+                    <div>Початок</div>
+                    <div>Кінець</div>
+                    <div>Активна</div>
+                    <div>Кому</div>
+                    <div>Дія</div>
+                </div>
+
+                <div class="staff-promo-table-row">
+
+                    <div class="staff-promo-cell">
+                        <div style="display:grid; gap:8px;">
+                            <input
+                                type="text"
+                                id="personal-percent-offer-title"
+                                placeholder="Назва пропозиції"
+                            >
+
+                            <input
+                                type="text"
+                                id="personal-percent-offer-text"
+                                placeholder="Текст для клієнта"
+                            >
+                        </div>
+                    </div>
+
+                    <div class="staff-promo-cell">
+                        <input
+                            type="number"
+                            id="personal-percent-offer-discount"
+                            placeholder="%"
+                            min="1"
+                            max="99"
+                        >
+                    </div>
+
+                    <div class="staff-promo-cell">
+                        <input
+                            type="datetime-local"
+                            id="personal-percent-offer-start"
+                        >
+                    </div>
+
+                    <div class="staff-promo-cell">
+                        <input
+                            type="datetime-local"
+                            id="personal-percent-offer-end"
+                        >
+                    </div>
+
+                    <div class="staff-promo-cell">
+                        <label class="staff-promo-checkbox">
+                            <input
+                                type="checkbox"
+                                id="personal-percent-offer-active"
+                            >
+                            Активна
+                        </label>
+                    </div>
+
+                    <div class="staff-promo-cell">
+                        <details
+                            class="staff-report-filter staff-personal-status-filter"
+                            id="personal-percent-offer-customer-status"
+                        >
+                            <summary>Усі клієнти</summary>
+
+                            <div class="staff-report-filter-menu staff-personal-status-menu">
+                                <label>
+                                    <input
+                                        type="checkbox"
+                                        class="personal-percent-offer-status-checkbox"
+                                        value="all"
+                                        checked
+                                    >
+                                    Усі клієнти
+                                </label>
+
+                                <label>
+                                    <input
+                                        type="checkbox"
+                                        class="personal-percent-offer-status-checkbox"
+                                        value="general"
+                                    >
+                                    Зареєстровані
+                                </label>
+
+                                <label>
+                                    <input
+                                        type="checkbox"
+                                        class="personal-percent-offer-status-checkbox"
+                                        value="friends"
+                                    >
+                                    Друзі
+                                </label>
+
+                                <label>
+                                    <input
+                                        type="checkbox"
+                                        class="personal-percent-offer-status-checkbox"
+                                        value="partners"
+                                    >
+                                    Партнери
+                                </label>
+                            </div>
+                        </details>
+                    </div>
+
+                    <div class="staff-promo-cell staff-promo-actions">
+                        <button id="save-personal-percent-offer-btn" class="buy-btn" type="button">
+                            Створити
+                        </button>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div id="personal-percent-offer-result" class="staff-result staff-hidden"></div>
+
+            <div id="personal-percent-offer-list-result" class="staff-result staff-hidden">
+                Список персональних % знижок підключимо наступним кроком.
             </div>
 
         </div>
@@ -919,12 +1098,51 @@
                     </div>
 
                     <div class="staff-promo-cell">
-                        <input
-                            type="text"
+                        <details
+                            class="staff-report-filter staff-personal-status-filter"
                             id="personal-gift-offer-customer-status"
-                            placeholder="all / general / friends / partners"
-                            value="all"
                         >
+                            <summary>Обрати</summary>
+
+                            <div class="staff-report-filter-menu staff-personal-status-menu">
+                                <label>
+                                    <input
+                                        type="checkbox"
+                                        class="personal-gift-offer-status-checkbox"
+                                        value="all"
+                                        checked
+                                    >
+                                    Всі клієнти
+                                </label>
+
+                                <label>
+                                    <input
+                                        type="checkbox"
+                                        class="personal-gift-offer-status-checkbox"
+                                        value="general"
+                                    >
+                                    Зареєстровані
+                                </label>
+
+                                <label>
+                                    <input
+                                        type="checkbox"
+                                        class="personal-gift-offer-status-checkbox"
+                                        value="friends"
+                                    >
+                                    Друзі
+                                </label>
+
+                                <label>
+                                    <input
+                                        type="checkbox"
+                                        class="personal-gift-offer-status-checkbox"
+                                        value="partners"
+                                    >
+                                    Партнери
+                                </label>
+                            </div>
+                        </details>
                     </div>
 
                     <div class="staff-promo-cell staff-promo-actions">
@@ -1019,12 +1237,51 @@
                     </div>
 
                     <div class="staff-promo-cell">
-                        <input
-                            type="text"
+                        <details
+                            class="staff-report-filter staff-personal-status-filter"
                             id="personal-delivery-offer-customer-status"
-                            placeholder="all / general / friends / partners"
-                            value="all"
                         >
+                            <summary>Обрати</summary>
+
+                            <div class="staff-report-filter-menu staff-personal-status-menu">
+                                <label>
+                                    <input
+                                        type="checkbox"
+                                        class="personal-delivery-offer-status-checkbox"
+                                        value="all"
+                                        checked
+                                    >
+                                    Всі клієнти
+                                </label>
+
+                                <label>
+                                    <input
+                                        type="checkbox"
+                                        class="personal-delivery-offer-status-checkbox"
+                                        value="general"
+                                    >
+                                    Зареєстровані
+                                </label>
+
+                                <label>
+                                    <input
+                                        type="checkbox"
+                                        class="personal-delivery-offer-status-checkbox"
+                                        value="friends"
+                                    >
+                                    Друзі
+                                </label>
+
+                                <label>
+                                    <input
+                                        type="checkbox"
+                                        class="personal-delivery-offer-status-checkbox"
+                                        value="partners"
+                                    >
+                                    Партнери
+                                </label>
+                            </div>
+                        </details>
                     </div>
 
                     <div class="staff-promo-cell staff-promo-actions">

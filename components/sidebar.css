@@ -1687,6 +1687,31 @@
     margin: 0;
 }
 
+#promos-section > .account-block > .staff-promo-campaign-block {
+    padding: 22px 24px 26px;
+    border-radius: 20px;
+    background: rgba(231, 228, 217, 0.48);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    box-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.35) inset,
+        0 10px 24px rgba(0, 0, 0, 0.08);
+}
+
+#promos-section > .account-block > .staff-promo-campaign-block + .staff-promo-campaign-block {
+    margin-top: 28px;
+}
+
+#promos-section > .account-block > .staff-promo-campaign-block h3 {
+    padding-bottom: 12px;
+    margin-bottom: 18px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+#promos-section > .account-block > .staff-promo-campaign-block .staff-promo-table {
+    background: rgba(244, 239, 230, 0.45);
+    border-radius: 16px;
+}
+
 @media (max-width: 1100px) {
     #promos-section .staff-promo-table {
         display: block;

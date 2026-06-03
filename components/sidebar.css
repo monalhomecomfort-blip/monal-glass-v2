@@ -1687,6 +1687,105 @@
     margin: 0;
 }
 
+/* персональні пропозиції — фільтр "Кому" */
+#promos-section .staff-personal-status-filter {
+    position: relative;
+    width: 100%;
+    margin: 0;
+    z-index: 60;
+}
+
+#promos-section .staff-personal-status-filter summary {
+    position: relative;
+    width: 100%;
+    height: 44px;
+    padding: 0 36px 0 14px;
+    border-radius: 14px;
+    background: #e7e4d9;
+    color: #1f1f1f;
+    font-size: 14px;
+    line-height: 44px;
+    white-space: nowrap;
+    cursor: pointer;
+    list-style: none;
+    box-shadow:
+        0 1px 0 rgba(255,255,255,0.35) inset,
+        0 2px 8px rgba(0,0,0,0.06);
+}
+
+#promos-section .staff-personal-status-filter summary::-webkit-details-marker {
+    display: none;
+}
+
+#promos-section .staff-personal-status-filter summary::marker {
+    content: "";
+}
+
+#promos-section .staff-personal-status-filter summary::after {
+    content: "";
+    position: absolute;
+    right: 18px;
+    top: 50%;
+    width: 7px;
+    height: 7px;
+    border-right: 2px solid #1f1f1f;
+    border-bottom: 2px solid #1f1f1f;
+    transform: translateY(-65%) rotate(45deg);
+    opacity: 0.9;
+    pointer-events: none;
+}
+
+#promos-section .staff-personal-status-filter[open] summary::after {
+    transform: translateY(-35%) rotate(225deg);
+}
+
+#promos-section .staff-personal-status-filter .staff-personal-status-menu {
+    position: absolute;
+    top: 50px;
+    left: 0;
+    z-index: 9998;
+    min-width: 220px;
+    max-height: none;
+    overflow: visible;
+    padding: 10px 0;
+    border-radius: 14px;
+    background: #f4efe6;
+    border: 1px solid rgba(0, 0, 0, 0.10);
+    box-shadow: 0 14px 32px rgba(0, 0, 0, 0.16);
+}
+
+#promos-section .staff-personal-status-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+#promos-section .staff-personal-status-menu label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    min-height: 32px;
+    margin: 0;
+    padding: 5px 12px;
+    white-space: nowrap;
+    color: #1f1f1f;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+#promos-section .staff-personal-status-menu label:hover {
+    background: rgba(231, 228, 217, 0.75);
+}
+
+#promos-section .staff-personal-status-menu input[type="checkbox"] {
+    flex: 0 0 auto;
+    width: 16px;
+    height: 16px;
+    margin: 0;
+    box-shadow: none;
+}
+
 #promos-section > .account-block > .staff-promo-campaign-block {
     padding: 22px 24px 26px;
     border-radius: 20px;

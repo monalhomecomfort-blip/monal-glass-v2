@@ -1473,6 +1473,11 @@ const focusPromoResult = document.getElementById("focus-promo-result");
 const focusPromosListResult = document.getElementById("focus-promos-list-result");
 const focusPromoWarehouseList = document.getElementById("focus-promo-warehouse-list");
 
+const personalPromoCodeListResult = document.getElementById("personal-promo-code-list-result");
+const personalPercentOfferListResult = document.getElementById("personal-percent-offer-list-result");
+const personalGiftOfferListResult = document.getElementById("personal-gift-offer-list-result");
+const personalDeliveryOfferListResult = document.getElementById("personal-delivery-offer-list-result");
+
 let FOCUS_PROMO_EDIT_ID = 0;
 let FOCUS_PROMOS_CACHE = [];
 let FOCUS_PROMOS_FILTER = "active";
@@ -3714,6 +3719,238 @@ async function loadFocusPromos() {
     }
 }
 
+function getPersonalOfferStatusText(value) {
+    const statuses = String(value || "all")
+        .split(",")
+        .map(item => item.trim().toLowerCase())
+        .filter(Boolean);
+
+    if (!statuses.length || statuses.includes("all")) {
+        return "Всі клієнти";
+    }
+
+    const labels = {
+        general: "Зареєстровані",
+        friends: "Друзі",
+        partners: "Партнери"
+    };
+
+    return statuses
+        .map(status => labels[status] || status)
+        .join(", ");
+}
+
+function getPersonalOfferActiveText(offer) {
+    return Number(offer?.is_active || 0) === 1 ? "Так" : "Ні";
+}
+
+function getPersonalOfferPeriodText(value) {
+    return value
+        ? formatFocusPromoDate(value)
+        : "—";
+}
+
+function getPersonalOfferConditionText(offer) {
+    const parts = [];
+
+    const minOrderAmount = Number(offer?.min_order_amount || 0);
+
+    if (minOrderAmount > 0) {
+        parts.push(`від ${minOrderAmount} грн`);
+    }
+
+    if (offer?.required_category_slug) {
+        const categoryLabels = {
+            aromadiffusers: "Аромадифузори",
+            refills: "Рефіли",
+            parfums: "Парфуми",
+            discovery: "Discovery",
+            "gift-sets": "Подарункові набори",
+            certificates: "Сертифікати"
+        };
+
+        parts.push(
+            categoryLabels[offer.required_category_slug] ||
+            offer.required_category_slug
+        );
+    }
+
+    return parts.length ? parts.join(", ") : "—";
+}
+
+function renderPersonalOffersTable(targetEl, offers, emptyText, valueRenderer) {
+    if (!targetEl) return;
+
+    targetEl.classList.remove("staff-hidden");
+
+    if (!offers.length) {
+        targetEl.innerHTML = `<p>${emptyText}</p>`;
+        return;
+    }
+
+    targetEl.innerHTML = `
+        <div class="staff-promo-table">
+            <div class="staff-promo-table-head">
+                <div>Назва</div>
+                <div>Значення</div>
+                <div>Умова</div>
+                <div>Початок</div>
+                <div>Кінець</div>
+                <div>Активна</div>
+                <div>Кому</div>
+            </div>
+
+            ${offers.map(offer => `
+                <div class="staff-promo-table-row">
+                    <div class="staff-promo-cell">
+                        ${escapeStaffHtml(offer.title || "—")}
+                        ${
+                            offer.offer_text
+                                ? `<br><span style="opacity:0.72;">${escapeStaffHtml(offer.offer_text)}</span>`
+                                : ""
+                        }
+                    </div>
+
+                    <div class="staff-promo-cell">
+                        ${escapeStaffHtml(valueRenderer(offer))}
+                    </div>
+
+                    <div class="staff-promo-cell">
+                        ${escapeStaffHtml(getPersonalOfferConditionText(offer))}
+                    </div>
+
+                    <div class="staff-promo-cell">
+                        ${escapeStaffHtml(getPersonalOfferPeriodText(offer.starts_at))}
+                    </div>
+
+                    <div class="staff-promo-cell">
+                        ${escapeStaffHtml(getPersonalOfferPeriodText(offer.ends_at))}
+                    </div>
+
+                    <div class="staff-promo-cell">
+                        ${escapeStaffHtml(getPersonalOfferActiveText(offer))}
+                    </div>
+
+                    <div class="staff-promo-cell">
+                        ${escapeStaffHtml(getPersonalOfferStatusText(offer.required_customer_status))}
+                    </div>
+                </div>
+            `).join("")}
+        </div>
+    `;
+}
+
+function renderPersonalOffersLists(offers) {
+    const list = Array.isArray(offers) ? offers : [];
+
+    const fixedPromoCodes = list.filter(offer =>
+        String(offer.offer_type || "").toLowerCase() === "promo" &&
+        Number(offer.discount_amount || 0) > 0
+    );
+
+    const percentOffers = list.filter(offer =>
+        String(offer.offer_type || "").toLowerCase() === "promo" &&
+        Number(offer.discount_percent || 0) > 0
+    );
+
+    const giftOffers = list.filter(offer =>
+        String(offer.offer_type || "").toLowerCase() === "gift"
+    );
+
+    const deliveryOffers = list.filter(offer =>
+        String(offer.offer_type || "").toLowerCase() === "delivery"
+    );
+
+    renderPersonalOffersTable(
+        personalPromoCodeListResult,
+        fixedPromoCodes,
+        "Створених персональних промокодів поки немає.",
+        offer => {
+            const code = offer.promo_code || "—";
+            const amount = Number(offer.discount_amount || 0);
+
+            return amount > 0
+                ? `${code}: −${amount} грн`
+                : code;
+        }
+    );
+
+    renderPersonalOffersTable(
+        personalPercentOfferListResult,
+        percentOffers,
+        "Створених персональних % знижок поки немає.",
+        offer => {
+            const percent = Number(offer.discount_percent || 0);
+
+            return percent > 0
+                ? `${percent}%`
+                : "—";
+        }
+    );
+
+    renderPersonalOffersTable(
+        personalGiftOfferListResult,
+        giftOffers,
+        "Створених персональних подарунків поки немає.",
+        offer => offer.offer_text || offer.title || "Подарунок"
+    );
+
+    renderPersonalOffersTable(
+        personalDeliveryOfferListResult,
+        deliveryOffers,
+        "Створених пропозицій безкоштовної доставки поки немає.",
+        offer => offer.offer_text || offer.title || "Безкоштовна доставка"
+    );
+}
+
+async function loadPersonalOffers() {
+    const resultTargets = [
+        personalPromoCodeListResult,
+        personalPercentOfferListResult,
+        personalGiftOfferListResult,
+        personalDeliveryOfferListResult
+    ].filter(Boolean);
+
+    resultTargets.forEach(target => {
+        target.classList.remove("staff-hidden");
+        target.innerHTML = "Завантажую персональні пропозиції…";
+    });
+
+    try {
+        const response = await fetch(
+            "https://monal-mono-pay-production.up.railway.app/api/staff/personal-offers-list",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    staffId: staff.id
+                })
+            }
+        );
+
+        const data = await response.json();
+
+        if (!data.ok) {
+            resultTargets.forEach(target => {
+                target.innerHTML = data.error || "Не вдалося завантажити персональні пропозиції.";
+            });
+
+            return;
+        }
+
+        renderPersonalOffersLists(data.offers || []);
+
+    } catch (err) {
+        console.error(err);
+
+        resultTargets.forEach(target => {
+            target.innerHTML = "Помилка зʼєднання при завантаженні персональних пропозицій.";
+        });
+    }
+}    
+
 if (openPromosSectionBtn && promosSection) {
     openPromosSectionBtn.addEventListener("click", async () => {
         showStaffSection(promosSection);
@@ -3765,6 +4002,7 @@ if (openPromosSectionBtn && promosSection) {
         await loadStaffProducts();
         await loadStaffWarehouses();
         await loadFocusPromos();
+        await loadPersonalOffers();
     });
 }
 

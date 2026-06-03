@@ -4891,12 +4891,23 @@ if (createSaleBtn && saleResult) {
 
             const grossTotalAmount = Number(sale.grossTotalAmount || sale.totalAmount || 0);
             const focusProductDiscountAmount = Number(sale.focusProductDiscountAmount || 0);
+            const welcomeDiscountAmount = Number(sale.welcomeDiscountAmount || 0);
             const finalTotalAmount = Number(sale.totalAmount || 0);
 
-            const saleTotalsHtml = focusProductDiscountAmount > 0
+            const saleDiscountLines = [];
+
+            if (focusProductDiscountAmount > 0) {
+                saleDiscountLines.push(`Аромат дня: −${focusProductDiscountAmount} грн`);
+            }
+
+            if (welcomeDiscountAmount > 0) {
+                saleDiscountLines.push(`Welcome-знижка 10%: −${welcomeDiscountAmount} грн`);
+            }
+
+            const saleTotalsHtml = saleDiscountLines.length
                 ? `
                     Сума до знижки: ${grossTotalAmount} грн<br>
-                    Аромат дня: −${focusProductDiscountAmount} грн<br>
+                    ${saleDiscountLines.join("<br>")}<br>
                     До оплати: ${finalTotalAmount} грн<br>
                 `
                 : `

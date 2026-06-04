@@ -754,11 +754,12 @@
                 value="promo"
             >
 
-            <div class="staff-promo-table">
+            <div class="staff-promo-table is-personal-promo-code-table">
 
                 <div class="staff-promo-table-head">
                     <div>Назва / код</div>
-                    <div>Знижка</div>
+                    <div>Умова</div>
+                    <div>Знижка, грн</div>
                     <div>Початок</div>
                     <div>Кінець</div>
                     <div>Активна</div>
@@ -787,10 +788,19 @@
                     <div class="staff-promo-cell">
                         <input
                             type="number"
+                            id="personal-promo-code-min-amount"
+                            placeholder="Від суми, грн"
+                            min="0"
+                            value="0"
+                        >
+                    </div>
+
+                    <div class="staff-promo-cell">
+                        <input
+                            type="number"
                             id="personal-promo-code-discount"
-                            placeholder="%"
+                            placeholder="Знижка, грн"
                             min="1"
-                            max="99"
                         >
                     </div>
 

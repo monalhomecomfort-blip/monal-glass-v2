@@ -1492,6 +1492,10 @@ let FOCUS_PROMO_EDIT_ID = 0;
 let FOCUS_PROMOS_CACHE = [];
 let FOCUS_PROMOS_FILTER = "active";
 
+let PERSONAL_PROMO_CODE_EDIT_ID = 0;
+let PERSONAL_PROMO_CODES_CACHE = [];
+let PERSONAL_PROMO_CODES_FILTER = "active";
+
 function isFocusPromoActive(campaign) {
     return Number(campaign?.is_active || 0) === 1 || campaign?.is_active === true;
 }
@@ -1502,6 +1506,18 @@ function setFocusPromosFilter(filter) {
         : "active";
 
     renderFocusPromosList(FOCUS_PROMOS_CACHE);
+}
+
+function isPersonalOfferActive(offer) {
+    return Number(offer?.is_active || 0) === 1 || offer?.is_active === true;
+}
+
+function setPersonalPromoCodesFilter(filter) {
+    PERSONAL_PROMO_CODES_FILTER = ["active", "inactive", "all"].includes(filter)
+        ? filter
+        : "active";
+
+    renderPersonalPromoCodesList(PERSONAL_PROMO_CODES_CACHE);
 }
 
 let STAFF_WAREHOUSES = [];    
@@ -3850,6 +3866,283 @@ function renderPersonalOffersTable(targetEl, offers, emptyText, valueRenderer) {
     `;
 }
 
+function getPersonalPromoCodeConditionText(offer) {
+    const parts = [];
+
+    const minOrderAmount = Number(offer?.min_order_amount || 0);
+
+    if (minOrderAmount > 0) {
+        parts.push(`від ${minOrderAmount} грн`);
+    } else {
+        parts.push("без порогу суми");
+    }
+
+    if (offer?.required_category_slug) {
+        const categoryLabels = {
+            aromadiffusers: "Аромадифузори",
+            refills: "Рефіли",
+            parfums: "Парфуми",
+            discovery: "Discovery",
+            "gift-sets": "Подарункові набори",
+            certificates: "Сертифікати"
+        };
+
+        parts.push(
+            categoryLabels[offer.required_category_slug] ||
+            offer.required_category_slug
+        );
+    }
+
+    return parts.join(", ");
+}
+
+function setPersonalPromoCodeStatusSelection(value) {
+    const selectedStatuses = String(value || "all")
+        .split(",")
+        .map(item => item.trim().toLowerCase())
+        .filter(Boolean);
+
+    const normalizedStatuses = selectedStatuses.length
+        ? selectedStatuses
+        : ["all"];
+
+    document
+        .querySelectorAll(".personal-promo-code-status-checkbox")
+        .forEach(checkbox => {
+            checkbox.checked = normalizedStatuses.includes(checkbox.value);
+        });
+
+    if (normalizedStatuses.includes("all")) {
+        document
+            .querySelectorAll(".personal-promo-code-status-checkbox")
+            .forEach(checkbox => {
+                checkbox.checked = checkbox.value === "all";
+            });
+    }
+
+    const summary = document.querySelector("#personal-promo-code-customer-status summary");
+
+    if (summary) {
+        summary.textContent = getPersonalOfferStatusText(
+            normalizedStatuses.includes("all")
+                ? "all"
+                : normalizedStatuses.join(",")
+        );
+    }
+}
+
+function startEditPersonalPromoCode(offerId) {
+    const offer = PERSONAL_PROMO_CODES_CACHE.find(item =>
+        Number(item.id || 0) === Number(offerId || 0)
+    );
+
+    if (!offer) return;
+
+    PERSONAL_PROMO_CODE_EDIT_ID = Number(offer.id || 0);
+
+    const titleInput = document.getElementById("personal-promo-code-title");
+    const codeInput = document.getElementById("personal-promo-code-value");
+    const minAmountInput = document.getElementById("personal-promo-code-min-amount");
+    const discountInput = document.getElementById("personal-promo-code-discount");
+    const startInput = document.getElementById("personal-promo-code-start");
+    const endInput = document.getElementById("personal-promo-code-end");
+    const activeInput = document.getElementById("personal-promo-code-active");
+    const saveBtn = document.getElementById("save-personal-promo-code-btn");
+    const resultEl = document.getElementById("personal-promo-code-result");
+
+    if (titleInput) {
+        titleInput.value = offer.title || "";
+    }
+
+    if (codeInput) {
+        codeInput.value = offer.promo_code || "";
+    }
+
+    if (minAmountInput) {
+        minAmountInput.value = Number(offer.min_order_amount || 0);
+    }
+
+    if (discountInput) {
+        discountInput.value = Number(offer.discount_amount || 0);
+    }
+
+    if (startInput) {
+        startInput.value = formatFocusPromoDateForInput(offer.starts_at);
+    }
+
+    if (endInput) {
+        endInput.value = formatFocusPromoDateForInput(offer.ends_at);
+    }
+
+    if (activeInput) {
+        activeInput.checked = isPersonalOfferActive(offer);
+    }
+
+    setPersonalPromoCodeStatusSelection(
+        offer.required_customer_status || "all"
+    );
+
+    if (saveBtn) {
+        saveBtn.textContent = "Зберегти";
+    }
+
+    if (resultEl) {
+        resultEl.classList.remove("staff-hidden");
+        resultEl.innerHTML = "Редагуємо персональний промокод.";
+    }
+
+    if (titleInput) {
+        titleInput.scrollIntoView({
+            behavior: "smooth",
+            block: "center"
+        });
+    }
+}
+
+function renderPersonalPromoCodesList(offers) {
+    if (!personalPromoCodeListResult) return;
+
+    PERSONAL_PROMO_CODES_CACHE = Array.isArray(offers) ? offers : [];
+
+    personalPromoCodeListResult.classList.remove("staff-hidden");
+
+    if (!PERSONAL_PROMO_CODES_CACHE.length) {
+        personalPromoCodeListResult.innerHTML = `
+            <p>Створених персональних промокодів поки немає.</p>
+        `;
+        return;
+    }
+
+    const visibleOffers = PERSONAL_PROMO_CODES_CACHE.filter(offer => {
+        const isActive = isPersonalOfferActive(offer);
+
+        if (PERSONAL_PROMO_CODES_FILTER === "active") {
+            return isActive;
+        }
+
+        if (PERSONAL_PROMO_CODES_FILTER === "inactive") {
+            return !isActive;
+        }
+
+        return true;
+    });
+
+    const tableHtml = visibleOffers.length
+        ? `
+            <div class="staff-promo-table is-personal-promo-code-table">
+                <div class="staff-promo-table-head">
+                    <div>Назва / код</div>
+                    <div>Умова</div>
+                    <div>Знижка, грн</div>
+                    <div>Початок</div>
+                    <div>Кінець</div>
+                    <div>Активна</div>
+                    <div>Кому</div>
+                    <div>Дія</div>
+                </div>
+
+                ${visibleOffers.map(offer => `
+                    <div class="staff-promo-table-row">
+                        <div class="staff-promo-cell">
+                            ${escapeStaffHtml(offer.title || "—")}
+                            ${
+                                offer.promo_code
+                                    ? `<br><span style="opacity:0.72;">${escapeStaffHtml(offer.promo_code)}</span>`
+                                    : ""
+                            }
+                        </div>
+
+                        <div class="staff-promo-cell">
+                            ${escapeStaffHtml(getPersonalPromoCodeConditionText(offer))}
+                            ${
+                                offer.offer_text
+                                    ? `<br><span style="opacity:0.72;">${escapeStaffHtml(offer.offer_text)}</span>`
+                                    : ""
+                            }
+                        </div>
+
+                        <div class="staff-promo-cell">
+                            ${escapeStaffHtml(Number(offer.discount_amount || 0))} грн
+                        </div>
+
+                        <div class="staff-promo-cell">
+                            ${escapeStaffHtml(getPersonalOfferPeriodText(offer.starts_at))}
+                        </div>
+
+                        <div class="staff-promo-cell">
+                            ${escapeStaffHtml(getPersonalOfferPeriodText(offer.ends_at))}
+                        </div>
+
+                        <div class="staff-promo-cell">
+                            ${escapeStaffHtml(getPersonalOfferActiveText(offer))}
+                        </div>
+
+                        <div class="staff-promo-cell">
+                            ${escapeStaffHtml(getPersonalOfferStatusText(offer.required_customer_status))}
+                        </div>
+
+                        <div class="staff-promo-cell staff-promo-actions">
+                            <button
+                                type="button"
+                                class="buy-btn staff-personal-promo-code-edit-btn"
+                                data-personal-promo-code-edit-id="${offer.id}"
+                            >
+                                Редагувати
+                            </button>
+                        </div>
+                    </div>
+                `).join("")}
+            </div>
+        `
+        : `
+            <p>Персональних промокодів за цим фільтром немає.</p>
+        `;
+
+    personalPromoCodeListResult.innerHTML = `
+        <div class="staff-promo-campaign-block">
+            <h3>Створені персональні промокоди</h3>
+
+            <div class="staff-users-filter-bar">
+                <button
+                    type="button"
+                    class="buy-btn staff-users-filter-btn ${PERSONAL_PROMO_CODES_FILTER === "active" ? "is-active" : ""}"
+                    onclick="setPersonalPromoCodesFilter('active')"
+                >
+                    Активні
+                </button>
+
+                <button
+                    type="button"
+                    class="buy-btn staff-users-filter-btn ${PERSONAL_PROMO_CODES_FILTER === "inactive" ? "is-active" : ""}"
+                    onclick="setPersonalPromoCodesFilter('inactive')"
+                >
+                    Неактивні
+                </button>
+
+                <button
+                    type="button"
+                    class="buy-btn staff-users-filter-btn ${PERSONAL_PROMO_CODES_FILTER === "all" ? "is-active" : ""}"
+                    onclick="setPersonalPromoCodesFilter('all')"
+                >
+                    Всі
+                </button>
+            </div>
+
+            ${tableHtml}
+        </div>
+    `;
+}
+
+if (personalPromoCodeListResult) {
+    personalPromoCodeListResult.addEventListener("click", event => {
+        const editButton = event.target.closest(".staff-personal-promo-code-edit-btn");
+
+        if (!editButton) return;
+
+        startEditPersonalPromoCode(editButton.dataset.personalPromoCodeEditId);
+    });
+}
+    
 function renderPersonalOffersLists(offers) {
     const list = Array.isArray(offers) ? offers : [];
 
@@ -3871,19 +4164,7 @@ function renderPersonalOffersLists(offers) {
         String(offer.offer_type || "").toLowerCase() === "delivery"
     );
 
-    renderPersonalOffersTable(
-        personalPromoCodeListResult,
-        fixedPromoCodes,
-        "Створених персональних промокодів поки немає.",
-        offer => {
-            const code = offer.promo_code || "—";
-            const amount = Number(offer.discount_amount || 0);
-
-            return amount > 0
-                ? `${code}: −${amount} грн`
-                : code;
-        }
-    );
+    renderPersonalPromoCodesList(fixedPromoCodes);
 
     renderPersonalOffersTable(
         personalPercentOfferListResult,

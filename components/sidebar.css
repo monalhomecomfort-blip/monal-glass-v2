@@ -1413,6 +1413,18 @@
 }
 
 /* ===================== STAFF PROMO CAMPAIGNS ===================== */
+#promos-section .staff-promo-main-title {
+    margin: 0 0 14px;
+    font-weight: 500;
+    font-size: 24px;
+    color: #1f1f1f;
+}
+
+#promos-section .staff-promo-personal-title {
+    margin-top: 34px;
+    padding-top: 26px;
+    border-top: 1px solid rgba(0, 0, 0, 0.12);
+}
 
 #promos-section .staff-promo-campaign-block {
     width: 100%;

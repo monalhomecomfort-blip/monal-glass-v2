@@ -278,11 +278,36 @@ function addToCart(name, price, label = "", items = null, extra = null) {
     updateCartCount();
 }
 
+function normalizeFocusPromoText(value) {
+    return String(value || "")
+        .trim()
+        .toLowerCase()
+        .replace(/ё/g, "е")
+        .replace(/[’ʼ']/g, "")
+        .replace(/[·•|/\\–—-]+/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+}
+
+function uniqueFocusPromoTexts(values) {
+    return [
+        ...new Set(
+            values
+                .map(value => normalizeFocusPromoText(value))
+                .filter(Boolean)
+        )
+    ];
+}
+
 function getFocusProductCampaign() {
     return PUBLIC_PROMO_CAMPAIGNS.find(c =>
         c.promo_type === "focus_product" &&
-        c.product_name &&
-        c.product_label
+        (
+            c.focus_product_id ||
+            c.product_key ||
+            c.product_name ||
+            c.display_name
+        )
     ) || null;
 }
 
@@ -291,13 +316,55 @@ function isFocusProductItem(item) {
 
     if (!campaign || !item) return false;
 
-    const itemName = String(item.name || "").trim().toLowerCase();
-    const itemLabel = String(item.label || "").trim().toLowerCase();
+    const campaignId = Number(campaign.focus_product_id || 0);
+    const itemId = Number(item.product_id || item.productId || item.id || 0);
 
-    const campaignName = String(campaign.product_name || "").trim().toLowerCase();
-    const campaignLabel = String(campaign.product_label || "").trim().toLowerCase();
+    if (campaignId && itemId && campaignId === itemId) {
+        return true;
+    }
 
-    return itemName === campaignName && itemLabel === campaignLabel;
+    const campaignKey = normalizeFocusPromoText(campaign.product_key);
+    const itemKey = normalizeFocusPromoText(item.product_key || item.productKey || item.key);
+
+    if (campaignKey && itemKey && campaignKey === itemKey) {
+        return true;
+    }
+
+    const itemName = item.name || item.product_name || item.display_name || item.title || "";
+    const itemLabel = item.label || item.product_label || "";
+
+    const campaignName = campaign.product_name || "";
+    const campaignLabel = campaign.product_label || "";
+    const campaignDisplayName = campaign.display_name || "";
+
+    const itemTexts = uniqueFocusPromoTexts([
+        itemName,
+        itemLabel && itemName ? `${itemLabel} ${itemName}` : "",
+        itemName && itemLabel ? `${itemName} ${itemLabel}` : ""
+    ]);
+
+    const campaignTexts = uniqueFocusPromoTexts([
+        campaignDisplayName,
+        campaignName,
+        campaignLabel && campaignName ? `${campaignLabel} ${campaignName}` : "",
+        campaignLabel && campaignDisplayName ? `${campaignLabel} ${campaignDisplayName}` : ""
+    ]);
+
+    return itemTexts.some(itemText =>
+        campaignTexts.some(campaignText => {
+            if (itemText === campaignText) return true;
+
+            if (campaignText.length >= 8 && itemText.includes(campaignText)) {
+                return true;
+            }
+
+            if (itemText.length >= 8 && campaignText.includes(itemText)) {
+                return true;
+            }
+
+            return false;
+        })
+    );
 }
 
 function calcFocusProductDiscount(cart) {

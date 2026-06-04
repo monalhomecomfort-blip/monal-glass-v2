@@ -110,6 +110,51 @@ function getOrderNoteFromSelectedOffer() {
 const PROMO = window.PROMO_CONFIG || null;
 let PROMO_CODE = (localStorage.getItem("promo_code") || "").trim().toUpperCase();
 
+const PERSONAL_PROMO_CODE_STORAGE_KEY = "monal_personal_promo_code";
+
+function getStoredPersonalPromoCodeData(code = PROMO_CODE) {
+    try {
+        const data = JSON.parse(
+            localStorage.getItem(PERSONAL_PROMO_CODE_STORAGE_KEY) || "null"
+        );
+
+        if (!data || !data.promoCode) return null;
+
+        const normalizedCode = String(code || "").trim().toUpperCase();
+        const storedCode = String(data.promoCode || "").trim().toUpperCase();
+
+        if (!normalizedCode || normalizedCode !== storedCode) {
+            return null;
+        }
+
+        const user = JSON.parse(localStorage.getItem("monal_user") || "null");
+
+        if (!user || !user.id) {
+            return null;
+        }
+
+        if (Number(data.userId || 0) !== Number(user.id || 0)) {
+            return null;
+        }
+
+        return data;
+
+    } catch (err) {
+        return null;
+    }
+}
+
+function setStoredPersonalPromoCodeData(data) {
+    localStorage.setItem(
+        PERSONAL_PROMO_CODE_STORAGE_KEY,
+        JSON.stringify(data)
+    );
+}
+
+function clearStoredPersonalPromoCodeData() {
+    localStorage.removeItem(PERSONAL_PROMO_CODE_STORAGE_KEY);
+}
+
 if (PROMO && Array.isArray(PROMO.promoDetails)) {
     const oldCodes = Array.isArray(PROMO.codes) ? PROMO.codes : [];
     const newCodes = PROMO.promoDetails
@@ -217,6 +262,31 @@ function calcPromoDiscount(cart, code = PROMO_CODE) {
     const normalizedCode = String(code || "").trim().toUpperCase();
 
     if (!normalizedCode) return 0;
+
+    const storedPersonalPromo = getStoredPersonalPromoCodeData(normalizedCode);
+
+    if (storedPersonalPromo) {
+        const storedDiscount = Number(storedPersonalPromo.discountAmount || 0);
+
+        if (storedDiscount <= 0) return 0;
+
+        const cartTotalWithoutCertificates = cart
+            .filter(item => {
+                const name = String(item?.name || "").toLowerCase();
+                const label = String(item?.label || "").toLowerCase();
+
+                return (
+                    !name.includes("сертиф") &&
+                    !label.includes("сертиф")
+                );
+            })
+            .reduce((sum, item) => sum + Number(item.price || 0), 0);
+
+        if (cartTotalWithoutCertificates <= 0) return 0;
+
+        return Math.min(storedDiscount, cartTotalWithoutCertificates);
+    }
+
     if (!PROMO || !PROMO.codes || !PROMO.codes.includes(normalizedCode)) return 0;
     if (!isPromoActive(normalizedCode)) return 0;
 
@@ -274,6 +344,10 @@ function addToCart(name, price, label = "", items = null, extra = null) {
 
     cart.push(item);
     localStorage.setItem("cart", JSON.stringify(cart));
+
+    clearStoredPersonalPromoCodeData();
+    localStorage.removeItem("promo_code");
+    PROMO_CODE = "";
 
     updateCartCount();
 }
@@ -527,6 +601,17 @@ function removeFromCart(index) {
     const cart = JSON.parse(localStorage.getItem("cart")) || [];
     cart.splice(index, 1);
     localStorage.setItem("cart", JSON.stringify(cart));
+
+    clearStoredPersonalPromoCodeData();
+    localStorage.removeItem("promo_code");
+    PROMO_CODE = "";
+
+    const promoInput = document.getElementById("promo-input");
+    const promoMessage = document.getElementById("promo-message");
+
+    if (promoInput) promoInput.value = "";
+    if (promoMessage) promoMessage.textContent = "";
+
     renderCart();
     updateCartCount();
 }
@@ -541,8 +626,9 @@ function clearCart() {
     
     // очищаємо промокод
     localStorage.removeItem("promo_code");
+    clearStoredPersonalPromoCodeData();
     PROMO_CODE = "";
-
+    
     // очищаємо поле вводу і повідомлення
     const promoInput = document.getElementById("promo-input");
     const promoMessage = document.getElementById("promo-message");
@@ -1335,7 +1421,7 @@ document.addEventListener("DOMContentLoaded", () => {
         promoInput.value = PROMO_CODE;
     }
 
-    promoBtn.addEventListener("click", () => {
+    promoBtn.addEventListener("click", async () => {
         const entered = promoInput.value.trim().toUpperCase();
 
         if (!entered) {
@@ -1343,62 +1429,149 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        if (!PROMO || !Array.isArray(PROMO.codes) || !PROMO.codes.includes(entered)) {
-            promoMessage.textContent = "Невірний промокод";
-            return;
-        }
-
-        if (!isPromoActive(entered)) {
-            promoMessage.textContent = "Промокод наразі не активний";
-            return;
-        }
-
         const cart = JSON.parse(localStorage.getItem("cart")) || [];
-        const promoDetailsItem = typeof getPromoByCode === "function"
-            ? getPromoByCode(entered)
-            : null;
 
-        let hasEligible = false;
-        let eligibleSum = 0;
-
-        cart.forEach(item => {
-            const excluded = typeof isExcludedItem === "function"
-                ? isExcludedItem(item, promoDetailsItem?.exclusions || null)
-                : false;
-
-            if (!excluded) {
-                hasEligible = true;
-                eligibleSum += Number(item.price) || 0;
-            }
-        });
-
-        if (!hasEligible) {
-            promoMessage.textContent = "Знижка не поширюється на товари з кошика";
+        if (!cart.length) {
+            promoMessage.textContent = "Спочатку додайте товари в кошик";
             return;
         }
 
-        const minOrderAmount = Number(promoDetailsItem?.minOrderAmount || 0);
+        clearStoredPersonalPromoCodeData();
 
-        if (minOrderAmount > 0 && eligibleSum < minOrderAmount) {
+        const isOldPromo =
+            PROMO &&
+            Array.isArray(PROMO.codes) &&
+            PROMO.codes.includes(entered);
+
+        if (isOldPromo) {
+            if (!isPromoActive(entered)) {
+                promoMessage.textContent = "Промокод наразі не активний";
+                return;
+            }
+
+            const promoDetailsItem = typeof getPromoByCode === "function"
+                ? getPromoByCode(entered)
+                : null;
+
+            let hasEligible = false;
+            let eligibleSum = 0;
+
+            cart.forEach(item => {
+                const excluded = typeof isExcludedItem === "function"
+                    ? isExcludedItem(item, promoDetailsItem?.exclusions || null)
+                    : false;
+
+                if (!excluded) {
+                    hasEligible = true;
+                    eligibleSum += Number(item.price) || 0;
+                }
+            });
+
+            if (!hasEligible) {
+                promoMessage.textContent = "Знижка не поширюється на товари з кошика";
+                return;
+            }
+
+            const minOrderAmount = Number(promoDetailsItem?.minOrderAmount || 0);
+
+            if (minOrderAmount > 0 && eligibleSum < minOrderAmount) {
+                PROMO_CODE = "";
+                localStorage.removeItem("promo_code");
+
+                promoMessage.textContent =
+                    `Для цього промокоду потрібна сума від ${minOrderAmount} грн без врахування сертифікатів`;
+
+                renderCart();
+                return;
+            }
+
+            const user = JSON.parse(localStorage.getItem("monal_user") || "null");
+            if (user && user.id) {
+                localStorage.removeItem("monal_selected_offer_" + user.id);
+            }
+
+            PROMO_CODE = entered;
+            localStorage.setItem("promo_code", PROMO_CODE);
+
+            promoMessage.textContent = "Знижка застосована";
+            renderCart();
+            return;
+        }
+
+        const user = JSON.parse(localStorage.getItem("monal_user") || "null");
+
+        if (!user || !user.id) {
             PROMO_CODE = "";
             localStorage.removeItem("promo_code");
+            clearStoredPersonalPromoCodeData();
 
             promoMessage.textContent =
-                `Для цього промокоду потрібна сума від ${minOrderAmount} грн без врахування сертифікатів`;
+                "Персональний промокод доступний тільки після входу в акаунт";
 
             renderCart();
             return;
         }
-        
-        const user = JSON.parse(localStorage.getItem("monal_user") || "null");
-        if (user && user.id) {
-            localStorage.removeItem("monal_selected_offer_" + user.id);
-        }
-        PROMO_CODE = entered;
-        localStorage.setItem("promo_code", PROMO_CODE);
 
-        promoMessage.textContent = "Знижка застосована";
-        renderCart();
+        promoMessage.textContent = "Перевіряю промокод…";
+
+        try {
+            const response = await fetch(
+                "https://monal-mono-pay-production.up.railway.app/api/promo-code/check",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        userId: user.id,
+                        promoCode: entered,
+                        items: cart
+                    })
+                }
+            );
+
+            const data = await response.json();
+
+            if (!data.ok || !data.valid) {
+                PROMO_CODE = "";
+                localStorage.removeItem("promo_code");
+                clearStoredPersonalPromoCodeData();
+
+                promoMessage.textContent =
+                    data.message || data.error || "Невірний або неактивний промокод";
+
+                renderCart();
+                return;
+            }
+
+            localStorage.removeItem("monal_selected_offer_" + user.id);
+
+            PROMO_CODE = entered;
+            localStorage.setItem("promo_code", PROMO_CODE);
+
+            setStoredPersonalPromoCodeData({
+                userId: user.id,
+                offerId: data.offerId || null,
+                title: data.title || "",
+                promoCode: entered,
+                discountAmount: Number(data.discountAmount || 0),
+                minOrderAmount: Number(data.minOrderAmount || 0),
+                eligibleSum: Number(data.eligibleSum || 0)
+            });
+
+            promoMessage.textContent = data.message || "Знижка застосована";
+            renderCart();
+
+        } catch (err) {
+            console.error("PERSONAL PROMO CHECK ERROR:", err);
+
+            PROMO_CODE = "";
+            localStorage.removeItem("promo_code");
+            clearStoredPersonalPromoCodeData();
+
+            promoMessage.textContent = "Помилка перевірки промокоду";
+            renderCart();
+        }
     });
 });
 

@@ -4134,13 +4134,135 @@ function renderPersonalPromoCodesList(offers) {
     `;
 }
 
-if (personalPromoCodeListResult) {
-    personalPromoCodeListResult.addEventListener("click", event => {
-        const editButton = event.target.closest(".staff-personal-promo-code-edit-btn");
+function getSelectedPersonalPromoCodeStatuses() {
+    const checkedStatuses = Array.from(
+        document.querySelectorAll(".personal-promo-code-status-checkbox:checked")
+    )
+        .map(checkbox => String(checkbox.value || "").trim().toLowerCase())
+        .filter(Boolean);
 
-        if (!editButton) return;
+    if (!checkedStatuses.length || checkedStatuses.includes("all")) {
+        return "all";
+    }
 
-        startEditPersonalPromoCode(editButton.dataset.personalPromoCodeEditId);
+    return checkedStatuses.join(",");
+}
+
+function resetPersonalPromoCodeForm() {
+    PERSONAL_PROMO_CODE_EDIT_ID = 0;
+
+    const titleInput = document.getElementById("personal-promo-code-title");
+    const codeInput = document.getElementById("personal-promo-code-value");
+    const minAmountInput = document.getElementById("personal-promo-code-min-amount");
+    const discountInput = document.getElementById("personal-promo-code-discount");
+    const startInput = document.getElementById("personal-promo-code-start");
+    const endInput = document.getElementById("personal-promo-code-end");
+    const activeInput = document.getElementById("personal-promo-code-active");
+    const saveBtn = document.getElementById("save-personal-promo-code-btn");
+
+    if (titleInput) titleInput.value = "";
+    if (codeInput) codeInput.value = "";
+    if (minAmountInput) minAmountInput.value = "0";
+    if (discountInput) discountInput.value = "";
+    if (startInput) startInput.value = "";
+    if (endInput) endInput.value = "";
+    if (activeInput) activeInput.checked = false;
+
+    setPersonalPromoCodeStatusSelection("all");
+
+    if (saveBtn) {
+        saveBtn.textContent = "Створити";
+    }
+}
+
+async function savePersonalPromoCode() {
+    const titleInput = document.getElementById("personal-promo-code-title");
+    const codeInput = document.getElementById("personal-promo-code-value");
+    const minAmountInput = document.getElementById("personal-promo-code-min-amount");
+    const discountInput = document.getElementById("personal-promo-code-discount");
+    const startInput = document.getElementById("personal-promo-code-start");
+    const endInput = document.getElementById("personal-promo-code-end");
+    const activeInput = document.getElementById("personal-promo-code-active");
+    const resultEl = document.getElementById("personal-promo-code-result");
+
+    const title = titleInput?.value.trim() || "";
+    const promoCode = codeInput?.value.trim().toUpperCase() || "";
+    const minOrderAmount = Number(minAmountInput?.value || 0);
+    const discountAmount = Number(discountInput?.value || 0);
+    const startsAt = startInput?.value || "";
+    const endsAt = endInput?.value || "";
+    const isActive = activeInput?.checked ? 1 : 0;
+    const requiredCustomerStatus = getSelectedPersonalPromoCodeStatuses();
+
+    if (!resultEl) return;
+
+    resultEl.classList.remove("staff-hidden");
+
+    if (!title || !promoCode) {
+        resultEl.innerHTML = "Вкажіть назву пропозиції і промокод.";
+        return;
+    }
+
+    if (discountAmount <= 0) {
+        resultEl.innerHTML = "Вкажіть знижку в грн більше 0.";
+        return;
+    }
+
+    if (minOrderAmount < 0) {
+        resultEl.innerHTML = "Умова по сумі не може бути меншою за 0.";
+        return;
+    }
+
+    resultEl.innerHTML = PERSONAL_PROMO_CODE_EDIT_ID
+        ? "Оновлюю персональний промокод…"
+        : "Створюю персональний промокод…";
+
+    try {
+        const response = await fetch(
+            "https://monal-mono-pay-production.up.railway.app/api/staff/save-personal-promo-code",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    staffId: staff.id,
+                    offerId: PERSONAL_PROMO_CODE_EDIT_ID,
+                    title,
+                    promoCode,
+                    discountAmount,
+                    minOrderAmount,
+                    startsAt,
+                    endsAt,
+                    isActive,
+                    requiredCustomerStatus
+                })
+            }
+        );
+
+        const data = await response.json();
+
+        if (!data.ok) {
+            resultEl.innerHTML = data.error || "Не вдалося зберегти персональний промокод.";
+            return;
+        }
+
+        resultEl.innerHTML = data.message || "Персональний промокод збережено.";
+
+        resetPersonalPromoCodeForm();
+        await loadPersonalOffers();
+
+    } catch (err) {
+        console.error(err);
+        resultEl.innerHTML = "Помилка зʼєднання при збереженні персонального промокоду.";
+    }
+}
+
+const savePersonalPromoCodeBtn = document.getElementById("save-personal-promo-code-btn");
+
+if (savePersonalPromoCodeBtn) {
+    savePersonalPromoCodeBtn.addEventListener("click", () => {
+        savePersonalPromoCode();
     });
 }
     

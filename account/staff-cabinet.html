@@ -1867,9 +1867,17 @@ function getSaleItemsTotal() {
 }
 
 function getCurrentSaleWarehouseId() {
-    return String(staff?.role || "") === "admin"
-        ? Number(saleWarehouseSelect?.value || 0)
-        : Number(staff?.warehouse_id || 0);
+    const assignedWarehouseId = Number(staff?.warehouse_id || 0);
+
+    if (assignedWarehouseId > 0) {
+        return assignedWarehouseId;
+    }
+
+    if (String(staff?.role || "") === "admin") {
+        return Number(saleWarehouseSelect?.value || 0);
+    }
+
+    return 0;
 }
 
 function getAppliedStaffSalePromoCode() {
@@ -3431,9 +3439,13 @@ function showStaffSection(section) {
 if (openSalesSectionBtn && salesSection) {
     openSalesSectionBtn.addEventListener("click", async () => {
         showStaffSection(salesSection);
+
         await loadStaffProducts();
 
-        if (String(staff?.role || "") === "admin") {
+        const assignedWarehouseId = Number(staff?.warehouse_id || 0);
+        const isAdmin = String(staff?.role || "") === "admin";
+
+        if (isAdmin && assignedWarehouseId <= 0) {
             if (saleWarehouseRow) {
                 saleWarehouseRow.classList.remove("staff-hidden");
             }
@@ -3443,7 +3455,13 @@ if (openSalesSectionBtn && salesSection) {
             if (saleWarehouseRow) {
                 saleWarehouseRow.classList.add("staff-hidden");
             }
+
+            if (saleWarehouseSelect && assignedWarehouseId > 0) {
+                saleWarehouseSelect.value = String(assignedWarehouseId);
+            }
         }
+
+        updateSalePaymentSummary();
     });
 }
 
@@ -6048,10 +6066,7 @@ if (createWarehouseBtn && newWarehouseNameInput && stockManageResult) {
 if (createSaleBtn && saleResult) {
     createSaleBtn.addEventListener("click", async () => {
         const paymentType = salePaymentTypeSelect?.value || "";
-        const warehouseId =
-            String(staff?.role || "") === "admin"
-                ? Number(saleWarehouseSelect?.value || 0)
-                : Number(staff?.warehouse_id || 0);
+        const warehouseId = getCurrentSaleWarehouseId();
 
         saleResult.classList.remove("staff-hidden");
 

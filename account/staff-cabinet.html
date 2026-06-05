@@ -190,6 +190,24 @@
                 <div>До оплати: <strong id="sale-total-amount">0 грн</strong></div>
             </div>
 
+            <div id="sale-promo-box" class="staff-payment-inline">
+                <input
+                    type="text"
+                    id="sale-promo-code"
+                    placeholder="Промокод"
+                >
+
+                <button id="sale-promo-apply-btn" class="buy-btn" type="button">
+                    Застосувати
+                </button>
+
+                <button id="sale-promo-clear-btn" class="buy-btn" type="button">
+                    Скинути
+                </button>
+            </div>
+
+            <div id="sale-promo-result" class="staff-payment-note"></div>
+
             <div class="staff-sale-payment-row">
                 <select id="sale-customer-source">
                     <option value="">Джерело клієнта</option>
@@ -1557,6 +1575,10 @@ const saleItemsBox = document.getElementById("sale-items-box");
 const saleCheckTotalAmount = document.getElementById("sale-check-total-amount");
 const saleCertificateAmount = document.getElementById("sale-certificate-amount");
 const saleTotalAmount = document.getElementById("sale-total-amount");
+const salePromoCodeInput = document.getElementById("sale-promo-code");
+const salePromoApplyBtn = document.getElementById("sale-promo-apply-btn");
+const salePromoClearBtn = document.getElementById("sale-promo-clear-btn");
+const salePromoResult = document.getElementById("sale-promo-result");
 const saleCustomerSourceSelect = document.getElementById("sale-customer-source");
 const salePaymentTypeSelect = document.getElementById("sale-payment-type");
 const createSaleBtn = document.getElementById("create-sale-btn");
@@ -1565,16 +1587,17 @@ const saleCardTransferPaidBtn = document.getElementById("sale-card-transfer-paid
 const saleCertificateBox = document.getElementById("sale-certificate-box");
 const saleCertificateCodeInput = document.getElementById("sale-certificate-code");
 const saleCertificateCheckBtn = document.getElementById("sale-certificate-check-btn");
-const saleCertificateResult = document.getElementById("sale-certificate-result");        
+const saleCertificateResult = document.getElementById("sale-certificate-result");                
 
 let SALE_SELECTED_CUSTOMER = null;
 let SALE_CARD_TRANSFER_CONFIRMED = false;
 let SALE_CERTIFICATE = null;
-let SALE_CERTIFICATE_CHECKED = null;    
+let SALE_CERTIFICATE_CHECKED = null;
+let SALE_PERSONAL_PROMO_CODE = "";    
 
 let STAFF_PRODUCTS_LOADED = false;
 let STAFF_PRODUCTS = [];
-let SALE_ITEMS = [];    
+let SALE_ITEMS = [];        
 
 async function loadStaffProducts() {
     if (STAFF_PRODUCTS_LOADED) return;
@@ -1849,6 +1872,26 @@ function getCurrentSaleWarehouseId() {
         : Number(staff?.warehouse_id || 0);
 }
 
+function getAppliedStaffSalePromoCode() {
+    return String(SALE_PERSONAL_PROMO_CODE || "").trim().toUpperCase();
+}
+
+function clearStaffSalePromoCode(shouldUpdate = true) {
+    SALE_PERSONAL_PROMO_CODE = "";
+
+    if (salePromoCodeInput) {
+        salePromoCodeInput.value = "";
+    }
+
+    if (salePromoResult) {
+        salePromoResult.textContent = "";
+    }
+
+    if (shouldUpdate) {
+        updateSalePaymentSummary();
+    }
+}
+
 function getSalePreviewItemsPayload() {
     return SALE_ITEMS.map(item => ({
         productId: Number(item.productId || 0),
@@ -1875,6 +1918,10 @@ async function updateSalePaymentSummary() {
             saleTotalAmount.textContent = "0 грн";
         }
 
+        if (salePromoResult && SALE_PERSONAL_PROMO_CODE) {
+            salePromoResult.textContent = "";
+        }
+
         return;
     }
 
@@ -1883,6 +1930,9 @@ async function updateSalePaymentSummary() {
     let grossTotalAmount = checkTotal;
     let focusProductDiscountAmount = 0;
     let welcomeDiscountAmount = 0;
+    let personalPromoCodeDiscountAmount = 0;
+    let personalPromoCodeMessage = "";
+    let personalPromoCodeValid = true;
     let totalAfterDiscounts = checkTotal;
 
     if (saleCheckTotalAmount) {
@@ -1905,6 +1955,7 @@ async function updateSalePaymentSummary() {
                         staffId: staff.id,
                         customerId: Number(SALE_SELECTED_CUSTOMER?.id || 0),
                         warehouseId,
+                        promoCode: getAppliedStaffSalePromoCode(),
                         items: getSalePreviewItemsPayload()
                     })
                 }
@@ -1920,6 +1971,9 @@ async function updateSalePaymentSummary() {
                 grossTotalAmount = Number(data.grossTotalAmount || checkTotal);
                 focusProductDiscountAmount = Number(data.focusProductDiscountAmount || 0);
                 welcomeDiscountAmount = Number(data.welcomeDiscountAmount || 0);
+                personalPromoCodeDiscountAmount = Number(data.personalPromoCodeDiscountAmount || 0);
+                personalPromoCodeMessage = String(data.personalPromoCodeMessage || "");
+                personalPromoCodeValid = Boolean(data.personalPromoCodeValid);
                 totalAfterDiscounts = Number(data.totalAmount || grossTotalAmount);
             }
 
@@ -1960,6 +2014,25 @@ async function updateSalePaymentSummary() {
         `);
     }
 
+    if (personalPromoCodeDiscountAmount > 0) {
+        discountLines.push(`
+            <span style="font-weight:400;">
+                Промокод: −${personalPromoCodeDiscountAmount} грн
+            </span>
+        `);
+    }
+
+    if (salePromoResult && SALE_PERSONAL_PROMO_CODE) {
+        if (personalPromoCodeDiscountAmount > 0) {
+            salePromoResult.textContent =
+                personalPromoCodeMessage || `Промокод ${SALE_PERSONAL_PROMO_CODE} застосовано.`;
+        } else if (!personalPromoCodeValid && personalPromoCodeMessage) {
+            salePromoResult.textContent = personalPromoCodeMessage;
+        } else if (personalPromoCodeMessage) {
+            salePromoResult.textContent = personalPromoCodeMessage;
+        }
+    }
+
     if (saleCheckTotalAmount) {
         saleCheckTotalAmount.innerHTML = discountLines.length
             ? `
@@ -1979,6 +2052,72 @@ async function updateSalePaymentSummary() {
     if (saleTotalAmount) {
         saleTotalAmount.textContent = `${payableTotal} грн`;
     }
+}
+
+if (salePromoApplyBtn) {
+    salePromoApplyBtn.addEventListener("click", async () => {
+        const code = String(salePromoCodeInput?.value || "").trim().toUpperCase();
+
+        if (!code) {
+            SALE_PERSONAL_PROMO_CODE = "";
+            if (salePromoResult) salePromoResult.textContent = "Введіть промокод.";
+            updateSalePaymentSummary();
+            return;
+        }
+
+        if (!Number(SALE_SELECTED_CUSTOMER?.id || 0)) {
+            SALE_PERSONAL_PROMO_CODE = "";
+            if (salePromoResult) {
+                salePromoResult.textContent =
+                    "Персональний промокод доступний тільки зареєстрованим клієнтам.";
+            }
+            updateSalePaymentSummary();
+            return;
+        }
+
+        if (!SALE_ITEMS.length) {
+            SALE_PERSONAL_PROMO_CODE = "";
+            if (salePromoResult) {
+                salePromoResult.textContent = "Спочатку додайте товари в чек.";
+            }
+            updateSalePaymentSummary();
+            return;
+        }
+
+        SALE_PERSONAL_PROMO_CODE = code;
+
+        if (salePromoCodeInput) {
+            salePromoCodeInput.value = code;
+        }
+
+        if (salePromoResult) {
+            salePromoResult.textContent = "Перевіряю промокод…";
+        }
+
+        await updateSalePaymentSummary();
+    });
+}
+
+if (salePromoClearBtn) {
+    salePromoClearBtn.addEventListener("click", () => {
+        clearStaffSalePromoCode();
+    });
+}
+
+if (salePromoCodeInput) {
+    salePromoCodeInput.addEventListener("input", () => {
+        const typedCode = String(salePromoCodeInput.value || "").trim().toUpperCase();
+
+        if (SALE_PERSONAL_PROMO_CODE && typedCode !== SALE_PERSONAL_PROMO_CODE) {
+            SALE_PERSONAL_PROMO_CODE = "";
+
+            if (salePromoResult) {
+                salePromoResult.textContent = "Натисніть “Застосувати”, щоб перевірити новий промокод.";
+            }
+
+            updateSalePaymentSummary();
+        }
+    });
 }
     
 function renderSaleItems() {
@@ -2577,6 +2716,9 @@ if (saleClientSearchBtn) {
         const searchValue = saleClientSearchInput.value.trim();
 
         SALE_SELECTED_CUSTOMER = null;
+        clearStaffSalePromoCode(false);
+        resetSaleCertificateBox();
+        updateSalePaymentSummary();
 
         if (!searchValue) {
             saleClientResult.classList.remove("staff-hidden");
@@ -2629,6 +2771,8 @@ if (saleClientSearchBtn) {
                 Знижка: ${c.discount || 0}%<br>
                 Накопичено: ${c.total_spent || 0} грн
             `;
+
+            updateSalePaymentSummary();
 
         } catch (err) {
             console.error(err);
@@ -5971,6 +6115,13 @@ if (createSaleBtn && saleResult) {
             return;
         }
 
+        const typedPromoCode = String(salePromoCodeInput?.value || "").trim().toUpperCase();
+
+        if (typedPromoCode && typedPromoCode !== SALE_PERSONAL_PROMO_CODE) {
+            saleResult.innerHTML = "Натисніть “Застосувати”, щоб перевірити промокод перед оплатою.";
+            return;
+        }
+
         const salePayload = {
             staffId: staff.id,
             customerId,
@@ -5984,7 +6135,8 @@ if (createSaleBtn && saleResult) {
             })),
             paymentType,
             warehouseId,
-            certificateCode: selectedCertificateCode
+            certificateCode: selectedCertificateCode,
+            promoCode: SALE_PERSONAL_PROMO_CODE || ""
         };
 
         if (
@@ -6167,6 +6319,7 @@ if (createSaleBtn && saleResult) {
             const grossTotalAmount = Number(sale.grossTotalAmount || sale.totalAmount || 0);
             const focusProductDiscountAmount = Number(sale.focusProductDiscountAmount || 0);
             const welcomeDiscountAmount = Number(sale.welcomeDiscountAmount || 0);
+            const personalPromoCodeDiscountAmount = Number(sale.personalPromoCodeDiscountAmount || 0);
             const finalTotalAmount = Number(sale.totalAmount || 0);
 
             const saleDiscountLines = [];
@@ -6177,6 +6330,10 @@ if (createSaleBtn && saleResult) {
 
             if (welcomeDiscountAmount > 0) {
                 saleDiscountLines.push(`Welcome-знижка 10%: −${welcomeDiscountAmount} грн`);
+            }
+
+            if (personalPromoCodeDiscountAmount > 0) {
+                saleDiscountLines.push(`Промокод: −${personalPromoCodeDiscountAmount} грн`);
             }
 
             const saleTotalsHtml = saleDiscountLines.length
@@ -6212,6 +6369,7 @@ if (createSaleBtn && saleResult) {
             `;
 
             SALE_ITEMS = [];
+            clearStaffSalePromoCode(false);
 
             if (saleProductSearch) saleProductSearch.value = "";
             if (saleProductId) saleProductId.value = "";

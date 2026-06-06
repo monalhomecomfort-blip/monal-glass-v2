@@ -459,6 +459,117 @@ function calcFocusProductDiscount(cart) {
     return Math.round(eligibleTotal * (discountPercent / 100));
 }
 
+function normalizeCartPersonalOfferText(value) {
+    return String(value || "")
+        .trim()
+        .toLowerCase()
+        .replace(/ё/g, "е")
+        .replace(/[’ʼ']/g, "")
+        .replace(/[_/\\|–—-]+/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+}
+
+function isCartCertificateItem(item) {
+    const name = normalizeCartPersonalOfferText(item?.name);
+    const label = normalizeCartPersonalOfferText(item?.label);
+    const categorySlug = normalizeCartPersonalOfferText(item?.category_slug);
+
+    return (
+        name.includes("сертиф") ||
+        label.includes("сертиф") ||
+        categorySlug.includes("certificate")
+    );
+}
+
+function getCartItemCategoryKeys(item) {
+    const name = normalizeCartPersonalOfferText(item?.name);
+    const label = normalizeCartPersonalOfferText(item?.label);
+    const categorySlug = normalizeCartPersonalOfferText(item?.category_slug);
+    const text = `${categorySlug} ${label} ${name}`;
+
+    const keys = new Set();
+
+    if (categorySlug) keys.add(categorySlug);
+    if (label) keys.add(label);
+
+    if (text.includes("аромадифузор")) keys.add("aromadiffusers");
+    if (text.includes("рефіл")) keys.add("refills");
+    if (text.includes("парфум")) keys.add("parfums");
+    if (text.includes("discovery") || text.includes("діскавер")) keys.add("discovery");
+    if (text.includes("подарунковий набір") || text.includes("gift")) keys.add("gift-sets");
+    if (text.includes("тестер")) keys.add("testers");
+
+    return Array.from(keys)
+        .map(item => normalizeCartPersonalOfferText(item))
+        .filter(Boolean);
+}
+
+function isCartItemEligibleForSelectedPercentOffer(item, offer) {
+    if (!offer || String(offer.offer_type || "").toLowerCase() !== "discount") {
+        return false;
+    }
+
+    if (isCartCertificateItem(item)) {
+        return false;
+    }
+
+    if (isFocusProductItem(item)) {
+        return false;
+    }
+
+    const categoriesRaw = String(offer.required_category_slug || "").trim();
+
+    if (!categoriesRaw || categoriesRaw.toLowerCase() === "all") {
+        return true;
+    }
+
+    const offerCategories = categoriesRaw
+        .split(",")
+        .map(item => normalizeCartPersonalOfferText(item))
+        .filter(Boolean);
+
+    if (!offerCategories.length) {
+        return true;
+    }
+
+    const itemCategoryKeys = getCartItemCategoryKeys(item);
+
+    return offerCategories.some(category =>
+        itemCategoryKeys.includes(category)
+    );
+}
+
+function calcSelectedPersonalPercentOfferDiscount(cart) {
+    const selectedOffer = getSelectedOffer();
+
+    if (
+        !selectedOffer ||
+        String(selectedOffer.offer_type || "").toLowerCase() !== "discount"
+    ) {
+        return 0;
+    }
+
+    const percent = Number(selectedOffer.discount_percent || 0);
+
+    if (percent <= 0) {
+        return 0;
+    }
+
+    const eligibleTotal = cart
+        .filter(item => isCartItemEligibleForSelectedPercentOffer(item, selectedOffer))
+        .reduce((sum, item) => sum + (Number(item.price) || 0), 0);
+
+    if (eligibleTotal <= 0) {
+        return 0;
+    }
+
+    return Math.min(
+        eligibleTotal,
+        Math.round(eligibleTotal * (percent / 100))
+    );
+}
+
 function calcUserCartDiscount(cart, user) {
     if (!user) return 0;
 
@@ -466,35 +577,36 @@ function calcUserCartDiscount(cart, user) {
     const welcomeDiscountUsed = Boolean(user.welcome_discount_used);
 
     const eligibleTotal = cart
-        .filter(item => {
-            const name = String(item?.name || "").toLowerCase();
-            const label = String(item?.label || "").toLowerCase();
-
-            return (
-                !name.includes("сертиф") &&
-                !label.includes("сертиф") &&
-                !isFocusProductItem(item)
-            );
-        })
+        .filter(item =>
+            !isCartCertificateItem(item) &&
+            !isFocusProductItem(item)
+        )
         .reduce((sum, item) => sum + (Number(item.price) || 0), 0);
 
     if (eligibleTotal <= 0) return 0;
+
+    let basePersonalDiscount = 0;
 
     const canUseWelcomeDiscount =
         customerStatus === "general" &&
         !welcomeDiscountUsed;
 
     if (canUseWelcomeDiscount) {
-        return Math.round(eligibleTotal * 0.10);
+        basePersonalDiscount = Math.round(eligibleTotal * 0.10);
+    } else {
+        const personalPercent = Number(user.discount || 0);
+
+        if (personalPercent > 0) {
+            basePersonalDiscount = Math.round(eligibleTotal * (personalPercent / 100));
+        }
     }
 
-    const personalPercent = Number(user.discount || 0);
+    const selectedPercentOfferDiscount = calcSelectedPersonalPercentOfferDiscount(cart);
 
-    if (personalPercent > 0) {
-        return Math.round(eligibleTotal * (personalPercent / 100));
-    }
-
-    return 0;
+    return Math.min(
+        eligibleTotal,
+        basePersonalDiscount + selectedPercentOfferDiscount
+    );
 }
 
 function renderCart() {

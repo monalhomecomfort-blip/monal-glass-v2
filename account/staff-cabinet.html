@@ -4556,6 +4556,198 @@ if (savePersonalPromoCodeBtn) {
         savePersonalPromoCode();
     });
 }
+
+let PERSONAL_PERCENT_OFFER_EDIT_ID = 0;
+
+function getSelectedPersonalPercentOfferStatuses() {
+    const checkedStatuses = Array.from(
+        document.querySelectorAll(".personal-percent-offer-status-checkbox:checked")
+    )
+        .map(checkbox => String(checkbox.value || "").trim().toLowerCase())
+        .filter(Boolean);
+
+    if (!checkedStatuses.length || checkedStatuses.includes("all")) {
+        return "all";
+    }
+
+    return checkedStatuses.join(",");
+}
+
+function getSelectedPersonalPercentOfferCategories() {
+    const checkedCategories = Array.from(
+        document.querySelectorAll(".personal-percent-offer-category-checkbox:checked")
+    )
+        .map(checkbox => String(checkbox.value || "").trim().toLowerCase())
+        .filter(Boolean);
+
+    if (!checkedCategories.length || checkedCategories.includes("all")) {
+        return "all";
+    }
+
+    return checkedCategories.join(",");
+}
+
+function setPersonalPercentOfferStatusSelection(value) {
+    const selectedValues = String(value || "all")
+        .split(",")
+        .map(item => item.trim().toLowerCase())
+        .filter(Boolean);
+
+    const useAll = !selectedValues.length || selectedValues.includes("all");
+
+    document.querySelectorAll(".personal-percent-offer-status-checkbox").forEach(checkbox => {
+        const checkboxValue = String(checkbox.value || "").trim().toLowerCase();
+
+        checkbox.checked = useAll
+            ? checkboxValue === "all"
+            : selectedValues.includes(checkboxValue);
+    });
+
+    const filter = document.getElementById("personal-percent-offer-customer-status");
+    const summary = filter ? filter.querySelector("summary") : null;
+
+    if (summary) {
+        if (useAll) {
+            summary.textContent = "Всі клієнти";
+        } else if (selectedValues.length > 2) {
+            summary.textContent = `Обрано: ${selectedValues.length}`;
+        } else {
+            summary.textContent = selectedValues
+                .map(value => {
+                    if (value === "general") return "Зареєстровані";
+                    if (value === "friends") return "Друзі";
+                    if (value === "partners") return "Партнери";
+                    return value;
+                })
+                .join(", ");
+        }
+    }
+}
+
+function setPersonalPercentOfferCategorySelection(value) {
+    const selectedValues = String(value || "all")
+        .split(",")
+        .map(item => item.trim().toLowerCase())
+        .filter(Boolean);
+
+    const useAll = !selectedValues.length || selectedValues.includes("all");
+
+    document.querySelectorAll(".personal-percent-offer-category-checkbox").forEach(checkbox => {
+        const checkboxValue = String(checkbox.value || "").trim().toLowerCase();
+
+        checkbox.checked = useAll
+            ? checkboxValue === "all"
+            : selectedValues.includes(checkboxValue);
+    });
+
+    updatePersonalPercentOfferCategorySummary();
+}
+
+function resetPersonalPercentOfferForm() {
+    PERSONAL_PERCENT_OFFER_EDIT_ID = 0;
+
+    const titleInput = document.getElementById("personal-percent-offer-title");
+    const discountInput = document.getElementById("personal-percent-offer-discount");
+    const startInput = document.getElementById("personal-percent-offer-start");
+    const endInput = document.getElementById("personal-percent-offer-end");
+    const activeInput = document.getElementById("personal-percent-offer-active");
+    const saveBtn = document.getElementById("save-personal-percent-offer-btn");
+
+    if (titleInput) titleInput.value = "";
+    if (discountInput) discountInput.value = "";
+    if (startInput) startInput.value = "";
+    if (endInput) endInput.value = "";
+    if (activeInput) activeInput.checked = false;
+
+    setPersonalPercentOfferStatusSelection("all");
+    setPersonalPercentOfferCategorySelection("all");
+
+    if (saveBtn) {
+        saveBtn.textContent = "Створити";
+    }
+}
+
+async function savePersonalPercentOffer() {
+    const titleInput = document.getElementById("personal-percent-offer-title");
+    const discountInput = document.getElementById("personal-percent-offer-discount");
+    const startInput = document.getElementById("personal-percent-offer-start");
+    const endInput = document.getElementById("personal-percent-offer-end");
+    const activeInput = document.getElementById("personal-percent-offer-active");
+    const resultEl = document.getElementById("personal-percent-offer-result");
+
+    const title = titleInput?.value.trim() || "";
+    const discountPercent = Number(discountInput?.value || 0);
+    const startsAt = startInput?.value || "";
+    const endsAt = endInput?.value || "";
+    const isActive = activeInput?.checked ? 1 : 0;
+    const requiredCustomerStatus = getSelectedPersonalPercentOfferStatuses();
+    const requiredCategorySlug = getSelectedPersonalPercentOfferCategories();
+
+    if (!resultEl) return;
+
+    resultEl.classList.remove("staff-hidden");
+
+    if (!title) {
+        resultEl.innerHTML = "Вкажіть назву персональної % знижки.";
+        return;
+    }
+
+    if (discountPercent <= 0 || discountPercent > 99) {
+        resultEl.innerHTML = "Вкажіть % знижки від 1 до 99.";
+        return;
+    }
+
+    resultEl.innerHTML = PERSONAL_PERCENT_OFFER_EDIT_ID
+        ? "Оновлюю персональну % знижку..."
+        : "Створюю персональну % знижку...";
+
+    try {
+        const response = await fetch(
+            "https://monal-mono-pay-production.up.railway.app/api/staff/save-personal-percent-offer",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    staffId: staff.id,
+                    offerId: PERSONAL_PERCENT_OFFER_EDIT_ID,
+                    title,
+                    discountPercent,
+                    startsAt,
+                    endsAt,
+                    isActive,
+                    requiredCustomerStatus,
+                    requiredCategorySlug
+                })
+            }
+        );
+
+        const data = await response.json();
+
+        if (!data.ok) {
+            resultEl.innerHTML = data.error || "Не вдалося зберегти персональну % знижку.";
+            return;
+        }
+
+        resultEl.innerHTML = data.message || "Персональну % знижку збережено.";
+
+        resetPersonalPercentOfferForm();
+        await loadPersonalOffers();
+
+    } catch (err) {
+        console.error(err);
+        resultEl.innerHTML = "Помилка зʼєднання при збереженні персональної % знижки.";
+    }
+}
+
+const savePersonalPercentOfferBtn = document.getElementById("save-personal-percent-offer-btn");
+
+if (savePersonalPercentOfferBtn) {
+    savePersonalPercentOfferBtn.addEventListener("click", () => {
+        savePersonalPercentOffer();
+    });
+}
     
 function renderPersonalOffersLists(offers) {
     const list = Array.isArray(offers) ? offers : [];
@@ -4566,7 +4758,7 @@ function renderPersonalOffersLists(offers) {
     );
 
     const percentOffers = list.filter(offer =>
-        String(offer.offer_type || "").toLowerCase() === "promo" &&
+        String(offer.offer_type || "").toLowerCase() === "discount" &&
         Number(offer.discount_percent || 0) > 0
     );
 
@@ -4586,9 +4778,14 @@ function renderPersonalOffersLists(offers) {
         "Створених персональних % знижок поки немає.",
         offer => {
             const percent = Number(offer.discount_percent || 0);
+            const categories = String(offer.required_category_slug || "").trim();
+
+            const categoryText = categories
+                ? `категорії: ${categories}`
+                : "всі категорії";
 
             return percent > 0
-                ? `${percent}%`
+                ? `${percent}% | ${categoryText}`
                 : "—";
         }
     );

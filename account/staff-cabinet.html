@@ -1535,6 +1535,8 @@ const personalPromoCodeListResult = document.getElementById("personal-promo-code
 const personalPercentOfferListResult = document.getElementById("personal-percent-offer-list-result");
 const personalGiftOfferListResult = document.getElementById("personal-gift-offer-list-result");
 const personalDeliveryOfferListResult = document.getElementById("personal-delivery-offer-list-result");
+const personalPercentOfferCategoryFilter = document.getElementById("personal-percent-offer-category-filter");
+const personalPercentOfferCategoryList = document.getElementById("personal-percent-offer-category-list");
 
 let FOCUS_PROMO_EDIT_ID = 0;
 let FOCUS_PROMOS_CACHE = [];
@@ -1689,6 +1691,117 @@ function renderSalesReportCategoryFilter() {
         label.appendChild(text);
 
         salesReportCategoryList.appendChild(label);
+    });
+}
+
+function getPersonalPercentOfferCategories() {
+    const categoryMap = new Map();
+
+    STAFF_PRODUCTS.forEach(product => {
+        const slug = String(product.category_slug || "").trim();
+        const label = String(product.product_label || product.category_slug || "").trim();
+        const value = slug || label;
+
+        if (!value || !label) return;
+
+        if (!categoryMap.has(value)) {
+            categoryMap.set(value, label);
+        }
+    });
+
+    return Array.from(categoryMap.entries())
+        .map(([value, label]) => ({
+            value,
+            label
+        }))
+        .sort((a, b) => a.label.localeCompare(b.label, "uk"));
+}
+
+function updatePersonalPercentOfferCategorySummary() {
+    if (!personalPercentOfferCategoryFilter) return;
+
+    const summary = personalPercentOfferCategoryFilter.querySelector("summary");
+
+    if (!summary) return;
+
+    const checked = Array.from(
+        document.querySelectorAll(".personal-percent-offer-category-checkbox:checked")
+    );
+
+    const hasAll = checked.some(input => input.value === "all");
+
+    if (!checked.length || hasAll) {
+        summary.textContent = "Всі категорії";
+        return;
+    }
+
+    const labels = checked
+        .map(input => input.dataset.categoryLabel || input.value)
+        .filter(Boolean);
+
+    summary.textContent = labels.length > 2
+        ? `Обрано: ${labels.length}`
+        : labels.join(", ");
+}
+
+function renderPersonalPercentOfferCategoryFilter() {
+    if (!personalPercentOfferCategoryList) return;
+
+    const categories = getPersonalPercentOfferCategories();
+
+    personalPercentOfferCategoryList.innerHTML = "";
+
+    categories.forEach(category => {
+        const label = document.createElement("label");
+
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.className = "personal-percent-offer-category-checkbox";
+        checkbox.value = category.value;
+        checkbox.dataset.categoryLabel = category.label;
+
+        label.appendChild(checkbox);
+        label.appendChild(document.createTextNode(" " + category.label));
+
+        personalPercentOfferCategoryList.appendChild(label);
+    });
+
+    updatePersonalPercentOfferCategorySummary();
+}
+
+if (personalPercentOfferCategoryFilter) {
+    personalPercentOfferCategoryFilter.addEventListener("change", event => {
+        const checkbox = event.target.closest(".personal-percent-offer-category-checkbox");
+
+        if (!checkbox) return;
+
+        const allCheckbox = personalPercentOfferCategoryFilter.querySelector(
+            '.personal-percent-offer-category-checkbox[value="all"]'
+        );
+
+        const categoryCheckboxes = Array.from(
+            personalPercentOfferCategoryFilter.querySelectorAll(
+                '.personal-percent-offer-category-checkbox:not([value="all"])'
+            )
+        );
+
+        if (checkbox.value === "all" && checkbox.checked) {
+            categoryCheckboxes.forEach(item => {
+                item.checked = false;
+            });
+        }
+
+        if (checkbox.value !== "all" && checkbox.checked && allCheckbox) {
+            allCheckbox.checked = false;
+        }
+
+        const hasSelectedCategory = categoryCheckboxes.some(item => item.checked);
+
+        if (!hasSelectedCategory && allCheckbox) {
+            allCheckbox.checked = true;
+        }
+
+        updatePersonalPercentOfferCategorySummary();
     });
 }
     
@@ -4600,6 +4713,7 @@ if (openPromosSectionBtn && promosSection) {
         }
 
         await loadStaffProducts();
+        renderPersonalPercentOfferCategoryFilter();
         await loadStaffWarehouses();
         await loadFocusPromos();
         await loadPersonalOffers();

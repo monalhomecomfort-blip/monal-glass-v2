@@ -482,27 +482,108 @@ function isCartCertificateItem(item) {
     );
 }
 
-function getCartItemCategoryKeys(item) {
-    const name = normalizeCartPersonalOfferText(item?.name);
-    const label = normalizeCartPersonalOfferText(item?.label);
-    const categorySlug = normalizeCartPersonalOfferText(item?.category_slug);
-    const text = `${categorySlug} ${label} ${name}`;
+function getCartCategoryAliases(value) {
+    const text = normalizeCartPersonalOfferText(value);
+    const aliases = new Set();
 
-    const keys = new Set();
+    if (!text) {
+        return [];
+    }
 
-    if (categorySlug) keys.add(categorySlug);
-    if (label) keys.add(label);
+    aliases.add(text);
 
-    if (text.includes("аромадифузор")) keys.add("aromadiffusers");
-    if (text.includes("рефіл")) keys.add("refills");
-    if (text.includes("парфум")) keys.add("parfums");
-    if (text.includes("discovery") || text.includes("діскавер")) keys.add("discovery");
-    if (text.includes("подарунковий набір") || text.includes("gift")) keys.add("gift-sets");
-    if (text.includes("тестер")) keys.add("testers");
+    if (
+        text.includes("аромадифузор") ||
+        text.includes("diffuser") ||
+        text.includes("aromadiffuser")
+    ) {
+        aliases.add("aromadiffusers");
+        aliases.add("аромадифузори");
+    }
 
-    return Array.from(keys)
+    if (
+        text.includes("рефіл") ||
+        text.includes("refill")
+    ) {
+        aliases.add("refills");
+        aliases.add("рефіли");
+    }
+
+    if (
+        text.includes("парфум") ||
+        text.includes("perfume") ||
+        text.includes("parfum") ||
+        text.includes("home perfume")
+    ) {
+        aliases.add("parfums");
+        aliases.add("парфуми");
+        aliases.add("парфуми для дому");
+    }
+
+    if (
+        text.includes("discovery") ||
+        text.includes("діскавер")
+    ) {
+        aliases.add("discovery");
+        aliases.add("discovery set");
+    }
+
+    if (
+        text.includes("подарунковий") ||
+        text.includes("gift")
+    ) {
+        aliases.add("gift-sets");
+        aliases.add("подарункові набори");
+    }
+
+    if (
+        text.includes("тестер") ||
+        text.includes("tester")
+    ) {
+        aliases.add("testers");
+        aliases.add("тестери");
+    }
+
+    return Array.from(aliases)
         .map(item => normalizeCartPersonalOfferText(item))
         .filter(Boolean);
+}
+
+function getCartItemCategoryKeys(item) {
+    const values = [
+        item?.category_slug,
+        item?.product_label,
+        item?.label,
+        item?.name,
+        item?.product_name,
+        item?.display_name,
+        item?.title,
+        `${item?.label || ""} ${item?.name || ""}`,
+        `${item?.category_slug || ""} ${item?.label || ""} ${item?.name || ""}`
+    ];
+
+    return [
+        ...new Set(
+            values.flatMap(value => getCartCategoryAliases(value))
+        )
+    ];
+}
+
+function getSelectedOfferCategoryKeys(offer) {
+    const categoriesRaw = String(offer?.required_category_slug || "").trim();
+
+    if (!categoriesRaw || categoriesRaw.toLowerCase() === "all") {
+        return [];
+    }
+
+    return [
+        ...new Set(
+            categoriesRaw
+                .split(",")
+                .flatMap(value => getCartCategoryAliases(value))
+                .filter(Boolean)
+        )
+    ];
 }
 
 function isCartItemEligibleForSelectedPercentOffer(item, offer) {
@@ -518,16 +599,7 @@ function isCartItemEligibleForSelectedPercentOffer(item, offer) {
         return false;
     }
 
-    const categoriesRaw = String(offer.required_category_slug || "").trim();
-
-    if (!categoriesRaw || categoriesRaw.toLowerCase() === "all") {
-        return true;
-    }
-
-    const offerCategories = categoriesRaw
-        .split(",")
-        .map(item => normalizeCartPersonalOfferText(item))
-        .filter(Boolean);
+    const offerCategories = getSelectedOfferCategoryKeys(offer);
 
     if (!offerCategories.length) {
         return true;
@@ -539,7 +611,6 @@ function isCartItemEligibleForSelectedPercentOffer(item, offer) {
         itemCategoryKeys.includes(category)
     );
 }
-
 function calcSelectedPersonalPercentOfferDiscount(cart) {
     const selectedOffer = getSelectedOffer();
 

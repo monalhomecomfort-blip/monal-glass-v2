@@ -918,21 +918,22 @@
             
         </div>
 
-                <div class="staff-promo-campaign-block" id="personal-percent-offer-block">
+         <div class="staff-promo-campaign-block" id="personal-percent-offer-block">
 
             <h3>Персональна % знижка</h3>
 
             <input
                 type="hidden"
                 id="personal-percent-offer-type"
-                value="promo"
+                value="discount"
             >
 
-            <div class="staff-promo-table">
+            <div class="staff-promo-table is-personal-percent-offer-table">
 
                 <div class="staff-promo-table-head">
                     <div>Назва / текст</div>
                     <div>%</div>
+                    <div>Категорії</div>
                     <div>Початок</div>
                     <div>Кінець</div>
                     <div>Активна</div>
@@ -969,6 +970,29 @@
                     </div>
 
                     <div class="staff-promo-cell">
+                        <details
+                            class="staff-report-filter staff-personal-status-filter staff-personal-category-filter"
+                            id="personal-percent-offer-category-filter"
+                        >
+                            <summary>Всі категорії</summary>
+
+                            <div class="staff-report-filter-menu staff-personal-status-menu">
+                                <label>
+                                    <input
+                                        type="checkbox"
+                                        class="personal-percent-offer-category-checkbox"
+                                        value="all"
+                                        checked
+                                    >
+                                    Всі категорії
+                                </label>
+
+                                <div id="personal-percent-offer-category-list"></div>
+                            </div>
+                        </details>
+                    </div>
+
+                    <div class="staff-promo-cell">
                         <input
                             type="datetime-local"
                             id="personal-percent-offer-start"
@@ -997,7 +1021,7 @@
                             class="staff-report-filter staff-personal-status-filter"
                             id="personal-percent-offer-customer-status"
                         >
-                            <summary>Усі клієнти</summary>
+                            <summary>Обрати</summary>
 
                             <div class="staff-report-filter-menu staff-personal-status-menu">
                                 <label>
@@ -1007,7 +1031,7 @@
                                         value="all"
                                         checked
                                     >
-                                    Усі клієнти
+                                    Всі клієнти
                                 </label>
 
                                 <label>

@@ -1917,9 +1917,15 @@
 #promos-section #personal-gift-offer-block {
     position: relative;
     z-index: 80;
+    isolation: isolate;
 }
 
-#promos-section #personal-gift-offer-block .is-personal-gift-offer-table,
+#promos-section #personal-gift-offer-block .is-personal-gift-offer-table {
+    position: relative;
+    z-index: 500;
+    overflow: visible;
+}
+
 #promos-section #personal-gift-offer-block .staff-promo-table-row,
 #promos-section #personal-gift-offer-block .staff-promo-cell {
     overflow: visible;
@@ -1927,29 +1933,34 @@
 
 #promos-section #personal-gift-offer-block .staff-promo-cell:first-child {
     position: relative;
-    z-index: 120;
+    z-index: 600;
 }
 
 #promos-section #personal-gift-offer-category-filter,
 #promos-section #personal-gift-offer-main-product-filter {
     position: relative;
-    z-index: 130;
+    z-index: 700;
 }
 
 #promos-section #personal-gift-offer-category-filter[open],
 #promos-section #personal-gift-offer-main-product-filter[open] {
-    z-index: 10020;
+    position: relative;
+    z-index: 20000;
 }
 
 #promos-section #personal-gift-offer-category-filter[open] .staff-personal-status-menu,
 #promos-section #personal-gift-offer-main-product-filter[open] .staff-personal-status-menu {
-    z-index: 10021;
+    position: absolute;
+    top: 50px;
+    left: 0;
+    z-index: 20001;
     max-height: 320px;
     overflow-y: auto;
     overflow-x: hidden;
     background: #f4efe6;
     opacity: 1;
-    isolation: isolate;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    box-shadow: 0 18px 42px rgba(0, 0, 0, 0.24);
 }
 
 #promos-section #personal-gift-offer-category-list,
@@ -1967,6 +1978,12 @@
 #promos-section #personal-gift-offer-category-list label:hover,
 #promos-section #personal-gift-offer-main-product-list label:hover {
     background: #e7e4d9;
+}
+
+#promos-section #personal-gift-offer-result,
+#promos-section #personal-gift-offer-list-result {
+    position: relative;
+    z-index: 1;
 }
 
 #promos-section .staff-personal-status-menu {

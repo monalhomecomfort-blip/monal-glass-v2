@@ -1661,6 +1661,59 @@
     white-space: nowrap;
 }
 
+#promos-section #personal-gift-offer-list-result .staff-promo-table-head > div:nth-child(1),
+#promos-section #personal-gift-offer-list-result .staff-promo-cell:nth-child(1) {
+    width: 15%;
+}
+
+#promos-section #personal-gift-offer-list-result .staff-promo-table-head > div:nth-child(2),
+#promos-section #personal-gift-offer-list-result .staff-promo-cell:nth-child(2) {
+    width: 21%;
+}
+
+#promos-section #personal-gift-offer-list-result .staff-promo-table-head > div:nth-child(3),
+#promos-section #personal-gift-offer-list-result .staff-promo-cell:nth-child(3) {
+    width: 17%;
+}
+
+#promos-section #personal-gift-offer-list-result .staff-promo-table-head > div:nth-child(4),
+#promos-section #personal-gift-offer-list-result .staff-promo-cell:nth-child(4) {
+    width: 10%;
+}
+
+#promos-section #personal-gift-offer-list-result .staff-promo-table-head > div:nth-child(5),
+#promos-section #personal-gift-offer-list-result .staff-promo-cell:nth-child(5) {
+    width: 10%;
+}
+
+#promos-section #personal-gift-offer-list-result .staff-promo-table-head > div:nth-child(6),
+#promos-section #personal-gift-offer-list-result .staff-promo-cell:nth-child(6) {
+    width: 6%;
+}
+
+#promos-section #personal-gift-offer-list-result .staff-promo-table-head > div:nth-child(7),
+#promos-section #personal-gift-offer-list-result .staff-promo-cell:nth-child(7) {
+    width: 11%;
+    border-right: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+#promos-section #personal-gift-offer-list-result .staff-promo-table-head > div:nth-child(8),
+#promos-section #personal-gift-offer-list-result .staff-promo-cell:nth-child(8) {
+    width: 10%;
+    border-right: none;
+}
+
+#promos-section #personal-gift-offer-list-result .staff-promo-actions .buy-btn {
+    width: 100%;
+    max-width: none;
+    min-width: 104px;
+    height: 40px;
+    margin: 0;
+    padding: 0 12px;
+    font-size: 13px;
+    white-space: nowrap;
+}
+
 #promos-section .staff-promo-product-cell {
     z-index: 50;
 }

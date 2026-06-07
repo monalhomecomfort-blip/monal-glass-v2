@@ -1593,10 +1593,17 @@ const saleItemsBox = document.getElementById("sale-items-box");
 const saleCheckTotalAmount = document.getElementById("sale-check-total-amount");
 const saleCertificateAmount = document.getElementById("sale-certificate-amount");
 const saleTotalAmount = document.getElementById("sale-total-amount");
-const salePromoCodeInput = document.getElementById("sale-promo-code");
-const salePromoApplyBtn = document.getElementById("sale-promo-apply-btn");
-const salePromoClearBtn = document.getElementById("sale-promo-clear-btn");
-const salePromoResult = document.getElementById("sale-promo-result");
+
+const salePersonalOffersBox = document.getElementById("sale-personal-offers-box");
+const salePersonalOffersList = document.getElementById("sale-personal-offers-list");
+const saleSelectedPersonalOffer = document.getElementById("sale-selected-personal-offer");
+
+/* старе ручне поле промокоду прибрали з HTML, але нижче ще є старі обробники */
+const salePromoCodeInput = null;
+const salePromoApplyBtn = null;
+const salePromoClearBtn = null;
+const salePromoResult = null;
+
 const saleCustomerSourceSelect = document.getElementById("sale-customer-source");
 const salePaymentTypeSelect = document.getElementById("sale-payment-type");
 const createSaleBtn = document.getElementById("create-sale-btn");
@@ -1605,7 +1612,7 @@ const saleCardTransferPaidBtn = document.getElementById("sale-card-transfer-paid
 const saleCertificateBox = document.getElementById("sale-certificate-box");
 const saleCertificateCodeInput = document.getElementById("sale-certificate-code");
 const saleCertificateCheckBtn = document.getElementById("sale-certificate-check-btn");
-const saleCertificateResult = document.getElementById("sale-certificate-result");                
+const saleCertificateResult = document.getElementById("sale-certificate-result");                        
 
 let SALE_SELECTED_CUSTOMER = null;
 let SALE_CARD_TRANSFER_CONFIRMED = false;

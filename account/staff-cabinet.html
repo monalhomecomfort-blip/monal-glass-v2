@@ -2493,6 +2493,28 @@ function getStaffSaleProductForItem(item) {
     ) || null;
 }
 
+function isStaffSaleCertificateCategoryText(value) {
+    const text = normalizeStaffSaleCategoryText(value);
+
+    return (
+        text === "certificates" ||
+        text === "certificate" ||
+        text.includes("certificate") ||
+        text.includes("сертиф")
+    );
+}
+
+function isStaffSaleTesterCategoryText(value) {
+    const text = normalizeStaffSaleCategoryText(value);
+
+    return (
+        text === "testers" ||
+        text === "tester" ||
+        text.includes("tester") ||
+        text.includes("тестер")
+    );
+}
+
 function getStaffSaleCanonicalCategoryKeys(value) {
     const text = normalizeStaffSaleCategoryText(value);
     const keys = new Set();
@@ -2507,14 +2529,22 @@ function getStaffSaleCanonicalCategoryKeys(value) {
         text === "всі категорії"
     ) {
         keys.add("all");
+        return Array.from(keys);
     }
 
-    if (
-        text === "testers" ||
-        text === "tester" ||
-        text.includes("тестер")
-    ) {
+    if (isStaffSaleCertificateCategoryText(text)) {
+        keys.add("certificates");
+        return Array.from(keys);
+    }
+
+    /*
+        Важливо:
+        якщо в назві категорії є і "парфум", і "тестер",
+        це НЕ повномірні парфуми, а саме тестери.
+    */
+    if (isStaffSaleTesterCategoryText(text)) {
         keys.add("testers");
+        return Array.from(keys);
     }
 
     if (
@@ -2529,7 +2559,8 @@ function getStaffSaleCanonicalCategoryKeys(value) {
     if (
         text === "refills" ||
         text === "refill" ||
-        text.includes("рефіл")
+        text.includes("рефіл") ||
+        text.includes("refill")
     ) {
         keys.add("refills");
     }
@@ -2538,6 +2569,8 @@ function getStaffSaleCanonicalCategoryKeys(value) {
         text === "parfums" ||
         text === "parfum" ||
         text === "perfume" ||
+        text.includes("parfum") ||
+        text.includes("perfume") ||
         text.includes("парфум")
     ) {
         keys.add("parfums");
@@ -2547,6 +2580,7 @@ function getStaffSaleCanonicalCategoryKeys(value) {
         text === "discovery" ||
         text === "discovery set" ||
         text === "discovery-set" ||
+        text.includes("discovery") ||
         text.includes("діскавер")
     ) {
         keys.add("discovery");
@@ -2555,17 +2589,10 @@ function getStaffSaleCanonicalCategoryKeys(value) {
     if (
         text === "gift-sets" ||
         text === "gift sets" ||
+        text.includes("gift") ||
         text.includes("подарунков")
     ) {
         keys.add("gift-sets");
-    }
-
-    if (
-        text === "certificates" ||
-        text === "certificate" ||
-        text.includes("сертиф")
-    ) {
-        keys.add("certificates");
     }
 
     return Array.from(keys).filter(Boolean);
@@ -2583,12 +2610,7 @@ function isStaffSaleTesterItem(item, product) {
         .map(value => normalizeStaffSaleCategoryText(value))
         .filter(Boolean);
 
-    return values.some(value =>
-        value === "testers" ||
-        value === "tester" ||
-        value.includes("тестер") ||
-        value.startsWith("tester ")
-    );
+    return values.some(value => isStaffSaleTesterCategoryText(value));
 }
 
 function getStaffSaleItemCategoryKeys(item) {
@@ -2611,7 +2633,7 @@ function getStaffSaleItemCategoryKeys(item) {
         ...new Set(
             explicitValues.flatMap(value => getStaffSaleCanonicalCategoryKeys(value))
         )
-    ].filter(key => key !== "all");
+    ].filter(key => key && key !== "all" && key !== "certificates");
 
     if (keys.length) {
         return keys;
@@ -2628,7 +2650,7 @@ function getStaffSaleItemCategoryKeys(item) {
         ...new Set(
             fallbackValues.flatMap(value => getStaffSaleCanonicalCategoryKeys(value))
         )
-    ].filter(key => key !== "all");
+    ].filter(key => key && key !== "all" && key !== "certificates");
 
     return keys;
 }
@@ -2640,7 +2662,7 @@ function getSelectedStaffSaleOfferCategoryKeys(offer) {
         return [];
     }
 
-    return [
+    const keys = [
         ...new Set(
             rawCategories
                 .split(",")
@@ -2648,6 +2670,13 @@ function getSelectedStaffSaleOfferCategoryKeys(offer) {
                 .filter(key => key && key !== "all" && key !== "certificates")
         )
     ];
+
+    /*
+        Важливо:
+        якщо категорія в БД задана, але код її не впізнав,
+        НЕ застосовуємо знижку до всіх товарів.
+    */
+    return keys.length ? keys : ["__no_category_match__"];
 }
 
 function isSaleItemEligibleForSelectedPercentOffer(item, offer) {
@@ -2666,6 +2695,10 @@ function isSaleItemEligibleForSelectedPercentOffer(item, offer) {
 
     if (!offerCategories.length) {
         return true;
+    }
+
+    if (offerCategories.includes("__no_category_match__")) {
+        return false;
     }
 
     const itemCategoryKeys = getStaffSaleItemCategoryKeys(item);

@@ -1113,24 +1113,21 @@
                         </div>
                     </details>
 
-                    <div class="staff-product-picker staff-promo-product-picker">
-                        <input
-                            type="text"
-                            id="personal-gift-offer-main-product-search"
-                            placeholder="Товари для подарунку"
-                            autocomplete="off"
-                        >
+                    <details
+                        class="staff-report-filter staff-personal-status-filter staff-personal-category-filter"
+                        id="personal-gift-offer-main-product-filter"
+                    >
+                        <summary>Товари для подарунку</summary>
 
-                        <input
-                            type="hidden"
-                            id="personal-gift-offer-main-product-id"
-                        >
+                        <div class="staff-report-filter-menu staff-personal-status-menu">
+                            <div id="personal-gift-offer-main-product-list"></div>
+                        </div>
+                    </details>
 
-                        <div
-                            id="personal-gift-offer-main-product-dropdown"
-                            class="staff-product-dropdown staff-hidden"
-                        ></div>
-                    </div>
+                    <input
+                        type="hidden"
+                        id="personal-gift-offer-main-product-id"
+                    >
 
                     <div
                         id="personal-gift-offer-main-products-selected"
@@ -1569,9 +1566,9 @@ const personalPercentOfferCategoryList = document.getElementById("personal-perce
 
 const personalGiftOfferCategoryFilter = document.getElementById("personal-gift-offer-category-filter");
 const personalGiftOfferCategoryList = document.getElementById("personal-gift-offer-category-list");
-const personalGiftOfferMainProductSearch = document.getElementById("personal-gift-offer-main-product-search");
+const personalGiftOfferMainProductFilter = document.getElementById("personal-gift-offer-main-product-filter");
+const personalGiftOfferMainProductList = document.getElementById("personal-gift-offer-main-product-list");
 const personalGiftOfferMainProductId = document.getElementById("personal-gift-offer-main-product-id");
-const personalGiftOfferMainProductDropdown = document.getElementById("personal-gift-offer-main-product-dropdown");
 const personalGiftOfferMainProductsSelected = document.getElementById("personal-gift-offer-main-products-selected");
 const personalGiftOfferGiftProductSearch = document.getElementById("personal-gift-offer-gift-product-search");
 const personalGiftOfferGiftProductId = document.getElementById("personal-gift-offer-gift-product-id");
@@ -1892,6 +1889,14 @@ function getPersonalGiftOfferCategoryCheckboxes() {
     );
 }
 
+function getPersonalGiftOfferMainProductCheckboxes() {
+    if (!personalGiftOfferMainProductFilter) return [];
+
+    return Array.from(
+        personalGiftOfferMainProductFilter.querySelectorAll(".personal-gift-offer-main-product-checkbox")
+    );
+}
+
 function updatePersonalGiftOfferCategorySummary() {
     if (!personalGiftOfferCategoryFilter) return;
 
@@ -1916,55 +1921,100 @@ function updatePersonalGiftOfferCategorySummary() {
         : labels.join(", ");
 }
 
-function clearPersonalGiftOfferMainProduct() {
-    if (personalGiftOfferMainProductSearch) {
-        personalGiftOfferMainProductSearch.value = "";
+function updatePersonalGiftOfferMainProductSummary() {
+    if (!personalGiftOfferMainProductFilter) return;
+
+    const summary = personalGiftOfferMainProductFilter.querySelector("summary");
+
+    if (!summary) return;
+
+    const checked = getPersonalGiftOfferMainProductCheckboxes()
+        .filter(input => input.checked);
+
+    if (!checked.length) {
+        summary.textContent = "Товари для подарунку";
+        return;
     }
+
+    const labels = checked
+        .map(input => input.dataset.productLabel || input.value)
+        .filter(Boolean);
+
+    summary.textContent = labels.length > 2
+        ? `Обрано: ${labels.length}`
+        : labels.join(", ");
+}
+
+function updatePersonalGiftOfferMainProductValue() {
+    if (!personalGiftOfferMainProductId) return;
+
+    const selectedIds = getPersonalGiftOfferMainProductCheckboxes()
+        .filter(input => input.checked)
+        .map(input => String(input.value || "").trim())
+        .filter(Boolean);
+
+    personalGiftOfferMainProductId.value = selectedIds.join(",");
+}
+
+function clearPersonalGiftOfferMainProduct() {
+    getPersonalGiftOfferMainProductCheckboxes().forEach(checkbox => {
+        checkbox.checked = false;
+    });
 
     if (personalGiftOfferMainProductId) {
         personalGiftOfferMainProductId.value = "";
-    }
-
-    if (personalGiftOfferMainProductDropdown) {
-        personalGiftOfferMainProductDropdown.classList.add("staff-hidden");
-        personalGiftOfferMainProductDropdown.innerHTML = "";
     }
 
     if (personalGiftOfferMainProductsSelected) {
         personalGiftOfferMainProductsSelected.classList.add("staff-hidden");
         personalGiftOfferMainProductsSelected.innerHTML = "";
     }
+
+    updatePersonalGiftOfferMainProductSummary();
 }
 
 function updatePersonalGiftOfferSourceLocks() {
     const categoryCheckboxes = getPersonalGiftOfferCategoryCheckboxes();
+    const productCheckboxes = getPersonalGiftOfferMainProductCheckboxes();
 
     const hasSelectedCategory = categoryCheckboxes.some(item => item.checked);
-    const hasSelectedProduct = Boolean(
-        String(personalGiftOfferMainProductId?.value || "").trim()
-    );
+    const hasSelectedProduct = productCheckboxes.some(item => item.checked);
 
-    if (hasSelectedCategory) {
+    if (hasSelectedCategory && hasSelectedProduct) {
         clearPersonalGiftOfferMainProduct();
     }
 
-    if (personalGiftOfferMainProductSearch) {
-        personalGiftOfferMainProductSearch.disabled = hasSelectedCategory;
-        personalGiftOfferMainProductSearch.placeholder = hasSelectedCategory
-            ? "Спочатку зніміть категорії для подарунку"
-            : "Товари для подарунку";
-    }
+    productCheckboxes.forEach(checkbox => {
+        checkbox.disabled = hasSelectedCategory;
+
+        const label = checkbox.closest("label");
+
+        if (label) {
+            label.style.opacity = hasSelectedCategory ? "0.45" : "1";
+        }
+    });
 
     categoryCheckboxes.forEach(checkbox => {
         checkbox.disabled = hasSelectedProduct;
 
         const label = checkbox.closest("label");
+
         if (label) {
             label.style.opacity = hasSelectedProduct ? "0.45" : "1";
         }
     });
 
+    if (personalGiftOfferMainProductFilter) {
+        personalGiftOfferMainProductFilter.style.opacity = hasSelectedCategory ? "0.65" : "1";
+    }
+
+    if (personalGiftOfferCategoryFilter) {
+        personalGiftOfferCategoryFilter.style.opacity = hasSelectedProduct ? "0.65" : "1";
+    }
+
     updatePersonalGiftOfferCategorySummary();
+    updatePersonalGiftOfferMainProductSummary();
+    updatePersonalGiftOfferMainProductValue();
 }
 
 function renderPersonalGiftOfferCategoryFilter() {
@@ -1987,6 +2037,38 @@ function renderPersonalGiftOfferCategoryFilter() {
         label.appendChild(document.createTextNode(" " + category.label));
 
         personalGiftOfferCategoryList.appendChild(label);
+    });
+
+    updatePersonalGiftOfferSourceLocks();
+}
+
+function renderPersonalGiftOfferMainProductFilter() {
+    if (!personalGiftOfferMainProductList) return;
+
+    const products = STAFF_PRODUCTS.filter(product => {
+        return !isStaffPromoCertificateProduct(product);
+    });
+
+    personalGiftOfferMainProductList.innerHTML = "";
+
+    products.forEach(product => {
+        const productId = String(product.id || "").trim();
+        const productTitle = String(product.display_name || product.product_key || "").trim();
+
+        if (!productId || !productTitle) return;
+
+        const label = document.createElement("label");
+
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.className = "personal-gift-offer-main-product-checkbox";
+        checkbox.value = productId;
+        checkbox.dataset.productLabel = productTitle;
+
+        label.appendChild(checkbox);
+        label.appendChild(document.createTextNode(" " + productTitle));
+
+        personalGiftOfferMainProductList.appendChild(label);
     });
 
     updatePersonalGiftOfferSourceLocks();
@@ -2127,12 +2209,15 @@ if (personalGiftOfferCategoryFilter) {
     });
 }
 
-bindPersonalGiftProductPicker({
-    searchInput: personalGiftOfferMainProductSearch,
-    hiddenInput: personalGiftOfferMainProductId,
-    dropdownEl: personalGiftOfferMainProductDropdown,
-    selectedBox: personalGiftOfferMainProductsSelected
-});
+if (personalGiftOfferMainProductFilter) {
+    personalGiftOfferMainProductFilter.addEventListener("change", event => {
+        const checkbox = event.target.closest(".personal-gift-offer-main-product-checkbox");
+
+        if (!checkbox) return;
+
+        updatePersonalGiftOfferSourceLocks();
+    });
+}
 
 bindPersonalGiftProductPicker({
     searchInput: personalGiftOfferGiftProductSearch,
@@ -6304,6 +6389,7 @@ if (openPromosSectionBtn && promosSection) {
         await loadStaffProducts();
         renderPersonalPercentOfferCategoryFilter();
         renderPersonalGiftOfferCategoryFilter();
+        renderPersonalGiftOfferMainProductFilter();
         await loadStaffWarehouses();
         await loadFocusPromos();
         await loadPersonalOffers();

@@ -1618,7 +1618,13 @@ let SALE_SELECTED_CUSTOMER = null;
 let SALE_CARD_TRANSFER_CONFIRMED = false;
 let SALE_CERTIFICATE = null;
 let SALE_CERTIFICATE_CHECKED = null;
-let SALE_PERSONAL_PROMO_CODE = "";    
+
+/* персональні пропозиції в staff-продажі: доступні + одна обрана */
+let SALE_AVAILABLE_PERSONAL_OFFERS = [];
+let SALE_SELECTED_PERSONAL_OFFER = null;
+
+/* тимчасово лишаємо для старої логіки промокоду, нижче ще приберемо */
+let SALE_PERSONAL_PROMO_CODE = "";        
 
 let STAFF_PRODUCTS_LOADED = false;
 let STAFF_PRODUCTS = [];

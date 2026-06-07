@@ -190,23 +190,19 @@
                 <div>До оплати: <strong id="sale-total-amount">0 грн</strong></div>
             </div>
 
-            <div id="sale-promo-box" class="staff-payment-inline">
-                <input
-                    type="text"
-                    id="sale-promo-code"
-                    placeholder="Промокод"
-                >
+            <div id="sale-personal-offers-box" class="staff-result staff-hidden">
+                <strong>Доступні персональні пропозиції</strong>
 
-                <button id="sale-promo-apply-btn" class="buy-btn" type="button">
-                    Застосувати
-                </button>
+                <div id="sale-personal-offers-list" style="margin-top:12px;">
+                    Після вибору клієнта тут зʼявляться доступні персональні пропозиції.
+                </div>
 
-                <button id="sale-promo-clear-btn" class="buy-btn" type="button">
-                    Скинути
-                </button>
+                <div
+                    id="sale-selected-personal-offer"
+                    class="staff-payment-note"
+                    style="margin-top:12px;"
+                ></div>
             </div>
-
-            <div id="sale-promo-result" class="staff-payment-note"></div>
 
             <div class="staff-sale-payment-row">
                 <select id="sale-customer-source">

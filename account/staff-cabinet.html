@@ -6251,6 +6251,135 @@ if (savePersonalPercentOfferBtn) {
         savePersonalPercentOffer();
     });
 }
+
+function getSelectedPersonalGiftOfferStatuses() {
+    const checkedStatuses = Array.from(
+        document.querySelectorAll(".personal-gift-offer-status-checkbox:checked")
+    )
+        .map(checkbox => String(checkbox.value || "").trim().toLowerCase())
+        .filter(Boolean);
+
+    const concreteStatuses = checkedStatuses.filter(status => status !== "all");
+
+    if (concreteStatuses.length) {
+        return concreteStatuses.join(",");
+    }
+
+    return "all";
+}
+
+function getSelectedPersonalGiftOfferCategories() {
+    const checkedCategories = Array.from(
+        document.querySelectorAll(".personal-gift-offer-category-checkbox:checked")
+    )
+        .map(checkbox => String(checkbox.value || "").trim().toLowerCase())
+        .filter(Boolean);
+
+    return checkedCategories.join(",");
+}
+
+function getSelectedPersonalGiftOfferProductIds() {
+    const checkedProductIds = Array.from(
+        document.querySelectorAll(".personal-gift-offer-main-product-checkbox:checked")
+    )
+        .map(checkbox => String(checkbox.value || "").trim())
+        .filter(Boolean);
+
+    if (checkedProductIds.length) {
+        return checkedProductIds.join(",");
+    }
+
+    return String(personalGiftOfferMainProductId?.value || "").trim();
+}
+
+async function savePersonalGiftOffer() {
+    const titleInput = document.getElementById("personal-gift-offer-title");
+    const startInput = document.getElementById("personal-gift-offer-start");
+    const endInput = document.getElementById("personal-gift-offer-end");
+    const activeInput = document.getElementById("personal-gift-offer-active");
+    const resultEl = document.getElementById("personal-gift-offer-result");
+
+    const title = titleInput?.value.trim() || "";
+    const giftProductId = Number(personalGiftOfferGiftProductId?.value || 0);
+    const startsAt = startInput?.value || "";
+    const endsAt = endInput?.value || "";
+    const isActive = activeInput?.checked ? 1 : 0;
+    const requiredCustomerStatus = getSelectedPersonalGiftOfferStatuses();
+    const requiredCategorySlug = getSelectedPersonalGiftOfferCategories();
+    const requiredProductIds = getSelectedPersonalGiftOfferProductIds();
+
+    if (!resultEl) return;
+
+    resultEl.classList.remove("staff-hidden");
+
+    if (!title) {
+        resultEl.innerHTML = "Вкажіть назву персонального подарунку.";
+        return;
+    }
+
+    if (!giftProductId) {
+        resultEl.innerHTML = "Оберіть товар-подарунок.";
+        return;
+    }
+
+    if (requiredCategorySlug && requiredProductIds) {
+        resultEl.innerHTML = "Оберіть або категорії для подарунку, або товари для подарунку. Не обидва варіанти одночасно.";
+        return;
+    }
+
+    if (!requiredCategorySlug && !requiredProductIds) {
+        resultEl.innerHTML = "Оберіть категорії або товари, за які дається подарунок.";
+        return;
+    }
+
+    resultEl.innerHTML = "Створюю персональний подарунок...";
+
+    try {
+        const response = await fetch(
+            "https://monal-mono-pay-production.up.railway.app/api/staff/save-personal-gift-offer",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    staffId: staff.id,
+                    title,
+                    giftProductId,
+                    startsAt,
+                    endsAt,
+                    isActive,
+                    requiredCustomerStatus,
+                    requiredCategorySlug,
+                    requiredProductIds
+                })
+            }
+        );
+
+        const data = await response.json();
+
+        if (!data.ok) {
+            resultEl.innerHTML = data.error || "Не вдалося зберегти персональний подарунок.";
+            return;
+        }
+
+        resultEl.innerHTML = data.message || "Персональний подарунок збережено.";
+
+        await loadPersonalOffers();
+
+    } catch (err) {
+        console.error(err);
+        resultEl.innerHTML = "Помилка зʼєднання при збереженні персонального подарунку.";
+    }
+}
+
+const savePersonalGiftOfferBtn = document.getElementById("save-personal-gift-offer-btn");
+
+if (savePersonalGiftOfferBtn) {
+    savePersonalGiftOfferBtn.addEventListener("click", () => {
+        savePersonalGiftOffer();
+    });
+}
     
 function renderPersonalOffersLists(offers) {
     const list = Array.isArray(offers) ? offers : [];

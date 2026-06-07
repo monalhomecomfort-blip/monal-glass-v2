@@ -1946,6 +1946,27 @@
     z-index: 10021;
     max-height: 320px;
     overflow-y: auto;
+    overflow-x: hidden;
+    background: #f4efe6;
+    opacity: 1;
+    isolation: isolate;
+}
+
+#promos-section #personal-gift-offer-category-list,
+#promos-section #personal-gift-offer-main-product-list {
+    position: relative;
+    z-index: 1;
+    background: #f4efe6;
+}
+
+#promos-section #personal-gift-offer-category-list label,
+#promos-section #personal-gift-offer-main-product-list label {
+    background: #f4efe6;
+}
+
+#promos-section #personal-gift-offer-category-list label:hover,
+#promos-section #personal-gift-offer-main-product-list label:hover {
+    background: #e7e4d9;
 }
 
 #promos-section .staff-personal-status-menu {

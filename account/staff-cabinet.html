@@ -3307,10 +3307,12 @@ if (saleClientSearchBtn) {
                 Імʼя: ${c.name || "—"}<br>
                 Email: ${c.email || "—"}<br>
                 Телефон: ${c.phone || "—"}<br>
+                Статус: ${c.customer_status || "general"}<br>
                 Знижка: ${c.discount || 0}%<br>
                 Накопичено: ${c.total_spent || 0} грн
             `;
 
+            await loadSalePersonalOffersForCustomer(c);
             updateSalePaymentSummary();
 
         } catch (err) {

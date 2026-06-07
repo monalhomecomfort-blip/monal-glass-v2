@@ -2493,87 +2493,144 @@ function getStaffSaleProductForItem(item) {
     ) || null;
 }
 
-function getStaffSaleCategoryAliases(value) {
+function getStaffSaleCanonicalCategoryKeys(value) {
     const text = normalizeStaffSaleCategoryText(value);
-    const aliases = new Set();
+    const keys = new Set();
 
-    if (!text) return [];
-
-    aliases.add(text);
+    if (!text) {
+        return [];
+    }
 
     if (
+        text === "all" ||
+        text === "всі" ||
+        text === "всі категорії"
+    ) {
+        keys.add("all");
+    }
+
+    if (
+        text === "testers" ||
+        text === "tester" ||
+        text.includes("тестер")
+    ) {
+        keys.add("testers");
+    }
+
+    if (
+        text === "aromadiffusers" ||
+        text === "aromadiffuser" ||
         text.includes("аромадифузор") ||
-        text.includes("diffuser") ||
-        text.includes("aromadiffuser")
+        text.includes("diffuser")
     ) {
-        aliases.add("aromadiffusers");
-        aliases.add("аромадифузори");
+        keys.add("aromadiffusers");
     }
 
     if (
-        text.includes("рефіл") ||
-        text.includes("refill")
+        text === "refills" ||
+        text === "refill" ||
+        text.includes("рефіл")
     ) {
-        aliases.add("refills");
-        aliases.add("рефіли");
+        keys.add("refills");
     }
 
     if (
-        text.includes("парфум") ||
-        text.includes("perfume") ||
-        text.includes("parfum")
+        text === "parfums" ||
+        text === "parfum" ||
+        text === "perfume" ||
+        text.includes("парфум")
     ) {
-        aliases.add("parfums");
-        aliases.add("парфуми");
-        aliases.add("парфуми для дому");
+        keys.add("parfums");
     }
 
     if (
-        text.includes("discovery") ||
+        text === "discovery" ||
+        text === "discovery set" ||
+        text === "discovery-set" ||
         text.includes("діскавер")
     ) {
-        aliases.add("discovery");
-        aliases.add("discovery set");
+        keys.add("discovery");
     }
 
     if (
-        text.includes("подарунковий") ||
-        text.includes("gift")
+        text === "gift-sets" ||
+        text === "gift sets" ||
+        text.includes("подарунков")
     ) {
-        aliases.add("gift-sets");
-        aliases.add("подарункові набори");
+        keys.add("gift-sets");
     }
 
     if (
-        text.includes("тестер") ||
-        text.includes("tester")
+        text === "certificates" ||
+        text === "certificate" ||
+        text.includes("сертиф")
     ) {
-        aliases.add("testers");
-        aliases.add("тестери");
+        keys.add("certificates");
     }
 
-    return Array.from(aliases)
-        .map(item => normalizeStaffSaleCategoryText(item))
+    return Array.from(keys).filter(Boolean);
+}
+
+function isStaffSaleTesterItem(item, product) {
+    const values = [
+        product?.category_slug,
+        product?.product_label,
+        product?.product_key,
+        product?.display_name,
+        product?.product_name,
+        item?.title
+    ]
+        .map(value => normalizeStaffSaleCategoryText(value))
         .filter(Boolean);
+
+    return values.some(value =>
+        value === "testers" ||
+        value === "tester" ||
+        value.includes("тестер") ||
+        value.startsWith("tester ")
+    );
 }
 
 function getStaffSaleItemCategoryKeys(item) {
     const product = getStaffSaleProductForItem(item);
 
-    const values = [
+    if (isSaleItemCertificate(item)) {
+        return ["certificates"];
+    }
+
+    if (isStaffSaleTesterItem(item, product)) {
+        return ["testers"];
+    }
+
+    const explicitValues = [
         product?.category_slug,
-        product?.product_label,
+        product?.product_label
+    ];
+
+    let keys = [
+        ...new Set(
+            explicitValues.flatMap(value => getStaffSaleCanonicalCategoryKeys(value))
+        )
+    ].filter(key => key !== "all");
+
+    if (keys.length) {
+        return keys;
+    }
+
+    const fallbackValues = [
         product?.display_name,
         product?.product_name,
         product?.product_key,
         item?.title
     ];
 
-    return [
+    keys = [
         ...new Set(
-            values.flatMap(value => getStaffSaleCategoryAliases(value))
+            fallbackValues.flatMap(value => getStaffSaleCanonicalCategoryKeys(value))
         )
-    ];
+    ].filter(key => key !== "all");
+
+    return keys;
 }
 
 function getSelectedStaffSaleOfferCategoryKeys(offer) {
@@ -2587,8 +2644,8 @@ function getSelectedStaffSaleOfferCategoryKeys(offer) {
         ...new Set(
             rawCategories
                 .split(",")
-                .flatMap(value => getStaffSaleCategoryAliases(value))
-                .filter(Boolean)
+                .flatMap(value => getStaffSaleCanonicalCategoryKeys(value))
+                .filter(key => key && key !== "all" && key !== "certificates")
         )
     ];
 }
@@ -2612,6 +2669,14 @@ function isSaleItemEligibleForSelectedPercentOffer(item, offer) {
     }
 
     const itemCategoryKeys = getStaffSaleItemCategoryKeys(item);
+
+    if (!itemCategoryKeys.length) {
+        return false;
+    }
+
+    if (itemCategoryKeys.includes("certificates")) {
+        return false;
+    }
 
     return offerCategories.some(category =>
         itemCategoryKeys.includes(category)

@@ -2431,6 +2431,201 @@ if (saleSelectedPersonalOffer) {
     });
 }
 
+function getStaffSaleSelectedPersonalOfferType() {
+    return String(SALE_SELECTED_PERSONAL_OFFER?.offer_type || "")
+        .trim()
+        .toLowerCase();
+}
+
+function getStaffSalePreviewCustomerId() {
+    const selectedOfferType = getStaffSaleSelectedPersonalOfferType();
+
+    if (selectedOfferType === "welcome" || selectedOfferType === "promo") {
+        return Number(SALE_SELECTED_CUSTOMER?.id || 0);
+    }
+
+    return 0;
+}
+
+function normalizeStaffSaleCategoryText(value) {
+    return String(value || "")
+        .trim()
+        .toLowerCase()
+        .replace(/ё/g, "е")
+        .replace(/[’ʼ']/g, "")
+        .replace(/[_/\\|–—-]+/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+}
+
+function getStaffSaleProductForItem(item) {
+    const productId = Number(item?.productId || 0);
+
+    return STAFF_PRODUCTS.find(product =>
+        Number(product.id || 0) === productId
+    ) || null;
+}
+
+function getStaffSaleCategoryAliases(value) {
+    const text = normalizeStaffSaleCategoryText(value);
+    const aliases = new Set();
+
+    if (!text) return [];
+
+    aliases.add(text);
+
+    if (
+        text.includes("аромадифузор") ||
+        text.includes("diffuser") ||
+        text.includes("aromadiffuser")
+    ) {
+        aliases.add("aromadiffusers");
+        aliases.add("аромадифузори");
+    }
+
+    if (
+        text.includes("рефіл") ||
+        text.includes("refill")
+    ) {
+        aliases.add("refills");
+        aliases.add("рефіли");
+    }
+
+    if (
+        text.includes("парфум") ||
+        text.includes("perfume") ||
+        text.includes("parfum")
+    ) {
+        aliases.add("parfums");
+        aliases.add("парфуми");
+        aliases.add("парфуми для дому");
+    }
+
+    if (
+        text.includes("discovery") ||
+        text.includes("діскавер")
+    ) {
+        aliases.add("discovery");
+        aliases.add("discovery set");
+    }
+
+    if (
+        text.includes("подарунковий") ||
+        text.includes("gift")
+    ) {
+        aliases.add("gift-sets");
+        aliases.add("подарункові набори");
+    }
+
+    if (
+        text.includes("тестер") ||
+        text.includes("tester")
+    ) {
+        aliases.add("testers");
+        aliases.add("тестери");
+    }
+
+    return Array.from(aliases)
+        .map(item => normalizeStaffSaleCategoryText(item))
+        .filter(Boolean);
+}
+
+function getStaffSaleItemCategoryKeys(item) {
+    const product = getStaffSaleProductForItem(item);
+
+    const values = [
+        product?.category_slug,
+        product?.product_label,
+        product?.display_name,
+        product?.product_name,
+        product?.product_key,
+        item?.title
+    ];
+
+    return [
+        ...new Set(
+            values.flatMap(value => getStaffSaleCategoryAliases(value))
+        )
+    ];
+}
+
+function getSelectedStaffSaleOfferCategoryKeys(offer) {
+    const rawCategories = String(offer?.required_category_slug || "").trim();
+
+    if (!rawCategories || rawCategories.toLowerCase() === "all") {
+        return [];
+    }
+
+    return [
+        ...new Set(
+            rawCategories
+                .split(",")
+                .flatMap(value => getStaffSaleCategoryAliases(value))
+                .filter(Boolean)
+        )
+    ];
+}
+
+function isSaleItemEligibleForSelectedPercentOffer(item, offer) {
+    if (
+        !offer ||
+        String(offer.offer_type || "").toLowerCase() !== "discount"
+    ) {
+        return false;
+    }
+
+    if (isSaleItemCertificate(item)) {
+        return false;
+    }
+
+    const offerCategories = getSelectedStaffSaleOfferCategoryKeys(offer);
+
+    if (!offerCategories.length) {
+        return true;
+    }
+
+    const itemCategoryKeys = getStaffSaleItemCategoryKeys(item);
+
+    return offerCategories.some(category =>
+        itemCategoryKeys.includes(category)
+    );
+}
+
+function calcSelectedStaffPersonalPercentOfferDiscount(maxDiscountBase = Infinity) {
+    const offer = SALE_SELECTED_PERSONAL_OFFER;
+
+    if (
+        !offer ||
+        String(offer.offer_type || "").toLowerCase() !== "discount"
+    ) {
+        return 0;
+    }
+
+    const percent = Number(offer.discount_percent || 0);
+
+    if (percent <= 0) {
+        return 0;
+    }
+
+    const eligibleTotal = SALE_ITEMS
+        .filter(item => isSaleItemEligibleForSelectedPercentOffer(item, offer))
+        .reduce((sum, item) => {
+            return sum + Number(item.price || 0) * Number(item.quantity || 0);
+        }, 0);
+
+    if (eligibleTotal <= 0) {
+        return 0;
+    }
+
+    const discountAmount = Math.round(eligibleTotal * (percent / 100));
+
+    return Math.min(
+        Number(maxDiscountBase || 0),
+        eligibleTotal,
+        discountAmount
+    );
+}
+
 function getSalePreviewItemsPayload() {
     return SALE_ITEMS.map(item => ({
         productId: Number(item.productId || 0),
@@ -2470,6 +2665,7 @@ async function updateSalePaymentSummary() {
     let focusProductDiscountAmount = 0;
     let welcomeDiscountAmount = 0;
     let personalPromoCodeDiscountAmount = 0;
+    let personalPercentOfferDiscountAmount = 0;
     let personalPromoCodeMessage = "";
     let personalPromoCodeValid = true;
     let totalAfterDiscounts = checkTotal;
@@ -2492,7 +2688,7 @@ async function updateSalePaymentSummary() {
                     },
                     body: JSON.stringify({
                         staffId: staff.id,
-                        customerId: Number(SALE_SELECTED_CUSTOMER?.id || 0),
+                        customerId: getStaffSalePreviewCustomerId(),
                         warehouseId,
                         promoCode: getAppliedStaffSalePromoCode(),
                         items: getSalePreviewItemsPayload()
@@ -2519,6 +2715,24 @@ async function updateSalePaymentSummary() {
         } catch (err) {
             console.error("SALE PREVIEW ERROR:", err);
         }
+    }
+
+    if (
+        getStaffSaleSelectedPersonalOfferType() !== "welcome" &&
+        welcomeDiscountAmount > 0
+    ) {
+        totalAfterDiscounts += welcomeDiscountAmount;
+        welcomeDiscountAmount = 0;
+    }
+
+    personalPercentOfferDiscountAmount =
+        calcSelectedStaffPersonalPercentOfferDiscount(totalAfterDiscounts);
+
+    if (personalPercentOfferDiscountAmount > 0) {
+        totalAfterDiscounts = Math.max(
+            0,
+            totalAfterDiscounts - personalPercentOfferDiscountAmount
+        );
     }
 
     const certificateNominal = SALE_CERTIFICATE
@@ -2557,6 +2771,17 @@ async function updateSalePaymentSummary() {
         discountLines.push(`
             <span style="font-weight:400;">
                 Промокод: −${personalPromoCodeDiscountAmount} грн
+            </span>
+        `);
+    }
+
+    if (personalPercentOfferDiscountAmount > 0) {
+        const selectedPercent = Number(SALE_SELECTED_PERSONAL_OFFER?.discount_percent || 0);
+        const selectedTitle = SALE_SELECTED_PERSONAL_OFFER?.title || "Персональна % знижка";
+
+        discountLines.push(`
+            <span style="font-weight:400;">
+                ${escapeSaleHtml(selectedTitle)} ${selectedPercent}%: −${personalPercentOfferDiscountAmount} грн
             </span>
         `);
     }

@@ -5188,6 +5188,66 @@ if (personalPromoCodeListResult) {
         startEditPersonalPromoCode(editButton.dataset.personalPromoCodeEditId);
     });
 }
+
+function bindPersonalStatusFilter(filterId, checkboxClass, setSelectionFn) {
+    const filter = document.getElementById(filterId);
+
+    if (!filter) return;
+
+    filter.addEventListener("change", event => {
+        const checkbox = event.target.closest("." + checkboxClass);
+
+        if (!checkbox) return;
+
+        const allCheckbox = filter.querySelector(
+            "." + checkboxClass + '[value="all"]'
+        );
+
+        const statusCheckboxes = Array.from(
+            filter.querySelectorAll(
+                "." + checkboxClass + ':not([value="all"])'
+            )
+        );
+
+        if (checkbox.value === "all" && checkbox.checked) {
+            statusCheckboxes.forEach(item => {
+                item.checked = false;
+            });
+        }
+
+        if (checkbox.value !== "all" && checkbox.checked && allCheckbox) {
+            allCheckbox.checked = false;
+        }
+
+        const selectedStatuses = statusCheckboxes
+            .filter(item => item.checked)
+            .map(item => String(item.value || "").trim().toLowerCase())
+            .filter(Boolean);
+
+        if (!selectedStatuses.length) {
+            if (allCheckbox) {
+                allCheckbox.checked = true;
+            }
+
+            setSelectionFn("all");
+            return;
+        }
+
+        setSelectionFn(selectedStatuses.join(","));
+    });
+}
+
+bindPersonalStatusFilter(
+    "personal-promo-code-customer-status",
+    "personal-promo-code-status-checkbox",
+    setPersonalPromoCodeStatusSelection
+);
+
+bindPersonalStatusFilter(
+    "personal-percent-offer-customer-status",
+    "personal-percent-offer-status-checkbox",
+    setPersonalPercentOfferStatusSelection
+);
     
 function getSelectedPersonalPromoCodeStatuses() {
     const checkedStatuses = Array.from(

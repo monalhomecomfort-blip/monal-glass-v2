@@ -1914,6 +1914,40 @@
     box-shadow: 0 14px 32px rgba(0, 0, 0, 0.16);
 }
 
+#promos-section #personal-gift-offer-block {
+    position: relative;
+    z-index: 80;
+}
+
+#promos-section #personal-gift-offer-block .is-personal-gift-offer-table,
+#promos-section #personal-gift-offer-block .staff-promo-table-row,
+#promos-section #personal-gift-offer-block .staff-promo-cell {
+    overflow: visible;
+}
+
+#promos-section #personal-gift-offer-block .staff-promo-cell:first-child {
+    position: relative;
+    z-index: 120;
+}
+
+#promos-section #personal-gift-offer-category-filter,
+#promos-section #personal-gift-offer-main-product-filter {
+    position: relative;
+    z-index: 130;
+}
+
+#promos-section #personal-gift-offer-category-filter[open],
+#promos-section #personal-gift-offer-main-product-filter[open] {
+    z-index: 10020;
+}
+
+#promos-section #personal-gift-offer-category-filter[open] .staff-personal-status-menu,
+#promos-section #personal-gift-offer-main-product-filter[open] .staff-personal-status-menu {
+    z-index: 10021;
+    max-height: 320px;
+    overflow-y: auto;
+}
+
 #promos-section .staff-personal-status-menu {
     display: flex;
     flex-direction: column;

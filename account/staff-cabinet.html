@@ -8522,6 +8522,11 @@ if (createSaleBtn && saleResult) {
             return;
         }
 
+        const selectedPersonalGiftOfferId =
+            getStaffSaleSelectedPersonalOfferType() === "gift"
+                ? Number(SALE_SELECTED_PERSONAL_OFFER?.id || 0)
+                : 0;
+
         const salePayload = {
             staffId: staff.id,
             customerId,
@@ -8536,7 +8541,8 @@ if (createSaleBtn && saleResult) {
             paymentType,
             warehouseId,
             certificateCode: selectedCertificateCode,
-            promoCode: SALE_PERSONAL_PROMO_CODE || ""
+            promoCode: SALE_PERSONAL_PROMO_CODE || "",
+            personalGiftOfferId: selectedPersonalGiftOfferId
         };
 
         if (

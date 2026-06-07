@@ -1699,10 +1699,33 @@ function renderSalesReportCategoryFilter() {
     });
 }
 
+function isStaffPromoCertificateProduct(product) {
+    const values = [
+        product?.category_slug,
+        product?.product_label,
+        product?.product_key,
+        product?.display_name,
+        product?.product_name
+    ]
+        .map(value => String(value || "").trim().toLowerCase())
+        .filter(Boolean);
+
+    return values.some(value =>
+        value.startsWith("certificate_") ||
+        value.includes("certificate") ||
+        value.includes("certificates") ||
+        value.includes("сертиф")
+    );
+}
+
 function getPersonalPercentOfferCategories() {
     const categoryMap = new Map();
 
     STAFF_PRODUCTS.forEach(product => {
+        if (isStaffPromoCertificateProduct(product)) {
+            return;
+        }
+
         const slug = String(product.category_slug || "").trim();
         const label = String(product.product_label || product.category_slug || "").trim();
         const value = slug || label;
@@ -1856,6 +1879,10 @@ function renderFocusPromoProductDropdown(searchText = "") {
     const query = String(searchText || "").trim().toLowerCase();
 
     const matches = STAFF_PRODUCTS.filter(product => {
+        if (isStaffPromoCertificateProduct(product)) {
+            return false;
+        }
+
         const title = String(product.display_name || "").toLowerCase();
         const key = String(product.product_key || "").toLowerCase();
         const category = String(product.category_slug || "").toLowerCase();

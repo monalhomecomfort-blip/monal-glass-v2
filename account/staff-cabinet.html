@@ -5179,6 +5179,16 @@ function renderPersonalPromoCodesList(offers) {
     `;
 }
 
+if (personalPromoCodeListResult) {
+    personalPromoCodeListResult.addEventListener("click", event => {
+        const editButton = event.target.closest(".staff-personal-promo-code-edit-btn");
+
+        if (!editButton) return;
+
+        startEditPersonalPromoCode(editButton.dataset.personalPromoCodeEditId);
+    });
+}
+    
 function getSelectedPersonalPromoCodeStatuses() {
     const checkedStatuses = Array.from(
         document.querySelectorAll(".personal-promo-code-status-checkbox:checked")

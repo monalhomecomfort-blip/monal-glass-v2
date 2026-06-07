@@ -1586,6 +1586,9 @@ let PERSONAL_PERCENT_OFFER_EDIT_ID = 0;
 let PERSONAL_PERCENT_OFFERS_CACHE = [];
 let PERSONAL_PERCENT_OFFERS_FILTER = "active";
 
+let PERSONAL_GIFT_OFFERS_CACHE = [];
+let PERSONAL_GIFT_OFFERS_FILTER = "active";
+
 function isFocusPromoActive(campaign) {
     return Number(campaign?.is_active || 0) === 1 || campaign?.is_active === true;
 }
@@ -5835,6 +5838,14 @@ function setPersonalPercentOffersFilter(filter) {
     renderPersonalPercentOffersList(PERSONAL_PERCENT_OFFERS_CACHE);
 }
 
+function setPersonalGiftOffersFilter(filter) {
+    PERSONAL_GIFT_OFFERS_FILTER = ["active", "inactive", "all"].includes(filter)
+        ? filter
+        : "active";
+
+    renderPersonalGiftOffersList(PERSONAL_GIFT_OFFERS_CACHE);
+}
+
 function getSelectedPersonalPercentOfferStatuses() {
     const checkedStatuses = Array.from(
         document.querySelectorAll(".personal-percent-offer-status-checkbox:checked")
@@ -6501,6 +6512,119 @@ if (savePersonalGiftOfferBtn) {
         savePersonalGiftOffer();
     });
 }
+
+function renderPersonalGiftOffersList(offers) {
+    if (!personalGiftOfferListResult) return;
+
+    PERSONAL_GIFT_OFFERS_CACHE = Array.isArray(offers) ? offers : [];
+
+    personalGiftOfferListResult.classList.remove("staff-hidden");
+
+    if (!PERSONAL_GIFT_OFFERS_CACHE.length) {
+        personalGiftOfferListResult.innerHTML = `
+            <p>Створених персональних подарунків поки немає.</p>
+        `;
+        return;
+    }
+
+    const visibleOffers = PERSONAL_GIFT_OFFERS_CACHE.filter(offer => {
+        const isActive = isPersonalOfferActive(offer);
+
+        if (PERSONAL_GIFT_OFFERS_FILTER === "active") {
+            return isActive;
+        }
+
+        if (PERSONAL_GIFT_OFFERS_FILTER === "inactive") {
+            return !isActive;
+        }
+
+        return true;
+    });
+
+    const tableHtml = visibleOffers.length
+        ? `
+            <div class="staff-promo-table">
+                <div class="staff-promo-table-head">
+                    <div>Назва</div>
+                    <div>Подарунок</div>
+                    <div>Умова</div>
+                    <div>Початок</div>
+                    <div>Кінець</div>
+                    <div>Активна</div>
+                    <div>Кому</div>
+                </div>
+
+                ${visibleOffers.map(offer => `
+                    <div class="staff-promo-table-row">
+                        <div class="staff-promo-cell">
+                            ${escapeStaffHtml(offer.title || "—")}
+                        </div>
+
+                        <div class="staff-promo-cell">
+                            ${escapeStaffHtml(offer.offer_text || "Подарунок")}
+                        </div>
+
+                        <div class="staff-promo-cell">
+                            ${escapeStaffHtml(getPersonalOfferConditionText(offer))}
+                        </div>
+
+                        <div class="staff-promo-cell">
+                            ${escapeStaffHtml(getPersonalOfferPeriodText(offer.starts_at))}
+                        </div>
+
+                        <div class="staff-promo-cell">
+                            ${escapeStaffHtml(getPersonalOfferPeriodText(offer.ends_at))}
+                        </div>
+
+                        <div class="staff-promo-cell">
+                            ${escapeStaffHtml(getPersonalOfferActiveText(offer))}
+                        </div>
+
+                        <div class="staff-promo-cell">
+                            ${escapeStaffHtml(getPersonalOfferStatusText(offer.required_customer_status))}
+                        </div>
+                    </div>
+                `).join("")}
+            </div>
+        `
+        : `
+            <p>Персональних подарунків за цим фільтром немає.</p>
+        `;
+
+    personalGiftOfferListResult.innerHTML = `
+        <div class="staff-promo-campaign-block">
+            <h3>Створені персональні подарунки</h3>
+
+            <div class="staff-users-filter-bar">
+                <button
+                    type="button"
+                    class="buy-btn staff-users-filter-btn ${PERSONAL_GIFT_OFFERS_FILTER === "active" ? "is-active" : ""}"
+                    onclick="setPersonalGiftOffersFilter('active')"
+                >
+                    Активні
+                </button>
+
+                <button
+                    type="button"
+                    class="buy-btn staff-users-filter-btn ${PERSONAL_GIFT_OFFERS_FILTER === "inactive" ? "is-active" : ""}"
+                    onclick="setPersonalGiftOffersFilter('inactive')"
+                >
+                    Неактивні
+                </button>
+
+                <button
+                    type="button"
+                    class="buy-btn staff-users-filter-btn ${PERSONAL_GIFT_OFFERS_FILTER === "all" ? "is-active" : ""}"
+                    onclick="setPersonalGiftOffersFilter('all')"
+                >
+                    Всі
+                </button>
+            </div>
+
+            ${tableHtml}
+        </div>
+    `;
+}
     
 function renderPersonalOffersLists(offers) {
     const list = Array.isArray(offers) ? offers : [];
@@ -6526,12 +6650,7 @@ function renderPersonalOffersLists(offers) {
     renderPersonalPromoCodesList(fixedPromoCodes);
     renderPersonalPercentOffersList(percentOffers);
 
-    renderPersonalOffersTable(
-        personalGiftOfferListResult,
-        giftOffers,
-        "Створених персональних подарунків поки немає.",
-        offer => offer.offer_text || offer.title || "Подарунок"
-    );
+    renderPersonalGiftOffersList(giftOffers);
 
     renderPersonalOffersTable(
         personalDeliveryOfferListResult,

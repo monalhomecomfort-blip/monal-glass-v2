@@ -5688,6 +5688,12 @@ bindPersonalStatusFilter(
     "personal-percent-offer-status-checkbox",
     setPersonalPercentOfferStatusSelection
 );
+
+bindPersonalStatusFilter(
+    "personal-gift-offer-customer-status",
+    "personal-gift-offer-status-checkbox",
+    setPersonalGiftOfferStatusSelection
+);    
     
 function getSelectedPersonalPromoCodeStatuses() {
     const checkedStatuses = Array.from(
@@ -6292,6 +6298,120 @@ function getSelectedPersonalGiftOfferProductIds() {
     return String(personalGiftOfferMainProductId?.value || "").trim();
 }
 
+function setPersonalGiftOfferStatusSelection(value) {
+    const selectedValues = String(value || "all")
+        .split(",")
+        .map(item => item.trim().toLowerCase())
+        .filter(Boolean);
+
+    const useAll = !selectedValues.length || selectedValues.includes("all");
+
+    document.querySelectorAll(".personal-gift-offer-status-checkbox").forEach(checkbox => {
+        const checkboxValue = String(checkbox.value || "").trim().toLowerCase();
+
+        checkbox.checked = useAll
+            ? checkboxValue === "all"
+            : selectedValues.includes(checkboxValue);
+    });
+
+    const filter = document.getElementById("personal-gift-offer-customer-status");
+    const summary = filter ? filter.querySelector("summary") : null;
+
+    if (!summary) return;
+
+    if (useAll) {
+        summary.textContent = "Всі клієнти";
+        return;
+    }
+
+    const labels = selectedValues.map(value => {
+        if (value === "general") return "Зареєстровані";
+        if (value === "friends") return "Друзі";
+        if (value === "partners") return "Партнери";
+        return value;
+    });
+
+    summary.textContent = labels.length > 2
+        ? `Обрано: ${labels.length}`
+        : labels.join(", ");
+}
+
+function resetPersonalGiftOfferForm() {
+    const titleInput = document.getElementById("personal-gift-offer-title");
+    const startInput = document.getElementById("personal-gift-offer-start");
+    const endInput = document.getElementById("personal-gift-offer-end");
+    const activeInput = document.getElementById("personal-gift-offer-active");
+    const saveBtn = document.getElementById("save-personal-gift-offer-btn");
+
+    if (titleInput) {
+        titleInput.value = "";
+    }
+
+    document.querySelectorAll(".personal-gift-offer-category-checkbox").forEach(checkbox => {
+        checkbox.checked = false;
+        checkbox.disabled = false;
+
+        const label = checkbox.closest("label");
+
+        if (label) {
+            label.style.opacity = "1";
+        }
+    });
+
+    document.querySelectorAll(".personal-gift-offer-main-product-checkbox").forEach(checkbox => {
+        checkbox.checked = false;
+        checkbox.disabled = false;
+
+        const label = checkbox.closest("label");
+
+        if (label) {
+            label.style.opacity = "1";
+        }
+    });
+
+    if (personalGiftOfferMainProductId) {
+        personalGiftOfferMainProductId.value = "";
+    }
+
+    if (personalGiftOfferMainProductsSelected) {
+        personalGiftOfferMainProductsSelected.classList.add("staff-hidden");
+        personalGiftOfferMainProductsSelected.innerHTML = "";
+    }
+
+    if (personalGiftOfferGiftProductSearch) {
+        personalGiftOfferGiftProductSearch.value = "";
+    }
+
+    if (personalGiftOfferGiftProductId) {
+        personalGiftOfferGiftProductId.value = "";
+    }
+
+    if (personalGiftOfferGiftProductDropdown) {
+        personalGiftOfferGiftProductDropdown.classList.add("staff-hidden");
+        personalGiftOfferGiftProductDropdown.innerHTML = "";
+    }
+
+    if (startInput) {
+        startInput.value = "";
+    }
+
+    if (endInput) {
+        endInput.value = "";
+    }
+
+    if (activeInput) {
+        activeInput.checked = false;
+    }
+
+    setPersonalGiftOfferStatusSelection("all");
+
+    updatePersonalGiftOfferSourceLocks();
+
+    if (saveBtn) {
+        saveBtn.textContent = "Створити";
+    }
+}
+
 async function savePersonalGiftOffer() {
     const titleInput = document.getElementById("personal-gift-offer-title");
     const startInput = document.getElementById("personal-gift-offer-start");
@@ -6365,6 +6485,7 @@ async function savePersonalGiftOffer() {
 
         resultEl.innerHTML = data.message || "Персональний подарунок збережено.";
 
+        resetPersonalGiftOfferForm();
         await loadPersonalOffers();
 
     } catch (err) {

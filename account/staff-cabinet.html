@@ -2265,6 +2265,54 @@ function renderSalePersonalOffers() {
         return;
     }
 
+    const welcomeOffer = SALE_AVAILABLE_PERSONAL_OFFERS.find(rawOffer => {
+        const offer = normalizeSalePersonalOffer(rawOffer);
+        return String(offer.offer_type || "").toLowerCase() === "welcome";
+    });
+
+    if (welcomeOffer) {
+        const offer = normalizeSalePersonalOffer(welcomeOffer);
+        const valueText = getSalePersonalOfferValueText(offer);
+
+        SALE_SELECTED_PERSONAL_OFFER = null;
+        SALE_PERSONAL_PROMO_CODE = "";
+
+        salePersonalOffersList.innerHTML = `
+            <div
+                class="review-card"
+                style="margin:10px 0; padding:12px 14px; border-radius:14px; background:rgba(244,239,230,0.75);"
+            >
+                <p style="margin:0 0 6px;">
+                    <strong>Welcome-знижка</strong>
+                </p>
+
+                <p style="margin:0 0 6px;">
+                    ${escapeSaleHtml(offer.title || "Welcome-знижка 10%")}
+                </p>
+
+                ${offer.offer_text ? `
+                    <p style="margin:0 0 6px;">
+                        ${escapeSaleHtml(offer.offer_text)}
+                    </p>
+                ` : ""}
+
+                ${valueText ? `
+                    <p style="margin:0 0 6px;">
+                        <strong>${escapeSaleHtml(valueText)}</strong>
+                    </p>
+                ` : ""}
+
+                <p style="margin:8px 0 0; opacity:0.75;">
+                    На першу покупку автоматично застосовується тільки welcome-знижка.
+                    Інші персональні пропозиції будуть доступні для наступних покупок.
+                </p>
+            </div>
+        `;
+
+        renderSaleSelectedPersonalOffer();
+        return;
+    }
+
     salePersonalOffersList.innerHTML = SALE_AVAILABLE_PERSONAL_OFFERS
         .map(rawOffer => {
             const offer = normalizeSalePersonalOffer(rawOffer);

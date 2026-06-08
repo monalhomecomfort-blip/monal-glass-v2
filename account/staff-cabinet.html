@@ -8682,10 +8682,62 @@ if (createSaleBtn && saleResult) {
             return;
         }
 
-        const selectedPersonalGiftOfferId =
-            getStaffSaleSelectedPersonalOfferType() === "gift"
-                ? Number(SALE_SELECTED_PERSONAL_OFFER?.id || 0)
+        let appliedPersonalPromoCodeForPayment = "";
+
+        if (
+            getStaffSaleSelectedPersonalOfferType() === "promo" &&
+            SALE_PERSONAL_PROMO_CODE
+        ) {
+            try {
+                const previewResponse = await fetch(
+                    "https://monal-mono-pay-production.up.railway.app/api/staff/sale-preview",
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            staffId: staff.id,
+                            customerId: getStaffSalePreviewCustomerId(),
+                            warehouseId,
+                            promoCode: SALE_PERSONAL_PROMO_CODE,
+                            items: getSalePreviewItemsPayload()
+                        })
+                    }
+                );
+
+                const previewData = await previewResponse.json();
+
+                const promoIsReallyApplied =
+                    previewData &&
+                    previewData.ok &&
+                    Boolean(previewData.personalPromoCodeValid) &&
+                    Number(previewData.personalPromoCodeDiscountAmount || 0) > 0;
+
+                appliedPersonalPromoCodeForPayment = promoIsReallyApplied
+                    ? SALE_PERSONAL_PROMO_CODE
+                    : "";
+
+            } catch (err) {
+                console.error("SALE PROMO FINAL CHECK ERROR:", err);
+                appliedPersonalPromoCodeForPayment = "";
+            }
+        }
+
+        let selectedPersonalGiftOfferId = 0;
+
+        if (
+            getStaffSaleSelectedPersonalOfferType() === "gift" &&
+            SALE_SELECTED_PERSONAL_OFFER
+        ) {
+            const giftAvailability = getStaffSaleGiftOfferAvailability(
+                normalizeSalePersonalOffer(SALE_SELECTED_PERSONAL_OFFER)
+            );
+
+            selectedPersonalGiftOfferId = giftAvailability.available
+                ? Number(SALE_SELECTED_PERSONAL_OFFER.id || 0)
                 : 0;
+        }
 
         const salePayload = {
             staffId: staff.id,
@@ -8701,7 +8753,7 @@ if (createSaleBtn && saleResult) {
             paymentType,
             warehouseId,
             certificateCode: selectedCertificateCode,
-            promoCode: SALE_PERSONAL_PROMO_CODE || "",
+            promoCode: appliedPersonalPromoCodeForPayment,
             personalGiftOfferId: selectedPersonalGiftOfferId
         };
 

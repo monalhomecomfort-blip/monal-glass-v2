@@ -33,6 +33,76 @@ function getSelectedOffer() {
         return null;
     }
 }
+function getCartItemProductId(item) {
+    return Number(
+        item?.product_id ||
+        item?.productId ||
+        item?.id ||
+        0
+    );
+}
+
+function isCartItemEligibleForSelectedGiftOffer(item, offer) {
+    if (!offer || String(offer.offer_type || "").toLowerCase() !== "gift") {
+        return false;
+    }
+
+    if (isCartCertificateItem(item)) {
+        return false;
+    }
+
+    const requiredTarget = String(offer.required_category_slug || "").trim();
+
+    if (!requiredTarget || requiredTarget.toLowerCase() === "all") {
+        return true;
+    }
+
+    if (requiredTarget.toLowerCase().startsWith("products:")) {
+        const requiredProductIds = requiredTarget
+            .replace(/^products:/i, "")
+            .split(",")
+            .map(value => Number(value || 0))
+            .filter(id => Number.isInteger(id) && id > 0);
+
+        if (!requiredProductIds.length) {
+            return false;
+        }
+
+        const itemProductId = getCartItemProductId(item);
+
+        return itemProductId > 0 && requiredProductIds.includes(itemProductId);
+    }
+
+    const requiredCategoryKeys = [
+        ...new Set(
+            requiredTarget
+                .split(",")
+                .flatMap(value => getCartCategoryAliases(value))
+                .filter(key => key && key !== "all" && key !== "certificates")
+        )
+    ];
+
+    if (!requiredCategoryKeys.length) {
+        return false;
+    }
+
+    const itemCategoryKeys = getCartItemCategoryKeys(item);
+
+    return requiredCategoryKeys.some(categoryKey =>
+        itemCategoryKeys.includes(categoryKey)
+    );
+}
+
+function isSelectedGiftOfferAvailableInCart(offer, cart) {
+    if (!offer || String(offer.offer_type || "").toLowerCase() !== "gift") {
+        return false;
+    }
+
+    return cart.some(item =>
+        isCartItemEligibleForSelectedGiftOffer(item, offer)
+    );
+}
+
 function getOrderNoteFromSelectedOffer() {
     const offer = getSelectedOffer();
 
@@ -43,11 +113,7 @@ function getOrderNoteFromSelectedOffer() {
     const cart = JSON.parse(localStorage.getItem("cart") || "[]");
 
     const eligibleSum = cart
-        .filter(item => {
-            const name = String(item?.name || "").toLowerCase();
-            const label = String(item?.label || "").toLowerCase();
-            return !name.includes("сертиф") && !label.includes("сертиф");
-        })
+        .filter(item => !isCartCertificateItem(item))
         .reduce((sum, item) => sum + (Number(item.price) || 0), 0);
 
     const minOrderAmount = Number(offer.min_order_amount || 0);
@@ -56,41 +122,32 @@ function getOrderNoteFromSelectedOffer() {
         return "";
     }
 
-    if (offer.required_category_slug) {
-        const hasCategoryMatch = cart.some(item => {
-            const name = String(item?.name || "").toLowerCase();
-            const label = String(item?.label || "").toLowerCase();
-            const fullText = `${label} ${name}`.toLowerCase();
+    if (offer.offer_type === "gift" && !isSelectedGiftOfferAvailableInCart(offer, cart)) {
+        return "";
+    }
 
-            if (offer.required_category_slug === "aromadiffusers") {
-                return fullText.includes("аромадифузор");
+    if (
+        offer.offer_type !== "gift" &&
+        offer.required_category_slug
+    ) {
+        const offerCategories = getSelectedOfferCategoryKeys(offer);
+
+        if (offerCategories.length) {
+            const hasCategoryMatch = cart.some(item => {
+                if (isCartCertificateItem(item)) {
+                    return false;
+                }
+
+                const itemCategoryKeys = getCartItemCategoryKeys(item);
+
+                return offerCategories.some(category =>
+                    itemCategoryKeys.includes(category)
+                );
+            });
+
+            if (!hasCategoryMatch) {
+                return "";
             }
-
-            if (offer.required_category_slug === "refills") {
-                return fullText.includes("рефіл");
-            }
-
-            if (offer.required_category_slug === "parfums") {
-                return fullText.includes("парфум");
-            }
-
-            if (offer.required_category_slug === "discovery") {
-                return fullText.includes("discovery") || fullText.includes("діскавер");
-            }
-
-            if (offer.required_category_slug === "gift-sets") {
-                return fullText.includes("подарунковий набір");
-            }
-
-            if (offer.required_category_slug === "certificates") {
-                return fullText.includes("сертиф");
-            }
-
-            return true;
-        });
-
-        if (!hasCategoryMatch) {
-            return "";
         }
     }
 

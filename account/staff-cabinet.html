@@ -339,16 +339,6 @@
         </label>
 
         <label>
-            <input type="checkbox" class="sales-report-source-checkbox" value="site">
-            Site
-        </label>
-
-        <label>
-            <input type="checkbox" class="sales-report-source-checkbox" value="bot">
-            Bot
-        </label>
-
-        <label>
             <input type="checkbox" class="sales-report-source-checkbox" value="empty">
             Не вказано
         </label>
@@ -4390,6 +4380,35 @@ function fillWarehouseSelects(warehouses) {
     if (salesReportWarehouseList) {
         salesReportWarehouseList.innerHTML = "";
 
+        const virtualSalesWarehouses = [
+            {
+                value: "site",
+                label: "Сайт"
+            },
+            {
+                value: "bot",
+                label: "Бот"
+            }
+        ];
+
+        virtualSalesWarehouses.forEach(virtualWarehouse => {
+            const label = document.createElement("label");
+
+            const checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.className = "sales-report-warehouse-checkbox";
+            checkbox.value = virtualWarehouse.value;
+
+            const text = document.createTextNode(
+                ` ${virtualWarehouse.label}`
+            );
+
+            label.appendChild(checkbox);
+            label.appendChild(text);
+
+            salesReportWarehouseList.appendChild(label);
+        });
+
         STAFF_WAREHOUSES.forEach(warehouse => {
             const label = document.createElement("label");
 
@@ -4408,7 +4427,7 @@ function fillWarehouseSelects(warehouses) {
             salesReportWarehouseList.appendChild(label);
         });
     }
-
+    
     if (focusPromoWarehouseList) {
         focusPromoWarehouseList.innerHTML = "";
 

@@ -3194,6 +3194,170 @@ function calcSelectedStaffPersonalPercentOfferDiscount(maxDiscountBase = Infinit
     );
 }
 
+function getStaffSaleSelectedOfferTitle(offer) {
+    return String(
+        offer?.title ||
+        getSalePersonalOfferTypeLabel(offer) ||
+        "Персональна пропозиція"
+    ).trim();
+}
+
+function getStaffSaleGiftOfferAvailability(offer) {
+    const requiredTarget = String(offer?.required_category_slug || "").trim();
+
+    if (!SALE_ITEMS.length) {
+        return {
+            available: false,
+            message: "спочатку додайте товари в чек"
+        };
+    }
+
+    if (!requiredTarget) {
+        return {
+            available: false,
+            message: "для подарунку не задана умова"
+        };
+    }
+
+    if (requiredTarget.toLowerCase().startsWith("products:")) {
+        const requiredProductIds = requiredTarget
+            .replace(/^products:/i, "")
+            .split(",")
+            .map(item => Number(item || 0))
+            .filter(id => Number.isInteger(id) && id > 0);
+
+        if (!requiredProductIds.length) {
+            return {
+                available: false,
+                message: "для подарунку не задані товари"
+            };
+        }
+
+        const hasRequiredProduct = SALE_ITEMS.some(item =>
+            requiredProductIds.includes(Number(item.productId || 0))
+        );
+
+        return hasRequiredProduct
+            ? {
+                available: true,
+                message: ""
+            }
+            : {
+                available: false,
+                message: "додайте товар, який дає право на подарунок"
+            };
+    }
+
+    if (requiredTarget.toLowerCase() === "all") {
+        const hasAnyNonCertificateProduct = SALE_ITEMS.some(item =>
+            !isSaleItemCertificate(item)
+        );
+
+        return hasAnyNonCertificateProduct
+            ? {
+                available: true,
+                message: ""
+            }
+            : {
+                available: false,
+                message: "додайте товар, який дає право на подарунок"
+            };
+    }
+
+    const requiredCategoryKeys = [
+        ...new Set(
+            requiredTarget
+                .split(",")
+                .flatMap(value => getStaffSaleCanonicalCategoryKeys(value))
+                .filter(key => key && key !== "all" && key !== "certificates")
+        )
+    ];
+
+    if (!requiredCategoryKeys.length) {
+        return {
+            available: false,
+            message: "категорію подарунку не розпізнано"
+        };
+    }
+
+    const hasRequiredCategory = SALE_ITEMS.some(item => {
+        if (isSaleItemCertificate(item)) {
+            return false;
+        }
+
+        const itemCategoryKeys = getStaffSaleItemCategoryKeys(item);
+
+        return requiredCategoryKeys.some(categoryKey =>
+            itemCategoryKeys.includes(categoryKey)
+        );
+    });
+
+    return hasRequiredCategory
+        ? {
+            available: true,
+            message: ""
+        }
+        : {
+            available: false,
+            message: "додайте товар з категорії, яка дає право на подарунок"
+        };
+}
+
+function buildStaffSaleSelectedOfferSummaryLine({
+    personalPromoCodeDiscountAmount = 0,
+    personalPromoCodeMessage = "",
+    personalPromoCodeValid = true,
+    personalPercentOfferDiscountAmount = 0
+} = {}) {
+    if (!SALE_SELECTED_PERSONAL_OFFER) {
+        return "";
+    }
+
+    const offer = normalizeSalePersonalOffer(SALE_SELECTED_PERSONAL_OFFER);
+    const type = String(offer.offer_type || "").toLowerCase();
+    const title = getStaffSaleSelectedOfferTitle(offer);
+
+    if (type === "promo") {
+        const code = String(offer.promo_code || "").trim().toUpperCase();
+        const promoTitle = code
+            ? `${title} (${code})`
+            : title;
+
+        if (personalPromoCodeDiscountAmount > 0) {
+            return `${promoTitle}: −${personalPromoCodeDiscountAmount} грн`;
+        }
+
+        const message = String(personalPromoCodeMessage || "").trim();
+
+        return personalPromoCodeValid && !message
+            ? `${promoTitle}: промо не доступне, виконайте умови`
+            : `${promoTitle}: промо не доступне${message ? " — " + message : ""}`;
+    }
+
+    if (type === "discount") {
+        const percent = Number(offer.discount_percent || 0);
+
+        if (personalPercentOfferDiscountAmount > 0) {
+            return `${title}${percent > 0 ? " " + percent + "%" : ""}: −${personalPercentOfferDiscountAmount} грн`;
+        }
+
+        return `${title}: промо не доступне, виконайте умови`;
+    }
+
+    if (type === "gift") {
+        const availability = getStaffSaleGiftOfferAvailability(offer);
+        const giftText = getSalePersonalOfferValueText(offer);
+
+        if (availability.available) {
+            return `${title}: застосовано${giftText ? ". " + giftText : ""}`;
+        }
+
+        return `${title}: промо не доступне — ${availability.message}`;
+    }
+
+    return "";
+}
+    
 function getSalePreviewItemsPayload() {
     return SALE_ITEMS.map(item => ({
         productId: Number(item.productId || 0),
@@ -3335,21 +3499,17 @@ async function updateSalePaymentSummary() {
         `);
     }
 
-    if (personalPromoCodeDiscountAmount > 0) {
+    const selectedOfferSummaryLine = buildStaffSaleSelectedOfferSummaryLine({
+        personalPromoCodeDiscountAmount,
+        personalPromoCodeMessage,
+        personalPromoCodeValid,
+        personalPercentOfferDiscountAmount
+    });
+
+    if (selectedOfferSummaryLine) {
         discountLines.push(`
             <span style="font-weight:400;">
-                Промокод: −${personalPromoCodeDiscountAmount} грн
-            </span>
-        `);
-    }
-
-    if (personalPercentOfferDiscountAmount > 0) {
-        const selectedPercent = Number(SALE_SELECTED_PERSONAL_OFFER?.discount_percent || 0);
-        const selectedTitle = SALE_SELECTED_PERSONAL_OFFER?.title || "Персональна % знижка";
-
-        discountLines.push(`
-            <span style="font-weight:400;">
-                ${escapeSaleHtml(selectedTitle)} ${selectedPercent}%: −${personalPercentOfferDiscountAmount} грн
+                ${escapeSaleHtml(selectedOfferSummaryLine)}
             </span>
         `);
     }

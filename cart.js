@@ -156,7 +156,19 @@ function getOrderNoteFromSelectedOffer() {
     }
 
     if (offer.offer_type === "gift") {
-        return offer.title || "Подарунок до замовлення";
+        const offerText = String(offer.offer_text || "").trim();
+
+        const giftMatch = offerText.match(
+            /Подарунок\s*:\s*([\s\S]*?)(?:\.?\s*Умова\s*:|$)/i
+        );
+
+        const giftName = giftMatch
+            ? String(giftMatch[1] || "").trim()
+            : "";
+
+        return giftName
+            ? `Подарунок: ${giftName}`
+            : offerText || offer.title || "Подарунок до замовлення";
     }
 
     return offer.title || "Персональна пропозиція";

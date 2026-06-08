@@ -42,6 +42,101 @@ function getCartItemProductId(item) {
     );
 }
 
+function getGiftOfferRequiredProductNamesFromOfferText(offer) {
+    const offerText = String(offer?.offer_text || "").trim();
+
+    const conditionMatch = offerText.match(
+        /Умова\s*:\s*([\s\S]*?)\.?\s*$/i
+    );
+
+    const conditionText = conditionMatch
+        ? String(conditionMatch[1] || "").trim()
+        : "";
+
+    if (!conditionText) {
+        return [];
+    }
+
+    return conditionText
+        .split(/\s*,\s*|\s*;\s*|\s*\|\s*/)
+        .map(item => normalizeCartPersonalOfferText(item))
+        .filter(Boolean);
+}
+
+function getGiftProductCompareTokens(value) {
+    const ignoredTokens = new Set([
+        "для",
+        "грн",
+        "uah",
+        "ml",
+        "мл"
+    ]);
+
+    return normalizeCartPersonalOfferText(value)
+        .split(" ")
+        .map(token => token.trim())
+        .filter(token =>
+            token.length > 1 &&
+            !ignoredTokens.has(token)
+        );
+}
+
+function isGiftProductTextMatch(requiredText, itemText) {
+    const required = normalizeCartPersonalOfferText(requiredText);
+    const item = normalizeCartPersonalOfferText(itemText);
+
+    if (!required || !item) {
+        return false;
+    }
+
+    if (required === item || item.includes(required) || required.includes(item)) {
+        return true;
+    }
+
+    const requiredTokens = getGiftProductCompareTokens(required);
+    const itemTokens = getGiftProductCompareTokens(item);
+
+    if (!requiredTokens.length || !itemTokens.length) {
+        return false;
+    }
+
+    const matchedCount = requiredTokens.filter(token =>
+        itemTokens.includes(token)
+    ).length;
+
+    return matchedCount >= Math.min(requiredTokens.length, 2);
+}
+
+function isCartItemNameMatchGiftProductCondition(item, offer) {
+    const requiredProductNames = getGiftOfferRequiredProductNamesFromOfferText(offer);
+
+    if (!requiredProductNames.length) {
+        return false;
+    }
+
+    const itemTexts = [
+        item?.name,
+        item?.label,
+        item?.product_name,
+        item?.display_name,
+        item?.title,
+        item?.product_key,
+        item?.productKey,
+        item?.key,
+        `${item?.label || ""} ${item?.name || ""}`,
+        `${item?.product_label || ""} ${item?.product_name || ""}`,
+        `${item?.category_slug || ""} ${item?.label || ""} ${item?.name || ""}`
+    ]
+        .map(value => String(value || "").trim())
+        .filter(Boolean);
+
+    return requiredProductNames.some(requiredName =>
+        itemTexts.some(itemText =>
+            isGiftProductTextMatch(requiredName, itemText)
+        )
+    );
+}
+
 function isCartItemEligibleForSelectedGiftOffer(item, offer) {
     if (!offer || String(offer.offer_type || "").toLowerCase() !== "gift") {
         return false;
@@ -70,7 +165,11 @@ function isCartItemEligibleForSelectedGiftOffer(item, offer) {
 
         const itemProductId = getCartItemProductId(item);
 
-        return itemProductId > 0 && requiredProductIds.includes(itemProductId);
+        if (itemProductId > 0 && requiredProductIds.includes(itemProductId)) {
+            return true;
+        }
+
+        return isCartItemNameMatchGiftProductCondition(item, offer);
     }
 
     const requiredCategoryKeys = [

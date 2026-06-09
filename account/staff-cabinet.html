@@ -3406,6 +3406,8 @@ async function updateSalePaymentSummary() {
     let grossTotalAmount = checkTotal;
     let focusProductDiscountAmount = 0;
     let welcomeDiscountAmount = 0;
+    let statusDiscountAmount = 0;
+    let statusDiscountNote = "";
     let personalPromoCodeDiscountAmount = 0;
     let personalPercentOfferDiscountAmount = 0;
     let personalPromoCodeMessage = "";
@@ -3448,6 +3450,8 @@ async function updateSalePaymentSummary() {
                 grossTotalAmount = Number(data.grossTotalAmount || checkTotal);
                 focusProductDiscountAmount = Number(data.focusProductDiscountAmount || 0);
                 welcomeDiscountAmount = Number(data.welcomeDiscountAmount || 0);
+                statusDiscountAmount = Number(data.statusDiscountAmount || 0);
+                statusDiscountNote = String(data.statusDiscountNote || "");
                 personalPromoCodeDiscountAmount = Number(data.personalPromoCodeDiscountAmount || 0);
                 personalPromoCodeMessage = String(data.personalPromoCodeMessage || "");
                 personalPromoCodeValid = Boolean(data.personalPromoCodeValid);
@@ -3505,6 +3509,14 @@ async function updateSalePaymentSummary() {
         discountLines.push(`
             <span style="font-weight:400;">
                 Welcome-знижка 10%: −${welcomeDiscountAmount} грн
+            </span>
+        `);
+    }
+
+    if (statusDiscountAmount > 0) {
+        discountLines.push(`
+            <span style="font-weight:400;">
+                ${escapeSaleHtml(statusDiscountNote || `Персональна знижка: −${statusDiscountAmount} грн`)}
             </span>
         `);
     }

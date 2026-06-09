@@ -2924,13 +2924,7 @@ function getStaffSaleSelectedPersonalOfferType() {
 }
 
 function getStaffSalePreviewCustomerId() {
-    const selectedOfferType = getStaffSaleSelectedPersonalOfferType();
-
-    if (selectedOfferType === "welcome" || selectedOfferType === "promo") {
-        return Number(SALE_SELECTED_CUSTOMER?.id || 0);
-    }
-
-    return 0;
+    return Number(SALE_SELECTED_CUSTOMER?.id || 0);
 }
 
 function normalizeStaffSaleCategoryText(value) {

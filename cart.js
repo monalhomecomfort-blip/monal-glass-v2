@@ -5,6 +5,9 @@ let CERT_CODE_USED = null;
 
 let PUBLIC_PROMO_CAMPAIGNS = [];
 
+let CART_PRODUCTS_CATALOG = [];
+let CART_PRODUCTS_CATALOG_LOADED = false;
+
 async function loadPublicPromoCampaigns() {
     try {
         await refreshStoredUserAfterOrder();
@@ -40,7 +43,34 @@ function getSelectedOffer() {
         return null;
     }
 }
-function getCartItemProductId(item) {
+async function loadCartProductsCatalog() {
+    if (CART_PRODUCTS_CATALOG_LOADED) {
+        return;
+    }
+
+    try {
+        const response = await fetch(
+            "https://monal-mono-pay-production.up.railway.app/api/products-catalog-public",
+            { cache: "no-store" }
+        );
+
+        const data = await response.json();
+
+        CART_PRODUCTS_CATALOG =
+            data && data.ok && Array.isArray(data.products)
+                ? data.products
+                : [];
+
+    } catch (err) {
+        console.error("LOAD CART PRODUCTS CATALOG ERROR:", err);
+        CART_PRODUCTS_CATALOG = [];
+
+    } finally {
+        CART_PRODUCTS_CATALOG_LOADED = true;
+    }
+}
+
+function getCartItemDirectProductId(item) {
     return Number(
         item?.product_id ||
         item?.productId ||
@@ -49,81 +79,53 @@ function getCartItemProductId(item) {
     );
 }
 
-function getGiftOfferRequiredProductNamesFromOfferText(offer) {
-    const offerText = String(offer?.offer_text || "").trim();
+function getCartCatalogProductCategoryKeys(product) {
+    const values = [
+        product?.category_slug,
+        product?.product_label,
+        product?.display_name,
+        product?.product_key
+    ];
 
-    const conditionMatch = offerText.match(
-        /Умова\s*:\s*([\s\S]*?)\.?\s*$/i
+    return [
+        ...new Set(
+            values.flatMap(value => getCartCategoryAliases(value))
+        )
+    ];
+}
+
+function hasCartProductCategoryMatch(item, product) {
+    const itemCategoryKeys = getCartItemCategoryKeys(item)
+        .filter(key => key && key !== "all" && key !== "certificates");
+
+    const productCategoryKeys = getCartCatalogProductCategoryKeys(product)
+        .filter(key => key && key !== "all" && key !== "certificates");
+
+    if (!itemCategoryKeys.length || !productCategoryKeys.length) {
+        return false;
+    }
+
+    return itemCategoryKeys.some(key =>
+        productCategoryKeys.includes(key)
     );
-
-    const conditionText = conditionMatch
-        ? String(conditionMatch[1] || "").trim()
-        : "";
-
-    if (!conditionText) {
-        return [];
-    }
-
-    return conditionText
-        .split(/\s*,\s*|\s*;\s*|\s*\|\s*/)
-        .map(item => normalizeCartPersonalOfferText(item))
-        .filter(Boolean);
 }
 
-function getGiftProductCompareTokens(value) {
-    const ignoredTokens = new Set([
-        "для",
-        "грн",
-        "uah",
-        "ml",
-        "мл"
-    ]);
-
-    return normalizeCartPersonalOfferText(value)
-        .split(" ")
-        .map(token => token.trim())
-        .filter(token =>
-            token.length > 1 &&
-            !ignoredTokens.has(token)
-        );
+function getCartProductMatchTexts(value) {
+    return [
+        ...new Set(
+            [
+                value,
+                normalizeCartPersonalOfferText(value)
+            ]
+                .map(item => normalizeCartPersonalOfferText(item))
+                .filter(Boolean)
+        )
+    ];
 }
 
-function isGiftProductTextMatch(requiredText, itemText) {
-    const required = normalizeCartPersonalOfferText(requiredText);
-    const item = normalizeCartPersonalOfferText(itemText);
-
-    if (!required || !item) {
-        return false;
-    }
-
-    if (required === item || item.includes(required) || required.includes(item)) {
-        return true;
-    }
-
-    const requiredTokens = getGiftProductCompareTokens(required);
-    const itemTokens = getGiftProductCompareTokens(item);
-
-    if (!requiredTokens.length || !itemTokens.length) {
-        return false;
-    }
-
-    const matchedCount = requiredTokens.filter(token =>
-        itemTokens.includes(token)
-    ).length;
-
-    return matchedCount >= Math.min(requiredTokens.length, 2);
-}
-
-function isCartItemNameMatchGiftProductCondition(item, offer) {
-    const requiredProductNames = getGiftOfferRequiredProductNamesFromOfferText(offer);
-
-    if (!requiredProductNames.length) {
-        return false;
-    }
-
+function isCartProductNameStrongMatch(item, product) {
     const itemTexts = [
         item?.name,
-        item?.label,
         item?.product_name,
         item?.display_name,
         item?.title,
@@ -131,17 +133,108 @@ function isCartItemNameMatchGiftProductCondition(item, offer) {
         item?.productKey,
         item?.key,
         `${item?.label || ""} ${item?.name || ""}`,
-        `${item?.product_label || ""} ${item?.product_name || ""}`,
+        `${item?.name || ""} ${item?.label || ""}`,
         `${item?.category_slug || ""} ${item?.label || ""} ${item?.name || ""}`
     ]
-        .map(value => String(value || "").trim())
+        .flatMap(value => getCartProductMatchTexts(value))
         .filter(Boolean);
 
-    return requiredProductNames.some(requiredName =>
-        itemTexts.some(itemText =>
-            isGiftProductTextMatch(requiredName, itemText)
-        )
+    const productTexts = [
+        product?.display_name,
+        product?.product_key,
+        `${product?.product_label || ""} ${product?.display_name || ""}`,
+        `${product?.category_slug || ""} ${product?.display_name || ""}`
+    ]
+        .flatMap(value => getCartProductMatchTexts(value))
+        .filter(Boolean);
+
+    if (!itemTexts.length || !productTexts.length) {
+        return false;
+    }
+
+    return itemTexts.some(itemText =>
+        productTexts.some(productText => {
+            if (itemText === productText) {
+                return true;
+            }
+
+            if (itemText.length >= 5 && productText.includes(itemText)) {
+                return true;
+            }
+
+            if (productText.length >= 5 && itemText.includes(productText)) {
+                return true;
+            }
+
+            return false;
+        })
     );
+}
+
+function findCartCatalogProductForItem(item) {
+    const directProductId = getCartItemDirectProductId(item);
+
+    if (directProductId > 0) {
+        const directProduct = CART_PRODUCTS_CATALOG.find(product =>
+            Number(product.id || 0) === directProductId
+        );
+
+        if (directProduct) {
+            return directProduct;
+        }
+    }
+
+    if (!Array.isArray(CART_PRODUCTS_CATALOG) || !CART_PRODUCTS_CATALOG.length) {
+        return null;
+    }
+
+    const itemPrice = Number(item?.price || 0);
+
+    const candidates = CART_PRODUCTS_CATALOG.filter(product => {
+        if (!hasCartProductCategoryMatch(item, product)) {
+            return false;
+        }
+
+        if (!isCartProductNameStrongMatch(item, product)) {
+            return false;
+        }
+
+        const productPrice = Number(product.price || 0);
+
+        if (itemPrice > 0 && productPrice > 0 && productPrice !== itemPrice) {
+            return false;
+        }
+
+        return true;
+    });
+
+    if (candidates.length === 1) {
+        return candidates[0];
+    }
+
+    if (candidates.length > 1 && itemPrice > 0) {
+        const exactPriceCandidates = candidates.filter(product =>
+            Number(product.price || 0) === itemPrice
+        );
+
+        if (exactPriceCandidates.length === 1) {
+            return exactPriceCandidates[0];
+        }
+    }
+
+    return null;
+}
+
+function getCartItemProductId(item) {
+    const directProductId = getCartItemDirectProductId(item);
+
+    if (directProductId > 0) {
+        return directProductId;
+    }
+
+    const catalogProduct = findCartCatalogProductForItem(item);
+
+    return Number(catalogProduct?.id || 0);
 }
 
 function isCartItemEligibleForSelectedGiftOffer(item, offer) {
@@ -172,11 +265,7 @@ function isCartItemEligibleForSelectedGiftOffer(item, offer) {
 
         const itemProductId = getCartItemProductId(item);
 
-        if (itemProductId > 0 && requiredProductIds.includes(itemProductId)) {
-            return true;
-        }
-
-        return isCartItemNameMatchGiftProductCondition(item, offer);
+        return itemProductId > 0 && requiredProductIds.includes(itemProductId);
     }
 
     const requiredCategoryKeys = [
@@ -1736,6 +1825,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     if (isCartPage) {
         await loadPublicPromoCampaigns();
+        await loadCartProductsCatalog();
         await validateSelectedOfferInCart();
     }
 

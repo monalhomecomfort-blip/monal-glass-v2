@@ -609,7 +609,18 @@ function isFocusProductItem(item) {
     );
 }
 
+function isVipCustomerForCart(user = null) {
+    const cartUser = user || JSON.parse(localStorage.getItem("monal_user") || "null");
+    const status = String(cartUser?.customer_status || "general").toLowerCase();
+
+    return status === "friends" || status === "partners";
+}
+
 function calcFocusProductDiscount(cart) {
+    if (isVipCustomerForCart()) {
+        return 0;
+    }
+
     const campaign = getFocusProductCampaign();
 
     if (!campaign) return 0;

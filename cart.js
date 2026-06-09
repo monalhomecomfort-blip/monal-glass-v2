@@ -7,6 +7,13 @@ let PUBLIC_PROMO_CAMPAIGNS = [];
 
 async function loadPublicPromoCampaigns() {
     try {
+        await refreshStoredUserAfterOrder();
+
+        if (typeof isVipCustomerForCart === "function" && isVipCustomerForCart()) {
+            PUBLIC_PROMO_CAMPAIGNS = [];
+            return;
+        }
+
         const res = await fetch(
             "https://monal-mono-pay-production.up.railway.app/api/public-promo-campaigns",
             { cache: "no-store" }

@@ -1820,6 +1820,20 @@ document.addEventListener("DOMContentLoaded", () => {
             PROMO.codes.includes(entered);
 
         if (isOldPromo) {
+            await refreshStoredUserAfterOrder();
+
+            if (typeof isVipCustomerForCart === "function" && isVipCustomerForCart()) {
+                PROMO_CODE = "";
+                localStorage.removeItem("promo_code");
+                clearStoredPersonalPromoCodeData();
+
+                promoMessage.textContent =
+                    "Для вашого статусу діє персональна знижка. Загальні промокоди не застосовуються.";
+
+                renderCart();
+                return;
+            }
+
             if (!isPromoActive(entered)) {
                 promoMessage.textContent = "Промокод наразі не активний";
                 return;

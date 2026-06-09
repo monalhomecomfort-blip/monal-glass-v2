@@ -1268,12 +1268,15 @@ function recalcAfterCertificate() {
     }
 }
 /* ===================== ОФОРМЛЕННЯ ЗАМОВЛЕННЯ ===================== */
-function submitOrder() {
+async function submitOrder() {
 
     const cart = JSON.parse(localStorage.getItem("cart")) || [];
-    const savedUser = JSON.parse(localStorage.getItem("monal_user") || "null");
 
     if (!cart.length) return;
+
+    await refreshStoredUserAfterOrder();
+
+    const savedUser = JSON.parse(localStorage.getItem("monal_user") || "null");
 
     syncCertificatePaymentRules();
 

@@ -455,6 +455,10 @@ function calcPromoDiscount(cart, code = PROMO_CODE) {
         return Math.min(storedDiscount, cartTotalWithoutCertificates);
     }
 
+    if (typeof isVipCustomerForCart === "function" && isVipCustomerForCart()) {
+        return 0;
+    }
+
     if (!PROMO || !PROMO.codes || !PROMO.codes.includes(normalizedCode)) return 0;
     if (!isPromoActive(normalizedCode)) return 0;
 

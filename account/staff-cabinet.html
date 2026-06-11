@@ -3864,6 +3864,7 @@ async function updateSalePaymentSummary() {
 
     let grossTotalAmount = checkTotal;
     let focusProductDiscountAmount = 0;
+    let focusPromoNote = "";
     let welcomeDiscountAmount = 0;
     let statusDiscountAmount = 0;
     let statusDiscountNote = "";
@@ -3908,6 +3909,7 @@ async function updateSalePaymentSummary() {
             ) {
                 grossTotalAmount = Number(data.grossTotalAmount || checkTotal);
                 focusProductDiscountAmount = Number(data.focusProductDiscountAmount || 0);
+                focusPromoNote = String(data.focusPromoNote || "").replace(/^,\s*/, "");
                 welcomeDiscountAmount = Number(data.welcomeDiscountAmount || 0);
                 statusDiscountAmount = Number(data.statusDiscountAmount || 0);
                 statusDiscountNote = String(data.statusDiscountNote || "");
@@ -3957,9 +3959,13 @@ async function updateSalePaymentSummary() {
     const discountLines = [];
 
     if (focusProductDiscountAmount > 0) {
+        const publicPromoLine =
+            focusPromoNote ||
+            `Загальна акція: −${focusProductDiscountAmount} грн`;
+
         discountLines.push(`
             <span style="font-weight:400;">
-                Аромат дня: −${focusProductDiscountAmount} грн
+                ${escapeSaleHtml(publicPromoLine)}
             </span>
         `);
     }
@@ -9658,6 +9664,7 @@ if (createSaleBtn && saleResult) {
 
             const grossTotalAmount = Number(sale.grossTotalAmount || sale.totalAmount || 0);
             const focusProductDiscountAmount = Number(sale.focusProductDiscountAmount || 0);
+            const focusPromoNote = String(sale.focusPromoNote || "").replace(/^,\s*/, "");
             const welcomeDiscountAmount = Number(sale.welcomeDiscountAmount || 0);
             const personalPromoCodeDiscountAmount = Number(sale.personalPromoCodeDiscountAmount || 0);
             const finalTotalAmount = Number(sale.totalAmount || 0);
@@ -9665,7 +9672,12 @@ if (createSaleBtn && saleResult) {
             const saleDiscountLines = [];
 
             if (focusProductDiscountAmount > 0) {
-                saleDiscountLines.push(`Аромат дня: −${focusProductDiscountAmount} грн`);
+                saleDiscountLines.push(
+                    escapeSaleHtml(
+                        focusPromoNote ||
+                        `Загальна акція: −${focusProductDiscountAmount} грн`
+                    )
+                );
             }
 
             if (welcomeDiscountAmount > 0) {

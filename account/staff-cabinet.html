@@ -1686,6 +1686,11 @@ const focusPromoResult = document.getElementById("focus-promo-result");
 const focusPromosListResult = document.getElementById("focus-promos-list-result");
 const focusPromoWarehouseList = document.getElementById("focus-promo-warehouse-list");
 
+const publicPercentPromoTitleInput = document.getElementById("public-percent-promo-title");
+const publicPercentPromoDiscountInput = document.getElementById("public-percent-promo-discount");
+const publicPercentPromoStartInput = document.getElementById("public-percent-promo-start");
+const publicPercentPromoEndInput = document.getElementById("public-percent-promo-end");
+const publicPercentPromoActiveInput = document.getElementById("public-percent-promo-active");
 const publicPercentPromoCategoryFilter = document.getElementById("public-percent-promo-category-filter");
 const publicPercentPromoCategoryList = document.getElementById("public-percent-promo-category-list");
 const publicPercentPromoProductFilter = document.getElementById("public-percent-promo-product-filter");
@@ -1693,6 +1698,9 @@ const publicPercentPromoProductList = document.getElementById("public-percent-pr
 const publicPercentPromoProductIds = document.getElementById("public-percent-promo-product-ids");
 const publicPercentPromoProductsSelected = document.getElementById("public-percent-promo-products-selected");
 const publicPercentPromoWarehouseList = document.getElementById("public-percent-promo-warehouse-list");
+const savePublicPercentPromoBtn = document.getElementById("save-public-percent-promo-btn");
+const publicPercentPromoResult = document.getElementById("public-percent-promo-result");
+const publicPercentPromosListResult = document.getElementById("public-percent-promos-list-result");
 
 const personalPromoCodeListResult = document.getElementById("personal-promo-code-list-result");
 const personalPercentOfferListResult = document.getElementById("personal-percent-offer-list-result");
@@ -1714,6 +1722,8 @@ const personalGiftOfferGiftProductDropdown = document.getElementById("personal-g
 let FOCUS_PROMO_EDIT_ID = 0;
 let FOCUS_PROMOS_CACHE = [];
 let FOCUS_PROMOS_FILTER = "active";
+
+let PUBLIC_PERCENT_PROMO_EDIT_ID = 0;
 
 let PERSONAL_PROMO_CODE_EDIT_ID = 0;
 let PERSONAL_PROMO_CODES_CACHE = [];
@@ -7794,6 +7804,194 @@ async function saveFocusPromo(replaceConflicts = false) {
         console.error(err);
         focusPromoResult.innerHTML = "Помилка зʼєднання при збереженні “Аромат дня”.";
     }
+}
+
+function getSelectedPublicPercentPromoCategorySlugs() {
+    return getPublicPercentPromoCategoryCheckboxes()
+        .filter(checkbox => checkbox.checked)
+        .map(checkbox => String(checkbox.value || "").trim().toLowerCase())
+        .filter(Boolean);
+}
+
+function getSelectedPublicPercentPromoProductIds() {
+    return getPublicPercentPromoProductCheckboxes()
+        .filter(checkbox => checkbox.checked)
+        .map(checkbox => Number(checkbox.value || 0))
+        .filter(id => Number.isInteger(id) && id > 0);
+}
+
+function getSelectedPublicPercentPromoWarehouseIds() {
+    return Array.from(
+        document.querySelectorAll(".public-percent-promo-warehouse-checkbox:checked")
+    )
+        .map(checkbox => Number(checkbox.value || 0))
+        .filter(id => Number.isInteger(id) && id > 0);
+}
+
+function resetPublicPercentPromoForm() {
+    PUBLIC_PERCENT_PROMO_EDIT_ID = 0;
+
+    if (publicPercentPromoTitleInput) {
+        publicPercentPromoTitleInput.value = "";
+    }
+
+    if (publicPercentPromoDiscountInput) {
+        publicPercentPromoDiscountInput.value = "";
+    }
+
+    if (publicPercentPromoStartInput) {
+        publicPercentPromoStartInput.value = "";
+    }
+
+    if (publicPercentPromoEndInput) {
+        publicPercentPromoEndInput.value = "";
+    }
+
+    if (publicPercentPromoActiveInput) {
+        publicPercentPromoActiveInput.checked = false;
+    }
+
+    getPublicPercentPromoCategoryCheckboxes().forEach(checkbox => {
+        checkbox.checked = checkbox.value === "all";
+        checkbox.disabled = false;
+
+        const label = checkbox.closest("label");
+
+        if (label) {
+            label.style.opacity = "1";
+            label.style.pointerEvents = "";
+        }
+    });
+
+    clearPublicPercentPromoProducts();
+
+    getPublicPercentPromoProductCheckboxes().forEach(checkbox => {
+        checkbox.disabled = false;
+
+        const label = checkbox.closest("label");
+
+        if (label) {
+            label.style.opacity = "1";
+            label.style.pointerEvents = "";
+        }
+    });
+
+    document
+        .querySelectorAll(".public-percent-promo-warehouse-checkbox")
+        .forEach(checkbox => {
+            checkbox.checked = false;
+        });
+
+    if (publicPercentPromoCategoryFilter) {
+        publicPercentPromoCategoryFilter.style.opacity = "1";
+        publicPercentPromoCategoryFilter.style.pointerEvents = "";
+        publicPercentPromoCategoryFilter.open = false;
+    }
+
+    if (publicPercentPromoProductFilter) {
+        publicPercentPromoProductFilter.style.opacity = "1";
+        publicPercentPromoProductFilter.style.pointerEvents = "";
+        publicPercentPromoProductFilter.open = false;
+    }
+
+    if (savePublicPercentPromoBtn) {
+        savePublicPercentPromoBtn.textContent = "Створити";
+    }
+
+    updatePublicPercentPromoSourceLocks();
+}
+
+async function savePublicPercentPromo() {
+    if (!publicPercentPromoResult) return;
+
+    const title = publicPercentPromoTitleInput?.value.trim() || "";
+    const discountPercent = Number(publicPercentPromoDiscountInput?.value || 0);
+    const startsAt = normalizeFocusPromoDateForApi(publicPercentPromoStartInput?.value);
+    const endsAt = normalizeFocusPromoDateForApi(publicPercentPromoEndInput?.value);
+    const isActive = publicPercentPromoActiveInput?.checked ? 1 : 0;
+    const productIds = getSelectedPublicPercentPromoProductIds();
+    let categorySlugs = getSelectedPublicPercentPromoCategorySlugs();
+    const warehouseIds = getSelectedPublicPercentPromoWarehouseIds();
+
+    publicPercentPromoResult.classList.remove("staff-hidden");
+
+    if (!title) {
+        publicPercentPromoResult.innerHTML = "Вкажіть назву загальної % знижки.";
+        return;
+    }
+
+    if (!discountPercent || discountPercent <= 0 || discountPercent >= 100) {
+        publicPercentPromoResult.innerHTML = "Вкажіть знижку більше 0 і менше 100.";
+        return;
+    }
+
+    if (!startsAt || !endsAt) {
+        publicPercentPromoResult.innerHTML = "Вкажіть дату початку і дату завершення.";
+        return;
+    }
+
+    if (!warehouseIds.length) {
+        publicPercentPromoResult.innerHTML = "Оберіть хоча б один staff-склад.";
+        return;
+    }
+
+    if (productIds.length) {
+        categorySlugs = [];
+    }
+
+    if (!productIds.length && !categorySlugs.length) {
+        categorySlugs = ["all"];
+    }
+
+    publicPercentPromoResult.innerHTML = "Зберігаю загальну % знижку…";
+
+    try {
+        const response = await fetch(
+            "https://monal-mono-pay-production.up.railway.app/api/staff/public-percent-promo-save",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    staffId: staff.id,
+                    promoId: PUBLIC_PERCENT_PROMO_EDIT_ID,
+                    title,
+                    discountPercent,
+                    startsAt,
+                    endsAt,
+                    isActive,
+                    categorySlugs,
+                    productIds,
+                    warehouseIds
+                })
+            }
+        );
+
+        const data = await response.json();
+
+        if (!data.ok) {
+            publicPercentPromoResult.innerHTML =
+                data.error || "Не вдалося зберегти загальну % знижку.";
+            return;
+        }
+
+        resetPublicPercentPromoForm();
+
+        publicPercentPromoResult.classList.remove("staff-hidden");
+        publicPercentPromoResult.innerHTML = "Загальну % знижку збережено.";
+
+    } catch (err) {
+        console.error(err);
+        publicPercentPromoResult.innerHTML =
+            "Помилка зʼєднання при збереженні загальної % знижки.";
+    }
+}
+
+if (savePublicPercentPromoBtn) {
+    savePublicPercentPromoBtn.addEventListener("click", () => {
+        savePublicPercentPromo();
+    });
 }
 
 if (saveFocusPromoBtn) {

@@ -1686,6 +1686,14 @@ const focusPromoResult = document.getElementById("focus-promo-result");
 const focusPromosListResult = document.getElementById("focus-promos-list-result");
 const focusPromoWarehouseList = document.getElementById("focus-promo-warehouse-list");
 
+const publicPercentPromoCategoryFilter = document.getElementById("public-percent-promo-category-filter");
+const publicPercentPromoCategoryList = document.getElementById("public-percent-promo-category-list");
+const publicPercentPromoProductFilter = document.getElementById("public-percent-promo-product-filter");
+const publicPercentPromoProductList = document.getElementById("public-percent-promo-product-list");
+const publicPercentPromoProductIds = document.getElementById("public-percent-promo-product-ids");
+const publicPercentPromoProductsSelected = document.getElementById("public-percent-promo-products-selected");
+const publicPercentPromoWarehouseList = document.getElementById("public-percent-promo-warehouse-list");
+
 const personalPromoCodeListResult = document.getElementById("personal-promo-code-list-result");
 const personalPercentOfferListResult = document.getElementById("personal-percent-offer-list-result");
 const personalGiftOfferListResult = document.getElementById("personal-gift-offer-list-result");
@@ -2010,6 +2018,308 @@ if (personalPercentOfferCategoryFilter) {
         }
 
         updatePersonalPercentOfferCategorySummary();
+    });
+}
+
+function getPublicPercentPromoCategoryCheckboxes() {
+    if (!publicPercentPromoCategoryFilter) return [];
+
+    return Array.from(
+        publicPercentPromoCategoryFilter.querySelectorAll(".public-percent-promo-category-checkbox")
+    );
+}
+
+function getPublicPercentPromoProductCheckboxes() {
+    if (!publicPercentPromoProductFilter) return [];
+
+    return Array.from(
+        publicPercentPromoProductFilter.querySelectorAll(".public-percent-promo-product-checkbox")
+    );
+}
+
+function updatePublicPercentPromoCategorySummary() {
+    if (!publicPercentPromoCategoryFilter) return;
+
+    const summary = publicPercentPromoCategoryFilter.querySelector("summary");
+
+    if (!summary) return;
+
+    const checked = getPublicPercentPromoCategoryCheckboxes()
+        .filter(input => input.checked);
+
+    const hasAll = checked.some(input => input.value === "all");
+
+    if (!checked.length || hasAll) {
+        summary.textContent = "Всі категорії";
+        return;
+    }
+
+    const labels = checked
+        .map(input => input.dataset.categoryLabel || input.value)
+        .filter(Boolean);
+
+    summary.textContent = labels.length > 2
+        ? `Обрано: ${labels.length}`
+        : labels.join(", ");
+}
+
+function updatePublicPercentPromoProductSummary() {
+    if (!publicPercentPromoProductFilter) return;
+
+    const summary = publicPercentPromoProductFilter.querySelector("summary");
+
+    if (!summary) return;
+
+    const checked = getPublicPercentPromoProductCheckboxes()
+        .filter(input => input.checked);
+
+    if (!checked.length) {
+        summary.textContent = "Товари для знижки";
+        return;
+    }
+
+    const labels = checked
+        .map(input => input.dataset.productLabel || input.value)
+        .filter(Boolean);
+
+    summary.textContent = labels.length > 2
+        ? `Обрано: ${labels.length}`
+        : labels.join(", ");
+}
+
+function updatePublicPercentPromoProductValue() {
+    if (!publicPercentPromoProductIds) return;
+
+    const selectedIds = getPublicPercentPromoProductCheckboxes()
+        .filter(input => input.checked)
+        .map(input => String(input.value || "").trim())
+        .filter(Boolean);
+
+    publicPercentPromoProductIds.value = selectedIds.join(",");
+
+    if (publicPercentPromoProductsSelected) {
+        if (selectedIds.length) {
+            const selectedNames = getPublicPercentPromoProductCheckboxes()
+                .filter(input => input.checked)
+                .map(input => input.dataset.productLabel || input.value)
+                .filter(Boolean);
+
+            publicPercentPromoProductsSelected.classList.remove("staff-hidden");
+            publicPercentPromoProductsSelected.textContent =
+                selectedNames.length > 2
+                    ? `Обрано товарів: ${selectedNames.length}`
+                    : `Обрано: ${selectedNames.join(", ")}`;
+        } else {
+            publicPercentPromoProductsSelected.classList.add("staff-hidden");
+            publicPercentPromoProductsSelected.innerHTML = "";
+        }
+    }
+}
+
+function clearPublicPercentPromoProducts() {
+    getPublicPercentPromoProductCheckboxes().forEach(checkbox => {
+        checkbox.checked = false;
+    });
+
+    if (publicPercentPromoProductIds) {
+        publicPercentPromoProductIds.value = "";
+    }
+
+    if (publicPercentPromoProductsSelected) {
+        publicPercentPromoProductsSelected.classList.add("staff-hidden");
+        publicPercentPromoProductsSelected.innerHTML = "";
+    }
+
+    updatePublicPercentPromoProductSummary();
+}
+
+function updatePublicPercentPromoSourceLocks() {
+    const allCheckbox = publicPercentPromoCategoryFilter
+        ? publicPercentPromoCategoryFilter.querySelector('.public-percent-promo-category-checkbox[value="all"]')
+        : null;
+
+    const categoryCheckboxes = getPublicPercentPromoCategoryCheckboxes();
+    const specificCategoryCheckboxes = categoryCheckboxes.filter(item => item.value !== "all");
+    const productCheckboxes = getPublicPercentPromoProductCheckboxes();
+
+    let hasSelectedSpecificCategory = specificCategoryCheckboxes.some(item => item.checked);
+    let hasSelectedProduct = productCheckboxes.some(item => item.checked);
+
+    if (hasSelectedSpecificCategory && hasSelectedProduct) {
+        clearPublicPercentPromoProducts();
+
+        hasSelectedProduct = false;
+    }
+
+    if (!hasSelectedSpecificCategory && !hasSelectedProduct && allCheckbox) {
+        allCheckbox.checked = true;
+    }
+
+    productCheckboxes.forEach(checkbox => {
+        checkbox.disabled = hasSelectedSpecificCategory;
+
+        const label = checkbox.closest("label");
+
+        if (label) {
+            label.style.opacity = hasSelectedSpecificCategory ? "0.45" : "1";
+            label.style.pointerEvents = hasSelectedSpecificCategory ? "none" : "";
+        }
+    });
+
+    categoryCheckboxes.forEach(checkbox => {
+        checkbox.disabled = hasSelectedProduct;
+
+        const label = checkbox.closest("label");
+
+        if (label) {
+            label.style.opacity = hasSelectedProduct ? "0.45" : "1";
+            label.style.pointerEvents = hasSelectedProduct ? "none" : "";
+        }
+    });
+
+    if (publicPercentPromoProductFilter) {
+        publicPercentPromoProductFilter.style.opacity = hasSelectedSpecificCategory ? "0.55" : "1";
+        publicPercentPromoProductFilter.style.pointerEvents = hasSelectedSpecificCategory ? "none" : "";
+
+        if (hasSelectedSpecificCategory) {
+            publicPercentPromoProductFilter.open = false;
+        }
+
+        const summary = publicPercentPromoProductFilter.querySelector("summary");
+
+        if (summary) {
+            summary.style.cursor = hasSelectedSpecificCategory ? "default" : "";
+        }
+    }
+
+    if (publicPercentPromoCategoryFilter) {
+        publicPercentPromoCategoryFilter.style.opacity = hasSelectedProduct ? "0.55" : "1";
+        publicPercentPromoCategoryFilter.style.pointerEvents = hasSelectedProduct ? "none" : "";
+
+        if (hasSelectedProduct) {
+            publicPercentPromoCategoryFilter.open = false;
+        }
+
+        const summary = publicPercentPromoCategoryFilter.querySelector("summary");
+
+        if (summary) {
+            summary.style.cursor = hasSelectedProduct ? "default" : "";
+        }
+    }
+
+    updatePublicPercentPromoCategorySummary();
+    updatePublicPercentPromoProductSummary();
+    updatePublicPercentPromoProductValue();
+}
+
+function renderPublicPercentPromoCategoryFilter() {
+    if (!publicPercentPromoCategoryList) return;
+
+    const categories = getPersonalPercentOfferCategories();
+
+    publicPercentPromoCategoryList.innerHTML = "";
+
+    categories.forEach(category => {
+        const label = document.createElement("label");
+
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.className = "public-percent-promo-category-checkbox";
+        checkbox.value = category.value;
+        checkbox.dataset.categoryLabel = category.label;
+
+        label.appendChild(checkbox);
+        label.appendChild(document.createTextNode(" " + category.label));
+
+        publicPercentPromoCategoryList.appendChild(label);
+    });
+
+    updatePublicPercentPromoSourceLocks();
+}
+
+function renderPublicPercentPromoProductFilter() {
+    if (!publicPercentPromoProductList) return;
+
+    const products = STAFF_PRODUCTS.filter(product => {
+        return !isStaffPromoCertificateProduct(product);
+    });
+
+    publicPercentPromoProductList.innerHTML = "";
+
+    products.forEach(product => {
+        const productId = String(product.id || "").trim();
+        const productTitle = String(product.display_name || product.product_key || "").trim();
+
+        if (!productId || !productTitle) return;
+
+        const label = document.createElement("label");
+
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.className = "public-percent-promo-product-checkbox";
+        checkbox.value = productId;
+        checkbox.dataset.productLabel = productTitle;
+
+        label.appendChild(checkbox);
+        label.appendChild(document.createTextNode(" " + productTitle));
+
+        publicPercentPromoProductList.appendChild(label);
+    });
+
+    updatePublicPercentPromoSourceLocks();
+}
+
+if (publicPercentPromoCategoryFilter) {
+    publicPercentPromoCategoryFilter.addEventListener("change", event => {
+        const checkbox = event.target.closest(".public-percent-promo-category-checkbox");
+
+        if (!checkbox) return;
+
+        const allCheckbox = publicPercentPromoCategoryFilter.querySelector(
+            '.public-percent-promo-category-checkbox[value="all"]'
+        );
+
+        const categoryCheckboxes = Array.from(
+            publicPercentPromoCategoryFilter.querySelectorAll(
+                '.public-percent-promo-category-checkbox:not([value="all"])'
+            )
+        );
+
+        if (checkbox.value === "all" && checkbox.checked) {
+            categoryCheckboxes.forEach(item => {
+                item.checked = false;
+            });
+
+            clearPublicPercentPromoProducts();
+        }
+
+        if (checkbox.value !== "all" && checkbox.checked && allCheckbox) {
+            allCheckbox.checked = false;
+        }
+
+        const hasSelectedCategory = categoryCheckboxes.some(item => item.checked);
+
+        if (!hasSelectedCategory && !getPublicPercentPromoProductCheckboxes().some(item => item.checked) && allCheckbox) {
+            allCheckbox.checked = true;
+        }
+
+        updatePublicPercentPromoSourceLocks();
+    });
+}
+
+if (publicPercentPromoProductFilter) {
+    publicPercentPromoProductFilter.addEventListener("change", event => {
+        const checkbox = event.target.closest(".public-percent-promo-product-checkbox");
+
+        if (!checkbox) return;
+
+        if (checkbox.checked) {
+            getPublicPercentPromoCategoryCheckboxes().forEach(item => {
+                item.checked = false;
+            });
+        }
+
+        updatePublicPercentPromoSourceLocks();
     });
 }
 
@@ -4618,6 +4928,28 @@ function fillWarehouseSelects(warehouses) {
             label.appendChild(text);
 
             focusPromoWarehouseList.appendChild(label);
+        });
+    }
+
+    if (publicPercentPromoWarehouseList) {
+        publicPercentPromoWarehouseList.innerHTML = "";
+
+        STAFF_WAREHOUSES.forEach(warehouse => {
+            const label = document.createElement("label");
+
+            const checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.className = "public-percent-promo-warehouse-checkbox";
+            checkbox.value = warehouse.warehouse_id;
+
+            const text = document.createTextNode(
+                ` ${warehouse.warehouse_name} ID ${warehouse.warehouse_id}`
+            );
+
+            label.appendChild(checkbox);
+            label.appendChild(text);
+
+            publicPercentPromoWarehouseList.appendChild(label);
         });
     }
 
@@ -7309,6 +7641,8 @@ if (openPromosSectionBtn && promosSection) {
 
         await loadStaffProducts();
         renderPersonalPercentOfferCategoryFilter();
+        renderPublicPercentPromoCategoryFilter();
+        renderPublicPercentPromoProductFilter();
         renderPersonalGiftOfferCategoryFilter();
         renderPersonalGiftOfferMainProductFilter();
         await loadStaffWarehouses();

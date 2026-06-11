@@ -750,6 +750,145 @@
 
         </div>
 
+        <div class="staff-promo-campaign-block" id="public-percent-promo-block">
+
+            <h3>Загальна % знижка</h3>
+
+            <input
+                type="hidden"
+                id="public-percent-promo-type"
+                value="public_percent"
+            >
+
+            <div class="staff-promo-table is-public-percent-promo-table">
+
+                <div class="staff-promo-table-head">
+                    <div>Назва / умова</div>
+                    <div>%</div>
+                    <div>Початок</div>
+                    <div>Кінець</div>
+                    <div>Активна</div>
+                    <div>Склади staff</div>
+                    <div>Дія</div>
+                </div>
+
+                <div class="staff-promo-table-row">
+
+                    <div class="staff-promo-cell">
+                        <div style="display:grid; gap:8px;">
+                            <input
+                                type="text"
+                                id="public-percent-promo-title"
+                                placeholder="Назва акції"
+                            >
+
+                            <details
+                                class="staff-report-filter staff-personal-status-filter staff-personal-category-filter"
+                                id="public-percent-promo-category-filter"
+                            >
+                                <summary>Категорії для знижки</summary>
+
+                                <div class="staff-report-filter-menu staff-personal-status-menu">
+                                    <label>
+                                        <input
+                                            type="checkbox"
+                                            class="public-percent-promo-category-checkbox"
+                                            value="all"
+                                            checked
+                                        >
+                                        Всі категорії
+                                    </label>
+
+                                    <div id="public-percent-promo-category-list"></div>
+                                </div>
+                            </details>
+
+                            <details
+                                class="staff-report-filter staff-personal-status-filter staff-personal-category-filter"
+                                id="public-percent-promo-product-filter"
+                            >
+                                <summary>Товари для знижки</summary>
+
+                                <div class="staff-report-filter-menu staff-personal-status-menu">
+                                    <div id="public-percent-promo-product-list"></div>
+                                </div>
+                            </details>
+
+                            <input
+                                type="hidden"
+                                id="public-percent-promo-product-ids"
+                            >
+
+                            <div
+                                id="public-percent-promo-products-selected"
+                                class="staff-hint staff-hidden"
+                            ></div>
+                        </div>
+                    </div>
+
+                    <div class="staff-promo-cell">
+                        <input
+                            type="number"
+                            id="public-percent-promo-discount"
+                            placeholder="%"
+                            min="1"
+                            max="99"
+                        >
+                    </div>
+
+                    <div class="staff-promo-cell">
+                        <input
+                            type="datetime-local"
+                            id="public-percent-promo-start"
+                        >
+                    </div>
+
+                    <div class="staff-promo-cell">
+                        <input
+                            type="datetime-local"
+                            id="public-percent-promo-end"
+                        >
+                    </div>
+
+                    <div class="staff-promo-cell">
+                        <label class="staff-promo-checkbox">
+                            <input
+                                type="checkbox"
+                                id="public-percent-promo-active"
+                            >
+                            Активна
+                        </label>
+                    </div>
+
+                    <div class="staff-promo-cell">
+                        <details class="staff-report-filter staff-promo-warehouse-filter">
+                            <summary>Обрати склади</summary>
+
+                            <div
+                                id="public-percent-promo-warehouse-list"
+                                class="staff-report-filter-menu"
+                            ></div>
+                        </details>
+                    </div>
+
+                    <div class="staff-promo-cell staff-promo-actions">
+                        <button id="save-public-percent-promo-btn" class="buy-btn" type="button">
+                            Створити
+                        </button>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div id="public-percent-promo-result" class="staff-result staff-hidden"></div>
+
+            <div id="public-percent-promos-list-result" class="staff-result staff-hidden">
+                Список загальних % знижок підключимо наступним кроком.
+            </div>
+
+        </div>
+
         <h2 class="staff-promo-main-title staff-promo-personal-title">
             Персональні пропозиції для зареєстрованих, налаштування
         </h2>

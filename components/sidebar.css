@@ -1878,13 +1878,15 @@
     margin-top: 0;
 }
 
-#promos-section #focus-promo-warehouse-list {
+#promos-section #focus-promo-warehouse-list,
+#promos-section #public-percent-promo-warehouse-list {
     display: flex;
     flex-direction: column;
     gap: 0;
 }
 
-#promos-section #focus-promo-warehouse-list label {
+#promos-section #focus-promo-warehouse-list label,
+#promos-section #public-percent-promo-warehouse-list label {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -1895,9 +1897,83 @@
     white-space: normal;
 }
 
-#promos-section #focus-promo-warehouse-list input[type="checkbox"] {
+#promos-section #focus-promo-warehouse-list input[type="checkbox"],
+#promos-section #public-percent-promo-warehouse-list input[type="checkbox"] {
     flex: 0 0 auto;
     margin: 0;
+}
+
+#promos-section #public-percent-promo-block {
+    position: relative;
+    z-index: 80;
+    isolation: isolate;
+}
+
+#promos-section #public-percent-promo-block .is-public-percent-promo-table {
+    position: relative;
+    z-index: 500;
+    overflow: visible;
+}
+
+#promos-section #public-percent-promo-block .staff-promo-table-row,
+#promos-section #public-percent-promo-block .staff-promo-cell {
+    overflow: visible;
+}
+
+#promos-section #public-percent-promo-block .staff-promo-cell:first-child,
+#promos-section #public-percent-promo-block .staff-promo-cell:nth-child(6) {
+    position: relative;
+    z-index: 600;
+}
+
+#promos-section #public-percent-promo-category-filter,
+#promos-section #public-percent-promo-product-filter,
+#promos-section #public-percent-promo-block .staff-promo-warehouse-filter {
+    position: relative;
+    z-index: 700;
+}
+
+#promos-section #public-percent-promo-category-filter[open],
+#promos-section #public-percent-promo-product-filter[open],
+#promos-section #public-percent-promo-block .staff-promo-warehouse-filter[open] {
+    position: relative;
+    z-index: 20000;
+}
+
+#promos-section #public-percent-promo-category-filter[open] .staff-personal-status-menu,
+#promos-section #public-percent-promo-product-filter[open] .staff-personal-status-menu,
+#promos-section #public-percent-promo-block .staff-promo-warehouse-filter[open] .staff-report-filter-menu {
+    position: absolute;
+    top: 50px;
+    left: 0;
+    z-index: 20001;
+    max-height: 320px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    background: #f4efe6;
+    opacity: 1;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    box-shadow: 0 18px 42px rgba(0, 0, 0, 0.24);
+}
+
+#promos-section #public-percent-promo-category-list,
+#promos-section #public-percent-promo-product-list,
+#promos-section #public-percent-promo-warehouse-list {
+    position: relative;
+    z-index: 1;
+    background: #f4efe6;
+}
+
+#promos-section #public-percent-promo-category-list label,
+#promos-section #public-percent-promo-product-list label,
+#promos-section #public-percent-promo-warehouse-list label {
+    background: #f4efe6;
+}
+
+#promos-section #public-percent-promo-category-list label:hover,
+#promos-section #public-percent-promo-product-list label:hover,
+#promos-section #public-percent-promo-warehouse-list label:hover {
+    background: #e7e4d9;
 }
 
 /* персональні пропозиції — фільтр "Кому" */

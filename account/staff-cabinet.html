@@ -3946,7 +3946,12 @@ async function updateSalePaymentSummary() {
                 personalPromoCodeDiscountAmount = Number(data.personalPromoCodeDiscountAmount || 0);
                 personalPromoCodeMessage = String(data.personalPromoCodeMessage || "");
                 personalPromoCodeValid = Boolean(data.personalPromoCodeValid);
-                totalAfterDiscounts = Number(data.totalAmount || grossTotalAmount);
+                totalAfterDiscounts = Number(
+                    data.totalAmount !== undefined &&
+                    data.totalAmount !== null
+                        ? data.totalAmount
+                        : grossTotalAmount
+                );
             }
 
         } catch (err) {

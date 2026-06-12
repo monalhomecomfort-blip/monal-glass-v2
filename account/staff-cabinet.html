@@ -9488,6 +9488,18 @@ if (createSaleBtn && saleResult) {
                 : 0;
         }
 
+        let selectedPersonalPercentOfferId = 0;
+
+        if (
+            getStaffSaleSelectedPersonalOfferType() === "discount" &&
+            SALE_SELECTED_PERSONAL_OFFER
+        ) {
+            selectedPersonalPercentOfferId =
+                calcSelectedStaffPersonalPercentOfferDiscount(Infinity) > 0
+                    ? Number(SALE_SELECTED_PERSONAL_OFFER.id || 0)
+                    : 0;
+        }
+
         const salePayload = {
             staffId: staff.id,
             customerId,
@@ -9504,6 +9516,7 @@ if (createSaleBtn && saleResult) {
             certificateCode: selectedCertificateCode,
             promoCode: appliedPersonalPromoCodeForPayment,
             personalGiftOfferId: selectedPersonalGiftOfferId,
+            personalPercentOfferId: selectedPersonalPercentOfferId,
             skipPublicPromo: shouldSkipStaffPublicPromoForSelectedOffer()
         };
 

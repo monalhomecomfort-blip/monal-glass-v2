@@ -3382,6 +3382,25 @@ function getStaffSaleSelectedPersonalOfferType() {
         .toLowerCase();
 }
 
+function shouldSkipStaffPublicPromoForSelectedOffer() {
+    const type = getStaffSaleSelectedPersonalOfferType();
+
+    if (!SALE_SELECTED_PERSONAL_OFFER) {
+        return false;
+    }
+
+    if (type === "delivery") {
+        return false;
+    }
+
+    return [
+        "promo",
+        "discount",
+        "gift",
+        "welcome"
+    ].includes(type);
+}
+
 function getStaffSalePreviewCustomerId() {
     return Number(SALE_SELECTED_CUSTOMER?.id || 0);
 }
@@ -3895,6 +3914,7 @@ async function updateSalePaymentSummary() {
                         customerId: getStaffSalePreviewCustomerId(),
                         warehouseId,
                         promoCode: getAppliedStaffSalePromoCode(),
+                        skipPublicPromo: shouldSkipStaffPublicPromoForSelectedOffer(),
                         items: getSalePreviewItemsPayload()
                     })
                 }
@@ -9429,6 +9449,7 @@ if (createSaleBtn && saleResult) {
                             customerId: getStaffSalePreviewCustomerId(),
                             warehouseId,
                             promoCode: SALE_PERSONAL_PROMO_CODE,
+                            skipPublicPromo: shouldSkipStaffPublicPromoForSelectedOffer(),
                             items: getSalePreviewItemsPayload()
                         })
                     }
@@ -9482,7 +9503,8 @@ if (createSaleBtn && saleResult) {
             warehouseId,
             certificateCode: selectedCertificateCode,
             promoCode: appliedPersonalPromoCodeForPayment,
-            personalGiftOfferId: selectedPersonalGiftOfferId
+            personalGiftOfferId: selectedPersonalGiftOfferId,
+            skipPublicPromo: shouldSkipStaffPublicPromoForSelectedOffer()
         };
 
         if (

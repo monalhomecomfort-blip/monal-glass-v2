@@ -10131,6 +10131,8 @@ if (createSaleBtn && saleResult) {
             const focusPromoNote = String(sale.focusPromoNote || "").replace(/^,\s*/, "");
             const welcomeDiscountAmount = Number(sale.welcomeDiscountAmount || 0);
             const personalPromoCodeDiscountAmount = Number(sale.personalPromoCodeDiscountAmount || 0);
+            const personalPercentOfferDiscountAmount = Number(sale.personalPercentOfferDiscountAmount || 0);
+            const personalPercentOfferNote = String(sale.personalPercentOfferNote || "").replace(/^,\s*/, "");
             const finalTotalAmount = Number(sale.totalAmount || 0);
 
             const saleDiscountLines = [];
@@ -10150,6 +10152,15 @@ if (createSaleBtn && saleResult) {
 
             if (personalPromoCodeDiscountAmount > 0) {
                 saleDiscountLines.push(`Промокод: −${personalPromoCodeDiscountAmount} грн`);
+            }
+
+            if (personalPercentOfferDiscountAmount > 0) {
+                saleDiscountLines.push(
+                    escapeSaleHtml(
+                        personalPercentOfferNote ||
+                        `Персональна % знижка: −${personalPercentOfferDiscountAmount} грн`
+                    )
+                );
             }
 
             const saleTotalsHtml = saleDiscountLines.length

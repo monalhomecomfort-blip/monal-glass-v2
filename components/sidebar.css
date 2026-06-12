@@ -2210,3 +2210,58 @@
         display: table-cell;
     }
 }
+
+/* ===================== PUBLIC PERCENT PROMO LIST WIDTH FIX ===================== */
+
+#promos-section #public-percent-promos-list-result .is-public-percent-promo-list-table .staff-promo-table-head > div:nth-child(1),
+#promos-section #public-percent-promos-list-result .is-public-percent-promo-list-table .staff-promo-cell:nth-child(1) {
+    width: 14%;
+}
+
+#promos-section #public-percent-promos-list-result .is-public-percent-promo-list-table .staff-promo-table-head > div:nth-child(2),
+#promos-section #public-percent-promos-list-result .is-public-percent-promo-list-table .staff-promo-cell:nth-child(2) {
+    width: 6%;
+}
+
+#promos-section #public-percent-promos-list-result .is-public-percent-promo-list-table .staff-promo-table-head > div:nth-child(3),
+#promos-section #public-percent-promos-list-result .is-public-percent-promo-list-table .staff-promo-cell:nth-child(3) {
+    width: 20%;
+}
+
+#promos-section #public-percent-promos-list-result .is-public-percent-promo-list-table .staff-promo-table-head > div:nth-child(4),
+#promos-section #public-percent-promos-list-result .is-public-percent-promo-list-table .staff-promo-cell:nth-child(4) {
+    width: 12%;
+}
+
+#promos-section #public-percent-promos-list-result .is-public-percent-promo-list-table .staff-promo-table-head > div:nth-child(5),
+#promos-section #public-percent-promos-list-result .is-public-percent-promo-list-table .staff-promo-cell:nth-child(5) {
+    width: 12%;
+}
+
+#promos-section #public-percent-promos-list-result .is-public-percent-promo-list-table .staff-promo-table-head > div:nth-child(6),
+#promos-section #public-percent-promos-list-result .is-public-percent-promo-list-table .staff-promo-cell:nth-child(6) {
+    width: 7%;
+}
+
+#promos-section #public-percent-promos-list-result .is-public-percent-promo-list-table .staff-promo-table-head > div:nth-child(7),
+#promos-section #public-percent-promos-list-result .is-public-percent-promo-list-table .staff-promo-cell:nth-child(7) {
+    width: 18%;
+    border-right: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+#promos-section #public-percent-promos-list-result .is-public-percent-promo-list-table .staff-promo-table-head > div:nth-child(8),
+#promos-section #public-percent-promos-list-result .is-public-percent-promo-list-table .staff-promo-cell:nth-child(8) {
+    width: 11%;
+    border-right: none;
+}
+
+#promos-section #public-percent-promos-list-result .is-public-percent-promo-list-table .staff-promo-actions .buy-btn {
+    width: 100%;
+    max-width: none;
+    min-width: 104px;
+    height: 40px;
+    margin: 0;
+    padding: 0 12px;
+    font-size: 13px;
+    white-space: nowrap;
+}

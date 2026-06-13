@@ -43,6 +43,68 @@ function getSelectedOffer() {
         return null;
     }
 }
+
+function escapeCartHtml(value) {
+    return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+}
+
+function shouldSkipCartPublicPromoForSelectedOffer() {
+    const offer = getSelectedOffer();
+
+    if (!offer) {
+        return false;
+    }
+
+    const type = String(offer.offer_type || "").trim().toLowerCase();
+
+    if (type === "delivery") {
+        return false;
+    }
+
+    return ["promo", "discount", "gift", "welcome"].includes(type);
+}
+
+function isCartPersonalPromoCodeApplied(code) {
+    const normalizedCode = String(code || PROMO_CODE || "").trim().toUpperCase();
+
+    if (!normalizedCode) {
+        return false;
+    }
+
+    return Boolean(getStoredPersonalPromoCodeData(normalizedCode));
+}
+
+function shouldSkipCartPublicPromo() {
+    return (
+        shouldSkipCartPublicPromoForSelectedOffer() ||
+        isCartPersonalPromoCodeApplied()
+    );
+}
+
+function getSelectedPersonalPercentOfferNote(discountAmount) {
+    const offer = getSelectedOffer();
+
+    if (
+        !offer ||
+        String(offer.offer_type || "").trim().toLowerCase() !== "discount" ||
+        Number(discountAmount || 0) <= 0
+    ) {
+        return "";
+    }
+
+    const title = String(offer.title || "Персональна пропозиція").trim();
+    const percent = Number(offer.discount_percent || 0);
+
+    return percent > 0
+        ? `Персональна пропозиція ${title} ${percent}%: −${discountAmount} грн`
+        : `Персональна пропозиція ${title}: −${discountAmount} грн`;
+}
+
 async function loadCartProductsCatalog() {
     if (CART_PRODUCTS_CATALOG_LOADED) {
         return;
@@ -350,6 +412,10 @@ function getOrderNoteFromSelectedOffer() {
         return "Безкоштовна доставка";
     }
 
+    if (offer.offer_type === "discount") {
+        return "";
+    }
+
     if (offer.offer_type === "gift") {
         const offerText = String(offer.offer_text || "").trim();
 
@@ -551,6 +617,10 @@ function calcPromoDiscount(cart, code = PROMO_CODE) {
         return Math.min(storedDiscount, cartTotalWithoutCertificates);
     }
 
+    if (shouldSkipCartPublicPromoForSelectedOffer()) {
+        return 0;
+    }
+
     if (typeof isVipCustomerForCart === "function" && isVipCustomerForCart()) {
         return 0;
     }
@@ -721,6 +791,10 @@ function calcFocusProductDiscount(cart) {
         return 0;
     }
 
+    if (shouldSkipCartPublicPromo()) {
+        return 0;
+    }
+
     const campaign = getFocusProductCampaign();
 
     if (!campaign) return 0;
@@ -874,12 +948,15 @@ function isCartItemEligibleForSelectedPercentOffer(item, offer) {
         return false;
     }
 
-    if (isFocusProductItem(item)) {
+    if (
+        !shouldSkipCartPublicPromoForSelectedOffer() &&
+        isFocusProductItem(item)
+    ) {
         return false;
     }
 
     const offerCategories = getSelectedOfferCategoryKeys(offer);
-
+    
     if (!offerCategories.length) {
         return true;
     }
@@ -926,36 +1003,39 @@ function calcUserCartDiscount(cart, user) {
     const customerStatus = String(user.customer_status || "general").toLowerCase();
     const welcomeDiscountUsed = Boolean(user.welcome_discount_used);
 
+    const canUseWelcomeDiscount =
+        customerStatus === "general" &&
+        !welcomeDiscountUsed;
+
     const eligibleTotal = cart
         .filter(item =>
             !isCartCertificateItem(item) &&
-            !isFocusProductItem(item)
+            (
+                !canUseWelcomeDiscount ||
+                shouldSkipCartPublicPromo() ||
+                !isFocusProductItem(item)
+            )
         )
         .reduce((sum, item) => sum + (Number(item.price) || 0), 0);
 
     if (eligibleTotal <= 0) return 0;
 
-    let basePersonalDiscount = 0;
-
-    const canUseWelcomeDiscount =
-        customerStatus === "general" &&
-        !welcomeDiscountUsed;
-
     if (canUseWelcomeDiscount) {
-        basePersonalDiscount = Math.round(eligibleTotal * 0.10);
-    } else {
-        const personalPercent = Number(user.discount || 0);
-
-        if (personalPercent > 0) {
-            basePersonalDiscount = Math.round(eligibleTotal * (personalPercent / 100));
-        }
+        return Math.min(
+            eligibleTotal,
+            Math.round(eligibleTotal * 0.10)
+        );
     }
 
-    const selectedPercentOfferDiscount = calcSelectedPersonalPercentOfferDiscount(cart);
+    const personalPercent = Number(user.discount || 0);
+
+    if (personalPercent <= 0) {
+        return 0;
+    }
 
     return Math.min(
         eligibleTotal,
-        basePersonalDiscount + selectedPercentOfferDiscount
+        Math.round(eligibleTotal * (personalPercent / 100))
     );
 }
 
@@ -993,17 +1073,23 @@ function renderCart() {
     const total = cart.reduce((s, i) => s + Number(i.price), 0);
 
     
-    /* ===================== АРОМАТ ДНЯ ===================== */
+    /* ===================== PUBLIC-ПРОМО ===================== */
 
     const focusProductDiscount = calcFocusProductDiscount(cart);
 
     const afterFocusProduct = total - focusProductDiscount;
 
-    /* ===================== ПЕРСОНАЛЬНА ЗНИЖКА ===================== */
+    /* ===================== ОСОБИСТА ЗНИЖКА / WELCOME ===================== */
 
-    const personalDiscount = calcUserCartDiscount(cart, user);
+    const loyaltyDiscount = calcUserCartDiscount(cart, user);
 
-    const afterPersonal = afterFocusProduct - personalDiscount;
+    const afterLoyalty = afterFocusProduct - loyaltyDiscount;
+
+    /* ===================== ПЕРСОНАЛЬНА % ПРОПОЗИЦІЯ ===================== */
+
+    const selectedPersonalOfferDiscount = calcSelectedPersonalPercentOfferDiscount(cart);
+
+    const afterSelectedPersonalOffer = afterLoyalty - selectedPersonalOfferDiscount;
 
     /* ===================== ПРОМОКОД ===================== */
 
@@ -1011,7 +1097,7 @@ function renderCart() {
         ? calcPromoDiscount(cart)
         : 0;
 
-    const afterPromo = Math.max(0, afterPersonal - promoDiscount);
+    const afterPromo = Math.max(0, afterSelectedPersonalOffer - promoDiscount);
 
     /* ===================== СЕРТИФІКАТ ===================== */
 
@@ -1020,6 +1106,8 @@ function renderCart() {
         : 0;
 
     const orderNote = getOrderNoteFromSelectedOffer();
+    const selectedPersonalOfferNote =
+        getSelectedPersonalPercentOfferNote(selectedPersonalOfferDiscount);
 
     const finalTotal = Math.max(0, afterPromo - certificateAmount);
 
@@ -1029,25 +1117,36 @@ function renderCart() {
 
     if (focusProductDiscount > 0) {
         html += `Аромат дня: −${focusProductDiscount} грн<br>`;
-    }    
+    }
 
-    if (personalDiscount > 0) {
+    if (user) {
         const isWelcomeDiscount =
-            user &&
             String(user.customer_status || "general").toLowerCase() === "general" &&
             !Boolean(user.welcome_discount_used);
 
-        html += `${
-            isWelcomeDiscount
-                ? "Welcome-знижка 10%"
-                : "Персональна знижка"
-        }: −${personalDiscount} грн<br>`;
+        const loyaltyPercent = isWelcomeDiscount
+            ? 10
+            : Number(user.discount || 0);
+
+        if (isWelcomeDiscount && loyaltyDiscount > 0) {
+            html += `Welcome-знижка 10%: −${loyaltyDiscount} грн<br>`;
+        } else {
+            html += `Особиста знижка ${loyaltyPercent}%: −${loyaltyDiscount} грн<br>`;
+        }
+    }
+
+    if (selectedPersonalOfferDiscount > 0 && selectedPersonalOfferNote) {
+        html += `${escapeCartHtml(selectedPersonalOfferNote)}<br>`;
     }
 
     if (promoDiscount > 0) {
-        html += `Промокод: −${promoDiscount} грн<br>`;
+        const promoLabel = isCartPersonalPromoCodeApplied()
+            ? "Персональний промокод"
+            : "Промокод";
+
+        html += `${promoLabel}: −${promoDiscount} грн<br>`;
     } else if (orderNote) {
-        html += `Персональна пропозиція: ${orderNote}<br>`;
+        html += `Персональна пропозиція: ${escapeCartHtml(orderNote)}<br>`;
     }
 
     if (certificateAmount > 0) {
@@ -1350,7 +1449,9 @@ function recalcAfterCertificate() {
 
     const focusProductDiscount = calcFocusProductDiscount(cart);
 
-    const personalDiscount = calcUserCartDiscount(cart, user);
+    const loyaltyDiscount = calcUserCartDiscount(cart, user);
+
+    const selectedPersonalOfferDiscount = calcSelectedPersonalPercentOfferDiscount(cart);
 
     const promoDiscount =
         typeof calcPromoDiscount === "function"
@@ -1359,7 +1460,7 @@ function recalcAfterCertificate() {
 
     const afterDiscounts = Math.max(
         0,
-        total - focusProductDiscount - personalDiscount - promoDiscount
+        total - focusProductDiscount - loyaltyDiscount - selectedPersonalOfferDiscount - promoDiscount
     );
 
     const remaining = Math.max(0, afterDiscounts - CERT_APPLIED_AMOUNT);
@@ -1451,7 +1552,11 @@ async function submitOrder() {
 
     const focusProductDiscount = calcFocusProductDiscount(cart);
 
-    const personalDiscount = calcUserCartDiscount(cart, savedUser);
+    const loyaltyDiscount = calcUserCartDiscount(cart, savedUser);
+
+    const selectedPersonalOfferDiscount = calcSelectedPersonalPercentOfferDiscount(cart);
+
+    const personalDiscount = loyaltyDiscount + selectedPersonalOfferDiscount;
 
     const promoDiscount = typeof calcPromoDiscount === "function"
         ? calcPromoDiscount(cart)
@@ -1459,7 +1564,7 @@ async function submitOrder() {
 
     const afterDiscounts = Math.max(
         0,
-        total - focusProductDiscount - personalDiscount - promoDiscount
+        total - focusProductDiscount - loyaltyDiscount - selectedPersonalOfferDiscount - promoDiscount
     );
 
     const remainingToPay = Math.max(0, afterDiscounts - CERT_APPLIED_AMOUNT);
@@ -1503,7 +1608,11 @@ async function submitOrder() {
     }
 
     const dueAmount = Math.max(0, remainingToPay - payNow);
-    const orderNote = getOrderNoteFromSelectedOffer();
+    const selectedPersonalOfferNote =
+        getSelectedPersonalPercentOfferNote(selectedPersonalOfferDiscount);
+    const orderNote =
+        selectedPersonalOfferNote ||
+        getOrderNoteFromSelectedOffer();
     const itemsText = cart
         .map(i => {
 
@@ -1534,16 +1643,21 @@ async function submitOrder() {
 
 💰 Загальна сума: ${total} грн
 ${focusProductDiscount > 0 ? `🌿 Аромат дня: −${focusProductDiscount} грн\n` : ""}
-${personalDiscount > 0
+${loyaltyDiscount > 0
   ? `👤 ${
       savedUser &&
       String(savedUser.customer_status || "general").toLowerCase() === "general" &&
       !Boolean(savedUser.welcome_discount_used)
           ? "Welcome-знижка 10%"
-          : "Персональна знижка"
-    }: −${personalDiscount} грн\n`
+          : `Особиста знижка ${Number(savedUser?.discount || 0)}%`
+    }: −${loyaltyDiscount} грн\n`
   : ""}
-${promoDiscount > 0 ? `🏷 Промокод: −${promoDiscount} грн\n` : ""}
+${selectedPersonalOfferDiscount > 0 && selectedPersonalOfferNote
+  ? `🎯 ${selectedPersonalOfferNote}\n`
+  : ""}
+${promoDiscount > 0
+  ? `🏷 ${isCartPersonalPromoCodeApplied() ? "Персональний промокод" : "Промокод"}: −${promoDiscount} грн\n`
+  : ""}
 ${(typeof CERT_CODE_USED === "string" && CERT_CODE_USED)
   ? `🎟 Сертифікат: ${CERT_CODE_USED} (−${CERT_APPLIED_AMOUNT} грн)\n`
   : ""}

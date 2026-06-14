@@ -4203,6 +4203,127 @@ function resetSaleCertificateBox() {
     updateSalePaymentSummary();
 }
 
+function resetStaffSaleForm(options = {}) {
+    const keepResult = Boolean(options.keepResult);
+    const keepWarehouse = Boolean(options.keepWarehouse);
+
+    SALE_SELECTED_CUSTOMER = null;
+    SALE_AVAILABLE_PERSONAL_OFFERS = [];
+    SALE_SELECTED_PERSONAL_OFFER = null;
+    SALE_PERSONAL_PROMO_CODE = "";
+    SALE_ITEMS = [];
+    SALE_CARD_TRANSFER_CONFIRMED = false;
+    SALE_CERTIFICATE = null;
+    SALE_CERTIFICATE_CHECKED = null;
+
+    if (!keepWarehouse && saleWarehouseSelect) {
+        saleWarehouseSelect.value = "";
+    }
+
+    if (saleClientSearchInput) {
+        saleClientSearchInput.value = "";
+    }
+
+    if (saleClientResult) {
+        saleClientResult.classList.add("staff-hidden");
+        saleClientResult.innerHTML = "";
+    }
+
+    if (saleProductSearch) {
+        saleProductSearch.value = "";
+    }
+
+    if (saleProductId) {
+        saleProductId.value = "";
+    }
+
+    if (saleProductQuantityInput) {
+        saleProductQuantityInput.value = "1";
+    }
+
+    if (saleProductPriceInput) {
+        saleProductPriceInput.value = "";
+    }
+
+    if (saleDiscoveryBox) {
+        saleDiscoveryBox.classList.add("staff-hidden");
+    }
+
+    if (saleDiscoveryList) {
+        saleDiscoveryList.innerHTML = "";
+    }
+
+    if (saleItemsBox) {
+        saleItemsBox.classList.add("staff-hidden");
+        saleItemsBox.innerHTML = "Товари ще не додані.";
+    }
+
+    if (salePersonalOffersBox) {
+        salePersonalOffersBox.classList.add("staff-hidden");
+    }
+
+    if (salePersonalOffersList) {
+        salePersonalOffersList.innerHTML =
+            "Після вибору клієнта тут зʼявляться доступні персональні пропозиції.";
+    }
+
+    if (saleSelectedPersonalOffer) {
+        saleSelectedPersonalOffer.innerHTML = "";
+    }
+
+    if (saleCustomerSourceSelect) {
+        saleCustomerSourceSelect.value = "";
+    }
+
+    if (salePaymentTypeSelect) {
+        salePaymentTypeSelect.value = "";
+    }
+
+    if (saleCardTransferBox) {
+        saleCardTransferBox.classList.add("staff-hidden");
+    }
+
+    if (saleCardTransferPaidBtn) {
+        saleCardTransferPaidBtn.textContent = "Переказ підтверджено";
+        saleCardTransferPaidBtn.classList.remove("is-confirmed");
+    }
+
+    if (saleCertificateBox) {
+        saleCertificateBox.classList.add("staff-hidden");
+    }
+
+    if (saleCertificateCodeInput) {
+        saleCertificateCodeInput.value = "";
+    }
+
+    if (saleCertificateResult) {
+        saleCertificateResult.textContent = "";
+    }
+
+    if (saleCertificateCheckBtn) {
+        saleCertificateCheckBtn.disabled = false;
+        saleCertificateCheckBtn.textContent = "Перевірити";
+        saleCertificateCheckBtn.dataset.mode = "check";
+        saleCertificateCheckBtn.classList.remove("is-confirmed");
+    }
+
+    if (salePromoResult) {
+        salePromoResult.textContent = "";
+    }
+
+    if (saleResult && !keepResult) {
+        saleResult.classList.add("staff-hidden");
+        saleResult.innerHTML = "";
+    }
+
+    if (createSaleBtn) {
+        createSaleBtn.disabled = false;
+        createSaleBtn.textContent = "Оплатити";
+    }
+
+    updateSalePaymentSummary();
+}
+
 function isDiscoverySaleProduct(product) {
     const title = String(product?.display_name || "").trim().toLowerCase();
     const key = String(product?.product_key || "").trim().toLowerCase();
@@ -4584,6 +4705,8 @@ if (salePaymentTypeSelect && saleCardTransferBox) {
             saleCardTransferPaidBtn.textContent = "Переказ підтверджено";
             saleCardTransferPaidBtn.classList.remove("is-confirmed");
         }
+
+        updateSalePaymentSummary();
     });
 }
 
@@ -5485,6 +5608,18 @@ function renderMyStockTable(data) {
 }
     
 function showStaffSection(section) {
+    const isLeavingSalesSection =
+        salesSection &&
+        section !== salesSection &&
+        !salesSection.classList.contains("staff-hidden");
+
+    if (isLeavingSalesSection) {
+        resetStaffSaleForm({
+            keepResult: false,
+            keepWarehouse: false
+        });
+    }
+
     document.querySelectorAll(".staff-section").forEach(item => {
         item.classList.add("staff-hidden");
     });
@@ -5498,6 +5633,11 @@ function showStaffSection(section) {
 if (openSalesSectionBtn && salesSection) {
     openSalesSectionBtn.addEventListener("click", async () => {
         showStaffSection(salesSection);
+
+        resetStaffSaleForm({
+            keepResult: false,
+            keepWarehouse: false
+        });
 
         await loadStaffProducts();
 
@@ -10200,35 +10340,12 @@ if (createSaleBtn && saleResult) {
                 ${saleItemsHtml}
             `;
 
-            SALE_ITEMS = [];
             clearStaffSalePromoCode(false);
 
-            if (saleProductSearch) saleProductSearch.value = "";
-            if (saleProductId) saleProductId.value = "";
-            if (saleProductQuantityInput) saleProductQuantityInput.value = "1";
-            if (saleProductPriceInput) saleProductPriceInput.value = "";
-
-            if (salePaymentTypeSelect) {
-                salePaymentTypeSelect.value = "";
-            }
-
-            SALE_CARD_TRANSFER_CONFIRMED = false;
-
-            if (saleCardTransferBox) {
-                saleCardTransferBox.classList.add("staff-hidden");
-            }
-
-            if (saleCertificateBox) {
-                saleCertificateBox.classList.add("staff-hidden");
-            }
-
-            if (saleCardTransferPaidBtn) {
-                saleCardTransferPaidBtn.textContent = "Переказ підтверджено";
-                saleCardTransferPaidBtn.classList.remove("is-confirmed");
-            }
-
-            resetSaleCertificateBox();
-            renderSaleItems();
+            resetStaffSaleForm({
+                keepResult: true,
+                keepWarehouse: true
+            });
 
             createSaleBtn.disabled = false;
             createSaleBtn.textContent = "Оплатити";

@@ -112,21 +112,23 @@
 
         <div class="staff-create-box">
 
-            <h3>Клієнт</h3>
+            <div id="sale-client-block">
+                <h3>Клієнт</h3>
 
-            <div class="staff-register-row">
-                <input
-                    type="text"
-                    id="sale-client-search"
-                    placeholder="Телефон або email клієнта"
-                >
+                <div class="staff-register-row">
+                    <input
+                        type="text"
+                        id="sale-client-search"
+                        placeholder="Телефон або email клієнта"
+                    >
 
-                <button id="sale-client-search-btn" class="buy-btn" type="button">
-                    Знайти
-                </button>
+                    <button id="sale-client-search-btn" class="buy-btn" type="button">
+                        Знайти
+                    </button>
+                </div>
+
+                <div id="sale-client-result" class="staff-result staff-hidden"></div>
             </div>
-
-            <div id="sale-client-result" class="staff-result staff-hidden"></div>
 
             <h3>Товари</h3>
 
@@ -1932,6 +1934,7 @@ const saleProductSearch = document.getElementById("sale-product-search");
 const saleProductId = document.getElementById("sale-product-id");
 const saleProductDropdown = document.getElementById("sale-product-dropdown");
 const saleResult = document.getElementById("sale-result");
+const saleClientBlock = document.getElementById("sale-client-block");
 const saleClientSearchInput = document.getElementById("sale-client-search");
 const saleClientSearchBtn = document.getElementById("sale-client-search-btn");
 const saleClientResult = document.getElementById("sale-client-result");
@@ -1987,7 +1990,44 @@ let SALE_AVAILABLE_PUBLIC_PROMO_CODES = [];
 
 let STAFF_PRODUCTS_LOADED = false;
 let STAFF_PRODUCTS = [];
-let SALE_ITEMS = [];        
+let SALE_ITEMS = [];
+
+function syncPartnerSaleClientBlock() {
+    if (!saleClientBlock) return;
+
+    const isPartner = String(staff?.role || "").trim() === "partner";
+
+    saleClientBlock.classList.toggle("staff-hidden", isPartner);
+
+    if (!isPartner) return;
+
+    SALE_SELECTED_CUSTOMER = null;
+    SALE_AVAILABLE_PERSONAL_OFFERS = [];
+    SALE_SELECTED_PERSONAL_OFFER = null;
+    SALE_PERSONAL_PROMO_CODE = "";
+
+    if (saleClientSearchInput) {
+        saleClientSearchInput.value = "";
+    }
+
+    if (saleClientResult) {
+        saleClientResult.classList.add("staff-hidden");
+        saleClientResult.innerHTML = "";
+    }
+
+    if (salePersonalOffersBox) {
+        salePersonalOffersBox.classList.add("staff-hidden");
+    }
+
+    if (salePersonalOffersList) {
+        salePersonalOffersList.innerHTML =
+            "Після вибору клієнта тут зʼявляться доступні персональні пропозиції.";
+    }
+
+    if (saleSelectedPersonalOffer) {
+        saleSelectedPersonalOffer.innerHTML = "";
+    }
+}    
 
 async function loadStaffProducts() {
     if (STAFF_PRODUCTS_LOADED) return;
@@ -6038,6 +6078,7 @@ if (openSalesSectionBtn && salesSection) {
             }
         }
 
+        syncPartnerSaleClientBlock();
         updateSalePaymentSummary();
     });
 }

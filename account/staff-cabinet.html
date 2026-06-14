@@ -3556,14 +3556,14 @@ if (salePublicPromoCodeOptionsList) {
                     ? 0
                     : promoId;
 
-            resetSaleCertificateBox();
+            resetSaleCertificateBox(false);
             updateSalePaymentSummary();
             return;
         }
 
         if (clearButton) {
             SALE_SELECTED_PUBLIC_PROMO_CODE_ID = 0;
-            resetSaleCertificateBox();
+            resetSaleCertificateBox(false);
             updateSalePaymentSummary();
         }
     });
@@ -4244,11 +4244,11 @@ async function updateSalePaymentSummary() {
 
             const data = await response.json();
 
-            if (
-                requestId === updateSalePaymentSummary.requestId &&
-                data &&
-                data.ok
-            ) {
+            if (requestId !== updateSalePaymentSummary.requestId) {
+                return;
+            }
+
+            if (data && data.ok) {
                 grossTotalAmount = Number(data.grossTotalAmount || checkTotal);
                 focusProductDiscountAmount = Number(data.focusProductDiscountAmount || 0);
                 focusPromoNote = String(data.focusPromoNote || "").replace(/^,\s*/, "");
@@ -4274,6 +4274,10 @@ async function updateSalePaymentSummary() {
             }
 
         } catch (err) {
+            if (requestId !== updateSalePaymentSummary.requestId) {
+                return;
+            }
+
             console.error("SALE PREVIEW ERROR:", err);
         }
     } else {
@@ -4520,7 +4524,7 @@ function renderSaleItems() {
     updateSalePaymentSummary();
 }
     
-function resetSaleCertificateBox() {
+function resetSaleCertificateBox(shouldUpdate = true) {
     SALE_CERTIFICATE = null;
     SALE_CERTIFICATE_CHECKED = null;
 
@@ -4539,7 +4543,9 @@ function resetSaleCertificateBox() {
         saleCertificateCheckBtn.classList.remove("is-confirmed");
     }
 
-    updateSalePaymentSummary();
+    if (shouldUpdate) {
+        updateSalePaymentSummary();
+    }
 }
 
 function resetStaffSaleForm(options = {}) {

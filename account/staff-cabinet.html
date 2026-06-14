@@ -6820,6 +6820,33 @@ function renderPublicPromoCodePromosList(campaigns) {
         publicPromoCodeListResult.innerHTML = `
             <div class="staff-promo-campaign-block">
                 <h3>Створені загальні промокоди</h3>
+
+                <div class="staff-users-filter-bar">
+                    <button
+                        type="button"
+                        class="buy-btn staff-users-filter-btn ${PUBLIC_PROMO_CODE_PROMOS_FILTER === "active" ? "is-active" : ""}"
+                        onclick="setPublicPromoCodePromosFilter('active')"
+                    >
+                        Активні
+                    </button>
+
+                    <button
+                        type="button"
+                        class="buy-btn staff-users-filter-btn ${PUBLIC_PROMO_CODE_PROMOS_FILTER === "inactive" ? "is-active" : ""}"
+                        onclick="setPublicPromoCodePromosFilter('inactive')"
+                    >
+                        Неактивні
+                    </button>
+
+                    <button
+                        type="button"
+                        class="buy-btn staff-users-filter-btn ${PUBLIC_PROMO_CODE_PROMOS_FILTER === "all" ? "is-active" : ""}"
+                        onclick="setPublicPromoCodePromosFilter('all')"
+                    >
+                        Всі
+                    </button>
+                </div>
+
                 <p>Поки що немає створених загальних промокодів.</p>
             </div>
         `;

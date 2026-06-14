@@ -516,10 +516,14 @@
                 Створити склад
             </button>
 
+            <button id="show-edit-warehouse-form-btn" class="buy-btn" type="button">
+                Редагувати склад
+            </button>
+
         </div>
 
 <div id="create-warehouse-box" class="staff-create-box staff-hidden">
-    <h3>Новий склад</h3>
+    <h3 id="warehouse-form-title">Новий склад</h3>
 
     <div class="staff-warehouse-form">
         <input
@@ -1750,7 +1754,9 @@ const openStockManageSectionBtn = document.getElementById("open-stock-manage-sec
 const stockManageWarehouseSelect = document.getElementById("stock-manage-warehouse-select");
 const chooseStockWarehouseBtn = document.getElementById("choose-stock-warehouse-btn");
 const showCreateWarehouseFormBtn = document.getElementById("show-create-warehouse-form-btn");
+const showEditWarehouseFormBtn = document.getElementById("show-edit-warehouse-form-btn");
 const createWarehouseBox = document.getElementById("create-warehouse-box");
+const warehouseFormTitle = document.getElementById("warehouse-form-title");
 const newWarehouseNameInput = document.getElementById("new-warehouse-name");
 const newWarehouseActCityInput = document.getElementById("new-warehouse-act-city");
 const newWarehouseDocumentBasisInput = document.getElementById("new-warehouse-document-basis");
@@ -1918,7 +1924,9 @@ function setPersonalPromoCodesFilter(filter) {
     renderPersonalPromoCodesList(PERSONAL_PROMO_CODES_CACHE);
 }
 
-let STAFF_WAREHOUSES = [];    
+let STAFF_WAREHOUSES = [];
+let WAREHOUSE_EDIT_ID = 0;
+
 const clientsSection = document.getElementById("clients-section");
 const openClientsSectionBtn = document.getElementById("open-clients-section");
 const clientSearchInput = document.getElementById("staff-client-search");
@@ -6107,33 +6115,9 @@ if (openStockManageSectionBtn && stockManageSection) {
     openStockManageSectionBtn.addEventListener("click", async () => {
         showStaffSection(stockManageSection);
 
-        if (stockManageWarehouseSelect) {
-            stockManageWarehouseSelect.value = "";
-        }
-
-        if (createWarehouseBox) {
-            createWarehouseBox.classList.add("staff-hidden");
-        }
-
-        if (newWarehouseNameInput) {
-            newWarehouseNameInput.value = "";
-        }
-
-        if (newWarehouseActCityInput) {
-            newWarehouseActCityInput.value = "";
-        }
-
-        if (newWarehouseDocumentBasisInput) {
-            newWarehouseDocumentBasisInput.value = "";
-        }
-
-        if (newWarehouseSupplierDetailsInput) {
-            newWarehouseSupplierDetailsInput.value = "";
-        }
-
-        if (newWarehouseBuyerDetailsInput) {
-            newWarehouseBuyerDetailsInput.value = "";
-        }
+        resetWarehouseFormMode({
+            hideForm: true
+        });
 
         if (stockManageResult) {
             stockManageResult.classList.add("staff-hidden");
@@ -10056,13 +10040,121 @@ if (createClientBtn) {
     });
 }
 
+function resetWarehouseFormMode({ hideForm = false } = {}) {
+    WAREHOUSE_EDIT_ID = 0;
+
+    if (warehouseFormTitle) {
+        warehouseFormTitle.textContent = "Новий склад";
+    }
+
+    if (createWarehouseBtn) {
+        createWarehouseBtn.textContent = "Створити";
+    }
+
+    if (newWarehouseNameInput) {
+        newWarehouseNameInput.value = "";
+    }
+
+    if (newWarehouseActCityInput) {
+        newWarehouseActCityInput.value = "";
+    }
+
+    if (newWarehouseDocumentBasisInput) {
+        newWarehouseDocumentBasisInput.value = "";
+    }
+
+    if (newWarehouseSupplierDetailsInput) {
+        newWarehouseSupplierDetailsInput.value = "";
+    }
+
+    if (newWarehouseBuyerDetailsInput) {
+        newWarehouseBuyerDetailsInput.value = "";
+    }
+
+    if (createWarehouseBox && hideForm) {
+        createWarehouseBox.classList.add("staff-hidden");
+    }
+}
+
+function fillWarehouseFormForEdit(warehouse) {
+    WAREHOUSE_EDIT_ID = Number(warehouse?.warehouse_id || 0);
+
+    if (warehouseFormTitle) {
+        warehouseFormTitle.textContent = `Редагування складу ID ${WAREHOUSE_EDIT_ID}`;
+    }
+
+    if (createWarehouseBtn) {
+        createWarehouseBtn.textContent = "Зберегти";
+    }
+
+    if (newWarehouseNameInput) {
+        newWarehouseNameInput.value = warehouse?.warehouse_name || "";
+    }
+
+    if (newWarehouseActCityInput) {
+        newWarehouseActCityInput.value = warehouse?.act_city || "";
+    }
+
+    if (newWarehouseDocumentBasisInput) {
+        newWarehouseDocumentBasisInput.value = warehouse?.document_basis || "";
+    }
+
+    if (newWarehouseSupplierDetailsInput) {
+        newWarehouseSupplierDetailsInput.value = warehouse?.supplier_details || "";
+    }
+
+    if (newWarehouseBuyerDetailsInput) {
+        newWarehouseBuyerDetailsInput.value = warehouse?.buyer_details || "";
+    }
+
+    if (createWarehouseBox) {
+        createWarehouseBox.classList.remove("staff-hidden");
+    }
+
+    if (newWarehouseNameInput) {
+        newWarehouseNameInput.focus();
+    }
+}
+
 if (showCreateWarehouseFormBtn && createWarehouseBox) {
     showCreateWarehouseFormBtn.addEventListener("click", () => {
-        createWarehouseBox.classList.toggle("staff-hidden");
+        resetWarehouseFormMode();
 
-        if (!createWarehouseBox.classList.contains("staff-hidden") && newWarehouseNameInput) {
+        createWarehouseBox.classList.remove("staff-hidden");
+
+        if (newWarehouseNameInput) {
             newWarehouseNameInput.focus();
         }
+    });
+}
+
+if (showEditWarehouseFormBtn && createWarehouseBox && stockManageWarehouseSelect) {
+    showEditWarehouseFormBtn.addEventListener("click", () => {
+        const warehouseId = Number(stockManageWarehouseSelect.value || 0);
+
+        if (!warehouseId) {
+            if (stockManageResult) {
+                stockManageResult.classList.remove("staff-hidden");
+                stockManageResult.innerHTML = "Оберіть склад для редагування.";
+            }
+
+            return;
+        }
+
+        const warehouse = STAFF_WAREHOUSES.find(item =>
+            Number(item.warehouse_id || 0) === warehouseId
+        );
+
+        if (!warehouse) {
+            if (stockManageResult) {
+                stockManageResult.classList.remove("staff-hidden");
+                stockManageResult.innerHTML = "Не вдалося знайти дані складу. Оновіть список складів.";
+            }
+
+            return;
+        }
+
+        fillWarehouseFormForEdit(warehouse);
     });
 }
 
@@ -10682,12 +10774,15 @@ if (chooseStockWarehouseBtn && stockManageWarehouseSelect && stockManageResult) 
 
 if (createWarehouseBtn && newWarehouseNameInput && stockManageResult) {
     createWarehouseBtn.addEventListener("click", async () => {
+        const warehouseId = Number(WAREHOUSE_EDIT_ID || 0);
+        const isEditMode = warehouseId > 0;
+
         const warehouseName = newWarehouseNameInput.value.trim();
         const actCity = newWarehouseActCityInput?.value.trim() || "";
         const documentBasis = newWarehouseDocumentBasisInput?.value.trim() || "";
         const supplierDetails = newWarehouseSupplierDetailsInput?.value.trim() || "";
         const buyerDetails = newWarehouseBuyerDetailsInput?.value.trim() || "";
-        
+
         stockManageResult.classList.remove("staff-hidden");
 
         if (!warehouseName) {
@@ -10715,11 +10810,15 @@ if (createWarehouseBtn && newWarehouseNameInput && stockManageResult) {
             return;
         }
 
-        stockManageResult.innerHTML = "Створюю склад…";
+        stockManageResult.innerHTML = isEditMode
+            ? "Зберігаю зміни складу…"
+            : "Створюю склад…";
 
         try {
             const response = await fetch(
-                "https://monal-mono-pay-production.up.railway.app/api/staff/create-warehouse",
+                isEditMode
+                    ? "https://monal-mono-pay-production.up.railway.app/api/staff/update-warehouse"
+                    : "https://monal-mono-pay-production.up.railway.app/api/staff/create-warehouse",
                 {
                     method: "POST",
                     headers: {
@@ -10727,6 +10826,7 @@ if (createWarehouseBtn && newWarehouseNameInput && stockManageResult) {
                     },
                     body: JSON.stringify({
                         staffId: staff.id,
+                        warehouseId,
                         warehouseName,
                         actCity,
                         documentBasis,
@@ -10739,29 +10839,17 @@ if (createWarehouseBtn && newWarehouseNameInput && stockManageResult) {
             const data = await response.json();
 
             if (!data.ok) {
-                stockManageResult.innerHTML = data.error || "Не вдалося створити склад.";
+                stockManageResult.innerHTML = data.error || (
+                    isEditMode
+                        ? "Не вдалося оновити склад."
+                        : "Не вдалося створити склад."
+                );
                 return;
             }
 
-            newWarehouseNameInput.value = "";
-
-            if (newWarehouseActCityInput) {
-                newWarehouseActCityInput.value = "";
-            }
-
-            if (newWarehouseDocumentBasisInput) {
-                newWarehouseDocumentBasisInput.value = "";
-            }
-
-            if (newWarehouseSupplierDetailsInput) {
-                newWarehouseSupplierDetailsInput.value = "";
-            }
-
-            if (newWarehouseBuyerDetailsInput) {
-                newWarehouseBuyerDetailsInput.value = "";
-            }
-
-            createWarehouseBox.classList.add("staff-hidden");
+            resetWarehouseFormMode({
+                hideForm: true
+            });
 
             await loadStaffWarehouses();
 
@@ -10769,16 +10857,24 @@ if (createWarehouseBtn && newWarehouseNameInput && stockManageResult) {
                 stockManageWarehouseSelect.value = data.warehouse.warehouse_id;
             }
 
-            stockManageResult.innerHTML = `
-                <strong>Склад створено</strong><br>
-                Назва: ${data.warehouse.warehouse_name}<br>
-                ID: ${data.warehouse.warehouse_id}<br>
-                Товарних рядків створено: ${data.insertedRows || 0}
-            `;
+            stockManageResult.innerHTML = isEditMode
+                ? `
+                    <strong>Склад оновлено</strong><br>
+                    Назва: ${data.warehouse.warehouse_name}<br>
+                    ID: ${data.warehouse.warehouse_id}
+                `
+                : `
+                    <strong>Склад створено</strong><br>
+                    Назва: ${data.warehouse.warehouse_name}<br>
+                    ID: ${data.warehouse.warehouse_id}<br>
+                    Товарних рядків створено: ${data.insertedRows || 0}
+                `;
 
         } catch (err) {
             console.error(err);
-            stockManageResult.innerHTML = "Помилка зʼєднання при створенні складу.";
+            stockManageResult.innerHTML = isEditMode
+                ? "Помилка зʼєднання при оновленні складу."
+                : "Помилка зʼєднання при створенні складу.";
         }
     });
 }

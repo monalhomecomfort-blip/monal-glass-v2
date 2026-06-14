@@ -190,6 +190,15 @@
                 <div>До оплати: <strong id="sale-total-amount">0 грн</strong></div>
             </div>
 
+            <div id="sale-public-promo-code-options-box" class="staff-result staff-hidden">
+                <strong>Доступні загальні промокоди</strong>
+
+                <div
+                    id="sale-public-promo-code-options-list"
+                    style="margin-top:12px;"
+                ></div>
+            </div>
+
             <div id="sale-personal-offers-box" class="staff-result staff-hidden">
                 <strong>Доступні персональні пропозиції</strong>
 
@@ -1943,6 +1952,9 @@ const salePersonalOffersBox = document.getElementById("sale-personal-offers-box"
 const salePersonalOffersList = document.getElementById("sale-personal-offers-list");
 const saleSelectedPersonalOffer = document.getElementById("sale-selected-personal-offer");
 
+const salePublicPromoCodeOptionsBox = document.getElementById("sale-public-promo-code-options-box");
+const salePublicPromoCodeOptionsList = document.getElementById("sale-public-promo-code-options-list");
+
 /* старе ручне поле промокоду прибрали з HTML, але нижче ще є старі обробники */
 const salePromoCodeInput = null;
 const salePromoApplyBtn = null;
@@ -1969,7 +1981,9 @@ let SALE_AVAILABLE_PERSONAL_OFFERS = [];
 let SALE_SELECTED_PERSONAL_OFFER = null;
 
 /* тимчасово лишаємо для старої логіки промокоду, нижче ще приберемо */
-let SALE_PERSONAL_PROMO_CODE = "";        
+let SALE_PERSONAL_PROMO_CODE = "";
+let SALE_SELECTED_PUBLIC_PROMO_CODE_ID = 0;
+let SALE_AVAILABLE_PUBLIC_PROMO_CODES = [];
 
 let STAFF_PRODUCTS_LOADED = false;
 let STAFF_PRODUCTS = [];
@@ -3401,6 +3415,7 @@ async function loadSalePersonalOffersForCustomer(customer = SALE_SELECTED_CUSTOM
     SALE_AVAILABLE_PERSONAL_OFFERS = [];
     SALE_SELECTED_PERSONAL_OFFER = null;
     SALE_PERSONAL_PROMO_CODE = "";
+    SALE_SELECTED_PUBLIC_PROMO_CODE_ID = 0;
 
     if (!salePersonalOffersBox || !salePersonalOffersList) return;
 
@@ -3473,6 +3488,8 @@ function selectSalePersonalOfferById(offerId) {
         SALE_PERSONAL_PROMO_CODE = "";
     }
 
+    SALE_SELECTED_PUBLIC_PROMO_CODE_ID = 0;
+
     renderSalePersonalOffers();
     updateSalePaymentSummary();
 }
@@ -3480,6 +3497,7 @@ function selectSalePersonalOfferById(offerId) {
 function clearSaleSelectedPersonalOffer(shouldUpdate = true) {
     SALE_SELECTED_PERSONAL_OFFER = null;
     SALE_PERSONAL_PROMO_CODE = "";
+    SALE_SELECTED_PUBLIC_PROMO_CODE_ID = 0;
 
     renderSalePersonalOffers();
 
@@ -3523,6 +3541,34 @@ if (saleSelectedPersonalOffer) {
     });
 }
 
+if (salePublicPromoCodeOptionsList) {
+    salePublicPromoCodeOptionsList.addEventListener("click", event => {
+        const useButton = event.target.closest(".sale-public-promo-code-use-btn");
+        const clearButton = event.target.closest(".sale-public-promo-code-clear-btn");
+
+        if (useButton) {
+            const promoId = Number(useButton.dataset.publicPromoCodeId || 0);
+
+            if (!promoId) return;
+
+            SALE_SELECTED_PUBLIC_PROMO_CODE_ID =
+                SALE_SELECTED_PUBLIC_PROMO_CODE_ID === promoId
+                    ? 0
+                    : promoId;
+
+            resetSaleCertificateBox();
+            updateSalePaymentSummary();
+            return;
+        }
+
+        if (clearButton) {
+            SALE_SELECTED_PUBLIC_PROMO_CODE_ID = 0;
+            resetSaleCertificateBox();
+            updateSalePaymentSummary();
+        }
+    });
+}    
+
 function getStaffSaleSelectedPersonalOfferType() {
     return String(SALE_SELECTED_PERSONAL_OFFER?.offer_type || "")
         .trim()
@@ -3548,6 +3594,127 @@ function shouldSkipStaffPublicPromoForSelectedOffer() {
     ].includes(type);
 }
 
+function getSelectedStaffPublicPromoCodeId() {
+    if (shouldSkipStaffPublicPromoForSelectedOffer()) {
+        return 0;
+    }
+
+    return Number(SALE_SELECTED_PUBLIC_PROMO_CODE_ID || 0);
+}
+
+function clearStaffSalePublicPromoCodeSelection(shouldUpdate = true) {
+    SALE_SELECTED_PUBLIC_PROMO_CODE_ID = 0;
+
+    if (shouldUpdate) {
+        updateSalePaymentSummary();
+    }
+}
+
+function renderStaffSalePublicPromoCodeOptions(options = [], selectedId = 0) {
+    SALE_AVAILABLE_PUBLIC_PROMO_CODES = Array.isArray(options) ? options : [];
+
+    if (!salePublicPromoCodeOptionsBox || !salePublicPromoCodeOptionsList) {
+        return;
+    }
+
+    const normalizedSelectedId = Number(selectedId || 0);
+
+    if (
+        shouldSkipStaffPublicPromoForSelectedOffer() ||
+        !SALE_ITEMS.length ||
+        !SALE_AVAILABLE_PUBLIC_PROMO_CODES.length
+    ) {
+        salePublicPromoCodeOptionsBox.classList.add("staff-hidden");
+        salePublicPromoCodeOptionsList.innerHTML = "";
+        return;
+    }
+
+    salePublicPromoCodeOptionsBox.classList.remove("staff-hidden");
+
+    salePublicPromoCodeOptionsList.innerHTML = SALE_AVAILABLE_PUBLIC_PROMO_CODES
+        .map(option => {
+            const campaignId = Number(option.campaignId || option.id || 0);
+            const isSelected = campaignId > 0 && campaignId === normalizedSelectedId;
+            const promoCode = String(option.promoCode || "").trim();
+            const title = String(option.title || "Загальний промокод").trim();
+            const minOrderAmount = Number(option.minOrderAmount || 0);
+            const discountValue = Number(option.discountValue || option.discountAmount || 0);
+            const discountAmount = Number(option.discountAmount || 0);
+            const available = Boolean(option.available);
+            const message = String(option.message || "").trim();
+
+            const conditionText =
+                minOrderAmount > 0
+                    ? `Умова: від ${minOrderAmount} грн без сертифікатів.`
+                    : "Умова: без порогу.";
+
+            const discountText =
+                available && discountAmount > 0
+                    ? `−${discountAmount} грн`
+                    : discountValue > 0
+                        ? `−${discountValue} грн`
+                        : "—";
+
+            return `
+                <div
+                    class="review-card"
+                    style="margin:10px 0; padding:12px 14px; border-radius:14px; background:rgba(244,239,230,0.75);"
+                >
+                    <p style="margin:0 0 6px;">
+                        <strong>Діє промокод ${escapeSaleHtml(promoCode || "—")}</strong>
+                    </p>
+
+                    <p style="margin:0 0 6px;">
+                        ${escapeSaleHtml(title)}: ${escapeSaleHtml(discountText)}
+                    </p>
+
+                    <p style="margin:0 0 8px; opacity:0.75;">
+                        ${escapeSaleHtml(conditionText)}
+                        ${message ? `<br>${escapeSaleHtml(message)}` : ""}
+                    </p>
+
+                    ${
+                        available
+                            ? `
+                                <button
+                                    type="button"
+                                    class="buy-btn sale-public-promo-code-use-btn"
+                                    data-public-promo-code-id="${campaignId}"
+                                >
+                                    ${isSelected ? "Використовується" : "Застосувати"}
+                                </button>
+                            `
+                            : `
+                                <button
+                                    type="button"
+                                    class="buy-btn"
+                                    disabled
+                                    style="opacity:0.55; cursor:not-allowed;"
+                                >
+                                    Недоступно
+                                </button>
+                            `
+                    }
+
+                    ${
+                        isSelected
+                            ? `
+                                <button
+                                    type="button"
+                                    class="buy-btn sale-public-promo-code-clear-btn"
+                                    style="margin-left:8px;"
+                                >
+                                    Скасувати промокод
+                                </button>
+                            `
+                            : ""
+                    }
+                </div>
+            `;
+        })
+        .join("");
+}
+    
 function getStaffSalePreviewCustomerId() {
     return Number(SALE_SELECTED_CUSTOMER?.id || 0);
 }
@@ -4023,14 +4190,20 @@ async function updateSalePaymentSummary() {
             salePromoResult.textContent = "";
         }
 
+        SALE_SELECTED_PUBLIC_PROMO_CODE_ID = 0;
+        renderStaffSalePublicPromoCodeOptions([], 0);
+
         return;
-    }
 
     const warehouseId = getCurrentSaleWarehouseId();
 
     let grossTotalAmount = checkTotal;
     let focusProductDiscountAmount = 0;
     let focusPromoNote = "";
+    let publicPromoCodeDiscountAmount = 0;
+    let publicPromoCodeNote = "";
+    let availablePublicPromoCodes = [];
+    let selectedPublicPromoCodeIdFromPreview = 0;
     let welcomeDiscountAmount = 0;
     let statusDiscountAmount = 0;
     let statusDiscountNote = "";
@@ -4061,6 +4234,7 @@ async function updateSalePaymentSummary() {
                         customerId: getStaffSalePreviewCustomerId(),
                         warehouseId,
                         promoCode: getAppliedStaffSalePromoCode(),
+                        selectedPublicPromoCodeId: getSelectedStaffPublicPromoCodeId(),
                         skipPublicPromo: shouldSkipStaffPublicPromoForSelectedOffer(),
                         items: getSalePreviewItemsPayload()
                     })
@@ -4077,6 +4251,13 @@ async function updateSalePaymentSummary() {
                 grossTotalAmount = Number(data.grossTotalAmount || checkTotal);
                 focusProductDiscountAmount = Number(data.focusProductDiscountAmount || 0);
                 focusPromoNote = String(data.focusPromoNote || "").replace(/^,\s*/, "");
+                publicPromoCodeDiscountAmount = Number(data.publicPromoCodeDiscountAmount || 0);
+                publicPromoCodeNote = String(data.publicPromoCodeNote || "").replace(/^,\s*/, "");
+                availablePublicPromoCodes = Array.isArray(data.availablePublicPromoCodes)
+                    ? data.availablePublicPromoCodes
+                    : [];
+                selectedPublicPromoCodeIdFromPreview = Number(data.selectedPublicPromoCodeId || 0);
+                SALE_SELECTED_PUBLIC_PROMO_CODE_ID = selectedPublicPromoCodeIdFromPreview;
                 welcomeDiscountAmount = Number(data.welcomeDiscountAmount || 0);
                 statusDiscountAmount = Number(data.statusDiscountAmount || 0);
                 statusDiscountNote = String(data.statusDiscountNote || "");
@@ -4094,7 +4275,15 @@ async function updateSalePaymentSummary() {
         } catch (err) {
             console.error("SALE PREVIEW ERROR:", err);
         }
+    } else {
+        SALE_SELECTED_PUBLIC_PROMO_CODE_ID = 0;
+        renderStaffSalePublicPromoCodeOptions([], 0);
     }
+
+    renderStaffSalePublicPromoCodeOptions(
+        availablePublicPromoCodes,
+        selectedPublicPromoCodeIdFromPreview
+    );
 
     if (
         getStaffSaleSelectedPersonalOfferType() !== "welcome" &&
@@ -4129,6 +4318,18 @@ async function updateSalePaymentSummary() {
     );
 
     const discountLines = [];
+
+    if (publicPromoCodeDiscountAmount > 0) {
+        const publicPromoCodeLine =
+            publicPromoCodeNote ||
+            `Загальний промокод: −${publicPromoCodeDiscountAmount} грн`;
+
+        discountLines.push(`
+            <span style="font-weight:400;">
+                ${escapeSaleHtml(publicPromoCodeLine)}
+            </span>
+        `);
+    }
 
     if (focusProductDiscountAmount > 0) {
         const publicPromoLine =
@@ -4348,6 +4549,8 @@ function resetStaffSaleForm(options = {}) {
     SALE_AVAILABLE_PERSONAL_OFFERS = [];
     SALE_SELECTED_PERSONAL_OFFER = null;
     SALE_PERSONAL_PROMO_CODE = "";
+    SALE_SELECTED_PUBLIC_PROMO_CODE_ID = 0;
+    SALE_AVAILABLE_PUBLIC_PROMO_CODES = [];
     SALE_ITEMS = [];
     SALE_CARD_TRANSFER_CONFIRMED = false;
     SALE_CERTIFICATE = null;
@@ -4407,6 +4610,14 @@ function resetStaffSaleForm(options = {}) {
     if (saleSelectedPersonalOffer) {
         saleSelectedPersonalOffer.innerHTML = "";
     }
+
+    if (salePublicPromoCodeOptionsBox) {
+        salePublicPromoCodeOptionsBox.classList.add("staff-hidden");
+    }
+
+    if (salePublicPromoCodeOptionsList) {
+        salePublicPromoCodeOptionsList.innerHTML = "";
+    }    
 
     if (saleCustomerSourceSelect) {
         saleCustomerSourceSelect.value = "";
@@ -4811,6 +5022,7 @@ function getCurrentSaleTotal() {
 
 if (saleWarehouseSelect) {
     saleWarehouseSelect.addEventListener("change", () => {
+        SALE_SELECTED_PUBLIC_PROMO_CODE_ID = 0;
         resetSaleCertificateBox();
         updateSalePaymentSummary();
     });
@@ -10616,6 +10828,7 @@ if (createSaleBtn && saleResult) {
                             customerId: getStaffSalePreviewCustomerId(),
                             warehouseId,
                             promoCode: SALE_PERSONAL_PROMO_CODE,
+                            selectedPublicPromoCodeId: getSelectedStaffPublicPromoCodeId(),
                             skipPublicPromo: shouldSkipStaffPublicPromoForSelectedOffer(),
                             items: getSalePreviewItemsPayload()
                         })
@@ -10682,6 +10895,7 @@ if (createSaleBtn && saleResult) {
             warehouseId,
             certificateCode: selectedCertificateCode,
             promoCode: appliedPersonalPromoCodeForPayment,
+            selectedPublicPromoCodeId: getSelectedStaffPublicPromoCodeId(),
             personalGiftOfferId: selectedPersonalGiftOfferId,
             personalPercentOfferId: selectedPersonalPercentOfferId,
             skipPublicPromo: shouldSkipStaffPublicPromoForSelectedOffer()

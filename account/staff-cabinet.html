@@ -889,6 +889,119 @@
 
         </div>
 
+        <div class="staff-promo-campaign-block" id="public-promo-code-block">
+
+            <h3>Загальний промокод</h3>
+
+            <input
+                type="hidden"
+                id="public-promo-code-type"
+                value="public_promo_code"
+            >
+
+            <div class="staff-promo-table is-public-promo-code-table">
+
+                <div class="staff-promo-table-head">
+                    <div>Назва / код</div>
+                    <div>Умова</div>
+                    <div>Знижка, грн</div>
+                    <div>Початок</div>
+                    <div>Кінець</div>
+                    <div>Активна</div>
+                    <div>Склади staff</div>
+                    <div>Дія</div>
+                </div>
+
+                <div class="staff-promo-table-row">
+
+                    <div class="staff-promo-cell">
+                        <div style="display:grid; gap:8px;">
+                            <input
+                                type="text"
+                                id="public-promo-code-title"
+                                placeholder="Назва промо"
+                            >
+
+                            <input
+                                type="text"
+                                id="public-promo-code-value"
+                                placeholder="Промокод"
+                            >
+                        </div>
+                    </div>
+
+                    <div class="staff-promo-cell">
+                        <input
+                            type="number"
+                            id="public-promo-code-min-amount"
+                            placeholder="Від суми, грн"
+                            min="0"
+                            value="0"
+                        >
+                    </div>
+
+                    <div class="staff-promo-cell">
+                        <input
+                            type="number"
+                            id="public-promo-code-discount"
+                            placeholder="Знижка, грн"
+                            min="1"
+                        >
+                    </div>
+
+                    <div class="staff-promo-cell">
+                        <input
+                            type="datetime-local"
+                            id="public-promo-code-start"
+                        >
+                    </div>
+
+                    <div class="staff-promo-cell">
+                        <input
+                            type="datetime-local"
+                            id="public-promo-code-end"
+                        >
+                    </div>
+
+                    <div class="staff-promo-cell">
+                        <label class="staff-promo-checkbox">
+                            <input
+                                type="checkbox"
+                                id="public-promo-code-active"
+                            >
+                            Активна
+                        </label>
+                    </div>
+
+                    <div class="staff-promo-cell">
+                        <details class="staff-report-filter staff-promo-warehouse-filter">
+                            <summary>Обрати склади</summary>
+
+                            <div
+                                id="public-promo-code-warehouse-list"
+                                class="staff-report-filter-menu"
+                            ></div>
+                        </details>
+                    </div>
+
+                    <div class="staff-promo-cell staff-promo-actions">
+                        <button id="save-public-promo-code-btn" class="buy-btn" type="button">
+                            Створити
+                        </button>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div id="public-promo-code-result" class="staff-result staff-hidden"></div>
+
+            <div id="public-promo-code-list-result" class="staff-result staff-hidden">
+                Список загальних промокодів підключимо наступним кроком.
+            </div>
+
+        </div>
+
         <h2 class="staff-promo-main-title staff-promo-personal-title">
             Персональні пропозиції для зареєстрованих, налаштування
         </h2>
@@ -1702,6 +1815,18 @@ const savePublicPercentPromoBtn = document.getElementById("save-public-percent-p
 const publicPercentPromoResult = document.getElementById("public-percent-promo-result");
 const publicPercentPromosListResult = document.getElementById("public-percent-promos-list-result");
 
+const publicPromoCodeTitleInput = document.getElementById("public-promo-code-title");
+const publicPromoCodeValueInput = document.getElementById("public-promo-code-value");
+const publicPromoCodeMinAmountInput = document.getElementById("public-promo-code-min-amount");
+const publicPromoCodeDiscountInput = document.getElementById("public-promo-code-discount");
+const publicPromoCodeStartInput = document.getElementById("public-promo-code-start");
+const publicPromoCodeEndInput = document.getElementById("public-promo-code-end");
+const publicPromoCodeActiveInput = document.getElementById("public-promo-code-active");
+const publicPromoCodeWarehouseList = document.getElementById("public-promo-code-warehouse-list");
+const savePublicPromoCodeBtn = document.getElementById("save-public-promo-code-btn");
+const publicPromoCodeResult = document.getElementById("public-promo-code-result");
+const publicPromoCodeListResult = document.getElementById("public-promo-code-list-result");
+
 const personalPromoCodeListResult = document.getElementById("personal-promo-code-list-result");
 const personalPercentOfferListResult = document.getElementById("personal-percent-offer-list-result");
 const personalGiftOfferListResult = document.getElementById("personal-gift-offer-list-result");
@@ -1726,6 +1851,10 @@ let FOCUS_PROMOS_FILTER = "active";
 let PUBLIC_PERCENT_PROMO_EDIT_ID = 0;
 let PUBLIC_PERCENT_PROMOS_CACHE = [];
 let PUBLIC_PERCENT_PROMOS_FILTER = "active";
+
+let PUBLIC_PROMO_CODE_EDIT_ID = 0;
+let PUBLIC_PROMO_CODE_PROMOS_CACHE = [];
+let PUBLIC_PROMO_CODE_PROMOS_FILTER = "active";
 
 let PERSONAL_PROMO_CODE_EDIT_ID = 0;
 let PERSONAL_PROMO_CODES_CACHE = [];
@@ -1756,6 +1885,14 @@ function setPublicPercentPromosFilter(filter) {
         : "active";
 
     renderPublicPercentPromosList(PUBLIC_PERCENT_PROMOS_CACHE);
+}
+
+function setPublicPromoCodePromosFilter(filter) {
+    PUBLIC_PROMO_CODE_PROMOS_FILTER = ["active", "inactive", "all"].includes(filter)
+        ? filter
+        : "active";
+
+    renderPublicPromoCodePromosList(PUBLIC_PROMO_CODE_PROMOS_CACHE);
 }
 
 function isPersonalOfferActive(offer) {
@@ -5127,6 +5264,28 @@ function fillWarehouseSelects(warehouses) {
         });
     }
 
+    if (publicPromoCodeWarehouseList) {
+        publicPromoCodeWarehouseList.innerHTML = "";
+
+        STAFF_WAREHOUSES.forEach(warehouse => {
+            const label = document.createElement("label");
+
+            const checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.className = "public-promo-code-warehouse-checkbox";
+            checkbox.value = warehouse.warehouse_id;
+
+            const text = document.createTextNode(
+                ` ${warehouse.warehouse_name} ID ${warehouse.warehouse_id}`
+            );
+
+            label.appendChild(checkbox);
+            label.appendChild(text);
+
+            publicPromoCodeWarehouseList.appendChild(label);
+        });
+    }
+
     if (stockManageWarehouseSelect) {
         stockManageWarehouseSelect.innerHTML = `
             <option value="">Оберіть склад</option>
@@ -6525,6 +6684,406 @@ async function loadPublicPercentPromos() {
         console.error(err);
         publicPercentPromosListResult.innerHTML =
             "Помилка зʼєднання при завантаженні списку загальних % знижок.";
+    }
+}
+
+function getSelectedPublicPromoCodeWarehouseIds() {
+    return Array.from(
+        document.querySelectorAll(".public-promo-code-warehouse-checkbox:checked")
+    )
+        .map(checkbox => Number(checkbox.value || 0))
+        .filter(id => Number.isInteger(id) && id > 0);
+}
+
+function resetPublicPromoCodeForm() {
+    PUBLIC_PROMO_CODE_EDIT_ID = 0;
+
+    if (publicPromoCodeTitleInput) {
+        publicPromoCodeTitleInput.value = "";
+    }
+
+    if (publicPromoCodeValueInput) {
+        publicPromoCodeValueInput.value = "";
+    }
+
+    if (publicPromoCodeMinAmountInput) {
+        publicPromoCodeMinAmountInput.value = "0";
+    }
+
+    if (publicPromoCodeDiscountInput) {
+        publicPromoCodeDiscountInput.value = "";
+    }
+
+    if (publicPromoCodeStartInput) {
+        publicPromoCodeStartInput.value = "";
+    }
+
+    if (publicPromoCodeEndInput) {
+        publicPromoCodeEndInput.value = "";
+    }
+
+    if (publicPromoCodeActiveInput) {
+        publicPromoCodeActiveInput.checked = false;
+    }
+
+    document
+        .querySelectorAll(".public-promo-code-warehouse-checkbox")
+        .forEach(checkbox => {
+            checkbox.checked = false;
+        });
+
+    if (savePublicPromoCodeBtn) {
+        savePublicPromoCodeBtn.textContent = "Створити";
+    }
+}
+
+function setPublicPromoCodeWarehouseSelection(warehouseIds = []) {
+    const selectedIds = new Set(
+        warehouseIds
+            .map(id => Number(id || 0))
+            .filter(id => Number.isInteger(id) && id > 0)
+    );
+
+    document
+        .querySelectorAll(".public-promo-code-warehouse-checkbox")
+        .forEach(checkbox => {
+            checkbox.checked = selectedIds.has(Number(checkbox.value || 0));
+        });
+}
+
+function startEditPublicPromoCodePromo(promoId) {
+    const campaign = PUBLIC_PROMO_CODE_PROMOS_CACHE.find(item =>
+        Number(item.id || 0) === Number(promoId || 0)
+    );
+
+    if (!campaign) return;
+
+    PUBLIC_PROMO_CODE_EDIT_ID = Number(campaign.id || 0);
+
+    if (publicPromoCodeTitleInput) {
+        publicPromoCodeTitleInput.value = campaign.title || "";
+    }
+
+    if (publicPromoCodeValueInput) {
+        publicPromoCodeValueInput.value = campaign.promo_code || "";
+    }
+
+    if (publicPromoCodeMinAmountInput) {
+        publicPromoCodeMinAmountInput.value = Number(campaign.min_order_amount || 0);
+    }
+
+    if (publicPromoCodeDiscountInput) {
+        publicPromoCodeDiscountInput.value = Number(campaign.discount_amount || 0);
+    }
+
+    if (publicPromoCodeStartInput) {
+        publicPromoCodeStartInput.value = formatFocusPromoDateForInput(campaign.starts_at);
+    }
+
+    if (publicPromoCodeEndInput) {
+        publicPromoCodeEndInput.value = formatFocusPromoDateForInput(campaign.ends_at);
+    }
+
+    if (publicPromoCodeActiveInput) {
+        publicPromoCodeActiveInput.checked = Boolean(campaign.is_active);
+    }
+
+    setPublicPromoCodeWarehouseSelection(
+        getFocusPromoWarehouseIds(campaign)
+    );
+
+    if (savePublicPromoCodeBtn) {
+        savePublicPromoCodeBtn.textContent = "Зберегти";
+    }
+
+    if (publicPromoCodeResult) {
+        publicPromoCodeResult.classList.remove("staff-hidden");
+        publicPromoCodeResult.innerHTML = "Редагуємо загальний промокод.";
+    }
+
+    if (publicPromoCodeTitleInput) {
+        publicPromoCodeTitleInput.scrollIntoView({
+            behavior: "smooth",
+            block: "center"
+        });
+    }
+}
+
+function renderPublicPromoCodePromosList(campaigns) {
+    if (!publicPromoCodeListResult) return;
+
+    PUBLIC_PROMO_CODE_PROMOS_CACHE = Array.isArray(campaigns) ? campaigns : [];
+
+    publicPromoCodeListResult.classList.remove("staff-hidden");
+
+    if (!PUBLIC_PROMO_CODE_PROMOS_CACHE.length) {
+        publicPromoCodeListResult.innerHTML = `
+            <div class="staff-promo-campaign-block">
+                <h3>Створені загальні промокоди</h3>
+                <p>Поки що немає створених загальних промокодів.</p>
+            </div>
+        `;
+        return;
+    }
+
+    const visibleCampaigns = PUBLIC_PROMO_CODE_PROMOS_CACHE.filter(campaign => {
+        const isActive = isFocusPromoActive(campaign);
+
+        if (PUBLIC_PROMO_CODE_PROMOS_FILTER === "active") {
+            return isActive;
+        }
+
+        if (PUBLIC_PROMO_CODE_PROMOS_FILTER === "inactive") {
+            return !isActive;
+        }
+
+        return true;
+    });
+
+    const tableHtml = visibleCampaigns.length
+        ? `
+            <div class="staff-promo-table is-public-promo-code-list-table">
+                <div class="staff-promo-table-head">
+                    <div>Назва</div>
+                    <div>Код</div>
+                    <div>Умова</div>
+                    <div>Знижка</div>
+                    <div>Початок</div>
+                    <div>Кінець</div>
+                    <div>Активна</div>
+                    <div>Склади staff</div>
+                    <div>Дія</div>
+                </div>
+
+                ${visibleCampaigns.map(campaign => {
+                    const isActive = isFocusPromoActive(campaign);
+                    const minOrderAmount = Number(campaign.min_order_amount || 0);
+
+                    return `
+                        <div class="staff-promo-table-row">
+                            <div class="staff-promo-cell">
+                                ${escapeStaffHtml(campaign.title || "Загальний промокод")}
+                            </div>
+
+                            <div class="staff-promo-cell">
+                                ${escapeStaffHtml(campaign.promo_code || "—")}
+                            </div>
+
+                            <div class="staff-promo-cell">
+                                ${minOrderAmount > 0
+                                    ? `від ${escapeStaffHtml(minOrderAmount)} грн`
+                                    : "без порогу"
+                                }
+                            </div>
+
+                            <div class="staff-promo-cell">
+                                −${escapeStaffHtml(campaign.discount_amount || 0)} грн
+                            </div>
+
+                            <div class="staff-promo-cell">
+                                ${escapeStaffHtml(formatFocusPromoDate(campaign.starts_at))}
+                            </div>
+
+                            <div class="staff-promo-cell">
+                                ${escapeStaffHtml(formatFocusPromoDate(campaign.ends_at))}
+                            </div>
+
+                            <div class="staff-promo-cell">
+                                ${isActive ? "Так" : "Ні"}
+                            </div>
+
+                            <div class="staff-promo-cell">
+                                ${escapeStaffHtml(getFocusPromoWarehousesText(campaign))}
+                            </div>
+
+                            <div class="staff-promo-cell staff-promo-actions">
+                                <button
+                                    type="button"
+                                    class="buy-btn public-promo-code-edit-btn"
+                                    data-public-promo-code-edit-id="${campaign.id}"
+                                >
+                                    Редагувати
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }).join("")}
+            </div>
+        `
+        : `
+            <p>Загальних промокодів за цим фільтром немає.</p>
+        `;
+
+    publicPromoCodeListResult.innerHTML = `
+        <div class="staff-promo-campaign-block">
+            <h3>Створені загальні промокоди</h3>
+
+            <div class="staff-users-filter-bar">
+                <button
+                    type="button"
+                    class="buy-btn staff-users-filter-btn ${PUBLIC_PROMO_CODE_PROMOS_FILTER === "active" ? "is-active" : ""}"
+                    onclick="setPublicPromoCodePromosFilter('active')"
+                >
+                    Активні
+                </button>
+
+                <button
+                    type="button"
+                    class="buy-btn staff-users-filter-btn ${PUBLIC_PROMO_CODE_PROMOS_FILTER === "inactive" ? "is-active" : ""}"
+                    onclick="setPublicPromoCodePromosFilter('inactive')"
+                >
+                    Неактивні
+                </button>
+
+                <button
+                    type="button"
+                    class="buy-btn staff-users-filter-btn ${PUBLIC_PROMO_CODE_PROMOS_FILTER === "all" ? "is-active" : ""}"
+                    onclick="setPublicPromoCodePromosFilter('all')"
+                >
+                    Всі
+                </button>
+            </div>
+
+            ${tableHtml}
+        </div>
+    `;
+}
+
+if (publicPromoCodeListResult) {
+    publicPromoCodeListResult.addEventListener("click", event => {
+        const editButton = event.target.closest(".public-promo-code-edit-btn");
+
+        if (!editButton) return;
+
+        startEditPublicPromoCodePromo(editButton.dataset.publicPromoCodeEditId);
+    });
+}
+
+async function loadPublicPromoCodePromos() {
+    if (!publicPromoCodeListResult) return;
+
+    publicPromoCodeListResult.classList.remove("staff-hidden");
+    publicPromoCodeListResult.innerHTML = "Завантажую загальні промокоди…";
+
+    try {
+        const response = await fetch(
+            "https://monal-mono-pay-production.up.railway.app/api/staff/public-promo-code-promos-list",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    staffId: staff.id
+                })
+            }
+        );
+
+        const data = await response.json();
+
+        if (!data.ok) {
+            publicPromoCodeListResult.innerHTML =
+                data.error || "Не вдалося завантажити список загальних промокодів.";
+            return;
+        }
+
+        renderPublicPromoCodePromosList(data.campaigns || []);
+
+    } catch (err) {
+        console.error(err);
+        publicPromoCodeListResult.innerHTML =
+            "Помилка зʼєднання при завантаженні списку загальних промокодів.";
+    }
+}
+
+async function savePublicPromoCodePromo() {
+    if (!publicPromoCodeResult) return;
+
+    const title = publicPromoCodeTitleInput?.value.trim() || "";
+    const promoCode = publicPromoCodeValueInput?.value.trim().toUpperCase().replace(/\s+/g, "") || "";
+    const minOrderAmount = Number(publicPromoCodeMinAmountInput?.value || 0);
+    const discountAmount = Number(publicPromoCodeDiscountInput?.value || 0);
+    const startsAt = normalizeFocusPromoDateForApi(publicPromoCodeStartInput?.value);
+    const endsAt = normalizeFocusPromoDateForApi(publicPromoCodeEndInput?.value);
+    const isActive = publicPromoCodeActiveInput?.checked ? 1 : 0;
+    const warehouseIds = getSelectedPublicPromoCodeWarehouseIds();
+
+    publicPromoCodeResult.classList.remove("staff-hidden");
+
+    if (!title) {
+        publicPromoCodeResult.innerHTML = "Вкажіть назву загального промокоду.";
+        return;
+    }
+
+    if (!promoCode) {
+        publicPromoCodeResult.innerHTML = "Вкажіть промокод.";
+        return;
+    }
+
+    if (!discountAmount || discountAmount <= 0) {
+        publicPromoCodeResult.innerHTML = "Вкажіть суму знижки більше 0 грн.";
+        return;
+    }
+
+    if (minOrderAmount < 0) {
+        publicPromoCodeResult.innerHTML = "Мінімальна сума чека не може бути меншою 0.";
+        return;
+    }
+
+    if (!startsAt || !endsAt) {
+        publicPromoCodeResult.innerHTML = "Вкажіть дату початку і дату завершення.";
+        return;
+    }
+
+    if (!warehouseIds.length) {
+        publicPromoCodeResult.innerHTML = "Оберіть хоча б один staff-склад.";
+        return;
+    }
+
+    publicPromoCodeResult.innerHTML = "Зберігаю загальний промокод…";
+
+    try {
+        const response = await fetch(
+            "https://monal-mono-pay-production.up.railway.app/api/staff/public-promo-code-promo-save",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    staffId: staff.id,
+                    promoId: PUBLIC_PROMO_CODE_EDIT_ID,
+                    title,
+                    promoCode,
+                    minOrderAmount,
+                    discountAmount,
+                    startsAt,
+                    endsAt,
+                    isActive,
+                    warehouseIds
+                })
+            }
+        );
+
+        const data = await response.json();
+
+        if (!data.ok) {
+            publicPromoCodeResult.innerHTML =
+                data.error || "Не вдалося зберегти загальний промокод.";
+            return;
+        }
+
+        resetPublicPromoCodeForm();
+
+        publicPromoCodeResult.classList.remove("staff-hidden");
+        publicPromoCodeResult.innerHTML = "Загальний промокод збережено.";
+
+        await loadPublicPromoCodePromos();
+
+    } catch (err) {
+        console.error(err);
+        publicPromoCodeResult.innerHTML =
+            "Помилка зʼєднання при збереженні загального промокоду.";
     }
 }
     
@@ -8255,6 +8814,7 @@ if (openPromosSectionBtn && promosSection) {
         await loadStaffWarehouses();
         await loadFocusPromos();
         await loadPublicPercentPromos();
+        await loadPublicPromoCodePromos();
         await loadPersonalOffers();
     });
 }
@@ -8591,6 +9151,12 @@ async function savePublicPercentPromo() {
 if (savePublicPercentPromoBtn) {
     savePublicPercentPromoBtn.addEventListener("click", () => {
         savePublicPercentPromo();
+    });
+}
+
+if (savePublicPromoCodeBtn) {
+    savePublicPromoCodeBtn.addEventListener("click", () => {
+        savePublicPromoCodePromo();
     });
 }
 

@@ -2319,6 +2319,7 @@
 #promos-section #public-promo-code-block .is-public-promo-code-table .staff-promo-table-head > div:nth-child(7),
 #promos-section #public-promo-code-block .is-public-promo-code-table .staff-promo-table-row > .staff-promo-cell:nth-child(7) {
     width: 12%;
+    border-right: 1px solid rgba(0, 0, 0, 0.08);
 }
 
 #promos-section #public-promo-code-block .is-public-promo-code-table .staff-promo-table-head > div:nth-child(8),

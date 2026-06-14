@@ -2268,6 +2268,86 @@
 
 /* ===================== PUBLIC PROMO CODE BLOCK ===================== */
 
+#promos-section #public-promo-code-block {
+    position: relative;
+    z-index: 75;
+    isolation: isolate;
+}
+
+#promos-section #public-promo-code-block .is-public-promo-code-table,
+#promos-section #public-promo-code-list-result .is-public-promo-code-list-table {
+    position: relative;
+    z-index: 500;
+    width: 100%;
+    max-width: none;
+    table-layout: fixed;
+    overflow: visible;
+}
+
+/* ===== CREATE FORM COLUMNS ===== */
+
+#promos-section #public-promo-code-block .is-public-promo-code-table .staff-promo-table-head > div:nth-child(1),
+#promos-section #public-promo-code-block .is-public-promo-code-table .staff-promo-table-row > .staff-promo-cell:nth-child(1) {
+    width: 18%;
+}
+
+#promos-section #public-promo-code-block .is-public-promo-code-table .staff-promo-table-head > div:nth-child(2),
+#promos-section #public-promo-code-block .is-public-promo-code-table .staff-promo-table-row > .staff-promo-cell:nth-child(2) {
+    width: 8%;
+}
+
+#promos-section #public-promo-code-block .is-public-promo-code-table .staff-promo-table-head > div:nth-child(3),
+#promos-section #public-promo-code-block .is-public-promo-code-table .staff-promo-table-row > .staff-promo-cell:nth-child(3) {
+    width: 13%;
+}
+
+#promos-section #public-promo-code-block .is-public-promo-code-table .staff-promo-table-head > div:nth-child(4),
+#promos-section #public-promo-code-block .is-public-promo-code-table .staff-promo-table-row > .staff-promo-cell:nth-child(4) {
+    width: 15%;
+}
+
+#promos-section #public-promo-code-block .is-public-promo-code-table .staff-promo-table-head > div:nth-child(5),
+#promos-section #public-promo-code-block .is-public-promo-code-table .staff-promo-table-row > .staff-promo-cell:nth-child(5) {
+    width: 15%;
+}
+
+#promos-section #public-promo-code-block .is-public-promo-code-table .staff-promo-table-head > div:nth-child(6),
+#promos-section #public-promo-code-block .is-public-promo-code-table .staff-promo-table-row > .staff-promo-cell:nth-child(6) {
+    width: 8%;
+}
+
+#promos-section #public-promo-code-block .is-public-promo-code-table .staff-promo-table-head > div:nth-child(7),
+#promos-section #public-promo-code-block .is-public-promo-code-table .staff-promo-table-row > .staff-promo-cell:nth-child(7) {
+    width: 12%;
+}
+
+#promos-section #public-promo-code-block .is-public-promo-code-table .staff-promo-table-head > div:nth-child(8),
+#promos-section #public-promo-code-block .is-public-promo-code-table .staff-promo-table-row > .staff-promo-cell:nth-child(8) {
+    width: 11%;
+    min-width: 118px;
+    border-right: none;
+}
+
+/* ===== CREATE FORM BUTTON ===== */
+
+#promos-section #public-promo-code-block #save-public-promo-code-btn {
+    width: 100%;
+    max-width: none;
+    min-width: 104px;
+    height: 40px;
+    margin: 0;
+    padding: 0 12px;
+    font-size: 13px;
+    white-space: nowrap;
+}
+
+#promos-section #public-promo-code-block .staff-promo-actions {
+    padding-left: 8px;
+    padding-right: 8px;
+}
+
+/* ===== WAREHOUSE DROPDOWN ===== */
+
 #promos-section #public-promo-code-warehouse-list {
     display: flex;
     flex-direction: column;
@@ -2301,18 +2381,6 @@
     box-shadow: none;
 }
 
-#promos-section #public-promo-code-block {
-    position: relative;
-    z-index: 75;
-    isolation: isolate;
-}
-
-#promos-section #public-promo-code-block .is-public-promo-code-table {
-    position: relative;
-    z-index: 500;
-    overflow: visible;
-}
-
 #promos-section #public-promo-code-block .staff-promo-table-row,
 #promos-section #public-promo-code-block .staff-promo-cell {
     overflow: visible;
@@ -2342,6 +2410,8 @@
     box-shadow: 0 18px 42px rgba(0, 0, 0, 0.24);
 }
 
+/* ===== LIST RESULT ===== */
+
 #promos-section #public-promo-code-list-result {
     width: 100%;
     max-width: none;
@@ -2353,9 +2423,11 @@
     margin-top: 0;
 }
 
+/* ===== LIST COLUMNS ===== */
+
 #promos-section #public-promo-code-list-result .is-public-promo-code-list-table .staff-promo-table-head > div:nth-child(1),
 #promos-section #public-promo-code-list-result .is-public-promo-code-list-table .staff-promo-cell:nth-child(1) {
-    width: 14%;
+    width: 13%;
 }
 
 #promos-section #public-promo-code-list-result .is-public-promo-code-list-table .staff-promo-table-head > div:nth-child(2),
@@ -2390,14 +2462,20 @@
 
 #promos-section #public-promo-code-list-result .is-public-promo-code-list-table .staff-promo-table-head > div:nth-child(8),
 #promos-section #public-promo-code-list-result .is-public-promo-code-list-table .staff-promo-cell:nth-child(8) {
-    width: 17%;
+    width: 16%;
     border-right: 1px solid rgba(0, 0, 0, 0.08);
 }
 
 #promos-section #public-promo-code-list-result .is-public-promo-code-list-table .staff-promo-table-head > div:nth-child(9),
 #promos-section #public-promo-code-list-result .is-public-promo-code-list-table .staff-promo-cell:nth-child(9) {
-    width: 10%;
+    width: 12%;
+    min-width: 118px;
     border-right: none;
+}
+
+#promos-section #public-promo-code-list-result .staff-promo-actions {
+    padding-left: 8px;
+    padding-right: 8px;
 }
 
 #promos-section #public-promo-code-list-result .staff-promo-actions .buy-btn {

@@ -2265,3 +2265,148 @@
     font-size: 13px;
     white-space: nowrap;
 }
+
+/* ===================== PUBLIC PROMO CODE BLOCK ===================== */
+
+#promos-section #public-promo-code-warehouse-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+#promos-section #public-promo-code-warehouse-list label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    min-height: 32px;
+    margin: 0;
+    padding: 5px 12px;
+    white-space: nowrap;
+    color: #1f1f1f;
+    font-size: 14px;
+    cursor: pointer;
+    background: #f4efe6;
+}
+
+#promos-section #public-promo-code-warehouse-list label:hover {
+    background: rgba(231, 228, 217, 0.75);
+}
+
+#promos-section #public-promo-code-warehouse-list input[type="checkbox"] {
+    flex: 0 0 auto;
+    width: 16px;
+    height: 16px;
+    margin: 0;
+    box-shadow: none;
+}
+
+#promos-section #public-promo-code-block {
+    position: relative;
+    z-index: 75;
+    isolation: isolate;
+}
+
+#promos-section #public-promo-code-block .is-public-promo-code-table {
+    position: relative;
+    z-index: 500;
+    overflow: visible;
+}
+
+#promos-section #public-promo-code-block .staff-promo-table-row,
+#promos-section #public-promo-code-block .staff-promo-cell {
+    overflow: visible;
+}
+
+#promos-section #public-promo-code-block .staff-promo-cell:nth-child(7) {
+    position: relative;
+    z-index: 600;
+}
+
+#promos-section #public-promo-code-block .staff-promo-warehouse-filter[open] {
+    position: relative;
+    z-index: 20000;
+}
+
+#promos-section #public-promo-code-block .staff-promo-warehouse-filter[open] .staff-report-filter-menu {
+    position: absolute;
+    top: 50px;
+    left: 0;
+    z-index: 20001;
+    max-height: 320px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    background: #f4efe6;
+    opacity: 1;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    box-shadow: 0 18px 42px rgba(0, 0, 0, 0.24);
+}
+
+#promos-section #public-promo-code-list-result {
+    width: 100%;
+    max-width: none;
+    padding: 0;
+    background: transparent;
+}
+
+#promos-section #public-promo-code-list-result .staff-promo-campaign-block {
+    margin-top: 0;
+}
+
+#promos-section #public-promo-code-list-result .is-public-promo-code-list-table .staff-promo-table-head > div:nth-child(1),
+#promos-section #public-promo-code-list-result .is-public-promo-code-list-table .staff-promo-cell:nth-child(1) {
+    width: 14%;
+}
+
+#promos-section #public-promo-code-list-result .is-public-promo-code-list-table .staff-promo-table-head > div:nth-child(2),
+#promos-section #public-promo-code-list-result .is-public-promo-code-list-table .staff-promo-cell:nth-child(2) {
+    width: 11%;
+}
+
+#promos-section #public-promo-code-list-result .is-public-promo-code-list-table .staff-promo-table-head > div:nth-child(3),
+#promos-section #public-promo-code-list-result .is-public-promo-code-list-table .staff-promo-cell:nth-child(3) {
+    width: 10%;
+}
+
+#promos-section #public-promo-code-list-result .is-public-promo-code-list-table .staff-promo-table-head > div:nth-child(4),
+#promos-section #public-promo-code-list-result .is-public-promo-code-list-table .staff-promo-cell:nth-child(4) {
+    width: 9%;
+}
+
+#promos-section #public-promo-code-list-result .is-public-promo-code-list-table .staff-promo-table-head > div:nth-child(5),
+#promos-section #public-promo-code-list-result .is-public-promo-code-list-table .staff-promo-cell:nth-child(5) {
+    width: 11%;
+}
+
+#promos-section #public-promo-code-list-result .is-public-promo-code-list-table .staff-promo-table-head > div:nth-child(6),
+#promos-section #public-promo-code-list-result .is-public-promo-code-list-table .staff-promo-cell:nth-child(6) {
+    width: 11%;
+}
+
+#promos-section #public-promo-code-list-result .is-public-promo-code-list-table .staff-promo-table-head > div:nth-child(7),
+#promos-section #public-promo-code-list-result .is-public-promo-code-list-table .staff-promo-cell:nth-child(7) {
+    width: 7%;
+}
+
+#promos-section #public-promo-code-list-result .is-public-promo-code-list-table .staff-promo-table-head > div:nth-child(8),
+#promos-section #public-promo-code-list-result .is-public-promo-code-list-table .staff-promo-cell:nth-child(8) {
+    width: 17%;
+    border-right: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+#promos-section #public-promo-code-list-result .is-public-promo-code-list-table .staff-promo-table-head > div:nth-child(9),
+#promos-section #public-promo-code-list-result .is-public-promo-code-list-table .staff-promo-cell:nth-child(9) {
+    width: 10%;
+    border-right: none;
+}
+
+#promos-section #public-promo-code-list-result .staff-promo-actions .buy-btn {
+    width: 100%;
+    max-width: none;
+    min-width: 104px;
+    height: 40px;
+    margin: 0;
+    padding: 0 12px;
+    font-size: 13px;
+    white-space: nowrap;
+}

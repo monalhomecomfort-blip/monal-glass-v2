@@ -4889,28 +4889,80 @@ function getDiscoveryRequiredCount() {
 function getSelectedDiscoveryAromas() {
     if (!saleDiscoveryList) return [];
 
-    return Array.from(
-        saleDiscoveryList.querySelectorAll(".sale-discovery-checkbox:checked")
-    ).map(input => input.dataset.aromaName || input.value);
+    const selectedAromas = [];
+
+    saleDiscoveryList
+        .querySelectorAll(".sale-discovery-qty-input")
+        .forEach(input => {
+            const aromaName = String(input.dataset.aromaName || "").trim();
+            const quantity = Number(input.value || 0);
+
+            if (!aromaName || !Number.isInteger(quantity) || quantity <= 0) {
+                return;
+            }
+
+            for (let i = 0; i < quantity; i++) {
+                selectedAromas.push(aromaName);
+            }
+        });
+
+    return selectedAromas;
+}
+
+function getDiscoverySelectedCount() {
+    return getSelectedDiscoveryAromas().length;
+}
+
+function setDiscoveryAromaQuantity(input, nextValue) {
+    if (!input) return;
+
+    const requiredCount = getDiscoveryRequiredCount();
+    const currentValue = Number(input.value || 0);
+    const selectedCount = getDiscoverySelectedCount();
+
+    let value = Number(nextValue || 0);
+
+    if (!Number.isInteger(value) || value < 0) {
+        value = 0;
+    }
+
+    const selectedWithoutCurrent = Math.max(0, selectedCount - currentValue);
+    const maxForThisInput = Math.max(0, requiredCount - selectedWithoutCurrent);
+
+    input.value = Math.min(value, maxForThisInput);
+
+    syncDiscoverySelectorLimit();
 }
 
 function syncDiscoverySelectorLimit() {
     if (!saleDiscoveryBox || !saleDiscoveryHint || !saleDiscoveryList) return;
 
     const requiredCount = getDiscoveryRequiredCount();
-    const selectedAromas = getSelectedDiscoveryAromas();
-    const selectedCount = selectedAromas.length;
+    const selectedCount = getDiscoverySelectedCount();
+    const leftCount = Math.max(0, requiredCount - selectedCount);
 
     saleDiscoveryHint.textContent =
-        `Оберіть ${requiredCount} аромати. Обрано: ${selectedCount}/${requiredCount}.`;
+        `Оберіть ${requiredCount} аромати. Обрано: ${selectedCount}/${requiredCount}. ` +
+        `Залишилось: ${leftCount}.`;
 
     saleDiscoveryList
-        .querySelectorAll(".sale-discovery-checkbox")
+        .querySelectorAll(".sale-discovery-qty-input")
         .forEach(input => {
-            input.disabled =
-                !input.checked &&
-                requiredCount > 0 &&
-                selectedCount >= requiredCount;
+            const value = Number(input.value || 0);
+            const minusBtn = input
+                .closest(".sale-discovery-qty-row")
+                ?.querySelector(".sale-discovery-minus-btn");
+            const plusBtn = input
+                .closest(".sale-discovery-qty-row")
+                ?.querySelector(".sale-discovery-plus-btn");
+
+            if (minusBtn) {
+                minusBtn.disabled = value <= 0;
+            }
+
+            if (plusBtn) {
+                plusBtn.disabled = requiredCount > 0 && selectedCount >= requiredCount;
+            }
         });
 }
 
@@ -4946,26 +4998,77 @@ function renderDiscoverySelector() {
             .trim();
 
         return `
-            <label>
-                <input
-                    type="checkbox"
-                    class="sale-discovery-checkbox"
-                    value="${escapeSaleHtml(product.product_key || product.id)}"
-                    data-aroma-name="${escapeSaleHtml(aromaName)}"
-                >
-                ${escapeSaleHtml(aromaName)}
-            </label>
+            <div class="sale-discovery-qty-row">
+                <span class="sale-discovery-aroma-name">
+                    ${escapeSaleHtml(aromaName)}
+                </span>
+
+                <div class="sale-discovery-qty-control">
+                    <button
+                        type="button"
+                        class="sale-discovery-qty-btn sale-discovery-minus-btn"
+                        data-action="minus"
+                        aria-label="Зменшити кількість"
+                    >
+                        −
+                    </button>
+
+                    <input
+                        type="number"
+                        class="sale-discovery-qty-input"
+                        value="0"
+                        min="0"
+                        step="1"
+                        inputmode="numeric"
+                        data-aroma-name="${escapeSaleHtml(aromaName)}"
+                    >
+
+                    <button
+                        type="button"
+                        class="sale-discovery-qty-btn sale-discovery-plus-btn"
+                        data-action="plus"
+                        aria-label="Збільшити кількість"
+                    >
+                        +
+                    </button>
+                </div>
+            </div>
         `;
     }).join("");
-    
+
     syncDiscoverySelectorLimit();
 }
 
 if (saleDiscoveryList) {
-    saleDiscoveryList.addEventListener("change", (event) => {
-        if (!event.target.classList.contains("sale-discovery-checkbox")) return;
+    saleDiscoveryList.addEventListener("click", (event) => {
+        const button = event.target.closest(".sale-discovery-qty-btn");
 
-        syncDiscoverySelectorLimit();
+        if (!button) return;
+
+        const row = button.closest(".sale-discovery-qty-row");
+        const input = row?.querySelector(".sale-discovery-qty-input");
+
+        if (!input) return;
+
+        const currentValue = Number(input.value || 0);
+        const action = String(button.dataset.action || "").trim();
+
+        if (action === "plus") {
+            setDiscoveryAromaQuantity(input, currentValue + 1);
+        }
+
+        if (action === "minus") {
+            setDiscoveryAromaQuantity(input, currentValue - 1);
+        }
+    });
+
+    saleDiscoveryList.addEventListener("input", (event) => {
+        if (!event.target.classList.contains("sale-discovery-qty-input")) return;
+
+        const input = event.target;
+        const value = Number(input.value || 0);
+
+        setDiscoveryAromaQuantity(input, value);
     });
 }
 

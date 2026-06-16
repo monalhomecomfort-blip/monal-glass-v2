@@ -2709,6 +2709,217 @@
     width: 145px;
 }
 
+/* ===================== STAFF USERS TABLE WIDTHS ===================== */
+
+.staff-page #staff-users-list-result .staff-table-wrap {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: visible;
+    padding: 18px 20px;
+    border-radius: 16px;
+    background: rgba(231, 228, 217, 0.65);
+}
+
+.staff-page #staff-users-list-result .staff-table {
+    width: 100%;
+    min-width: 1580px;
+    table-layout: fixed;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.staff-page #staff-users-list-result .staff-table th,
+.staff-page #staff-users-list-result .staff-table td {
+    padding: 10px 10px;
+    vertical-align: middle;
+    text-align: left;
+    box-sizing: border-box;
+}
+
+.staff-page #staff-users-list-result .staff-table th {
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.staff-page #staff-users-list-result .staff-table td {
+    white-space: normal;
+}
+
+.staff-page #staff-users-list-result .staff-table th:nth-child(1),
+.staff-page #staff-users-list-result .staff-table td:nth-child(1) {
+    width: 58px;
+    text-align: center;
+}
+
+.staff-page #staff-users-list-result .staff-table th:nth-child(2),
+.staff-page #staff-users-list-result .staff-table td:nth-child(2) {
+    width: 200px;
+}
+
+.staff-page #staff-users-list-result .staff-table th:nth-child(3),
+.staff-page #staff-users-list-result .staff-table td:nth-child(3) {
+    width: 245px;
+}
+
+.staff-page #staff-users-list-result .staff-table th:nth-child(4),
+.staff-page #staff-users-list-result .staff-table td:nth-child(4) {
+    width: 205px;
+}
+
+.staff-page #staff-users-list-result .staff-table th:nth-child(5),
+.staff-page #staff-users-list-result .staff-table td:nth-child(5) {
+    width: 230px;
+}
+
+.staff-page #staff-users-list-result .staff-table th:nth-child(6),
+.staff-page #staff-users-list-result .staff-table td:nth-child(6) {
+    width: 130px;
+}
+
+.staff-page #staff-users-list-result .staff-table th:nth-child(7),
+.staff-page #staff-users-list-result .staff-table td:nth-child(7) {
+    width: 255px;
+}
+
+.staff-page #staff-users-list-result .staff-table th:nth-child(8),
+.staff-page #staff-users-list-result .staff-table td:nth-child(8) {
+    width: 120px;
+    text-align: center;
+}
+
+.staff-page #staff-users-list-result .staff-table th:nth-child(9),
+.staff-page #staff-users-list-result .staff-table td:nth-child(9) {
+    width: 150px;
+    text-align: center;
+}
+
+.staff-page #staff-users-list-result .staff-table input[type="text"],
+.staff-page #staff-users-list-result .staff-table input[type="email"],
+.staff-page #staff-users-list-result .staff-table input[type="tel"],
+.staff-page #staff-users-list-result .staff-table input[type="password"],
+.staff-page #staff-users-list-result .staff-table select {
+    width: 100% !important;
+    min-width: 0 !important;
+}
+
+.staff-page #staff-users-list-result .staff-table .staff-user-edit-active {
+    width: 16px !important;
+    height: 16px;
+    margin: 0;
+    box-shadow: none;
+}
+
+.staff-page #staff-users-list-result .staff-table .save-staff-user-btn {
+    width: 100%;
+    min-width: 120px;
+    height: 42px;
+    margin: 0;
+    padding: 0 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+    font-size: 14px;
+}
+
+.staff-page #staff-users-list-result .staff-readonly-note {
+    display: inline-flex;
+    min-width: 104px;
+    height: 38px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+}
+
+/* ===================== STAFF USERS MOBILE ===================== */
+
+@media (max-width: 760px) {
+    .staff-page #staff-users-list-result .staff-table-wrap {
+        overflow-x: visible;
+        padding: 0;
+        background: transparent;
+    }
+
+    .staff-page #staff-users-list-result .staff-table {
+        width: 100%;
+        min-width: 0;
+        display: block;
+    }
+
+    .staff-page #staff-users-list-result .staff-table thead {
+        display: none;
+    }
+
+    .staff-page #staff-users-list-result .staff-table tbody {
+        display: grid;
+        gap: 14px;
+    }
+
+    .staff-page #staff-users-list-result .staff-table tr {
+        display: grid;
+        gap: 10px;
+        padding: 14px;
+        border-radius: 18px;
+        background: rgba(231, 228, 217, 0.74);
+        box-shadow:
+            0 1px 0 rgba(255,255,255,0.35) inset,
+            0 2px 10px rgba(0,0,0,0.06);
+    }
+
+    .staff-page #staff-users-list-result .staff-table td {
+        display: grid;
+        grid-template-columns: minmax(110px, 38%) 1fr;
+        gap: 10px;
+        align-items: center;
+        width: 100% !important;
+        padding: 0;
+        text-align: left !important;
+    }
+
+    .staff-page #staff-users-list-result .staff-table td::before {
+        font-weight: 600;
+        opacity: 0.75;
+        font-size: 12px;
+        line-height: 1.25;
+    }
+
+    .staff-page #staff-users-list-result .staff-table td:nth-child(1)::before {
+        content: "ID";
+    }
+
+    .staff-page #staff-users-list-result .staff-table td:nth-child(2)::before {
+        content: "Імʼя";
+    }
+
+    .staff-page #staff-users-list-result .staff-table td:nth-child(3)::before {
+        content: "Email";
+    }
+
+    .staff-page #staff-users-list-result .staff-table td:nth-child(4)::before {
+        content: "Телефон";
+    }
+
+    .staff-page #staff-users-list-result .staff-table td:nth-child(5)::before {
+        content: "Новий пароль";
+    }
+
+    .staff-page #staff-users-list-result .staff-table td:nth-child(6)::before {
+        content: "Роль";
+    }
+
+    .staff-page #staff-users-list-result .staff-table td:nth-child(7)::before {
+        content: "Склад";
+    }
+
+    .staff-page #staff-users-list-result .staff-table td:nth-child(8)::before {
+        content: "Активний";
+    }
+
+    .staff-page #staff-users-list-result .staff-table td:nth-child(9)::before {
+        content: "Дія";
+    }
+}
 /* ===================== STAFF PRODUCTS ADMIN MOBILE ===================== */
 
 @media (max-width: 700px) {

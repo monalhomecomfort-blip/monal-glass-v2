@@ -85,6 +85,14 @@
                 </button>
             </div>
 
+            <div class="staff-card" data-access="admin" data-special-access="admin-tools">
+                <h3>Товари та ціни</h3>
+                <p>Створення staff-товарів, редагування назв і цін у products_catalog.</p>
+                <button class="buy-btn" type="button" id="open-products-admin-section">
+                    Перейти
+                </button>
+            </div>            
+
             <div class="staff-card" data-access="admin">
                 <h3>Staff users</h3>
                 <p>Перегляд внутрішніх користувачів: адмінів, менеджерів, партнерів.</p>
@@ -1646,6 +1654,70 @@
     </div>
 
 </section>
+
+<section id="products-admin-section" class="staff-section staff-hidden" data-special-access="admin-tools">
+
+    <div class="account-block big">
+        <h2>Товари та ціни</h2>
+
+        <p>
+            Створення нових staff-товарів у products_catalog та редагування назв і цін.
+            Товари, створені тут, не змінюють товарні сторінки сайту.
+        </p>
+
+        <div class="staff-promo-campaign-block">
+            <h3>Створити новий товар</h3>
+
+            <p class="staff-hint">
+                Спочатку оберіть категорію. Система покаже приклад товару з цієї категорії,
+                а новий товар збере за тією ж логікою. ID створюється автоматично.
+            </p>
+
+            <div class="staff-search-row" style="max-width:520px;">
+                <select id="product-admin-create-category">
+                    <option value="">Оберіть категорію</option>
+                </select>
+            </div>
+
+            <div id="product-admin-create-table-result" class="staff-result">
+                Оберіть категорію, щоб побачити приклад товару.
+            </div>
+
+            <div id="product-admin-create-result" class="staff-result staff-hidden"></div>
+        </div>
+
+        <div class="staff-promo-campaign-block">
+            <h3>Редагування товарів і цін</h3>
+
+            <p class="staff-hint">
+                Для редагування оберіть категорію товару. Доступні для зміни тільки назва і ціни.
+                ID, product_key, категорія, product_label і ємність показуються інформаційно.
+            </p>
+
+            <div class="staff-search-row sales-report-filter-row">
+                <select id="product-admin-edit-category">
+                    <option value="">Оберіть категорію</option>
+                </select>
+
+                <select id="product-admin-edit-status">
+                    <option value="active">Активні</option>
+                    <option value="inactive">Неактивні</option>
+                    <option value="all">Всі</option>
+                </select>
+
+                <button id="load-products-admin-list-btn" class="buy-btn" type="button">
+                    Показати
+                </button>
+            </div>
+
+            <div id="products-admin-list-result" class="staff-result">
+                Оберіть категорію, щоб завантажити товари.
+            </div>
+        </div>
+
+    </div>
+
+</section>
         
 <section id="staff-users-section" class="staff-section staff-hidden">
 
@@ -1740,6 +1812,16 @@ document.querySelectorAll("[data-access]").forEach(card => {
     }
 });
 
+const CAN_MANAGE_ADMIN_TOOLS =
+    String(staff?.role || "").trim() === "admin" &&
+    Boolean(staff?.can_manage_staff_users);
+
+document.querySelectorAll('[data-special-access="admin-tools"]').forEach(item => {
+    if (!CAN_MANAGE_ADMIN_TOOLS) {
+        item.classList.add("staff-hidden");
+    }
+});    
+
 const salesSection = document.getElementById("sales-section");
 const openSalesSectionBtn = document.getElementById("open-sales-section");
 
@@ -1799,6 +1881,22 @@ const staffUsersCreateBox = staffUsersSection
     ? staffUsersSection.querySelector(".staff-create-box")
     : null;
 const CAN_MANAGE_STAFF_USERS = Boolean(staff?.can_manage_staff_users);
+
+const productsAdminSection = document.getElementById("products-admin-section");
+const openProductsAdminSectionBtn = document.getElementById("open-products-admin-section");
+
+const productAdminCreateCategorySelect = document.getElementById("product-admin-create-category");
+const productAdminCreateTableResult = document.getElementById("product-admin-create-table-result");
+const productAdminCreateResult = document.getElementById("product-admin-create-result");
+
+const productAdminEditCategorySelect = document.getElementById("product-admin-edit-category");
+const productAdminEditStatusSelect = document.getElementById("product-admin-edit-status");
+const loadProductsAdminListBtn = document.getElementById("load-products-admin-list-btn");
+const productsAdminListResult = document.getElementById("products-admin-list-result");
+
+let ADMIN_PRODUCT_CATEGORIES = [];
+let ADMIN_PRODUCT_CATEGORIES_LOADED = false;
+let ADMIN_PRODUCTS_LIST = [];    
 
 const promosSection = document.getElementById("promos-section");
 const openPromosSectionBtn = document.getElementById("open-promos-section");
@@ -9463,6 +9561,599 @@ function escapeStaffHtml(value) {
         .replaceAll("'", "&#039;");
 }
 
+function getAdminProductCategoryBySlug(categorySlug) {
+    const slug = String(categorySlug || "").trim();
+
+    return ADMIN_PRODUCT_CATEGORIES.find(category =>
+        String(category.category_slug || "").trim() === slug
+    ) || null;
+}
+
+function getAdminProductSample(categorySlug) {
+    const category = getAdminProductCategoryBySlug(categorySlug);
+
+    return category && category.sample
+        ? category.sample
+        : null;
+}
+
+function getAdminProductActiveText(value) {
+    return Number(value || 0) === 1 ? "Так" : "Ні";
+}
+
+function getAdminEditableProductName(product) {
+    const productName = String(product?.product_name || "").trim();
+
+    if (productName) {
+        return productName;
+    }
+
+    let displayName = String(product?.display_name || "").trim();
+    const productLabel = String(product?.product_label || "").trim();
+    const capacityMl = Number(product?.capacity_ml || 0);
+
+    if (productLabel && displayName.toLowerCase().startsWith(productLabel.toLowerCase())) {
+        displayName = displayName
+            .slice(productLabel.length)
+            .replace(/^[-\s]+/, "")
+            .trim();
+    }
+
+    if (capacityMl > 0) {
+        displayName = displayName
+            .replace(new RegExp("\\s*-?\\s*" + capacityMl + "\\s*ml\\b", "i"), "")
+            .trim();
+    }
+
+    displayName = displayName
+        .replace(/\s*-\s*\d+\s*грн\s*$/i, "")
+        .replace(/\s+/g, " ")
+        .trim();
+
+    return displayName;
+}
+
+function renderAdminProductCategoryOptions() {
+    const optionsHtml = `
+        <option value="">Оберіть категорію</option>
+        ${ADMIN_PRODUCT_CATEGORIES.map(category => `
+            <option value="${escapeStaffHtml(category.category_slug)}">
+                ${escapeStaffHtml(category.product_label || category.category_slug)}
+                (${escapeStaffHtml(category.category_slug)})
+            </option>
+        `).join("")}
+    `;
+
+    if (productAdminCreateCategorySelect) {
+        const currentValue = productAdminCreateCategorySelect.value;
+        productAdminCreateCategorySelect.innerHTML = optionsHtml;
+        productAdminCreateCategorySelect.value = currentValue;
+    }
+
+    if (productAdminEditCategorySelect) {
+        const currentValue = productAdminEditCategorySelect.value;
+        productAdminEditCategorySelect.innerHTML = optionsHtml;
+        productAdminEditCategorySelect.value = currentValue;
+    }
+}
+
+function renderAdminCreateProductTable() {
+    if (!productAdminCreateTableResult || !productAdminCreateCategorySelect) return;
+
+    const categorySlug = productAdminCreateCategorySelect.value;
+    const sample = getAdminProductSample(categorySlug);
+
+    if (!categorySlug || !sample) {
+        productAdminCreateTableResult.innerHTML =
+            "Оберіть категорію, щоб побачити приклад товару.";
+        return;
+    }
+
+    productAdminCreateTableResult.innerHTML = `
+        <div style="overflow-x:auto;">
+            <table class="staff-report-table">
+                <thead>
+                    <tr>
+                        <th>Рядок</th>
+                        <th>ID</th>
+                        <th>product_key</th>
+                        <th>category_slug</th>
+                        <th>product_label</th>
+                        <th>Назва</th>
+                        <th>Ємність, ml</th>
+                        <th>РЦ</th>
+                        <th>СВ</th>
+                        <th>Реалізація</th>
+                        <th>Активний</th>
+                        <th>Дія</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <td>Приклад</td>
+                        <td>${escapeStaffHtml(sample.id || "")}</td>
+                        <td>${escapeStaffHtml(sample.product_key || "")}</td>
+                        <td>${escapeStaffHtml(sample.category_slug || "")}</td>
+                        <td>${escapeStaffHtml(sample.product_label || "")}</td>
+                        <td>${escapeStaffHtml(getAdminEditableProductName(sample) || sample.display_name || "")}</td>
+                        <td>${escapeStaffHtml(sample.capacity_ml || "")}</td>
+                        <td>${escapeStaffHtml(sample.price ?? 0)}</td>
+                        <td>${escapeStaffHtml(sample.cost_price ?? 0)}</td>
+                        <td>${escapeStaffHtml(sample.realization_price ?? 0)}</td>
+                        <td>${escapeStaffHtml(getAdminProductActiveText(sample.is_active))}</td>
+                        <td>Приклад</td>
+                    </tr>
+
+                    <tr>
+                        <td>Новий товар</td>
+                        <td>Авто</td>
+                        <td>Авто після збереження</td>
+                        <td>${escapeStaffHtml(sample.category_slug || "")}</td>
+                        <td>${escapeStaffHtml(sample.product_label || "")}</td>
+                        <td>
+                            <input
+                                type="text"
+                                id="new-admin-product-name"
+                                placeholder="Назва товару"
+                                style="min-width:220px;"
+                            >
+                        </td>
+                        <td>
+                            <input
+                                type="number"
+                                id="new-admin-product-capacity"
+                                placeholder="ml"
+                                min="1"
+                                step="1"
+                                style="width:110px;"
+                            >
+                        </td>
+                        <td>
+                            <input
+                                type="number"
+                                id="new-admin-product-price"
+                                placeholder="РЦ"
+                                min="0"
+                                step="1"
+                                style="width:110px;"
+                            >
+                        </td>
+                        <td>
+                            <input
+                                type="number"
+                                id="new-admin-product-cost-price"
+                                placeholder="СВ"
+                                min="0"
+                                step="1"
+                                style="width:110px;"
+                            >
+                        </td>
+                        <td>
+                            <input
+                                type="number"
+                                id="new-admin-product-realization-price"
+                                placeholder="Реал."
+                                min="0"
+                                step="1"
+                                style="width:110px;"
+                            >
+                        </td>
+                        <td>Так</td>
+                        <td>
+                            <button
+                                id="create-admin-product-btn"
+                                class="buy-btn"
+                                type="button"
+                            >
+                                Створити
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    `;
+
+    const createAdminProductBtn = document.getElementById("create-admin-product-btn");
+
+    if (createAdminProductBtn) {
+        createAdminProductBtn.addEventListener("click", createAdminProduct);
+    }
+}
+
+async function loadAdminProductCategories() {
+    if (ADMIN_PRODUCT_CATEGORIES_LOADED) {
+        renderAdminProductCategoryOptions();
+        renderAdminCreateProductTable();
+        return;
+    }
+
+    if (productAdminCreateTableResult) {
+        productAdminCreateTableResult.innerHTML = "Завантажую категорії...";
+    }
+
+    try {
+        const response = await fetch(
+            "https://monal-mono-pay-production.up.railway.app/api/staff/admin-product-categories",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    staffId: staff.id
+                })
+            }
+        );
+
+        const data = await response.json();
+
+        if (!data.ok) {
+            if (productAdminCreateTableResult) {
+                productAdminCreateTableResult.innerHTML =
+                    data.error || "Не вдалося завантажити категорії.";
+            }
+            return;
+        }
+
+        ADMIN_PRODUCT_CATEGORIES = Array.isArray(data.categories)
+            ? data.categories
+            : [];
+
+        ADMIN_PRODUCT_CATEGORIES_LOADED = true;
+
+        renderAdminProductCategoryOptions();
+        renderAdminCreateProductTable();
+
+    } catch (err) {
+        console.error(err);
+
+        if (productAdminCreateTableResult) {
+            productAdminCreateTableResult.innerHTML =
+                "Помилка зʼєднання при завантаженні категорій.";
+        }
+    }
+}
+
+async function createAdminProduct() {
+    if (!CAN_MANAGE_ADMIN_TOOLS) return;
+
+    const categorySlug = productAdminCreateCategorySelect
+        ? productAdminCreateCategorySelect.value
+        : "";
+
+    const productNameInput = document.getElementById("new-admin-product-name");
+    const capacityInput = document.getElementById("new-admin-product-capacity");
+    const priceInput = document.getElementById("new-admin-product-price");
+    const costPriceInput = document.getElementById("new-admin-product-cost-price");
+    const realizationPriceInput = document.getElementById("new-admin-product-realization-price");
+
+    const productName = productNameInput ? productNameInput.value.trim() : "";
+    const capacityMl = capacityInput ? Number(capacityInput.value || 0) : 0;
+    const price = priceInput ? Number(priceInput.value || 0) : 0;
+    const costPrice = costPriceInput ? Number(costPriceInput.value || 0) : 0;
+    const realizationPrice = realizationPriceInput ? Number(realizationPriceInput.value || 0) : 0;
+
+    if (!categorySlug) {
+        alert("Оберіть категорію");
+        return;
+    }
+
+    if (!productName) {
+        alert("Вкажіть назву товару");
+        return;
+    }
+
+    if (!Number.isInteger(capacityMl) || capacityMl <= 0) {
+        alert("Ємність має бути цілим числом без ml");
+        return;
+    }
+
+    if (productAdminCreateResult) {
+        productAdminCreateResult.classList.remove("staff-hidden");
+        productAdminCreateResult.innerHTML = "Створюю товар...";
+    }
+
+    try {
+        const response = await fetch(
+            "https://monal-mono-pay-production.up.railway.app/api/staff/admin-create-product",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    staffId: staff.id,
+                    categorySlug,
+                    productName,
+                    capacityMl,
+                    price,
+                    costPrice,
+                    realizationPrice,
+                    isActive: 1
+                })
+            }
+        );
+
+        const data = await response.json();
+
+        if (!data.ok) {
+            if (productAdminCreateResult) {
+                productAdminCreateResult.innerHTML =
+                    data.error || "Не вдалося створити товар.";
+            }
+            return;
+        }
+
+        if (productAdminCreateResult) {
+            productAdminCreateResult.innerHTML = `
+                Товар створено.<br>
+                ID: <strong>${escapeStaffHtml(data.product?.id || "")}</strong><br>
+                product_key: <strong>${escapeStaffHtml(data.product?.product_key || "")}</strong><br>
+                Назва: <strong>${escapeStaffHtml(data.product?.display_name || "")}</strong>
+            `;
+        }
+
+        if (productNameInput) productNameInput.value = "";
+        if (capacityInput) capacityInput.value = "";
+        if (priceInput) priceInput.value = "";
+        if (costPriceInput) costPriceInput.value = "";
+        if (realizationPriceInput) realizationPriceInput.value = "";
+
+        STAFF_PRODUCTS_LOADED = false;
+        await loadAdminProductCategories();
+
+        if (
+            productAdminEditCategorySelect &&
+            productAdminEditCategorySelect.value === categorySlug
+        ) {
+            await loadAdminProductsList();
+        }
+
+    } catch (err) {
+        console.error(err);
+
+        if (productAdminCreateResult) {
+            productAdminCreateResult.innerHTML =
+                "Помилка зʼєднання при створенні товару.";
+        }
+    }
+}
+
+function renderAdminProductsList(products) {
+    if (!productsAdminListResult) return;
+
+    if (!products.length) {
+        productsAdminListResult.innerHTML =
+            "По цій категорії товарів не знайдено.";
+        return;
+    }
+
+    productsAdminListResult.innerHTML = `
+        <div style="overflow-x:auto;">
+            <table class="staff-report-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>product_key</th>
+                        <th>category_slug</th>
+                        <th>product_label</th>
+                        <th>Ємність, ml</th>
+                        <th>Назва</th>
+                        <th>РЦ</th>
+                        <th>СВ</th>
+                        <th>Реалізація</th>
+                        <th>Активний</th>
+                        <th>Дія</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    ${products.map(product => `
+                        <tr
+                            class="admin-product-row"
+                            data-product-id="${escapeStaffHtml(product.id || "")}"
+                            data-is-active="${Number(product.is_active || 0)}"
+                        >
+                            <td>${escapeStaffHtml(product.id || "")}</td>
+                            <td>${escapeStaffHtml(product.product_key || "")}</td>
+                            <td>${escapeStaffHtml(product.category_slug || "")}</td>
+                            <td>${escapeStaffHtml(product.product_label || "")}</td>
+                            <td>${escapeStaffHtml(product.capacity_ml || "")}</td>
+                            <td>
+                                <input
+                                    type="text"
+                                    class="admin-product-name-input"
+                                    value="${escapeStaffHtml(getAdminEditableProductName(product))}"
+                                    style="min-width:220px;"
+                                >
+                            </td>
+                            <td>
+                                <input
+                                    type="number"
+                                    class="admin-product-price-input"
+                                    value="${escapeStaffHtml(product.price ?? 0)}"
+                                    min="0"
+                                    step="1"
+                                    style="width:110px;"
+                                >
+                            </td>
+                            <td>
+                                <input
+                                    type="number"
+                                    class="admin-product-cost-price-input"
+                                    value="${escapeStaffHtml(product.cost_price ?? 0)}"
+                                    min="0"
+                                    step="1"
+                                    style="width:110px;"
+                                >
+                            </td>
+                            <td>
+                                <input
+                                    type="number"
+                                    class="admin-product-realization-price-input"
+                                    value="${escapeStaffHtml(product.realization_price ?? 0)}"
+                                    min="0"
+                                    step="1"
+                                    style="width:110px;"
+                                >
+                            </td>
+                            <td>${escapeStaffHtml(getAdminProductActiveText(product.is_active))}</td>
+                            <td>
+                                <button
+                                    class="buy-btn save-admin-product-row-btn"
+                                    type="button"
+                                    data-product-id="${escapeStaffHtml(product.id || "")}"
+                                >
+                                    Зберегти
+                                </button>
+                            </td>
+                        </tr>
+                    `).join("")}
+                </tbody>
+            </table>
+        </div>
+    `;
+}
+
+async function loadAdminProductsList() {
+    if (!productsAdminListResult || !productAdminEditCategorySelect) return;
+
+    const categorySlug = productAdminEditCategorySelect.value;
+    const status = productAdminEditStatusSelect
+        ? productAdminEditStatusSelect.value
+        : "active";
+
+    if (!categorySlug) {
+        productsAdminListResult.innerHTML =
+            "Оберіть категорію, щоб не вивантажувати всі товари пулом.";
+        return;
+    }
+
+    productsAdminListResult.innerHTML = "Завантажую товари...";
+
+    try {
+        const response = await fetch(
+            "https://monal-mono-pay-production.up.railway.app/api/staff/admin-products-list",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    staffId: staff.id,
+                    categorySlug,
+                    status
+                })
+            }
+        );
+
+        const data = await response.json();
+
+        if (!data.ok) {
+            productsAdminListResult.innerHTML =
+                data.error || "Не вдалося завантажити товари.";
+            return;
+        }
+
+        ADMIN_PRODUCTS_LIST = Array.isArray(data.products)
+            ? data.products
+            : [];
+
+        renderAdminProductsList(ADMIN_PRODUCTS_LIST);
+
+    } catch (err) {
+        console.error(err);
+        productsAdminListResult.innerHTML =
+            "Помилка зʼєднання при завантаженні товарів.";
+    }
+}
+
+async function saveAdminProductRow(productId) {
+    if (!CAN_MANAGE_ADMIN_TOOLS) return;
+
+    const row = document.querySelector(
+        `.admin-product-row[data-product-id="${CSS.escape(String(productId))}"]`
+    );
+
+    if (!row) return;
+
+    const productNameInput = row.querySelector(".admin-product-name-input");
+    const priceInput = row.querySelector(".admin-product-price-input");
+    const costPriceInput = row.querySelector(".admin-product-cost-price-input");
+    const realizationPriceInput = row.querySelector(".admin-product-realization-price-input");
+
+    const productName = productNameInput ? productNameInput.value.trim() : "";
+    const price = priceInput ? Number(priceInput.value || 0) : 0;
+    const costPrice = costPriceInput ? Number(costPriceInput.value || 0) : 0;
+    const realizationPrice = realizationPriceInput ? Number(realizationPriceInput.value || 0) : 0;
+    const isActive = Number(row.dataset.isActive || 0);
+
+    if (!productName) {
+        alert("Назва товару не може бути порожньою");
+        return;
+    }
+
+    const button = row.querySelector(".save-admin-product-row-btn");
+    const oldButtonText = button ? button.textContent : "";
+
+    if (button) {
+        button.textContent = "Зберігаю...";
+        button.disabled = true;
+    }
+
+    try {
+        const response = await fetch(
+            "https://monal-mono-pay-production.up.railway.app/api/staff/admin-update-product",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    staffId: staff.id,
+                    productId,
+                    productName,
+                    price,
+                    costPrice,
+                    realizationPrice,
+                    isActive
+                })
+            }
+        );
+
+        const data = await response.json();
+
+        if (!data.ok) {
+            alert(data.error || "Не вдалося зберегти товар.");
+            return;
+        }
+
+        STAFF_PRODUCTS_LOADED = false;
+
+        if (button) {
+            button.textContent = "Збережено";
+        }
+
+        setTimeout(() => {
+            if (button) {
+                button.textContent = oldButtonText || "Зберегти";
+                button.disabled = false;
+            }
+        }, 900);
+
+    } catch (err) {
+        console.error(err);
+        alert("Помилка зʼєднання при збереженні товару.");
+
+        if (button) {
+            button.textContent = oldButtonText || "Зберегти";
+            button.disabled = false;
+        }
+    }
+}    
+
 function renderStaffWarehouseOptions(selectedWarehouseId = "") {
     const selectedValue = String(selectedWarehouseId ?? "");
 
@@ -9722,6 +10413,64 @@ async function loadStaffUsers() {
     }
 }
 
+if (openProductsAdminSectionBtn && productsAdminSection) {
+    openProductsAdminSectionBtn.addEventListener("click", async () => {
+        if (!CAN_MANAGE_ADMIN_TOOLS) {
+            alert("Немає права на керування товарами та цінами.");
+            return;
+        }
+
+        showStaffSection(productsAdminSection);
+
+        if (productAdminCreateResult) {
+            productAdminCreateResult.classList.add("staff-hidden");
+            productAdminCreateResult.innerHTML = "";
+        }
+
+        await loadAdminProductCategories();
+    });
+}
+
+if (productAdminCreateCategorySelect) {
+    productAdminCreateCategorySelect.addEventListener("change", () => {
+        renderAdminCreateProductTable();
+
+        if (productAdminCreateResult) {
+            productAdminCreateResult.classList.add("staff-hidden");
+            productAdminCreateResult.innerHTML = "";
+        }
+    });
+}
+
+if (productAdminEditCategorySelect) {
+    productAdminEditCategorySelect.addEventListener("change", loadAdminProductsList);
+}
+
+if (productAdminEditStatusSelect) {
+    productAdminEditStatusSelect.addEventListener("change", loadAdminProductsList);
+}
+
+if (loadProductsAdminListBtn) {
+    loadProductsAdminListBtn.addEventListener("click", loadAdminProductsList);
+}
+
+if (productsAdminListResult) {
+    productsAdminListResult.addEventListener("click", event => {
+        const button = event.target.closest(".save-admin-product-row-btn");
+
+        if (!button) return;
+
+        const productId = Number(button.dataset.productId || 0);
+
+        if (!productId) {
+            alert("Не знайдено ID товару");
+            return;
+        }
+
+        saveAdminProductRow(productId);
+    });
+}
+    
 if (openStaffSectionBtn && staffUsersSection) {
     openStaffSectionBtn.addEventListener("click", async () => {
         showStaffSection(staffUsersSection);

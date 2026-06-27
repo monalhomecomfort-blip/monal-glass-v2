@@ -118,7 +118,7 @@ const parfumsGalleries = {
   "images/perfumes/travel_black_6.png"   
   ],
   "amber elite-15": [
-  "images/perfumes/travel_amber.png",
+  "images/perfumes/travel_black_amber.png",
   "images/perfumes/travel_black_3.png",
   "images/perfumes/travel_black_4.png",
   "images/perfumes/travel_black_5.png",

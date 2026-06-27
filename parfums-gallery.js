@@ -109,7 +109,28 @@ const parfumsGalleries = {
   "rosalya-15": [
     "images/perfumes/travel_rosalya.png",
     "images/perfumes/travel_rosalya_.png"
-  ] 
+  ],
+  "leather absolute-15": [
+  "images/perfumes/travel_black_leather.png",
+  "images/perfumes/travel_black_3.png",
+  "images/perfumes/travel_black_4.png",
+  "images/perfumes/travel_black_5.png",
+  "images/perfumes/travel_black_6.png"   
+  ],
+  "amber elite-15": [
+  "images/perfumes/travel_amber.png",
+  "images/perfumes/travel_black_3.png",
+  "images/perfumes/travel_black_4.png",
+  "images/perfumes/travel_black_5.png",
+  "images/perfumes/travel_black_6.png"   
+  ],
+  "bois noir-15": [
+  "images/perfumes/travel_black_bois.png",
+  "images/perfumes/travel_black_3.png",
+  "images/perfumes/travel_black_4.png",
+  "images/perfumes/travel_black_5.png",
+  "images/perfumes/travel_black_6.png"   
+  ],  
 };
 
 /* ===================== REFILLS ===================== */

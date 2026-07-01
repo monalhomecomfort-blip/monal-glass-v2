@@ -3232,3 +3232,113 @@
         font-size: 11px;
     }
 }
+
+/* ===== PUBLIC GIFT PROMO FIXES ===== */
+
+#promos-section #public-gift-promo-block {
+    position: relative;
+    z-index: 140;
+    isolation: isolate;
+}
+
+#promos-section #public-gift-promo-block .is-public-gift-promo-table {
+    position: relative;
+    z-index: 500;
+    overflow: visible;
+}
+
+#promos-section #public-gift-promo-block .staff-promo-table-row,
+#promos-section #public-gift-promo-block .staff-promo-cell {
+    overflow: visible;
+}
+
+#promos-section #public-gift-promo-block .staff-promo-cell:first-child,
+#promos-section #public-gift-promo-block .staff-promo-cell:nth-child(2),
+#promos-section #public-gift-promo-block .staff-promo-cell:nth-child(6) {
+    position: relative;
+    z-index: 700;
+}
+
+#promos-section #public-gift-promo-category-filter,
+#promos-section #public-gift-promo-product-filter,
+#promos-section #public-gift-promo-block .staff-promo-warehouse-filter,
+#promos-section #public-gift-promo-block .staff-product-picker {
+    position: relative;
+    z-index: 800;
+}
+
+#promos-section #public-gift-promo-category-filter[open],
+#promos-section #public-gift-promo-product-filter[open],
+#promos-section #public-gift-promo-block .staff-promo-warehouse-filter[open] {
+    position: relative;
+    z-index: 30000;
+}
+
+#promos-section #public-gift-promo-category-filter[open] .staff-personal-status-menu,
+#promos-section #public-gift-promo-product-filter[open] .staff-personal-status-menu,
+#promos-section #public-gift-promo-block .staff-promo-warehouse-filter[open] .staff-report-filter-menu {
+    position: absolute;
+    top: 50px;
+    left: 0;
+    z-index: 30001;
+    width: min(420px, calc(100vw - 80px));
+    max-height: 340px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    background: #f4efe6;
+    opacity: 1;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    box-shadow: 0 18px 42px rgba(0, 0, 0, 0.24);
+}
+
+#promos-section #public-gift-promo-gift-product-dropdown {
+    z-index: 30002;
+    max-height: 340px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    background: #f4efe6;
+    box-shadow: 0 18px 42px rgba(0, 0, 0, 0.24);
+}
+
+#promos-section #public-gift-promo-category-list,
+#promos-section #public-gift-promo-product-list,
+#promos-section #public-gift-promo-warehouse-list {
+    position: relative;
+    z-index: 1;
+    background: #f4efe6;
+}
+
+#promos-section #public-gift-promo-category-list label,
+#promos-section #public-gift-promo-product-list label,
+#promos-section #public-gift-promo-warehouse-list label {
+    background: #f4efe6;
+}
+
+#promos-section #public-gift-promo-category-list label:hover,
+#promos-section #public-gift-promo-product-list label:hover,
+#promos-section #public-gift-promo-warehouse-list label:hover {
+    background: #e7e4d9;
+}
+
+#promos-section .staff-promo-product-filter-search {
+    width: calc(100% - 20px);
+    height: 38px;
+    margin: 0 10px 8px;
+    padding: 0 12px;
+    border-radius: 12px;
+    border: none;
+    background: #e7e4d9;
+    color: #1f1f1f;
+    font-size: 14px;
+    font-family: 'Montserrat', sans-serif;
+    outline: none;
+    box-shadow:
+        0 1px 0 rgba(255,255,255,0.35) inset,
+        0 2px 8px rgba(0,0,0,0.06);
+}
+
+#promos-section #public-gift-promo-result,
+#promos-section #public-gift-promos-list-result {
+    position: relative;
+    z-index: 1;
+}

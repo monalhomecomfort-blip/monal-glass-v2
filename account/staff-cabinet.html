@@ -2081,6 +2081,24 @@ const publicPromoCodeWarehouseList = document.getElementById("public-promo-code-
 const savePublicPromoCodeBtn = document.getElementById("save-public-promo-code-btn");
 const publicPromoCodeResult = document.getElementById("public-promo-code-result");
 const publicPromoCodeListResult = document.getElementById("public-promo-code-list-result");
+const publicGiftPromoTitleInput = document.getElementById("public-gift-promo-title");
+const publicGiftPromoCategoryFilter = document.getElementById("public-gift-promo-category-filter");
+const publicGiftPromoCategoryList = document.getElementById("public-gift-promo-category-list");
+const publicGiftPromoProductFilter = document.getElementById("public-gift-promo-product-filter");
+const publicGiftPromoProductList = document.getElementById("public-gift-promo-product-list");
+const publicGiftPromoProductIds = document.getElementById("public-gift-promo-product-ids");
+const publicGiftPromoProductsSelected = document.getElementById("public-gift-promo-products-selected");
+const publicGiftPromoGiftProductSearch = document.getElementById("public-gift-promo-gift-product-search");
+const publicGiftPromoGiftProductId = document.getElementById("public-gift-promo-gift-product-id");
+const publicGiftPromoGiftProductDropdown = document.getElementById("public-gift-promo-gift-product-dropdown");
+const publicGiftPromoStartInput = document.getElementById("public-gift-promo-start");
+const publicGiftPromoEndInput = document.getElementById("public-gift-promo-end");
+const publicGiftPromoActiveInput = document.getElementById("public-gift-promo-active");
+const publicGiftPromoWarehouseList = document.getElementById("public-gift-promo-warehouse-list");
+const savePublicGiftPromoBtn = document.getElementById("save-public-gift-promo-btn");
+const publicGiftPromoResult = document.getElementById("public-gift-promo-result");
+const publicGiftPromosListResult = document.getElementById("public-gift-promos-list-result");
+    
 
 const personalPromoCodeListResult = document.getElementById("personal-promo-code-list-result");
 const personalPercentOfferListResult = document.getElementById("personal-percent-offer-list-result");
@@ -2110,6 +2128,10 @@ let PUBLIC_PERCENT_PROMOS_FILTER = "active";
 let PUBLIC_PROMO_CODE_EDIT_ID = 0;
 let PUBLIC_PROMO_CODE_PROMOS_CACHE = [];
 let PUBLIC_PROMO_CODE_PROMOS_FILTER = "active";
+
+let PUBLIC_GIFT_PROMO_EDIT_ID = 0;
+let PUBLIC_GIFT_PROMOS_CACHE = [];
+let PUBLIC_GIFT_PROMOS_FILTER = "active";
 
 let PERSONAL_PROMO_CODE_EDIT_ID = 0;
 let PERSONAL_PROMO_CODES_CACHE = [];
@@ -2148,6 +2170,14 @@ function setPublicPromoCodePromosFilter(filter) {
         : "active";
 
     renderPublicPromoCodePromosList(PUBLIC_PROMO_CODE_PROMOS_CACHE);
+}
+
+function setPublicGiftPromosFilter(filter) {
+    PUBLIC_GIFT_PROMOS_FILTER = ["active", "inactive", "all"].includes(filter)
+        ? filter
+        : "active";
+
+    renderPublicGiftPromosList(PUBLIC_GIFT_PROMOS_CACHE);
 }
 
 function isPersonalOfferActive(offer) {
@@ -5891,6 +5921,28 @@ function fillWarehouseSelects(warehouses) {
             label.appendChild(text);
 
             publicPromoCodeWarehouseList.appendChild(label);
+        });
+    }
+
+    if (publicGiftPromoWarehouseList) {
+        publicGiftPromoWarehouseList.innerHTML = "";
+
+        STAFF_WAREHOUSES.forEach(warehouse => {
+            const label = document.createElement("label");
+
+            const checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.className = "public-gift-promo-warehouse-checkbox";
+            checkbox.value = warehouse.warehouse_id;
+
+            const text = document.createTextNode(
+                ` ${warehouse.warehouse_name} ID ${warehouse.warehouse_id}`
+            );
+
+            label.appendChild(checkbox);
+            label.appendChild(text);
+
+            publicGiftPromoWarehouseList.appendChild(label);
         });
     }
 

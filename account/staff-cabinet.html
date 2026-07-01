@@ -1075,6 +1075,14 @@
                                 <summary>Товари для подарунку</summary>
 
                                 <div class="staff-report-filter-menu staff-personal-status-menu">
+                                    <input
+                                        type="text"
+                                        id="public-gift-promo-product-search"
+                                        class="staff-promo-product-filter-search"
+                                        placeholder="Почніть вводити назву товару"
+                                        autocomplete="off"
+                                    >
+
                                     <div id="public-gift-promo-product-list"></div>
                                 </div>
                             </details>
@@ -2085,6 +2093,7 @@ const publicGiftPromoTitleInput = document.getElementById("public-gift-promo-tit
 const publicGiftPromoCategoryFilter = document.getElementById("public-gift-promo-category-filter");
 const publicGiftPromoCategoryList = document.getElementById("public-gift-promo-category-list");
 const publicGiftPromoProductFilter = document.getElementById("public-gift-promo-product-filter");
+const publicGiftPromoProductSearch = document.getElementById("public-gift-promo-product-search");
 const publicGiftPromoProductList = document.getElementById("public-gift-promo-product-list");
 const publicGiftPromoProductIds = document.getElementById("public-gift-promo-product-ids");
 const publicGiftPromoProductsSelected = document.getElementById("public-gift-promo-products-selected");
@@ -3027,14 +3036,58 @@ function renderPublicGiftPromoCategoryFilter() {
     updatePublicGiftPromoSourceLocks();
 }
 
-function renderPublicGiftPromoProductFilter() {
+function renderPublicGiftPromoProductFilter(searchText = "") {
     if (!publicGiftPromoProductList) return;
 
+    const query = String(searchText || "").trim().toLowerCase();
+
+    const selectedIds = new Set(
+        getPublicGiftPromoProductCheckboxes()
+            .filter(input => input.checked)
+            .map(input => String(input.value || "").trim())
+            .filter(Boolean)
+    );
+
     const products = STAFF_PRODUCTS.filter(product => {
-        return !isPublicGiftPromoBlockedProduct(product);
+        if (isPublicGiftPromoBlockedProduct(product)) {
+            return false;
+        }
+
+        const productId = String(product.id || "").trim();
+
+        const title = String(product.display_name || "").toLowerCase();
+        const key = String(product.product_key || "").toLowerCase();
+        const category = String(product.category_slug || "").toLowerCase();
+        const label = String(product.product_label || "").toLowerCase();
+
+        if (selectedIds.has(productId)) {
+            return true;
+        }
+
+        if (!query) {
+            return false;
+        }
+
+        return (
+            title.includes(query) ||
+            key.includes(query) ||
+            category.includes(query) ||
+            label.includes(query)
+        );
     });
 
     publicGiftPromoProductList.innerHTML = "";
+
+    if (!products.length) {
+        publicGiftPromoProductList.innerHTML = `
+            <div class="staff-product-empty">
+                ${query ? "Товар не знайдено" : "Почніть вводити назву товару"}
+            </div>
+        `;
+
+        updatePublicGiftPromoSourceLocks();
+        return;
+    }
 
     products.forEach(product => {
         const productId = String(product.id || "").trim();
@@ -3049,6 +3102,7 @@ function renderPublicGiftPromoProductFilter() {
         checkbox.className = "public-gift-promo-product-checkbox";
         checkbox.value = productId;
         checkbox.dataset.productLabel = productTitle;
+        checkbox.checked = selectedIds.has(productId);
 
         label.appendChild(checkbox);
         label.appendChild(document.createTextNode(" " + productTitle));
@@ -3064,6 +3118,15 @@ function renderPublicGiftPromoGiftProductDropdown(searchText = "") {
 
     const query = String(searchText || "").trim().toLowerCase();
 
+    publicGiftPromoGiftProductDropdown.classList.remove("staff-hidden");
+
+    if (!query) {
+        publicGiftPromoGiftProductDropdown.innerHTML = `
+            <div class="staff-product-empty">Почніть вводити назву товару</div>
+        `;
+        return;
+    }
+
     const matches = STAFF_PRODUCTS.filter(product => {
         if (isPublicGiftPromoBlockedProduct(product)) {
             return false;
@@ -3074,8 +3137,6 @@ function renderPublicGiftPromoGiftProductDropdown(searchText = "") {
         const category = String(product.category_slug || "").toLowerCase();
         const label = String(product.product_label || "").toLowerCase();
 
-        if (!query) return true;
-
         return (
             title.includes(query) ||
             key.includes(query) ||
@@ -3083,8 +3144,6 @@ function renderPublicGiftPromoGiftProductDropdown(searchText = "") {
             label.includes(query)
         );
     });
-
-    publicGiftPromoGiftProductDropdown.classList.remove("staff-hidden");
 
     if (!matches.length) {
         publicGiftPromoGiftProductDropdown.innerHTML = `
@@ -3176,6 +3235,20 @@ if (publicGiftPromoCategoryFilter) {
     });
 }
 
+if (publicGiftPromoProductSearch) {
+    publicGiftPromoProductSearch.addEventListener("input", () => {
+        renderPublicGiftPromoProductFilter(publicGiftPromoProductSearch.value);
+    });
+
+    publicGiftPromoProductSearch.addEventListener("click", event => {
+        event.stopPropagation();
+    });
+
+    publicGiftPromoProductSearch.addEventListener("keydown", event => {
+        event.stopPropagation();
+    });
+}
+    
 if (publicGiftPromoProductFilter) {
     publicGiftPromoProductFilter.addEventListener("change", event => {
         const checkbox = event.target.closest(".public-gift-promo-product-checkbox");

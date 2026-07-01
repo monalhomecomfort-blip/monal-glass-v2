@@ -1025,6 +1025,146 @@
 
         </div>
 
+        <div class="staff-promo-campaign-block" id="public-gift-promo-block">
+
+            <h3>Загальний подарунок</h3>
+
+            <input
+                type="hidden"
+                id="public-gift-promo-type"
+                value="public_gift"
+            >
+
+            <div class="staff-promo-table is-public-gift-promo-table">
+
+                <div class="staff-promo-table-head">
+                    <div>Назва / Умова для подарунку</div>
+                    <div>Подарунок</div>
+                    <div>Початок</div>
+                    <div>Кінець</div>
+                    <div>Активна</div>
+                    <div>Склади staff</div>
+                    <div>Дія</div>
+                </div>
+
+                <div class="staff-promo-table-row">
+
+                    <div class="staff-promo-cell">
+                        <div style="display:grid; gap:8px;">
+                            <input
+                                type="text"
+                                id="public-gift-promo-title"
+                                placeholder="Назва акції"
+                            >
+
+                            <details
+                                class="staff-report-filter staff-personal-status-filter staff-personal-category-filter"
+                                id="public-gift-promo-category-filter"
+                            >
+                                <summary>Категорії для подарунку</summary>
+
+                                <div class="staff-report-filter-menu staff-personal-status-menu">
+                                    <div id="public-gift-promo-category-list"></div>
+                                </div>
+                            </details>
+
+                            <details
+                                class="staff-report-filter staff-personal-status-filter staff-personal-category-filter"
+                                id="public-gift-promo-product-filter"
+                            >
+                                <summary>Товари для подарунку</summary>
+
+                                <div class="staff-report-filter-menu staff-personal-status-menu">
+                                    <div id="public-gift-promo-product-list"></div>
+                                </div>
+                            </details>
+
+                            <input
+                                type="hidden"
+                                id="public-gift-promo-product-ids"
+                            >
+
+                            <div
+                                id="public-gift-promo-products-selected"
+                                class="staff-hint staff-hidden"
+                            ></div>
+                        </div>
+                    </div>
+
+                    <div class="staff-promo-cell">
+                        <div class="staff-product-picker staff-promo-product-picker">
+                            <input
+                                type="text"
+                                id="public-gift-promo-gift-product-search"
+                                placeholder="Подарунок"
+                                autocomplete="off"
+                            >
+
+                            <input
+                                type="hidden"
+                                id="public-gift-promo-gift-product-id"
+                            >
+
+                            <div
+                                id="public-gift-promo-gift-product-dropdown"
+                                class="staff-product-dropdown staff-hidden"
+                            ></div>
+                        </div>
+                    </div>
+
+                    <div class="staff-promo-cell">
+                        <input
+                            type="datetime-local"
+                            id="public-gift-promo-start"
+                        >
+                    </div>
+
+                    <div class="staff-promo-cell">
+                        <input
+                            type="datetime-local"
+                            id="public-gift-promo-end"
+                        >
+                    </div>
+
+                    <div class="staff-promo-cell">
+                        <label class="staff-promo-checkbox">
+                            <input
+                                type="checkbox"
+                                id="public-gift-promo-active"
+                            >
+                            Активна
+                        </label>
+                    </div>
+
+                    <div class="staff-promo-cell">
+                        <details class="staff-report-filter staff-promo-warehouse-filter">
+                            <summary>Обрати склади</summary>
+
+                            <div
+                                id="public-gift-promo-warehouse-list"
+                                class="staff-report-filter-menu"
+                            ></div>
+                        </details>
+                    </div>
+
+                    <div class="staff-promo-cell staff-promo-actions">
+                        <button id="save-public-gift-promo-btn" class="buy-btn" type="button">
+                            Створити
+                        </button>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div id="public-gift-promo-result" class="staff-result staff-hidden"></div>
+
+            <div id="public-gift-promos-list-result" class="staff-result staff-hidden">
+                Список загальних подарунків підключимо наступним кроком.
+            </div>
+
+        </div>
+
         <h2 class="staff-promo-main-title staff-promo-personal-title">
             Персональні пропозиції для зареєстрованих, налаштування
         </h2>

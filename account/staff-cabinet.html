@@ -3048,41 +3048,55 @@ function renderPublicGiftPromoProductFilter(searchText = "") {
             .filter(Boolean)
     );
 
-    const products = STAFF_PRODUCTS.filter(product => {
-        if (isPublicGiftPromoBlockedProduct(product)) {
-            return false;
-        }
+    const products = STAFF_PRODUCTS
+        .filter(product => {
+            if (isPublicGiftPromoBlockedProduct(product)) {
+                return false;
+            }
 
-        const productId = String(product.id || "").trim();
+            const productId = String(product.id || "").trim();
 
-        const title = String(product.display_name || "").toLowerCase();
-        const key = String(product.product_key || "").toLowerCase();
-        const category = String(product.category_slug || "").toLowerCase();
-        const label = String(product.product_label || "").toLowerCase();
+            const searchableText = [
+                product.display_name,
+                product.product_name,
+                product.product_key,
+                product.product_label,
+                product.category_slug,
+                product.price
+            ]
+                .map(value => String(value || "").trim().toLowerCase())
+                .filter(Boolean)
+                .join(" ");
 
-        if (selectedIds.has(productId)) {
-            return true;
-        }
+            if (selectedIds.has(productId)) {
+                return true;
+            }
 
-        if (!query) {
-            return false;
-        }
+            if (!query) {
+                return true;
+            }
 
-        return (
-            title.includes(query) ||
-            key.includes(query) ||
-            category.includes(query) ||
-            label.includes(query)
-        );
-    });
+            return searchableText.includes(query);
+        })
+        .sort((a, b) => {
+            const aSelected = selectedIds.has(String(a.id || "").trim()) ? 0 : 1;
+            const bSelected = selectedIds.has(String(b.id || "").trim()) ? 0 : 1;
+
+            if (aSelected !== bSelected) {
+                return aSelected - bSelected;
+            }
+
+            return String(a.display_name || "").localeCompare(
+                String(b.display_name || ""),
+                "uk"
+            );
+        });
 
     publicGiftPromoProductList.innerHTML = "";
 
     if (!products.length) {
         publicGiftPromoProductList.innerHTML = `
-            <div class="staff-product-empty">
-                ${query ? "Товар не знайдено" : "Почніть вводити назву товару"}
-            </div>
+            <div class="staff-product-empty">Товар не знайдено</div>
         `;
 
         updatePublicGiftPromoSourceLocks();
@@ -3112,7 +3126,6 @@ function renderPublicGiftPromoProductFilter(searchText = "") {
 
     updatePublicGiftPromoSourceLocks();
 }
-
 function renderPublicGiftPromoGiftProductDropdown(searchText = "") {
     if (!publicGiftPromoGiftProductDropdown) return;
 
@@ -3236,11 +3249,21 @@ if (publicGiftPromoCategoryFilter) {
 }
 
 if (publicGiftPromoProductSearch) {
-    publicGiftPromoProductSearch.addEventListener("input", () => {
+    publicGiftPromoProductSearch.addEventListener("input", event => {
+        event.stopPropagation();
+        renderPublicGiftPromoProductFilter(publicGiftPromoProductSearch.value);
+    });
+
+    publicGiftPromoProductSearch.addEventListener("focus", event => {
+        event.stopPropagation();
         renderPublicGiftPromoProductFilter(publicGiftPromoProductSearch.value);
     });
 
     publicGiftPromoProductSearch.addEventListener("click", event => {
+        event.stopPropagation();
+    });
+
+    publicGiftPromoProductSearch.addEventListener("mousedown", event => {
         event.stopPropagation();
     });
 

@@ -13262,6 +13262,8 @@ if (createSaleBtn && saleResult) {
             const personalPromoCodeDiscountAmount = Number(sale.personalPromoCodeDiscountAmount || 0);
             const personalPercentOfferDiscountAmount = Number(sale.personalPercentOfferDiscountAmount || 0);
             const personalPercentOfferNote = String(sale.personalPercentOfferNote || "").replace(/^,\s*/, "");
+            const publicGiftProductName = String(sale.publicGiftProductName || "").trim();
+            const publicGiftPromoNote = String(sale.publicGiftPromoNote || "").replace(/^,\s*/, "");
             const finalTotalAmount = Number(sale.totalAmount || 0);
 
             const saleDiscountLines = [];
@@ -13302,6 +13304,16 @@ if (createSaleBtn && saleResult) {
                     Сума: ${finalTotalAmount} грн<br>
                 `;
 
+            const publicGiftHtml = publicGiftProductName
+                ? `
+                    <br><br>
+                    ${escapeSaleHtml(publicGiftProductName)} × 1
+                    — 0 грн
+                    <br>
+                    ${escapeSaleHtml(publicGiftPromoNote || "Загальний подарунок до акції")}
+                `
+                : "";
+
             const saleItemsHtml = saleItems.length
                 ? saleItems.map(item => `
                     ${item.productName || "—"} × ${item.quantity || 0}
@@ -13309,7 +13321,7 @@ if (createSaleBtn && saleResult) {
                     <br>
                     Залишок було: ${item.stockBefore ?? "—"},
                     стало: ${item.stockAfter ?? "—"}
-                `).join("<br><br>")
+                `).join("<br><br>") + publicGiftHtml
                 : (sale.itemsText || "—").replaceAll("\n", "<br>");
 
             saleResult.innerHTML = `
@@ -13317,7 +13329,7 @@ if (createSaleBtn && saleResult) {
                 Замовлення: ${sale.orderId || "—"}<br>
                 Клієнт: ${sale.customerName || "—"}<br>
                 Склад: ${sale.warehouseName || "—"} ID ${sale.warehouseId || "—"}<br>
-                Товарів у чеку: ${saleItems.length || sale.quantity || 0}<br>
+                Товарів у чеку: ${(saleItems.length || sale.quantity || 0) + (publicGiftProductName ? 1 : 0)}<br>
                 ${saleTotalsHtml}
                 Оплата: ${sale.paymentLabel || "—"}<br><br>
                 <strong>Склад чека:</strong><br>

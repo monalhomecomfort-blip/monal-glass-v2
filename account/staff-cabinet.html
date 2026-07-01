@@ -8132,6 +8132,508 @@ async function savePublicPromoCodePromo() {
             "Помилка зʼєднання при збереженні загального промокоду.";
     }
 }
+
+function getSelectedPublicGiftPromoCategorySlugs() {
+    return getPublicGiftPromoCategoryCheckboxes()
+        .filter(checkbox => checkbox.checked)
+        .map(checkbox => String(checkbox.value || "").trim().toLowerCase())
+        .filter(Boolean);
+}
+
+function getSelectedPublicGiftPromoProductIds() {
+    return getPublicGiftPromoProductCheckboxes()
+        .filter(checkbox => checkbox.checked)
+        .map(checkbox => Number(checkbox.value || 0))
+        .filter(id => Number.isInteger(id) && id > 0);
+}
+
+function getSelectedPublicGiftPromoWarehouseIds() {
+    return Array.from(
+        document.querySelectorAll(".public-gift-promo-warehouse-checkbox:checked")
+    )
+        .map(checkbox => Number(checkbox.value || 0))
+        .filter(id => Number.isInteger(id) && id > 0);
+}
+
+function setPublicGiftPromoWarehouseSelection(warehouseIds = []) {
+    const selectedIds = new Set(
+        warehouseIds
+            .map(id => Number(id || 0))
+            .filter(id => Number.isInteger(id) && id > 0)
+    );
+
+    document
+        .querySelectorAll(".public-gift-promo-warehouse-checkbox")
+        .forEach(checkbox => {
+            checkbox.checked = selectedIds.has(Number(checkbox.value || 0));
+        });
+}
+
+function setPublicGiftPromoCategorySelection(categorySlugs = []) {
+    const selectedSlugs = new Set(
+        categorySlugs
+            .map(slug => String(slug || "").trim().toLowerCase())
+            .filter(Boolean)
+    );
+
+    getPublicGiftPromoCategoryCheckboxes().forEach(checkbox => {
+        checkbox.checked = selectedSlugs.has(
+            String(checkbox.value || "").trim().toLowerCase()
+        );
+    });
+}
+
+function setPublicGiftPromoProductSelection(productIds = []) {
+    const selectedIds = new Set(
+        productIds
+            .map(id => Number(id || 0))
+            .filter(id => Number.isInteger(id) && id > 0)
+    );
+
+    getPublicGiftPromoProductCheckboxes().forEach(checkbox => {
+        checkbox.checked = selectedIds.has(Number(checkbox.value || 0));
+    });
+
+    updatePublicGiftPromoProductValue();
+}
+
+function getPublicGiftPromoGiftText(campaign) {
+    const giftProduct = campaign?.gift_product || {};
+
+    return (
+        giftProduct.display_name ||
+        giftProduct.product_name ||
+        giftProduct.product_label ||
+        giftProduct.product_key ||
+        "—"
+    );
+}
+
+function resetPublicGiftPromoForm() {
+    PUBLIC_GIFT_PROMO_EDIT_ID = 0;
+
+    if (publicGiftPromoTitleInput) {
+        publicGiftPromoTitleInput.value = "";
+    }
+
+    clearPublicGiftPromoCategories();
+    clearPublicGiftPromoProducts();
+
+    if (publicGiftPromoGiftProductSearch) {
+        publicGiftPromoGiftProductSearch.value = "";
+    }
+
+    if (publicGiftPromoGiftProductId) {
+        publicGiftPromoGiftProductId.value = "";
+    }
+
+    if (publicGiftPromoGiftProductDropdown) {
+        publicGiftPromoGiftProductDropdown.classList.add("staff-hidden");
+        publicGiftPromoGiftProductDropdown.innerHTML = "";
+    }
+
+    if (publicGiftPromoStartInput) {
+        publicGiftPromoStartInput.value = "";
+    }
+
+    if (publicGiftPromoEndInput) {
+        publicGiftPromoEndInput.value = "";
+    }
+
+    if (publicGiftPromoActiveInput) {
+        publicGiftPromoActiveInput.checked = false;
+    }
+
+    document
+        .querySelectorAll(".public-gift-promo-warehouse-checkbox")
+        .forEach(checkbox => {
+            checkbox.checked = false;
+        });
+
+    if (publicGiftPromoCategoryFilter) {
+        publicGiftPromoCategoryFilter.style.opacity = "1";
+        publicGiftPromoCategoryFilter.style.pointerEvents = "";
+        publicGiftPromoCategoryFilter.open = false;
+    }
+
+    if (publicGiftPromoProductFilter) {
+        publicGiftPromoProductFilter.style.opacity = "1";
+        publicGiftPromoProductFilter.style.pointerEvents = "";
+        publicGiftPromoProductFilter.open = false;
+    }
+
+    if (savePublicGiftPromoBtn) {
+        savePublicGiftPromoBtn.textContent = "Створити";
+    }
+
+    updatePublicGiftPromoSourceLocks();
+}
+
+function startEditPublicGiftPromo(promoId) {
+    const campaign = PUBLIC_GIFT_PROMOS_CACHE.find(item =>
+        Number(item.id || 0) === Number(promoId || 0)
+    );
+
+    if (!campaign) return;
+
+    PUBLIC_GIFT_PROMO_EDIT_ID = Number(campaign.id || 0);
+
+    if (publicGiftPromoTitleInput) {
+        publicGiftPromoTitleInput.value = campaign.title || "";
+    }
+
+    if (publicGiftPromoStartInput) {
+        publicGiftPromoStartInput.value = formatFocusPromoDateForInput(campaign.starts_at);
+    }
+
+    if (publicGiftPromoEndInput) {
+        publicGiftPromoEndInput.value = formatFocusPromoDateForInput(campaign.ends_at);
+    }
+
+    if (publicGiftPromoActiveInput) {
+        publicGiftPromoActiveInput.checked = Boolean(campaign.is_active);
+    }
+
+    clearPublicGiftPromoCategories();
+    clearPublicGiftPromoProducts();
+
+    const productIds = getPublicPercentPromoTargetProductIds(campaign);
+    const categorySlugs = getPublicPercentPromoTargetCategorySlugs(campaign);
+
+    if (productIds.length) {
+        setPublicGiftPromoProductSelection(productIds);
+    } else if (categorySlugs.length) {
+        setPublicGiftPromoCategorySelection(categorySlugs);
+    }
+
+    const giftProduct = campaign.gift_product || {};
+    const giftProductId = Number(campaign.focus_product_id || giftProduct.id || 0);
+
+    if (publicGiftPromoGiftProductId) {
+        publicGiftPromoGiftProductId.value = giftProductId ? String(giftProductId) : "";
+    }
+
+    if (publicGiftPromoGiftProductSearch) {
+        publicGiftPromoGiftProductSearch.value = getPublicGiftPromoGiftText(campaign);
+    }
+
+    setPublicGiftPromoWarehouseSelection(
+        getFocusPromoWarehouseIds(campaign)
+    );
+
+    if (savePublicGiftPromoBtn) {
+        savePublicGiftPromoBtn.textContent = "Зберегти";
+    }
+
+    if (publicGiftPromoResult) {
+        publicGiftPromoResult.classList.remove("staff-hidden");
+        publicGiftPromoResult.innerHTML = "Редагуємо загальний подарунок.";
+    }
+
+    updatePublicGiftPromoSourceLocks();
+
+    if (publicGiftPromoTitleInput) {
+        publicGiftPromoTitleInput.scrollIntoView({
+            behavior: "smooth",
+            block: "center"
+        });
+    }
+}
+
+function renderPublicGiftPromosList(campaigns) {
+    if (!publicGiftPromosListResult) return;
+
+    PUBLIC_GIFT_PROMOS_CACHE = Array.isArray(campaigns) ? campaigns : [];
+
+    publicGiftPromosListResult.classList.remove("staff-hidden");
+
+    if (!PUBLIC_GIFT_PROMOS_CACHE.length) {
+        publicGiftPromosListResult.innerHTML = `
+            <div class="staff-promo-campaign-block">
+                <h3>Створені загальні подарунки</h3>
+
+                <div class="staff-users-filter-bar">
+                    <button
+                        type="button"
+                        class="buy-btn staff-users-filter-btn ${PUBLIC_GIFT_PROMOS_FILTER === "active" ? "is-active" : ""}"
+                        onclick="setPublicGiftPromosFilter('active')"
+                    >
+                        Активні
+                    </button>
+
+                    <button
+                        type="button"
+                        class="buy-btn staff-users-filter-btn ${PUBLIC_GIFT_PROMOS_FILTER === "inactive" ? "is-active" : ""}"
+                        onclick="setPublicGiftPromosFilter('inactive')"
+                    >
+                        Неактивні
+                    </button>
+
+                    <button
+                        type="button"
+                        class="buy-btn staff-users-filter-btn ${PUBLIC_GIFT_PROMOS_FILTER === "all" ? "is-active" : ""}"
+                        onclick="setPublicGiftPromosFilter('all')"
+                    >
+                        Всі
+                    </button>
+                </div>
+
+                <p>Поки що немає створених загальних подарунків.</p>
+            </div>
+        `;
+        return;
+    }
+
+    const visibleCampaigns = PUBLIC_GIFT_PROMOS_CACHE.filter(campaign => {
+        const isActive = isFocusPromoActive(campaign);
+
+        if (PUBLIC_GIFT_PROMOS_FILTER === "active") {
+            return isActive;
+        }
+
+        if (PUBLIC_GIFT_PROMOS_FILTER === "inactive") {
+            return !isActive;
+        }
+
+        return true;
+    });
+
+    const tableHtml = visibleCampaigns.length
+        ? `
+            <div class="staff-promo-table is-public-gift-promo-list-table">
+                <div class="staff-promo-table-head">
+                    <div>Назва</div>
+                    <div>Умова</div>
+                    <div>Подарунок</div>
+                    <div>Початок</div>
+                    <div>Кінець</div>
+                    <div>Активна</div>
+                    <div>Склади staff</div>
+                    <div>Дія</div>
+                </div>
+
+                ${visibleCampaigns.map(campaign => {
+                    const isActive = isFocusPromoActive(campaign);
+
+                    return `
+                        <div class="staff-promo-table-row">
+                            <div class="staff-promo-cell">
+                                ${escapeStaffHtml(campaign.title || "Загальний подарунок")}
+                            </div>
+
+                            <div class="staff-promo-cell">
+                                ${escapeStaffHtml(getPublicPercentPromoTargetText(campaign))}
+                            </div>
+
+                            <div class="staff-promo-cell">
+                                ${escapeStaffHtml(getPublicGiftPromoGiftText(campaign))}
+                            </div>
+
+                            <div class="staff-promo-cell">
+                                ${escapeStaffHtml(formatFocusPromoDate(campaign.starts_at))}
+                            </div>
+
+                            <div class="staff-promo-cell">
+                                ${escapeStaffHtml(formatFocusPromoDate(campaign.ends_at))}
+                            </div>
+
+                            <div class="staff-promo-cell">
+                                ${isActive ? "Так" : "Ні"}
+                            </div>
+
+                            <div class="staff-promo-cell">
+                                ${escapeStaffHtml(getFocusPromoWarehousesText(campaign))}
+                            </div>
+
+                            <div class="staff-promo-cell staff-promo-actions">
+                                <button
+                                    type="button"
+                                    class="buy-btn public-gift-promo-edit-btn"
+                                    data-public-gift-promo-edit-id="${campaign.id}"
+                                >
+                                    Редагувати
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }).join("")}
+            </div>
+        `
+        : `
+            <p>Загальних подарунків за цим фільтром немає.</p>
+        `;
+
+    publicGiftPromosListResult.innerHTML = `
+        <div class="staff-promo-campaign-block">
+            <h3>Створені загальні подарунки</h3>
+
+            <div class="staff-users-filter-bar">
+                <button
+                    type="button"
+                    class="buy-btn staff-users-filter-btn ${PUBLIC_GIFT_PROMOS_FILTER === "active" ? "is-active" : ""}"
+                    onclick="setPublicGiftPromosFilter('active')"
+                >
+                    Активні
+                </button>
+
+                <button
+                    type="button"
+                    class="buy-btn staff-users-filter-btn ${PUBLIC_GIFT_PROMOS_FILTER === "inactive" ? "is-active" : ""}"
+                    onclick="setPublicGiftPromosFilter('inactive')"
+                >
+                    Неактивні
+                </button>
+
+                <button
+                    type="button"
+                    class="buy-btn staff-users-filter-btn ${PUBLIC_GIFT_PROMOS_FILTER === "all" ? "is-active" : ""}"
+                    onclick="setPublicGiftPromosFilter('all')"
+                >
+                    Всі
+                </button>
+            </div>
+
+            ${tableHtml}
+        </div>
+    `;
+}
+
+if (publicGiftPromosListResult) {
+    publicGiftPromosListResult.addEventListener("click", event => {
+        const editButton = event.target.closest(".public-gift-promo-edit-btn");
+
+        if (!editButton) return;
+
+        startEditPublicGiftPromo(editButton.dataset.publicGiftPromoEditId);
+    });
+}
+
+async function loadPublicGiftPromos() {
+    if (!publicGiftPromosListResult) return;
+
+    publicGiftPromosListResult.classList.remove("staff-hidden");
+    publicGiftPromosListResult.innerHTML = "Завантажую загальні подарунки…";
+
+    try {
+        const response = await fetch(
+            "https://monal-mono-pay-production.up.railway.app/api/staff/public-gift-promos-list",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    staffId: staff.id
+                })
+            }
+        );
+
+        const data = await response.json();
+
+        if (!data.ok) {
+            publicGiftPromosListResult.innerHTML =
+                data.error || "Не вдалося завантажити список загальних подарунків.";
+            return;
+        }
+
+        renderPublicGiftPromosList(data.campaigns || []);
+
+    } catch (err) {
+        console.error(err);
+        publicGiftPromosListResult.innerHTML =
+            "Помилка зʼєднання при завантаженні списку загальних подарунків.";
+    }
+}
+
+async function savePublicGiftPromo() {
+    if (!publicGiftPromoResult) return;
+
+    const title = publicGiftPromoTitleInput?.value.trim() || "";
+    const giftProductId = Number(publicGiftPromoGiftProductId?.value || 0);
+    const startsAt = normalizeFocusPromoDateForApi(publicGiftPromoStartInput?.value);
+    const endsAt = normalizeFocusPromoDateForApi(publicGiftPromoEndInput?.value);
+    const isActive = publicGiftPromoActiveInput?.checked ? 1 : 0;
+    const productIds = getSelectedPublicGiftPromoProductIds();
+    let categorySlugs = getSelectedPublicGiftPromoCategorySlugs();
+    const warehouseIds = getSelectedPublicGiftPromoWarehouseIds();
+
+    publicGiftPromoResult.classList.remove("staff-hidden");
+
+    if (!title) {
+        publicGiftPromoResult.innerHTML = "Вкажіть назву загального подарунку.";
+        return;
+    }
+
+    if (!productIds.length && !categorySlugs.length) {
+        publicGiftPromoResult.innerHTML = "Оберіть умову: категорію або конкретний товар.";
+        return;
+    }
+
+    if (!giftProductId) {
+        publicGiftPromoResult.innerHTML = "Оберіть товар-подарунок зі списку.";
+        return;
+    }
+
+    if (!startsAt || !endsAt) {
+        publicGiftPromoResult.innerHTML = "Вкажіть дату початку і дату завершення.";
+        return;
+    }
+
+    if (!warehouseIds.length) {
+        publicGiftPromoResult.innerHTML = "Оберіть хоча б один staff-склад.";
+        return;
+    }
+
+    if (productIds.length) {
+        categorySlugs = [];
+    }
+
+    publicGiftPromoResult.innerHTML = "Зберігаю загальний подарунок…";
+
+    try {
+        const response = await fetch(
+            "https://monal-mono-pay-production.up.railway.app/api/staff/public-gift-promo-save",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    staffId: staff.id,
+                    promoId: PUBLIC_GIFT_PROMO_EDIT_ID,
+                    title,
+                    giftProductId,
+                    startsAt,
+                    endsAt,
+                    isActive,
+                    categorySlugs,
+                    productIds,
+                    warehouseIds
+                })
+            }
+        );
+
+        const data = await response.json();
+
+        if (!data.ok) {
+            publicGiftPromoResult.innerHTML =
+                data.error || "Не вдалося зберегти загальний подарунок.";
+            return;
+        }
+
+        resetPublicGiftPromoForm();
+
+        publicGiftPromoResult.classList.remove("staff-hidden");
+        publicGiftPromoResult.innerHTML = "Загальний подарунок збережено.";
+
+        await loadPublicGiftPromos();
+
+    } catch (err) {
+        console.error(err);
+        publicGiftPromoResult.innerHTML =
+            "Помилка зʼєднання при збереженні загального подарунку.";
+    }
+}
     
 function getPersonalOfferStatusText(value) {
     const statuses = String(value || "all")
@@ -9863,6 +10365,7 @@ if (openPromosSectionBtn && promosSection) {
         await loadFocusPromos();
         await loadPublicPercentPromos();
         await loadPublicPromoCodePromos();
+        await loadPublicGiftPromos();
         await loadPersonalOffers();
     });
 }
@@ -10205,6 +10708,12 @@ if (savePublicPercentPromoBtn) {
 if (savePublicPromoCodeBtn) {
     savePublicPromoCodeBtn.addEventListener("click", () => {
         savePublicPromoCodePromo();
+    });
+}
+
+if (savePublicGiftPromoBtn) {
+    savePublicGiftPromoBtn.addEventListener("click", () => {
+        savePublicGiftPromo();
     });
 }
 

@@ -2810,6 +2810,388 @@ if (publicPercentPromoProductFilter) {
     });
 }
 
+/* ===================== PUBLIC GIFT PROMO FORM ===================== */
+
+function isPublicGiftPromoBlockedProduct(product) {
+    const values = [
+        product?.category_slug,
+        product?.product_label,
+        product?.product_key,
+        product?.display_name,
+        product?.product_name
+    ]
+        .map(value => String(value || "").trim().toLowerCase())
+        .filter(Boolean);
+
+    return (
+        isStaffPromoCertificateProduct(product) ||
+        values.some(value =>
+            value === "consumables" ||
+            value.includes("consumable_") ||
+            value.includes("розхідник")
+        )
+    );
+}
+
+function getPublicGiftPromoCategoryCheckboxes() {
+    if (!publicGiftPromoCategoryFilter) return [];
+
+    return Array.from(
+        publicGiftPromoCategoryFilter.querySelectorAll(".public-gift-promo-category-checkbox")
+    );
+}
+
+function getPublicGiftPromoProductCheckboxes() {
+    if (!publicGiftPromoProductFilter) return [];
+
+    return Array.from(
+        publicGiftPromoProductFilter.querySelectorAll(".public-gift-promo-product-checkbox")
+    );
+}
+
+function updatePublicGiftPromoCategorySummary() {
+    if (!publicGiftPromoCategoryFilter) return;
+
+    const summary = publicGiftPromoCategoryFilter.querySelector("summary");
+
+    if (!summary) return;
+
+    const checked = getPublicGiftPromoCategoryCheckboxes()
+        .filter(input => input.checked);
+
+    if (!checked.length) {
+        summary.textContent = "Категорії для подарунку";
+        return;
+    }
+
+    const labels = checked
+        .map(input => input.dataset.categoryLabel || input.value)
+        .filter(Boolean);
+
+    summary.textContent = labels.length > 2
+        ? `Обрано: ${labels.length}`
+        : labels.join(", ");
+}
+
+function updatePublicGiftPromoProductSummary() {
+    if (!publicGiftPromoProductFilter) return;
+
+    const summary = publicGiftPromoProductFilter.querySelector("summary");
+
+    if (!summary) return;
+
+    const checked = getPublicGiftPromoProductCheckboxes()
+        .filter(input => input.checked);
+
+    if (!checked.length) {
+        summary.textContent = "Товари для подарунку";
+        return;
+    }
+
+    const labels = checked
+        .map(input => input.dataset.productLabel || input.value)
+        .filter(Boolean);
+
+    summary.textContent = labels.length > 2
+        ? `Обрано: ${labels.length}`
+        : labels.join(", ");
+}
+
+function updatePublicGiftPromoProductValue() {
+    if (!publicGiftPromoProductIds) return;
+
+    const selectedIds = getPublicGiftPromoProductCheckboxes()
+        .filter(input => input.checked)
+        .map(input => String(input.value || "").trim())
+        .filter(Boolean);
+
+    publicGiftPromoProductIds.value = selectedIds.join(",");
+
+    if (publicGiftPromoProductsSelected) {
+        if (!selectedIds.length) {
+            publicGiftPromoProductsSelected.classList.add("staff-hidden");
+            publicGiftPromoProductsSelected.innerHTML = "";
+            return;
+        }
+
+        const labels = getPublicGiftPromoProductCheckboxes()
+            .filter(input => input.checked)
+            .map(input => input.dataset.productLabel || input.value)
+            .filter(Boolean);
+
+        publicGiftPromoProductsSelected.classList.remove("staff-hidden");
+        publicGiftPromoProductsSelected.innerHTML =
+            "Обрано товарів: " + labels.join(", ");
+    }
+}
+
+function clearPublicGiftPromoCategories() {
+    getPublicGiftPromoCategoryCheckboxes().forEach(checkbox => {
+        checkbox.checked = false;
+    });
+
+    updatePublicGiftPromoCategorySummary();
+}
+
+function clearPublicGiftPromoProducts() {
+    getPublicGiftPromoProductCheckboxes().forEach(checkbox => {
+        checkbox.checked = false;
+    });
+
+    if (publicGiftPromoProductIds) {
+        publicGiftPromoProductIds.value = "";
+    }
+
+    if (publicGiftPromoProductsSelected) {
+        publicGiftPromoProductsSelected.classList.add("staff-hidden");
+        publicGiftPromoProductsSelected.innerHTML = "";
+    }
+
+    updatePublicGiftPromoProductSummary();
+}
+
+function updatePublicGiftPromoSourceLocks() {
+    const categoryCheckboxes = getPublicGiftPromoCategoryCheckboxes();
+    const productCheckboxes = getPublicGiftPromoProductCheckboxes();
+
+    const hasSelectedCategory = categoryCheckboxes.some(item => item.checked);
+    const hasSelectedProduct = productCheckboxes.some(item => item.checked);
+
+    productCheckboxes.forEach(checkbox => {
+        checkbox.disabled = hasSelectedCategory;
+
+        const label = checkbox.closest("label");
+
+        if (label) {
+            label.style.opacity = hasSelectedCategory ? "0.45" : "1";
+            label.style.pointerEvents = hasSelectedCategory ? "none" : "";
+        }
+    });
+
+    categoryCheckboxes.forEach(checkbox => {
+        checkbox.disabled = hasSelectedProduct;
+
+        const label = checkbox.closest("label");
+
+        if (label) {
+            label.style.opacity = hasSelectedProduct ? "0.45" : "1";
+            label.style.pointerEvents = hasSelectedProduct ? "none" : "";
+        }
+    });
+
+    if (publicGiftPromoProductFilter) {
+        publicGiftPromoProductFilter.style.opacity = hasSelectedCategory ? "0.55" : "1";
+        publicGiftPromoProductFilter.style.pointerEvents = hasSelectedCategory ? "none" : "";
+
+        if (hasSelectedCategory) {
+            publicGiftPromoProductFilter.open = false;
+        }
+    }
+
+    if (publicGiftPromoCategoryFilter) {
+        publicGiftPromoCategoryFilter.style.opacity = hasSelectedProduct ? "0.55" : "1";
+        publicGiftPromoCategoryFilter.style.pointerEvents = hasSelectedProduct ? "none" : "";
+
+        if (hasSelectedProduct) {
+            publicGiftPromoCategoryFilter.open = false;
+        }
+    }
+
+    updatePublicGiftPromoCategorySummary();
+    updatePublicGiftPromoProductSummary();
+    updatePublicGiftPromoProductValue();
+}
+
+function renderPublicGiftPromoCategoryFilter() {
+    if (!publicGiftPromoCategoryList) return;
+
+    const categories = getPersonalPercentOfferCategories();
+
+    publicGiftPromoCategoryList.innerHTML = "";
+
+    categories.forEach(category => {
+        const label = document.createElement("label");
+
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.className = "public-gift-promo-category-checkbox";
+        checkbox.value = category.value;
+        checkbox.dataset.categoryLabel = category.label;
+
+        label.appendChild(checkbox);
+        label.appendChild(document.createTextNode(" " + category.label));
+
+        publicGiftPromoCategoryList.appendChild(label);
+    });
+
+    updatePublicGiftPromoSourceLocks();
+}
+
+function renderPublicGiftPromoProductFilter() {
+    if (!publicGiftPromoProductList) return;
+
+    const products = STAFF_PRODUCTS.filter(product => {
+        return !isPublicGiftPromoBlockedProduct(product);
+    });
+
+    publicGiftPromoProductList.innerHTML = "";
+
+    products.forEach(product => {
+        const productId = String(product.id || "").trim();
+        const productTitle = String(product.display_name || product.product_key || "").trim();
+
+        if (!productId || !productTitle) return;
+
+        const label = document.createElement("label");
+
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.className = "public-gift-promo-product-checkbox";
+        checkbox.value = productId;
+        checkbox.dataset.productLabel = productTitle;
+
+        label.appendChild(checkbox);
+        label.appendChild(document.createTextNode(" " + productTitle));
+
+        publicGiftPromoProductList.appendChild(label);
+    });
+
+    updatePublicGiftPromoSourceLocks();
+}
+
+function renderPublicGiftPromoGiftProductDropdown(searchText = "") {
+    if (!publicGiftPromoGiftProductDropdown) return;
+
+    const query = String(searchText || "").trim().toLowerCase();
+
+    const matches = STAFF_PRODUCTS.filter(product => {
+        if (isPublicGiftPromoBlockedProduct(product)) {
+            return false;
+        }
+
+        const title = String(product.display_name || "").toLowerCase();
+        const key = String(product.product_key || "").toLowerCase();
+        const category = String(product.category_slug || "").toLowerCase();
+        const label = String(product.product_label || "").toLowerCase();
+
+        if (!query) return true;
+
+        return (
+            title.includes(query) ||
+            key.includes(query) ||
+            category.includes(query) ||
+            label.includes(query)
+        );
+    });
+
+    publicGiftPromoGiftProductDropdown.classList.remove("staff-hidden");
+
+    if (!matches.length) {
+        publicGiftPromoGiftProductDropdown.innerHTML = `
+            <div class="staff-product-empty">Товар не знайдено</div>
+        `;
+        return;
+    }
+
+    publicGiftPromoGiftProductDropdown.innerHTML = matches.map(product => `
+        <div
+            class="staff-product-option"
+            data-product-id="${product.id}"
+            data-product-title="${escapeSaleHtml(product.display_name || product.product_key)}"
+        >
+            ${escapeSaleHtml(product.display_name || product.product_key)} · ${product.price || 0} грн
+        </div>
+    `).join("");
+}
+
+function bindPublicGiftPromoGiftProductPicker() {
+    if (
+        !publicGiftPromoGiftProductSearch ||
+        !publicGiftPromoGiftProductId ||
+        !publicGiftPromoGiftProductDropdown
+    ) {
+        return;
+    }
+
+    publicGiftPromoGiftProductSearch.addEventListener("input", async () => {
+        publicGiftPromoGiftProductId.value = "";
+
+        await loadStaffProducts();
+        renderPublicGiftPromoGiftProductDropdown(publicGiftPromoGiftProductSearch.value);
+    });
+
+    publicGiftPromoGiftProductSearch.addEventListener("focus", async () => {
+        await loadStaffProducts();
+        renderPublicGiftPromoGiftProductDropdown(publicGiftPromoGiftProductSearch.value);
+    });
+
+    const picker = publicGiftPromoGiftProductSearch.closest(".staff-product-picker");
+
+    if (picker) {
+        picker.addEventListener("click", async event => {
+            const rect = picker.getBoundingClientRect();
+            const clickedArrowZone = event.clientX >= rect.right - 52;
+
+            if (!clickedArrowZone) return;
+
+            await loadStaffProducts();
+            renderPublicGiftPromoGiftProductDropdown("");
+            publicGiftPromoGiftProductSearch.focus();
+        });
+    }
+
+    publicGiftPromoGiftProductDropdown.addEventListener("click", event => {
+        const option = event.target.closest(".staff-product-option");
+
+        if (!option) return;
+
+        publicGiftPromoGiftProductId.value = option.dataset.productId || "";
+        publicGiftPromoGiftProductSearch.value = option.dataset.productTitle || "";
+
+        publicGiftPromoGiftProductDropdown.classList.add("staff-hidden");
+        publicGiftPromoGiftProductDropdown.innerHTML = "";
+    });
+
+    document.addEventListener("click", event => {
+        if (
+            !publicGiftPromoGiftProductSearch.contains(event.target) &&
+            !publicGiftPromoGiftProductDropdown.contains(event.target)
+        ) {
+            publicGiftPromoGiftProductDropdown.classList.add("staff-hidden");
+        }
+    });
+}
+
+if (publicGiftPromoCategoryFilter) {
+    publicGiftPromoCategoryFilter.addEventListener("change", event => {
+        const checkbox = event.target.closest(".public-gift-promo-category-checkbox");
+
+        if (!checkbox) return;
+
+        if (checkbox.checked) {
+            clearPublicGiftPromoProducts();
+        }
+
+        updatePublicGiftPromoSourceLocks();
+    });
+}
+
+if (publicGiftPromoProductFilter) {
+    publicGiftPromoProductFilter.addEventListener("change", event => {
+        const checkbox = event.target.closest(".public-gift-promo-product-checkbox");
+
+        if (!checkbox) return;
+
+        if (checkbox.checked) {
+            clearPublicGiftPromoCategories();
+        }
+
+        updatePublicGiftPromoSourceLocks();
+    });
+}
+
+bindPublicGiftPromoGiftProductPicker();
+
 function getPersonalGiftOfferCategoryCheckboxes() {
     if (!personalGiftOfferCategoryFilter) return [];
 
@@ -9473,6 +9855,8 @@ if (openPromosSectionBtn && promosSection) {
         renderPersonalPercentOfferCategoryFilter();
         renderPublicPercentPromoCategoryFilter();
         renderPublicPercentPromoProductFilter();
+        renderPublicGiftPromoCategoryFilter();
+        renderPublicGiftPromoProductFilter();
         renderPersonalGiftOfferCategoryFilter();
         renderPersonalGiftOfferMainProductFilter();
         await loadStaffWarehouses();

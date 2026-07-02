@@ -471,39 +471,7 @@
     </div>
 </div>
 
-<script>
-function openGiftPackagingModal() {
-    const modal = document.getElementById("gift-packaging-modal");
 
-    if (!modal) return;
-
-    modal.style.display = "flex";
-    document.body.classList.add("gift-packaging-open");
-}
-
-function closeGiftPackagingModal() {
-    const modal = document.getElementById("gift-packaging-modal");
-
-    if (!modal) return;
-
-    modal.style.display = "none";
-    document.body.classList.remove("gift-packaging-open");
-}
-
-document.addEventListener("click", function (event) {
-    const modal = document.getElementById("gift-packaging-modal");
-
-    if (modal && event.target === modal) {
-        closeGiftPackagingModal();
-    }
-});
-
-document.addEventListener("keydown", function (event) {
-    if (event.key === "Escape") {
-        closeGiftPackagingModal();
-    }
-});
-</script>    
 
 <!-- МОДАЛЬНЕ ВІКНО ПЕРЕВІРКИ ДАНИХ -->
 <div id="payment-modal" class="modal" style="display:none;">

@@ -1043,7 +1043,7 @@
                     <div>Початок</div>
                     <div>Кінець</div>
                     <div>Активна</div>
-                    <div>Склади staff</div>
+                    <div>Сайт / склади staff</div>
                     <div>Дія</div>
                 </div>
 
@@ -1145,14 +1145,24 @@
                     </div>
 
                     <div class="staff-promo-cell">
-                        <details class="staff-report-filter staff-promo-warehouse-filter">
-                            <summary>Обрати склади</summary>
+                        <div style="display:grid; gap:8px;">
+                            <label class="staff-promo-checkbox">
+                                <input
+                                    type="checkbox"
+                                    id="public-gift-promo-site-enabled"
+                                >
+                                Сайт
+                            </label>
 
-                            <div
-                                id="public-gift-promo-warehouse-list"
-                                class="staff-report-filter-menu"
-                            ></div>
-                        </details>
+                            <details class="staff-report-filter staff-promo-warehouse-filter">
+                                <summary>Обрати склади</summary>
+
+                                <div
+                                    id="public-gift-promo-warehouse-list"
+                                    class="staff-report-filter-menu"
+                                ></div>
+                            </details>
+                        </div>
                     </div>
 
                     <div class="staff-promo-cell staff-promo-actions">
@@ -2103,6 +2113,7 @@ const publicGiftPromoGiftProductDropdown = document.getElementById("public-gift-
 const publicGiftPromoStartInput = document.getElementById("public-gift-promo-start");
 const publicGiftPromoEndInput = document.getElementById("public-gift-promo-end");
 const publicGiftPromoActiveInput = document.getElementById("public-gift-promo-active");
+const publicGiftPromoSiteEnabledInput = document.getElementById("public-gift-promo-site-enabled");
 const publicGiftPromoWarehouseList = document.getElementById("public-gift-promo-warehouse-list");
 const savePublicGiftPromoBtn = document.getElementById("save-public-gift-promo-btn");
 const publicGiftPromoResult = document.getElementById("public-gift-promo-result");
@@ -8356,6 +8367,10 @@ function resetPublicGiftPromoForm() {
         publicGiftPromoActiveInput.checked = false;
     }
 
+    if (publicGiftPromoSiteEnabledInput) {
+        publicGiftPromoSiteEnabledInput.checked = false;
+    }
+
     document
         .querySelectorAll(".public-gift-promo-warehouse-checkbox")
         .forEach(checkbox => {
@@ -8404,6 +8419,10 @@ function startEditPublicGiftPromo(promoId) {
 
     if (publicGiftPromoActiveInput) {
         publicGiftPromoActiveInput.checked = Boolean(campaign.is_active);
+    }
+
+    if (publicGiftPromoSiteEnabledInput) {
+        publicGiftPromoSiteEnabledInput.checked = Boolean(campaign.site_enabled);
     }
 
     clearPublicGiftPromoCategories();
@@ -8520,7 +8539,7 @@ function renderPublicGiftPromosList(campaigns) {
                     <div>Початок</div>
                     <div>Кінець</div>
                     <div>Активна</div>
-                    <div>Склади staff</div>
+                    <div>Сайт / склади staff</div>
                     <div>Дія</div>
                 </div>
 
@@ -8665,6 +8684,7 @@ async function savePublicGiftPromo() {
     const startsAt = normalizeFocusPromoDateForApi(publicGiftPromoStartInput?.value);
     const endsAt = normalizeFocusPromoDateForApi(publicGiftPromoEndInput?.value);
     const isActive = publicGiftPromoActiveInput?.checked ? 1 : 0;
+    const siteEnabled = publicGiftPromoSiteEnabledInput?.checked ? 1 : 0;
     const productIds = getSelectedPublicGiftPromoProductIds();
     let categorySlugs = getSelectedPublicGiftPromoCategorySlugs();
     const warehouseIds = getSelectedPublicGiftPromoWarehouseIds();
@@ -8691,8 +8711,8 @@ async function savePublicGiftPromo() {
         return;
     }
 
-    if (!warehouseIds.length) {
-        publicGiftPromoResult.innerHTML = "Оберіть хоча б один staff-склад.";
+    if (!siteEnabled && !warehouseIds.length) {
+        publicGiftPromoResult.innerHTML = "Оберіть сайт або хоча б один staff-склад.";
         return;
     }
 
@@ -8718,6 +8738,7 @@ async function savePublicGiftPromo() {
                     startsAt,
                     endsAt,
                     isActive,
+                    siteEnabled,
                     categorySlugs,
                     productIds,
                     warehouseIds

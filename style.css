@@ -3251,36 +3251,68 @@ body.site-promo-modal-open {
 /* ===================== CART PAGE — MŌNAL PREMIUM VISUAL ===================== */
 
 .page-cart {
-    background:
-        radial-gradient(circle at 12% 18%, rgba(232, 225, 214, 0.16), transparent 34%),
-        radial-gradient(circle at 88% 22%, rgba(170, 156, 141, 0.14), transparent 36%),
-        linear-gradient(135deg, #060606 0%, #191919 42%, #3b3a37 100%);
+    position: relative;
+    min-height: 100vh;
+    background: #090909;
     color: #e8e1d6;
+    overflow: hidden;
+}
+
+.page-cart::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+
+    background:
+        linear-gradient(rgba(8, 8, 8, 0.46), rgba(8, 8, 8, 0.58)),
+        url("images/backgrounds/cart-atmosphere.jpg") center center / cover no-repeat;
+
+    filter: blur(12px) saturate(0.92) brightness(0.72);
+    transform: scale(1.08);
+    pointer-events: none;
+}
+
+.page-cart::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+
+    background:
+        radial-gradient(circle at 18% 22%, rgba(215, 195, 162, 0.12), transparent 34%),
+        radial-gradient(circle at 82% 18%, rgba(120, 112, 102, 0.14), transparent 32%),
+        linear-gradient(135deg, rgba(9, 9, 9, 0.32), rgba(9, 9, 9, 0.54));
+
+    pointer-events: none;
 }
 
 .page-cart .container.cart-page-container {
-    max-width: 1360px;
-    padding-top: 150px;
-    padding-bottom: 90px;
+    position: relative;
+    z-index: 1;
+
+    max-width: 1220px;
+    padding-top: 138px;
+    padding-bottom: 72px;
 }
 
 .monal-cart-shell {
     width: 100%;
-    padding: 34px 38px 38px;
+    padding: 28px 30px 30px;
 
-    border: 1px solid rgba(232, 225, 214, 0.22);
-    border-radius: 28px;
+    border: 1px solid rgba(232, 225, 214, 0.18);
+    border-radius: 26px;
 
     background:
-        linear-gradient(135deg, rgba(80, 76, 70, 0.72), rgba(18, 18, 18, 0.88)),
-        rgba(4, 4, 4, 0.64);
+        linear-gradient(135deg, rgba(70, 66, 61, 0.68), rgba(16, 16, 16, 0.84)),
+        rgba(4, 4, 4, 0.52);
 
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
 
     box-shadow:
-        0 24px 70px rgba(0, 0, 0, 0.42),
-        inset 0 1px 0 rgba(255, 255, 255, 0.06);
+        0 22px 54px rgba(0, 0, 0, 0.34),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
 .monal-cart-head {
@@ -3324,8 +3356,8 @@ body.site-promo-modal-open {
 
 .monal-cart-grid {
     display: grid;
-    grid-template-columns: minmax(0, 1.45fr) minmax(360px, 0.75fr);
-    gap: 32px;
+    grid-template-columns: minmax(0, 1.38fr) minmax(320px, 0.72fr);
+    gap: 24px;
     align-items: start;
 }
 
@@ -3881,8 +3913,8 @@ body.gift-packaging-open {
 
 .page-cart .monal-cart-grid {
     display: grid !important;
-    grid-template-columns: minmax(0, 1.45fr) minmax(360px, 0.75fr) !important;
-    gap: 32px !important;
+    grid-template-columns: minmax(0, 1.38fr) minmax(320px, 0.72fr) !important;
+    gap: 24px !important;
     align-items: start !important;
 }
 

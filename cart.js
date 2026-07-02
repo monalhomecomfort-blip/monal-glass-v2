@@ -299,12 +299,19 @@ function getCartItemProductId(item) {
     return Number(catalogProduct?.id || 0);
 }
 
+function isGiftPackagingItem(item) {
+    return (
+        String(item?.type || "").trim().toLowerCase() === "gift_packaging" ||
+        String(item?.category_slug || "").trim().toLowerCase() === "gift_packaging"
+    );
+}
+
 function isCartItemEligibleForSelectedGiftOffer(item, offer) {
     if (!offer || String(offer.offer_type || "").toLowerCase() !== "gift") {
         return false;
     }
 
-    if (isCartCertificateItem(item)) {
+    if (isCartCertificateItem(item) || isGiftPackagingItem(item)) {
         return false;
     }
 
@@ -372,7 +379,10 @@ function getOrderNoteFromSelectedOffer() {
     }
 
     const eligibleSum = cart
-        .filter(item => !isCartCertificateItem(item))
+        .filter(item =>
+            !isCartCertificateItem(item) &&
+            !isGiftPackagingItem(item)
+        )
         .reduce((sum, item) => sum + (Number(item.price) || 0), 0);
 
     const minOrderAmount = Number(offer.min_order_amount || 0);
@@ -393,7 +403,7 @@ function getOrderNoteFromSelectedOffer() {
 
         if (offerCategories.length) {
             const hasCategoryMatch = cart.some(item => {
-                if (isCartCertificateItem(item)) {
+                if (isCartCertificateItem(item) || isGiftPackagingItem(item)) {
                     return false;
                 }
 
@@ -540,6 +550,10 @@ function isExcludedItem(item, exclusions = null) {
     const name = String(item?.name || "").toLowerCase();
     const label = String(item?.label || "").toLowerCase();
     const rules = exclusions || PROMO?.exclusions || {};
+
+    if (isGiftPackagingItem(item)) {
+        return true;
+    }
 
     if (
         rules.certificates &&
@@ -1073,7 +1087,7 @@ function isCartItemEligibleForSelectedPercentOffer(item, offer) {
         return false;
     }
 
-    if (isCartCertificateItem(item)) {
+    if (isCartCertificateItem(item) || isGiftPackagingItem(item)) {
         return false;
     }
 
@@ -1139,6 +1153,7 @@ function calcUserCartDiscount(cart, user) {
     const eligibleTotal = cart
         .filter(item =>
             !isCartCertificateItem(item) &&
+            !isGiftPackagingItem(item) &&
             (
                 !canUseWelcomeDiscount ||
                 shouldSkipCartPublicPromo() ||
@@ -2320,8 +2335,44 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
+function addGiftPackagingToCart() {
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    const alreadyAdded = cart.some(item => isGiftPackagingItem(item));
+
+    if (alreadyAdded) {
+        closeGiftPackagingModal();
+
+        if (typeof renderCart === "function") {
+            renderCart();
+        }
+
+        return;
+    }
+
+    cart.push({
+        name: "Подарункове пакування Mōnal",
+        price: 90,
+        label: "Пакування",
+        type: "gift_packaging",
+        category_slug: "gift_packaging",
+        quantity: 1
+    });
+
+    localStorage.setItem("cart", JSON.stringify(cart));
+
+    updateCartCount();
+
+    if (typeof renderCart === "function") {
+        renderCart();
+    }
+
+    closeGiftPackagingModal();
+}
+
 /* ===== MAKE CART FUNCTIONS GLOBAL (for onclick="...") ===== */
 window.addToCart = addToCart;
+window.addGiftPackagingToCart = addGiftPackagingToCart;
 window.removeFromCart = removeFromCart;
 window.clearCart = clearCart;
 window.showCheckout = showCheckout;

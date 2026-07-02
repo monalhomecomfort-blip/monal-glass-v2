@@ -362,12 +362,14 @@ function isSelectedGiftOfferAvailableInCart(offer, cart) {
 
 function getOrderNoteFromSelectedOffer() {
     const offer = getSelectedOffer();
+    const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+
+    const publicGiftPromo = getCartPublicGiftPromo(cart);
+    const publicGiftNote = publicGiftPromo ? publicGiftPromo.note : "";
 
     if (!offer || offer.offer_type === "promo") {
-        return "";
+        return publicGiftNote;
     }
-
-    const cart = JSON.parse(localStorage.getItem("cart") || "[]");
 
     const eligibleSum = cart
         .filter(item => !isCartCertificateItem(item))
@@ -812,6 +814,133 @@ function calcFocusProductDiscount(cart) {
     return Math.round(eligibleTotal * (discountPercent / 100));
 }
 
+function getCartPublicGiftName(campaign) {
+    return String(
+        campaign?.display_name ||
+        campaign?.product_name ||
+        campaign?.product_key ||
+        "подарунок"
+    ).trim();
+}
+
+function getCartPublicGiftConditionItem(cart, campaign) {
+    const targetSelection = String(campaign?.target_selection || "").trim();
+    const availableItems = cart.filter(item => !isCartCertificateItem(item));
+
+    if (!availableItems.length) {
+        return null;
+    }
+
+    if (!targetSelection || targetSelection.toLowerCase() === "all") {
+        return availableItems[0];
+    }
+
+    if (targetSelection.toLowerCase().startsWith("products:")) {
+        const productIds = targetSelection
+            .replace(/^products:/i, "")
+            .split(",")
+            .map(value => Number(value || 0))
+            .filter(id => Number.isInteger(id) && id > 0);
+
+        if (!productIds.length) {
+            return null;
+        }
+
+        return availableItems.find(item => {
+            const itemProductId = getCartItemProductId(item);
+
+            return itemProductId > 0 && productIds.includes(itemProductId);
+        }) || null;
+    }
+
+    if (targetSelection.toLowerCase().startsWith("categories:")) {
+        const categoryKeys = [
+            ...new Set(
+                targetSelection
+                    .replace(/^categories:/i, "")
+                    .split(",")
+                    .flatMap(value => getCartCategoryAliases(value))
+                    .filter(key => key && key !== "all" && key !== "certificates")
+            )
+        ];
+
+        if (!categoryKeys.length) {
+            return null;
+        }
+
+        return availableItems.find(item => {
+            const itemCategoryKeys = getCartItemCategoryKeys(item);
+
+            return categoryKeys.some(categoryKey =>
+                itemCategoryKeys.includes(categoryKey)
+            );
+        }) || null;
+    }
+
+    return null;
+}
+
+function getCartPublicGiftPromo(cart) {
+    if (!Array.isArray(cart) || !cart.length) {
+        return null;
+    }
+
+    if (isVipCustomerForCart()) {
+        return null;
+    }
+
+    if (shouldSkipCartPublicPromo()) {
+        return null;
+    }
+
+    if (calcFocusProductDiscount(cart) > 0) {
+        return null;
+    }
+
+    const promoDiscount = typeof calcPromoDiscount === "function"
+        ? calcPromoDiscount(cart)
+        : 0;
+
+    if (promoDiscount > 0) {
+        return null;
+    }
+
+    const giftCampaigns = PUBLIC_PROMO_CAMPAIGNS
+        .filter(campaign =>
+            String(campaign?.promo_type || "").trim() === "public_gift"
+        )
+        .sort((a, b) =>
+            Number(a.priority || 999) - Number(b.priority || 999)
+        );
+
+    for (const campaign of giftCampaigns) {
+        const conditionItem = getCartPublicGiftConditionItem(cart, campaign);
+
+        if (!conditionItem) {
+            continue;
+        }
+
+        const giftName = getCartPublicGiftName(campaign);
+        const conditionProductName = String(
+            conditionItem.name ||
+            conditionItem.display_name ||
+            conditionItem.product_name ||
+            "товару"
+        ).trim();
+
+        return {
+            campaign,
+            giftName,
+            conditionProductName,
+            note: conditionProductName
+                ? `Діє акція: у подарунок ${giftName} за купівлю ${conditionProductName}.`
+                : `Діє акція: у подарунок ${giftName}.`
+        };
+    }
+
+    return null;
+}
+
 function normalizeCartPersonalOfferText(value) {
     return String(value || "")
         .trim()
@@ -1106,6 +1235,7 @@ function renderCart() {
         : 0;
 
     const orderNote = getOrderNoteFromSelectedOffer();
+    const publicGiftPromo = getCartPublicGiftPromo(cart);
     const selectedPersonalOfferNote =
         getSelectedPersonalPercentOfferNote(selectedPersonalOfferDiscount);
 
@@ -1146,7 +1276,13 @@ function renderCart() {
 
         html += `${promoLabel}: −${promoDiscount} грн<br>`;
     } else if (orderNote) {
-        html += `Персональна пропозиція: ${escapeCartHtml(orderNote)}<br>`;
+        const isPublicGiftNote =
+            publicGiftPromo &&
+            orderNote === publicGiftPromo.note;
+
+        html += isPublicGiftNote
+            ? `<span class="cart-gift-info">${escapeCartHtml(orderNote)}</span><br>`
+            : `Персональна пропозиція: ${escapeCartHtml(orderNote)}<br>`;
     }
 
     if (certificateAmount > 0) {
@@ -1634,6 +1770,19 @@ async function submitOrder() {
         })
         .join("\n");
 
+    const publicGiftPromo = getCartPublicGiftPromo(cart);
+
+    const publicGiftItemsText = publicGiftPromo
+        ? `• ${publicGiftPromo.giftName} — 0 грн (подарунок до акції)`
+        : "";
+
+    const finalItemsText = [
+        itemsText,
+        publicGiftItemsText
+    ]
+        .filter(Boolean)
+        .join("\n");
+
     const text =
 `🧾 *Нове замовлення №${orderId}*
 👤 ${last} ${first}
@@ -1665,7 +1814,7 @@ ${(typeof CERT_CODE_USED === "string" && CERT_CODE_USED)
 💸 До оплати: ${dueAmount} грн
 
 🛒 Товари:
-${itemsText}
+${finalItemsText}
 `;
 
     const certificatesData = cart
@@ -1689,7 +1838,7 @@ ${itemsText}
       buyerName: last + " " + first,
       buyerPhone: phone,
       delivery: np,
-      itemsText: itemsText,
+      itemsText: finalItemsText,
       totalAmount: total,
       orderAmount: afterDiscounts,  
       paidAmount: payNow,

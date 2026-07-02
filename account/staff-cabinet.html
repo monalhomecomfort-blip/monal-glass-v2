@@ -5147,9 +5147,13 @@ async function updateSalePaymentSummary() {
     }
 
     if (publicGiftProductName) {
+        const publicGiftLine =
+            publicGiftPromoNote ||
+            `Діє акція: у подарунок ${publicGiftProductName}.`;
+
         discountLines.push(`
-            <span style="font-weight:400;">
-                ${escapeSaleHtml(publicGiftPromoNote || `Загальний подарунок: ${publicGiftProductName}`)} · 0 грн
+            <span class="staff-sale-gift-info">
+                ${escapeSaleHtml(publicGiftLine)}
             </span>
         `);
     }
@@ -13319,10 +13323,9 @@ if (createSaleBtn && saleResult) {
             const publicGiftHtml = publicGiftProductName
                 ? `
                     <br><br>
-                    ${escapeSaleHtml(publicGiftProductName)} × 1
-                    — 0 грн
-                    <br>
-                    ${escapeSaleHtml(publicGiftPromoNote || "Загальний подарунок до акції")}
+                    <span class="staff-sale-gift-info">
+                        ${escapeSaleHtml(publicGiftPromoNote || `Діє акція: у подарунок ${publicGiftProductName}.`)}
+                    </span>
                 `
                 : "";
 

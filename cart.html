@@ -47,7 +47,7 @@
 
 </head>
 
-<body>
+<body class="page-cart">
 
 <!-- МЕНЮ -->
 <nav>
@@ -156,197 +156,246 @@
 </div>    
 
 <!-- ОБГОРТКА -->
-<div class="page-wrap">
+<div class="page-wrap page-cart-wrap">
 
-    <div class="container">
-               
-        <div class="delivery-columns">
+    <div class="container cart-page-container">
 
-            <!-- ЛІВА КОЛОНКА -->
-            <div class="delivery-block cart-box">
-                <h2>Ваші товари</h2>
-                <div id="cart-list" style="margin-bottom:14px;"></div>
+        <section class="monal-cart-shell">
 
-                <!-- PROMO CODE BLOCK -->
-                <div id="promo-block" style="margin-bottom:10px;">
-                    <label for="promo-input" style="display:block; margin-bottom:6px;">
-                        Промокод
-                    </label>
-
-                    <div style="display:grid; grid-template-columns: 2fr 1fr; gap:8px; align-items:center;">
-                        <input 
-                            id="promo-input" 
-                            type="text" 
-                            class="input"
-                            placeholder="Введіть промокод"
-                            style="width:100%; min-width:0; margin:0;"
-                        >
-
-                        <button 
-                            id="promo-apply-btn" 
-                            type="button" 
-                            class="buy-btn"
-                            style="width:100%; margin:0; white-space:nowrap;"
-                        >
-                            Застосувати
-                        </button>
-                    </div>
-
-                    <div id="promo-message" style="margin-top:6px; font-size:14px; color:#cfc7b8;"></div>
+            <div class="monal-cart-head">
+                <div>
+                    <h1>Кошик</h1>
+                    <p>Перевірте товари, промо та деталі замовлення.</p>
                 </div>
 
-                <!-- СЕРТИФІКАТ -->
-                <div style="margin-bottom:18px;">
-                    <label for="cert-code" style="display:block; margin-bottom:6px;">
-                        Сертифікат
-                    </label>
+                <a href="index.html" class="monal-cart-back">
+                    ← Продовжити покупки
+                </a>
+            </div>
 
-                    <div style="display:grid; grid-template-columns: 2fr 1fr; gap:8px; align-items:center;">
-                        <input
-                            id="cert-code"
-                            class="input"
-                            placeholder="Введіть код сертифіката"
-                            style="width:100%; min-width:0; margin:0;"
+            <div class="monal-cart-grid">
+
+                <!-- ЛІВА ЧАСТИНА: ТОВАРИ -->
+                <div class="monal-cart-main cart-box">
+                    <div class="monal-cart-section-title">
+                        <h2>Ваші товари</h2>
+                    </div>
+
+                    <div id="cart-list" class="monal-cart-list"></div>
+
+                    <div class="monal-cart-actions">
+                        <button
+                            class="buy-btn monal-cart-secondary-btn"
+                            onclick="clearCart()"
+                            type="button"
                         >
+                            Очистити кошик
+                        </button>
+                    </div>
+                </div>
+
+                <!-- ПРАВА ЧАСТИНА: ПРОМО / ПАКУВАННЯ / СУМА / ОФОРМЛЕННЯ -->
+                <aside class="monal-cart-side">
+
+                    <!-- PROMO CODE BLOCK -->
+                    <div id="promo-block" class="monal-cart-card">
+                        <label for="promo-input">
+                            Промокод
+                        </label>
+
+                        <div class="monal-cart-input-row">
+                            <input
+                                id="promo-input"
+                                type="text"
+                                class="input"
+                                placeholder="Введіть промокод"
+                            >
+
+                            <button
+                                id="promo-apply-btn"
+                                type="button"
+                                class="buy-btn monal-cart-small-btn"
+                            >
+                                Застосувати
+                            </button>
+                        </div>
+
+                        <div id="promo-message" class="monal-cart-message"></div>
+                    </div>
+
+                    <!-- СЕРТИФІКАТ -->
+                    <div class="monal-cart-card">
+                        <label for="cert-code">
+                            Сертифікат
+                        </label>
+
+                        <div class="monal-cart-input-row">
+                            <input
+                                id="cert-code"
+                                class="input"
+                                placeholder="Введіть код сертифіката"
+                            >
+
+                            <button
+                                type="button"
+                                class="buy-btn monal-cart-small-btn"
+                                onclick="applyCertificate()"
+                            >
+                                Застосувати
+                            </button>
+                        </div>
+
+                        <div id="cert-info" class="monal-cart-message"></div>
+                    </div>
+
+                    <!-- ПАКУВАННЯ -->
+                    <div class="monal-cart-card monal-cart-packaging-card">
+                        <div class="monal-cart-packaging-icon">🎁</div>
+
+                        <div class="monal-cart-packaging-text">
+                            <strong>Подарункове пакування</strong>
+                            <span>Фірмове пакування Mōnal для вашого замовлення.</span>
+                        </div>
 
                         <button
                             type="button"
-                            class="buy-btn"
-                            onclick="applyCertificate()"
-                            style="width:100%; margin:0; white-space:nowrap;"
+                            class="buy-btn monal-cart-packaging-btn"
+                            onclick="openGiftPackagingModal()"
                         >
-                            Застосувати
+                            Обрати пакування
                         </button>
                     </div>
 
-                    <div
-                        id="cert-info"
-                        style="margin-top:6px; font-size:14px; color:#cfc7b8;"
-                    ></div>
-                </div>
+                    <!-- ІНФО ПО ПРОМО / ПОДАРУНКАХ / ЗНИЖКАХ -->
+                    <div class="monal-cart-card monal-cart-info-card">
+                        <div class="monal-cart-info-row">
+                            <span>Активні пропозиції</span>
+                            <strong>показуються в сумі</strong>
+                        </div>
 
-                
+                        <div class="monal-cart-info-row">
+                            <span>Подарунки до замовлення</span>
+                            <strong>якщо умови виконані</strong>
+                        </div>
 
-                <h2>Сума</h2>
-                <div id="cart-total" style="font-size:20px; margin-bottom:18px;"></div>
+                        <div class="monal-cart-info-row">
+                            <span>Персональні знижки</span>
+                            <strong>з акаунта клієнта</strong>
+                        </div>
+                    </div>
 
-                <button 
-                    class="buy-btn" 
-                    onclick="clearCart()" 
-                    style="width:100%;"
-                >
-                    Очистити
-                </button>
+                    <!-- СУМА -->
+                    <div class="monal-cart-card monal-cart-total-card">
+                        <h2>Підсумок</h2>
 
-                <button 
-                    class="buy-btn" 
-                    onclick="showCheckout()" 
-                    style="width:100%; margin-top:10px;"
-                >
-                    Оформити
-                </button>
+                        <div id="cart-total" class="monal-cart-total"></div>
+
+                        <button
+                            class="buy-btn monal-cart-checkout-btn"
+                            onclick="showCheckout()"
+                            type="button"
+                        >
+                            Оформити замовлення
+                        </button>
+
+                        <div class="monal-cart-safe-note">
+                            Ваші дані під захистом
+                        </div>
+                    </div>
+
+                    <!-- ОФОРМЛЕННЯ -->
+                    <div class="monal-cart-card monal-cart-checkout-block" id="checkout" style="display:none;">
+
+                        <h2>Оформлення</h2>
+
+                        <input
+                            id="inp-last"
+                            class="input"
+                            placeholder="Прізвище"
+                            required
+                        >
+
+                        <input
+                            id="inp-first"
+                            class="input"
+                            placeholder="Ім'я"
+                            required
+                        >
+
+                        <input
+                            id="inp-phone"
+                            class="input"
+                            placeholder="Телефон (38(0XX)XXX-XX-XX)"
+                            required
+                        >
+
+                        <div class="monal-cart-city-wrap">
+                            <input
+                                id="np-city-input"
+                                class="input"
+                                placeholder="Почніть вводити місто"
+                                autocomplete="off"
+                                required
+                            >
+
+                            <div id="np-city-list" class="autocomplete-list"></div>
+                        </div>
+
+                        <select id="np-warehouse" class="input" required disabled>
+                            <option value="">Оберіть відділення / поштомат</option>
+                        </select>
+
+                        <p id="np-manual-hint" class="monal-cart-hint" style="display:none;">
+                            Не знайшли відділення? Введіть номер або адресу вручну.
+                        </p>
+
+                        <button
+                            type="button"
+                            class="buy-btn monal-cart-secondary-btn"
+                            onclick="toggleManualNP()"
+                        >
+                            Інше відділення
+                        </button>
+
+                        <input
+                            id="np-manual"
+                            class="input"
+                            placeholder="Введіть вручну: №, адреса або поштомат"
+                            style="display:none;"
+                        >
+
+                        <div id="payment-type" class="monal-cart-payment-type">
+                            <div>
+                                Вид оплати:
+                            </div>
+
+                            <label>
+                                <input type="radio" name="pay" value="Картка онлайн">
+                                Картка онлайн
+                            </label>
+
+                            <label>
+                                <input type="radio" name="pay" value="Передплата 150 грн">
+                                Передплата
+                            </label>
+                        </div>
+
+                        <button
+                            type="button"
+                            class="buy-btn monal-cart-checkout-btn"
+                            onclick="submitOrder()"
+                        >
+                            Надіслати замовлення
+                        </button>
+
+                    </div>
+
+                </aside>
+
             </div>
 
-            <!-- ПРАВА КОЛОНКА -->
-            <div class="delivery-block" id="checkout" style="display:none;">
+        </section>
 
-                <h2>Оформлення</h2>
-
-                <input
-                    id="inp-last"
-                    class="input"
-                    placeholder="Прізвище"
-                    required
-                >
-
-                <input
-                    id="inp-first"
-                    class="input"
-                    placeholder="Ім'я"
-                    required
-                >
-
-                <!-- Телефон (БЕЗ oninput, маска тільки через JS) -->
-                <input
-                    id="inp-phone"
-                    class="input"
-                    placeholder="Телефон (38(0XX)XXX-XX-XX)"
-                    required
-                >
-
-                <!-- Місто (autocomplete) -->
-                <div style="position: relative;">
-                <input
-                    id="np-city-input"
-                    class="input"
-                    placeholder="Почніть вводити місто"
-                    autocomplete="off"
-                    required
-                >
-
-                <div id="np-city-list" class="autocomplete-list"></div>
-    </div>
-
-    <!-- Відділення / поштомат -->
-    <select id="np-warehouse" class="input" required disabled>
-        <option value="">Оберіть відділення / поштомат</option>
-    </select>
-
-    <p
-        id="np-manual-hint"
-        style="margin:8px 0 0; font-size:13px; color:#777; display:none;"
-    >
-        Не знайшли відділення? Введіть номер або адресу вручну.
-    </p>
-
-    <button
-        type="button"
-        class="buy-btn"
-        style="margin-top:10px;"
-        onclick="toggleManualNP()"
-    >
-        Інше відділення
-    </button>
-
-    <input
-        id="np-manual"
-        class="input"
-        placeholder="Введіть вручну: №, адреса або поштомат"
-        style="display:none; margin-top:10px;"
-    >            
-             
-
-    <!-- Оплата -->
-<div id="payment-type" style="margin-top:12px;">
-  <div style="font-size:14px; margin-bottom:6px;">
-    Вид оплати:
-  </div>
-
-  <label style="margin-right:12px;">
-    <input type="radio" name="pay" value="Картка онлайн">
-    Картка онлайн
-  </label>
-
-  <label>
-    <input type="radio" name="pay" value="Передплата 150 грн">
-    Передплата
-  </label>
-</div>
-
-
-    <button
-      type="button"
-      class="buy-btn"
-      style="margin-top:14px;"
-      onclick="submitOrder()"
-    >
-      Надіслати замовлення
-    </button>
-
-
-</div>
-
-        </div>
     </div>
 
 <footer>
@@ -371,6 +420,89 @@
 
 <script src="promo-config.js"></script>    
 <script src="cart.js"></script>
+<!-- МОДАЛЬНЕ ВІКНО ПОДАРУНКОВОГО ПАКУВАННЯ -->
+<div id="gift-packaging-modal" class="gift-packaging-modal" style="display:none;">
+    <div class="gift-packaging-window">
+
+        <button
+            type="button"
+            class="gift-packaging-close"
+            onclick="closeGiftPackagingModal()"
+            aria-label="Закрити"
+        >
+            ×
+        </button>
+
+        <div class="gift-packaging-gallery">
+            <img
+                src="images/gifts/gift_packaging_1.png"
+                alt="Подарункове пакування Mōnal"
+                class="gift-packaging-main-img"
+            >
+
+            <div class="gift-packaging-thumbs">
+                <img src="images/gifts/gift_packaging_1.png" alt="">
+                <img src="images/gifts/gift_packaging_2.png" alt="">
+                <img src="images/gifts/gift_packaging_3.png" alt="">
+            </div>
+        </div>
+
+        <div class="gift-packaging-info">
+            <h3>Подарункове пакування</h3>
+
+            <p>
+                Фірмове пакування Mōnal для замовлення:
+                стримане, охайне та готове до вручення.
+            </p>
+
+            <div class="gift-packaging-price">
+                90 грн
+            </div>
+
+            <button
+                type="button"
+                class="buy-btn gift-packaging-add-btn"
+            >
+                Додати
+            </button>
+        </div>
+
+    </div>
+</div>
+
+<script>
+function openGiftPackagingModal() {
+    const modal = document.getElementById("gift-packaging-modal");
+
+    if (!modal) return;
+
+    modal.style.display = "flex";
+    document.body.classList.add("gift-packaging-open");
+}
+
+function closeGiftPackagingModal() {
+    const modal = document.getElementById("gift-packaging-modal");
+
+    if (!modal) return;
+
+    modal.style.display = "none";
+    document.body.classList.remove("gift-packaging-open");
+}
+
+document.addEventListener("click", function (event) {
+    const modal = document.getElementById("gift-packaging-modal");
+
+    if (modal && event.target === modal) {
+        closeGiftPackagingModal();
+    }
+});
+
+document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape") {
+        closeGiftPackagingModal();
+    }
+});
+</script>    
 
 <!-- МОДАЛЬНЕ ВІКНО ПЕРЕВІРКИ ДАНИХ -->
 <div id="payment-modal" class="modal" style="display:none;">

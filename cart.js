@@ -2335,44 +2335,70 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
+function openGiftPackagingModal() {
+    const modal = document.getElementById("gift-packaging-modal");
+
+    if (!modal) return;
+
+    modal.style.display = "flex";
+    document.body.classList.add("gift-packaging-open");
+}
+
+function closeGiftPackagingModal() {
+    const modal = document.getElementById("gift-packaging-modal");
+
+    if (!modal) return;
+
+    modal.style.display = "none";
+    document.body.classList.remove("gift-packaging-open");
+}
+
 function addGiftPackagingToCart() {
-    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    const cart = JSON.parse(localStorage.getItem("cart") || "[]");
 
     const alreadyAdded = cart.some(item => isGiftPackagingItem(item));
 
-    if (alreadyAdded) {
-        closeGiftPackagingModal();
+    if (!alreadyAdded) {
+        cart.push({
+            name: "Подарункове пакування Mōnal",
+            price: 90,
+            label: "Пакування",
+            type: "gift_packaging",
+            category_slug: "gift_packaging",
+            quantity: 1
+        });
 
-        if (typeof renderCart === "function") {
-            renderCart();
-        }
-
-        return;
+        localStorage.setItem("cart", JSON.stringify(cart));
     }
-
-    cart.push({
-        name: "Подарункове пакування Mōnal",
-        price: 90,
-        label: "Пакування",
-        type: "gift_packaging",
-        category_slug: "gift_packaging",
-        quantity: 1
-    });
-
-    localStorage.setItem("cart", JSON.stringify(cart));
 
     updateCartCount();
-
-    if (typeof renderCart === "function") {
-        renderCart();
-    }
-
+    renderCart();
     closeGiftPackagingModal();
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+    const giftPackagingModal = document.getElementById("gift-packaging-modal");
+
+    if (!giftPackagingModal) return;
+
+    giftPackagingModal.addEventListener("click", function (event) {
+        if (event.target === giftPackagingModal) {
+            closeGiftPackagingModal();
+        }
+    });
+
+    document.addEventListener("keydown", function (event) {
+        if (event.key === "Escape") {
+            closeGiftPackagingModal();
+        }
+    });
+});
 
 /* ===== MAKE CART FUNCTIONS GLOBAL (for onclick="...") ===== */
 window.addToCart = addToCart;
 window.addGiftPackagingToCart = addGiftPackagingToCart;
+window.openGiftPackagingModal = openGiftPackagingModal;
+window.closeGiftPackagingModal = closeGiftPackagingModal;
 window.removeFromCart = removeFromCart;
 window.clearCart = clearCart;
 window.showCheckout = showCheckout;

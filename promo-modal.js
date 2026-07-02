@@ -1,9 +1,8 @@
 (function () {
-    const PROMO_SESSION_KEY = "monal_ten_mini_promo_seen_session";
     const PROMO_IMAGE_SRC = "images/promo/ten-mini-diffuser-modal.png";
     const PROMO_TARGET_URL = "aromadiffusers.html";
 
-    if (sessionStorage.getItem(PROMO_SESSION_KEY) === "1") {
+    if (!document.body.classList.contains("home")) {
         return;
     }
 
@@ -19,7 +18,6 @@
         }
 
         document.body.classList.remove("site-promo-modal-open");
-        sessionStorage.setItem(PROMO_SESSION_KEY, "1");
     }
 
     function openPromoModal() {
@@ -59,7 +57,7 @@
         closeBtn.addEventListener("click", closePromoModal);
 
         ctaBtn.addEventListener("click", function () {
-            sessionStorage.setItem(PROMO_SESSION_KEY, "1");
+            closePromoModal();
         });
 
         modal.addEventListener("click", function (event) {

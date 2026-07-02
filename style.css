@@ -1287,6 +1287,19 @@ a.sub-mini {
     text-align: right;
     font-weight: 300;
 }
+.cart-gift-info {
+    display: inline-block;
+    width: 100%;
+    margin: 6px 0;
+    padding: 9px 12px;
+    border-radius: 14px;
+    background: rgba(231, 228, 217, 0.78);
+    color: #1f1f1f;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.4;
+    box-sizing: border-box;
+}
 .cart-remove {
     background: none;
     border: none;

@@ -3860,3 +3860,37 @@ body.gift-packaging-open {
         font-size: 28px;
     }
 }
+
+/* ===================== CART PAGE — OLD STYLE ISOLATION FIX ===================== */
+
+.page-cart .monal-cart-main {
+    width: auto !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    flex: initial !important;
+}
+
+.page-cart .monal-cart-shell,
+.page-cart .monal-cart-card,
+.page-cart .monal-cart-main,
+.page-cart .monal-cart-side {
+    box-sizing: border-box;
+}
+
+.page-cart .monal-cart-grid {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1.45fr) minmax(360px, 0.75fr) !important;
+    gap: 32px !important;
+    align-items: start !important;
+}
+
+.page-cart .monal-cart-card .buy-btn,
+.page-cart .monal-cart-main .buy-btn {
+    margin-top: 0;
+}
+
+.page-cart .monal-cart-card .input {
+    margin: 0 !important;
+}

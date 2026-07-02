@@ -3162,20 +3162,23 @@ body.site-promo-modal-open {
 .site-promo-modal-window {
     position: relative;
 
-    width: min(920px, 94vw);
+    width: min(520px, 86vw);
+    max-height: 86vh;
 
-    border-radius: 24px;
+    border-radius: 20px;
     overflow: hidden;
 
-    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.45);
+    box-shadow: 0 20px 54px rgba(0, 0, 0, 0.42);
 
     animation: sitePromoModalIn 0.35s ease forwards;
 }
 
 .site-promo-modal-image {
     width: 100%;
+    max-height: 86vh;
     height: auto;
     display: block;
+    object-fit: contain;
 }
 
 /* невидима зона хрестика на фото */
@@ -3229,15 +3232,13 @@ body.site-promo-modal-open {
     }
 
     .site-promo-modal-window {
-        width: 96vw;
+        width: 92vw;
+        max-height: 82vh;
         border-radius: 18px;
     }
 
-    .site-promo-modal-close-hitbox {
-        width: 44px;
-        height: 44px;
-        top: 2%;
-        right: 2%;
+    .site-promo-modal-image {
+        max-height: 82vh;
     }
 
     .site-promo-modal-cta-hitbox {

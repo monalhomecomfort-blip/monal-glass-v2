@@ -1145,24 +1145,14 @@
                     </div>
 
                     <div class="staff-promo-cell">
-                        <div style="display:grid; gap:8px;">
-                            <label class="staff-promo-checkbox">
-                                <input
-                                    type="checkbox"
-                                    id="public-gift-promo-site-enabled"
-                                >
-                                Сайт
-                            </label>
+                        <details class="staff-report-filter staff-promo-warehouse-filter">
+                            <summary>Обрати сайт / склади</summary>
 
-                            <details class="staff-report-filter staff-promo-warehouse-filter">
-                                <summary>Обрати склади</summary>
-
-                                <div
-                                    id="public-gift-promo-warehouse-list"
-                                    class="staff-report-filter-menu"
-                                ></div>
-                            </details>
-                        </div>
+                            <div
+                                id="public-gift-promo-warehouse-list"
+                                class="staff-report-filter-menu"
+                            ></div>
+                        </details>
                     </div>
 
                     <div class="staff-promo-cell staff-promo-actions">
@@ -2113,7 +2103,6 @@ const publicGiftPromoGiftProductDropdown = document.getElementById("public-gift-
 const publicGiftPromoStartInput = document.getElementById("public-gift-promo-start");
 const publicGiftPromoEndInput = document.getElementById("public-gift-promo-end");
 const publicGiftPromoActiveInput = document.getElementById("public-gift-promo-active");
-const publicGiftPromoSiteEnabledInput = document.getElementById("public-gift-promo-site-enabled");
 const publicGiftPromoWarehouseList = document.getElementById("public-gift-promo-warehouse-list");
 const savePublicGiftPromoBtn = document.getElementById("save-public-gift-promo-btn");
 const publicGiftPromoResult = document.getElementById("public-gift-promo-result");
@@ -6432,6 +6421,18 @@ function fillWarehouseSelects(warehouses) {
     if (publicGiftPromoWarehouseList) {
         publicGiftPromoWarehouseList.innerHTML = "";
 
+        const siteLabel = document.createElement("label");
+
+        const siteCheckbox = document.createElement("input");
+        siteCheckbox.type = "checkbox";
+        siteCheckbox.className = "public-gift-promo-warehouse-checkbox";
+        siteCheckbox.value = "0";
+
+        siteLabel.appendChild(siteCheckbox);
+        siteLabel.appendChild(document.createTextNode(" Сайт"));
+
+        publicGiftPromoWarehouseList.appendChild(siteLabel);
+
         STAFF_WAREHOUSES.forEach(warehouse => {
             const label = document.createElement("label");
 
@@ -8270,25 +8271,32 @@ function getSelectedPublicGiftPromoProductIds() {
         .filter(id => Number.isInteger(id) && id > 0);
 }
 
+function getSelectedPublicGiftPromoSiteEnabled() {
+    return Array.from(
+        document.querySelectorAll(".public-gift-promo-warehouse-checkbox:checked")
+    )
+        .some(checkbox => Number(checkbox.value) === 0);
+}
+
 function getSelectedPublicGiftPromoWarehouseIds() {
     return Array.from(
         document.querySelectorAll(".public-gift-promo-warehouse-checkbox:checked")
     )
-        .map(checkbox => Number(checkbox.value || 0))
+        .map(checkbox => Number(checkbox.value))
         .filter(id => Number.isInteger(id) && id > 0);
 }
 
 function setPublicGiftPromoWarehouseSelection(warehouseIds = []) {
     const selectedIds = new Set(
         warehouseIds
-            .map(id => Number(id || 0))
-            .filter(id => Number.isInteger(id) && id > 0)
+            .map(id => Number(id))
+            .filter(id => Number.isInteger(id) && id >= 0)
     );
 
     document
         .querySelectorAll(".public-gift-promo-warehouse-checkbox")
         .forEach(checkbox => {
-            checkbox.checked = selectedIds.has(Number(checkbox.value || 0));
+            checkbox.checked = selectedIds.has(Number(checkbox.value));
         });
 }
 
@@ -8367,10 +8375,6 @@ function resetPublicGiftPromoForm() {
         publicGiftPromoActiveInput.checked = false;
     }
 
-    if (publicGiftPromoSiteEnabledInput) {
-        publicGiftPromoSiteEnabledInput.checked = false;
-    }
-
     document
         .querySelectorAll(".public-gift-promo-warehouse-checkbox")
         .forEach(checkbox => {
@@ -8421,10 +8425,6 @@ function startEditPublicGiftPromo(promoId) {
         publicGiftPromoActiveInput.checked = Boolean(campaign.is_active);
     }
 
-    if (publicGiftPromoSiteEnabledInput) {
-        publicGiftPromoSiteEnabledInput.checked = Boolean(campaign.site_enabled);
-    }
-
     clearPublicGiftPromoCategories();
     clearPublicGiftPromoProducts();
 
@@ -8448,9 +8448,10 @@ function startEditPublicGiftPromo(promoId) {
         publicGiftPromoGiftProductSearch.value = getPublicGiftPromoGiftText(campaign);
     }
 
-    setPublicGiftPromoWarehouseSelection(
-        getFocusPromoWarehouseIds(campaign)
-    );
+    setPublicGiftPromoWarehouseSelection([
+        ...(campaign.site_enabled ? [0] : []),
+        ...getFocusPromoWarehouseIds(campaign)
+    ]);
 
     if (savePublicGiftPromoBtn) {
         savePublicGiftPromoBtn.textContent = "Зберегти";
@@ -8684,7 +8685,7 @@ async function savePublicGiftPromo() {
     const startsAt = normalizeFocusPromoDateForApi(publicGiftPromoStartInput?.value);
     const endsAt = normalizeFocusPromoDateForApi(publicGiftPromoEndInput?.value);
     const isActive = publicGiftPromoActiveInput?.checked ? 1 : 0;
-    const siteEnabled = publicGiftPromoSiteEnabledInput?.checked ? 1 : 0;
+    const siteEnabled = getSelectedPublicGiftPromoSiteEnabled() ? 1 : 0;
     const productIds = getSelectedPublicGiftPromoProductIds();
     let categorySlugs = getSelectedPublicGiftPromoCategorySlugs();
     const warehouseIds = getSelectedPublicGiftPromoWarehouseIds();

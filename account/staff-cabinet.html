@@ -4997,6 +4997,8 @@ async function updateSalePaymentSummary() {
     let focusPromoNote = "";
     let publicPromoCodeDiscountAmount = 0;
     let publicPromoCodeNote = "";
+    let publicGiftProductName = "";
+    let publicGiftPromoNote = "";
     let availablePublicPromoCodes = [];
     let selectedPublicPromoCodeIdFromPreview = 0;
     let welcomeDiscountAmount = 0;
@@ -5048,6 +5050,8 @@ async function updateSalePaymentSummary() {
                 focusPromoNote = String(data.focusPromoNote || "").replace(/^,\s*/, "");
                 publicPromoCodeDiscountAmount = Number(data.publicPromoCodeDiscountAmount || 0);
                 publicPromoCodeNote = String(data.publicPromoCodeNote || "").replace(/^,\s*/, "");
+                publicGiftProductName = String(data.publicGiftProductName || "").trim();
+                publicGiftPromoNote = String(data.publicGiftPromoNote || "").replace(/^,\s*/, "");
                 availablePublicPromoCodes = Array.isArray(data.availablePublicPromoCodes)
                     ? data.availablePublicPromoCodes
                     : [];
@@ -5138,6 +5142,14 @@ async function updateSalePaymentSummary() {
         discountLines.push(`
             <span style="font-weight:400;">
                 ${escapeSaleHtml(publicPromoLine)}
+            </span>
+        `);
+    }
+
+    if (publicGiftProductName) {
+        discountLines.push(`
+            <span style="font-weight:400;">
+                ${escapeSaleHtml(publicGiftPromoNote || `Загальний подарунок: ${publicGiftProductName}`)} · 0 грн
             </span>
         `);
     }

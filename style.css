@@ -3932,11 +3932,13 @@ body.gift-packaging-open {
     box-sizing: border-box;
 }
 
-.page-cart .monal-cart-grid {
-    display: grid !important;
-    grid-template-columns: minmax(0, 1.32fr) minmax(300px, 0.68fr) !important;
-    gap: 20px !important;
-    align-items: start !important;
+@media (min-width: 901px) {
+    .page-cart .monal-cart-grid {
+        display: grid !important;
+        grid-template-columns: minmax(0, 1.32fr) minmax(300px, 0.68fr) !important;
+        gap: 20px !important;
+        align-items: start !important;
+    }
 }
 
 .page-cart .monal-cart-card .buy-btn,
@@ -3946,4 +3948,27 @@ body.gift-packaging-open {
 
 .page-cart .monal-cart-card .input {
     margin: 0 !important;
+}
+
+@media (max-width: 900px) {
+    .page-cart .monal-cart-grid {
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        gap: 18px !important;
+    }
+
+    .page-cart .monal-cart-main,
+    .page-cart .monal-cart-side {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+    }
+
+    .page-cart .monal-cart-side {
+        order: 2;
+    }
+
+    .page-cart .monal-cart-main {
+        order: 1;
+    }
 }

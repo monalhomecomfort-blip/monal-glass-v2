@@ -2479,7 +2479,7 @@ function addGiftPackagingToCart() {
         cart.push({
             name: "Подарункове пакування Mōnal",
             price: 90,
-            label: "Пакування",
+            label: "",
             type: "gift_packaging",
             category_slug: "gift_packaging",
             quantity: 1

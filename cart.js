@@ -1183,6 +1183,99 @@ function calcUserCartDiscount(cart, user) {
     );
 }
 
+const CART_TYPE_IMAGES = {
+    aromadiffuser: "images/cart/default-aromadiffuser.jpg",
+    certificate: "images/cart/default-certificate.jpg",
+    discovery: "images/cart/default-discovery.jpg",
+    parfum100: "images/cart/default-parfum-100.jpg",
+    parfum15: "images/cart/default-parfum-15.jpg",
+    parfumBlack15: "images/cart/default-parfum-black-15.jpg",
+    refill: "images/cart/default-refill.jpg",
+    testers: "images/cart/default-testers.jpg"
+};
+
+function getCartItemImage(item) {
+    const name = normalizeCartPersonalOfferText(item?.name);
+    const label = normalizeCartPersonalOfferText(item?.label);
+    const categorySlug = normalizeCartPersonalOfferText(item?.category_slug);
+    const productLabel = normalizeCartPersonalOfferText(item?.product_label);
+    const productName = normalizeCartPersonalOfferText(item?.product_name);
+    const displayName = normalizeCartPersonalOfferText(item?.display_name);
+    const productKey = normalizeCartPersonalOfferText(item?.product_key);
+    const price = Number(item?.price || 0);
+
+    const searchText = [
+        name,
+        label,
+        categorySlug,
+        productLabel,
+        productName,
+        displayName,
+        productKey
+    ].join(" ");
+
+    if (isCartCertificateItem(item)) {
+        return CART_TYPE_IMAGES.certificate;
+    }
+
+    if (
+        searchText.includes("leather absolute") ||
+        searchText.includes("amber elite") ||
+        searchText.includes("bois noir")
+    ) {
+        return CART_TYPE_IMAGES.parfumBlack15;
+    }
+
+    if (
+        searchText.includes("ten mini") ||
+        searchText.includes("тестер") ||
+        searchText.includes("tester")
+    ) {
+        return CART_TYPE_IMAGES.testers;
+    }
+
+    if (
+        searchText.includes("discovery") ||
+        searchText.includes("діскавер")
+    ) {
+        return CART_TYPE_IMAGES.discovery;
+    }
+
+    if (
+        searchText.includes("рефіл") ||
+        searchText.includes("refill")
+    ) {
+        return CART_TYPE_IMAGES.refill;
+    }
+
+    if (
+        searchText.includes("аромадифузор") ||
+        searchText.includes("diffuser") ||
+        searchText.includes("aromadiffuser")
+    ) {
+        return CART_TYPE_IMAGES.aromadiffuser;
+    }
+
+    if (
+        searchText.includes("парфум") ||
+        searchText.includes("perfume") ||
+        searchText.includes("parfum")
+    ) {
+        if (
+            name.includes("15 ml") ||
+            name.includes("15мл") ||
+            name.includes("15 мл") ||
+            price === 385
+        ) {
+            return CART_TYPE_IMAGES.parfum15;
+        }
+
+        return CART_TYPE_IMAGES.parfum100;
+    }
+
+    return "";
+}
+
 function renderCart() {
 
     const cart = JSON.parse(localStorage.getItem("cart")) || [];
@@ -1205,10 +1298,29 @@ function renderCart() {
                 ? ` (${item.certificateType})`
                 : "";
 
+        const itemImage = getCartItemImage(item);
+        const imageHtml = itemImage
+            ? `
+                <img
+                    src="${itemImage}"
+                    alt=""
+                    class="cart-item-image"
+                >
+            `
+            : "";
+
         return `
             <div class="cart-item">
-                <span>${item.label ? item.label + " " : ""}${item.name}${certificateTypeText}</span>
-                <span>${item.price} грн</span>
+                ${imageHtml}
+
+                <span class="cart-item-name">
+                    ${item.label ? item.label + " " : ""}${item.name}${certificateTypeText}
+                </span>
+
+                <span class="cart-item-price">
+                    ${item.price} грн
+                </span>
+
                 <button onclick="removeFromCart(${index})">X</button>
             </div>
         `;

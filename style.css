@@ -3291,7 +3291,7 @@ body.site-promo-modal-open {
     position: relative;
     z-index: 1;
 
-    max-width: 1080px;
+    max-width: 1220px;
     padding-top: 128px;
     padding-bottom: 60px;
 }
@@ -3383,11 +3383,11 @@ body.site-promo-modal-open {
 /* cart.js генерує .cart-item, тому стилізуємо його без зміни логіки */
 .page-cart .cart-item {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) auto auto;
-    gap: 16px;
+    grid-template-columns: 118px minmax(0, 1fr) auto auto;
+    gap: 14px;
     align-items: center;
 
-    padding: 16px 18px;
+    padding: 14px 16px;
 
     border: 1px solid rgba(232, 225, 214, 0.12);
     border-radius: 18px;
@@ -3397,6 +3397,19 @@ body.site-promo-modal-open {
         rgba(10, 10, 10, 0.28);
 
     color: #e8e1d6;
+}
+
+.page-cart .cart-item-image {
+    width: 118px;
+    height: 88px;
+
+    display: block;
+    object-fit: cover;
+
+    border-radius: 14px;
+    border: 1px solid rgba(232, 225, 214, 0.12);
+
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.22);
 }
 
 .page-cart .cart-item span:first-child {
@@ -3788,11 +3801,14 @@ body.gift-packaging-open {
 .gift-packaging-thumbs img {
     width: 100%;
     aspect-ratio: 1 / 0.72;
-    object-fit: cover;
+    object-fit: contain;
+
+    padding: 4px;
 
     border-radius: 12px;
     border: 1px solid rgba(232, 225, 214, 0.16);
-    opacity: 0.82;
+    background: rgba(244, 239, 230, 0.92);
+    opacity: 0.88;
 }
 
 .gift-packaging-info {

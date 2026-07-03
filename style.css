@@ -3792,9 +3792,16 @@ body.gift-packaging-open {
     width: 100%;
     aspect-ratio: 1 / 0.78;
     object-fit: cover;
+    object-position: center 72%;
 
     border-radius: 20px;
     border: 1px solid rgba(232, 225, 214, 0.12);
+}
+
+@media (max-width: 600px) {
+    .gift-packaging-main-img {
+        object-position: center 78%;
+    }
 }
 
 .gift-packaging-thumbs {

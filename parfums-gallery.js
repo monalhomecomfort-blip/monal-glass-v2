@@ -111,25 +111,16 @@ const parfumsGalleries = {
     "images/perfumes/travel_rosalya_.png"
   ],
   "leather absolute-15": [
-  "images/perfumes/travel_black_leather.png",
-  "images/perfumes/travel_black_3.png",
-  "images/perfumes/travel_black_4.png",
-  "images/perfumes/travel_black_5.png",
-  "images/perfumes/travel_black_6.png"   
+  "images/perfumes/travel_black_leather_.png",
+  "images/perfumes/travel_black_leather.png"     
   ],
   "amber elite-15": [
-  "images/perfumes/travel_black_amber.png",
-  "images/perfumes/travel_black_3.png",
-  "images/perfumes/travel_black_4.png",
-  "images/perfumes/travel_black_5.png",
-  "images/perfumes/travel_black_6.png"   
+  "images/perfumes/travel_black_amber_.png",
+  "images/perfumes/travel_black_amber.png"    
   ],
   "bois noir-15": [
-  "images/perfumes/travel_black_bois.png",
-  "images/perfumes/travel_black_3.png",
-  "images/perfumes/travel_black_4.png",
-  "images/perfumes/travel_black_5.png",
-  "images/perfumes/travel_black_6.png"   
+  "images/perfumes/travel_black_bois_.png",
+  "images/perfumes/travel_black_bois.png"     
   ],  
 };
 

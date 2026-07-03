@@ -1191,7 +1191,8 @@ const CART_TYPE_IMAGES = {
     parfum15: "images/cart/default-parfum-15.jpg",
     parfumBlack15: "images/cart/default-parfum-black-15.jpg",
     refill: "images/cart/default-refill.jpg",
-    testers: "images/cart/default-testers.jpg"
+    testers: "images/cart/default-testers.jpg",
+    giftPackaging: "images/gifts/gift_packaging_1.png"
 };
 
 function getCartItemImage(item) {
@@ -1213,6 +1214,10 @@ function getCartItemImage(item) {
         displayName,
         productKey
     ].join(" ");
+
+    if (isGiftPackagingItem(item)) {
+        return CART_TYPE_IMAGES.giftPackaging;
+    }
 
     if (isCartCertificateItem(item)) {
         return CART_TYPE_IMAGES.certificate;

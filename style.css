@@ -78,6 +78,33 @@ nav {
 .nav-right a:hover {
     color: #ffffff;
 }
+.nav-center a.nav-active,
+.nav-right a.nav-active {
+    position: relative;
+    color: #ffffff;
+}
+
+.nav-center a.nav-active::after,
+.nav-right a.nav-active::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: -10px;
+
+    width: 42px;
+    height: 1px;
+
+    transform: translateX(-50%);
+
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(215, 195, 162, 0.95),
+        transparent
+    );
+
+    box-shadow: 0 0 12px rgba(215, 195, 162, 0.55);
+}
 /* ===================== NAV — CATALOG (BASE + DESKTOP) ===================== */
 .nav-catalog {
     position: relative;
@@ -4019,5 +4046,171 @@ body.gift-packaging-open {
 
     .page-cart .monal-cart-main {
         order: 1;
+    }
+}
+
+/* ===================== CONTACTS PAGE — PREMIUM VISUAL ===================== */
+
+.page-contacts {
+    min-height: 100vh;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(244, 239, 230, 0.92) 0%,
+            rgba(244, 239, 230, 0.82) 38%,
+            rgba(244, 239, 230, 0.58) 68%,
+            rgba(244, 239, 230, 0.34) 100%
+        ),
+        url("images/backgrounds/contacts-page-bg.jpg");
+
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+.page-contacts .container {
+    max-width: 1280px;
+    min-height: calc(100vh - 70px);
+
+    padding-top: 170px;
+    padding-bottom: 80px;
+}
+
+.page-contacts .page-title {
+    position: relative;
+
+    margin-bottom: 18px;
+
+    font-size: 42px;
+    font-weight: 300;
+    color: #242424;
+}
+
+.page-contacts .page-title::after {
+    content: "";
+    display: block;
+
+    width: min(520px, 68vw);
+    height: 1px;
+
+    margin-top: 18px;
+
+    background: linear-gradient(
+        90deg,
+        rgba(191, 160, 111, 0.75),
+        rgba(191, 160, 111, 0.18),
+        transparent
+    );
+}
+
+.page-contacts .contact-columns {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 36px;
+
+    margin-top: 70px;
+}
+
+.page-contacts .contact-col {
+    min-height: 310px;
+    padding: 42px 48px;
+
+    border-radius: 22px;
+    border: 1px solid rgba(232, 225, 214, 0.14);
+
+    background:
+        radial-gradient(circle at 12% 18%, rgba(215, 195, 162, 0.18), transparent 34%),
+        linear-gradient(135deg, rgba(62, 60, 55, 0.92), rgba(17, 17, 16, 0.94));
+
+    box-shadow:
+        0 26px 60px rgba(0, 0, 0, 0.28),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+
+    color: #e8e1d6;
+}
+
+.page-contacts .contact-col p {
+    margin: 0 0 28px;
+
+    font-size: 15px;
+    line-height: 1.65;
+    color: rgba(232, 225, 214, 0.88);
+}
+
+.page-contacts .contact-col p:last-child {
+    margin-bottom: 0;
+}
+
+.page-contacts .contact-col strong {
+    display: inline-block;
+    margin-bottom: 6px;
+
+    font-size: 22px;
+    font-weight: 300;
+    color: #f4efe6;
+}
+
+.page-contacts .contact-col a {
+    color: rgba(232, 225, 214, 0.9);
+    text-decoration: none;
+}
+
+.page-contacts .contact-col a:hover {
+    color: #ffffff;
+}
+
+@media (max-width: 900px) {
+    .page-contacts {
+        background:
+            linear-gradient(
+                180deg,
+                rgba(244, 239, 230, 0.96) 0%,
+                rgba(244, 239, 230, 0.88) 48%,
+                rgba(244, 239, 230, 0.72) 100%
+            ),
+            url("images/backgrounds/contacts-page-bg.jpg");
+
+        background-size: cover;
+        background-position: center top;
+        background-attachment: scroll;
+    }
+
+    .page-contacts .container {
+        min-height: auto;
+        padding-top: 120px;
+        padding-left: 18px;
+        padding-right: 18px;
+        padding-bottom: 70px;
+    }
+
+    .page-contacts .page-title {
+        font-size: 36px;
+        margin-bottom: 18px;
+    }
+
+    .page-contacts .contact-columns {
+        display: flex !important;
+        flex-direction: column;
+        gap: 18px;
+
+        margin: 46px 0 0 !important;
+        padding: 0 !important;
+    }
+
+    .page-contacts .contact-col {
+        min-height: 0;
+        padding: 28px 24px;
+
+        border-radius: 20px;
+    }
+
+    .page-contacts .contact-col strong {
+        font-size: 19px;
+    }
+
+    .page-contacts .contact-col p {
+        font-size: 14px;
+        line-height: 1.55;
     }
 }

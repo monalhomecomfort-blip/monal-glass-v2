@@ -394,6 +394,159 @@ footer {
 .about-block h2 {
     color: #e8e1d6; /* заголовки також кремові */
 }
+
+/* ===================== ABOUT PAGE — PREMIUM BACKGROUNDS ===================== */
+
+.page-about {
+    min-height: 100vh;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(244, 239, 230, 0.94) 0%,
+            rgba(244, 239, 230, 0.84) 40%,
+            rgba(244, 239, 230, 0.58) 72%,
+            rgba(244, 239, 230, 0.36) 100%
+        ),
+        url("images/backgrounds/about-page-bg.jpg");
+
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+.page-about .about-container {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 170px 40px 90px;
+
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 30px;
+}
+
+.page-about .about-block {
+    position: relative;
+    overflow: hidden;
+
+    min-height: 250px;
+    padding: 38px 42px;
+
+    border-radius: 22px;
+    border: 1px solid rgba(232, 225, 214, 0.14);
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(30, 29, 27, 0.90),
+            rgba(9, 9, 8, 0.94)
+        );
+
+    background-size: cover;
+    background-position: center;
+
+    box-shadow:
+        0 24px 58px rgba(0, 0, 0, 0.28),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+
+    color: #e8e1d6;
+}
+
+.page-about .about-block::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+
+    background:
+        radial-gradient(circle at 16% 18%, rgba(215, 195, 162, 0.14), transparent 34%),
+        linear-gradient(135deg, rgba(12, 12, 11, 0.46), rgba(4, 4, 4, 0.70));
+
+    pointer-events: none;
+    z-index: 0;
+}
+
+.page-about .about-block h2,
+.page-about .about-block p {
+    position: relative;
+    z-index: 1;
+}
+
+.page-about .about-block.big {
+    grid-column: 1 / -1;
+    min-height: 230px;
+}
+
+.page-about .about-block h2 {
+    margin: 0 0 18px;
+
+    font-size: 24px;
+    font-weight: 300;
+    line-height: 1.2;
+    color: #f4efe6;
+}
+
+.page-about .about-block p {
+    max-width: 920px;
+    margin: 0;
+
+    font-size: 14px;
+    line-height: 1.58;
+    color: rgba(232, 225, 214, 0.88);
+}
+
+/* 1 — головний верхній блок */
+.page-about .about-block:nth-child(1) {
+    background-image:
+        linear-gradient(135deg, rgba(30, 29, 27, 0.86), rgba(9, 9, 8, 0.93)),
+        url("images/backgrounds/about-brand-card-bg.jpg");
+
+    background-position: center;
+}
+
+/* 2 — Історія */
+.page-about .about-block:nth-child(2) {
+    background-image:
+        linear-gradient(135deg, rgba(30, 29, 27, 0.86), rgba(9, 9, 8, 0.94)),
+        url("images/backgrounds/about-history-card-bg.jpg");
+
+    background-position: center;
+}
+
+/* 3 — На чому ми акцентуємо */
+.page-about .about-block:nth-child(3) {
+    background-image:
+        linear-gradient(135deg, rgba(30, 29, 27, 0.86), rgba(9, 9, 8, 0.94)),
+        url("images/backgrounds/about-focus-card-bg.jpg");
+
+    background-position: center;
+}
+
+/* 4 — Філософія */
+.page-about .about-block:nth-child(4) {
+    background-image:
+        linear-gradient(135deg, rgba(30, 29, 27, 0.86), rgba(9, 9, 8, 0.93)),
+        url("images/backgrounds/about-philosophy-card-bg.jpg");
+
+    background-position: center;
+}
+
+/* 5 — Місія */
+.page-about .about-block:nth-child(5) {
+    background-image:
+        linear-gradient(135deg, rgba(30, 29, 27, 0.86), rgba(9, 9, 8, 0.94)),
+        url("images/backgrounds/about-mission-card-bg.jpg");
+
+    background-position: center;
+}
+
+/* 6 — Ціль */
+.page-about .about-block:nth-child(6) {
+    background-image:
+        linear-gradient(135deg, rgba(30, 29, 27, 0.86), rgba(9, 9, 8, 0.94)),
+        url("images/backgrounds/about-goal-card-bg.jpg");
+
+    background-position: center;
+}
 /* ===================== PRODUCT PAGE ===================== */
 .product-row {
     display: grid;
@@ -4353,5 +4506,62 @@ body.gift-packaging-open {
 
     .page-contacts .contacts-benefit:last-child {
         border-bottom: none;
+    }
+}
+
+/* ===================== ABOUT PAGE — MOBILE PREMIUM FIX ===================== */
+
+@media (max-width: 900px) {
+    .page-about {
+        background:
+            linear-gradient(
+                180deg,
+                rgba(244, 239, 230, 0.96) 0%,
+                rgba(244, 239, 230, 0.88) 52%,
+                rgba(244, 239, 230, 0.76) 100%
+            ),
+            url("images/backgrounds/about-page-bg.jpg");
+
+        background-size: cover;
+        background-position: center top;
+        background-attachment: scroll;
+    }
+
+    .page-about .about-container {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 18px !important;
+
+        width: 100% !important;
+        max-width: 100% !important;
+
+        margin: 0 auto !important;
+        padding: 126px 18px 70px !important;
+    }
+
+    .page-about .about-block,
+    .page-about .about-block.big,
+    .page-about .about-block.small {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-height: 0;
+
+        margin: 0 !important;
+        padding: 28px 24px !important;
+
+        border-radius: 20px;
+        box-sizing: border-box;
+    }
+
+    .page-about .about-block h2 {
+        margin-bottom: 14px;
+
+        font-size: 21px;
+        line-height: 1.22;
+    }
+
+    .page-about .about-block p {
+        font-size: 13px;
+        line-height: 1.52;
     }
 }

@@ -477,7 +477,10 @@ footer {
 }
 
 .page-about .about-block h2 {
-    margin: 0 0 18px;
+    position: relative;
+
+    margin: 0 0 22px;
+    padding-bottom: 14px;
 
     font-size: 24px;
     font-weight: 300;
@@ -485,6 +488,24 @@ footer {
     color: #f4efe6;
 }
 
+.page-about .about-block h2::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+
+    width: min(360px, 72%);
+    height: 1px;
+
+    background: linear-gradient(
+        90deg,
+        rgba(215, 195, 162, 0.88),
+        rgba(215, 195, 162, 0.22),
+        transparent
+    );
+
+    box-shadow: 0 0 12px rgba(215, 195, 162, 0.22);
+}
 .page-about .about-block p {
     max-width: 920px;
     margin: 0;

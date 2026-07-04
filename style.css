@@ -4058,9 +4058,9 @@ body.gift-packaging-open {
         linear-gradient(
             90deg,
             rgba(244, 239, 230, 0.92) 0%,
-            rgba(244, 239, 230, 0.82) 38%,
-            rgba(244, 239, 230, 0.58) 68%,
-            rgba(244, 239, 230, 0.34) 100%
+            rgba(244, 239, 230, 0.80) 38%,
+            rgba(244, 239, 230, 0.54) 68%,
+            rgba(244, 239, 230, 0.30) 100%
         ),
         url("images/backgrounds/contacts-page-bg.jpg");
 
@@ -4073,16 +4073,16 @@ body.gift-packaging-open {
     max-width: 1280px;
     min-height: calc(100vh - 70px);
 
-    padding-top: 170px;
-    padding-bottom: 80px;
+    padding-top: 138px;
+    padding-bottom: 64px;
 }
 
 .page-contacts .page-title {
     position: relative;
 
-    margin-bottom: 18px;
+    margin-bottom: 16px;
 
-    font-size: 42px;
+    font-size: 38px;
     font-weight: 300;
     color: #242424;
 }
@@ -4094,7 +4094,7 @@ body.gift-packaging-open {
     width: min(520px, 68vw);
     height: 1px;
 
-    margin-top: 18px;
+    margin-top: 16px;
 
     background: linear-gradient(
         90deg,
@@ -4104,49 +4104,91 @@ body.gift-packaging-open {
     );
 }
 
+.page-contacts .contacts-intro {
+    max-width: 620px;
+    margin: 0;
+
+    font-size: 14px;
+    line-height: 1.55;
+    color: rgba(36, 36, 36, 0.82);
+}
+
 .page-contacts .contact-columns {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    gap: 36px;
+    gap: 30px;
 
-    margin-top: 70px;
+    margin-top: 44px;
 }
 
 .page-contacts .contact-col {
-    min-height: 310px;
-    padding: 42px 48px;
+    min-height: 265px;
+    padding: 34px 38px;
 
     border-radius: 22px;
     border: 1px solid rgba(232, 225, 214, 0.14);
 
     background:
-        radial-gradient(circle at 12% 18%, rgba(215, 195, 162, 0.18), transparent 34%),
-        linear-gradient(135deg, rgba(62, 60, 55, 0.92), rgba(17, 17, 16, 0.94));
+        radial-gradient(circle at 10% 16%, rgba(215, 195, 162, 0.16), transparent 34%),
+        linear-gradient(135deg, rgba(58, 56, 51, 0.88), rgba(14, 14, 13, 0.94));
 
     box-shadow:
-        0 26px 60px rgba(0, 0, 0, 0.28),
+        0 20px 46px rgba(0, 0, 0, 0.24),
         inset 0 1px 0 rgba(255, 255, 255, 0.08);
 
     color: #e8e1d6;
 }
 
-.page-contacts .contact-col p {
-    margin: 0 0 28px;
+.page-contacts .contact-item {
+    display: grid;
+    grid-template-columns: 46px minmax(0, 1fr);
+    gap: 16px;
+    align-items: start;
 
-    font-size: 15px;
-    line-height: 1.65;
-    color: rgba(232, 225, 214, 0.88);
+    margin-bottom: 24px;
 }
 
-.page-contacts .contact-col p:last-child {
+.page-contacts .contact-item:last-child {
     margin-bottom: 0;
+}
+
+.page-contacts .contact-icon,
+.page-contacts .contacts-benefit-icon {
+    width: 38px;
+    height: 38px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+    border: 1px solid rgba(215, 195, 162, 0.34);
+
+    background:
+        radial-gradient(circle, rgba(215, 195, 162, 0.22), rgba(10, 10, 10, 0.18));
+
+    color: #d7c3a2;
+    font-size: 18px;
+    line-height: 1;
+
+    box-shadow:
+        0 0 18px rgba(215, 195, 162, 0.18),
+        inset 0 1px 0 rgba(255, 255, 255, 0.10);
+}
+
+.page-contacts .contact-col p {
+    margin: 0;
+
+    font-size: 14px;
+    line-height: 1.55;
+    color: rgba(232, 225, 214, 0.86);
 }
 
 .page-contacts .contact-col strong {
     display: inline-block;
-    margin-bottom: 6px;
+    margin-bottom: 5px;
 
-    font-size: 22px;
+    font-size: 20px;
     font-weight: 300;
     color: #f4efe6;
 }
@@ -4158,6 +4200,64 @@ body.gift-packaging-open {
 
 .page-contacts .contact-col a:hover {
     color: #ffffff;
+}
+
+.page-contacts .contacts-benefits {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+
+    margin-top: 22px;
+    padding: 20px 24px;
+
+    border-radius: 20px;
+    border: 1px solid rgba(232, 225, 214, 0.14);
+
+    background:
+        radial-gradient(circle at 16% 20%, rgba(215, 195, 162, 0.16), transparent 34%),
+        linear-gradient(135deg, rgba(58, 56, 51, 0.88), rgba(14, 14, 13, 0.94));
+
+    box-shadow:
+        0 18px 42px rgba(0, 0, 0, 0.22),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+
+    color: #e8e1d6;
+}
+
+.page-contacts .contacts-benefit {
+    display: grid;
+    grid-template-columns: 42px minmax(0, 1fr);
+    gap: 14px;
+    align-items: center;
+
+    padding: 0 18px;
+
+    border-right: 1px solid rgba(232, 225, 214, 0.12);
+}
+
+.page-contacts .contacts-benefit:first-child {
+    padding-left: 0;
+}
+
+.page-contacts .contacts-benefit:last-child {
+    padding-right: 0;
+    border-right: none;
+}
+
+.page-contacts .contacts-benefit strong {
+    display: block;
+    margin-bottom: 4px;
+
+    font-size: 14px;
+    font-weight: 400;
+    color: #d7c3a2;
+}
+
+.page-contacts .contacts-benefit p {
+    margin: 0;
+
+    font-size: 12px;
+    line-height: 1.35;
+    color: rgba(232, 225, 214, 0.78);
 }
 
 @media (max-width: 900px) {
@@ -4178,15 +4278,20 @@ body.gift-packaging-open {
 
     .page-contacts .container {
         min-height: auto;
-        padding-top: 120px;
+        padding-top: 116px;
         padding-left: 18px;
         padding-right: 18px;
         padding-bottom: 70px;
     }
 
     .page-contacts .page-title {
-        font-size: 36px;
-        margin-bottom: 18px;
+        font-size: 34px;
+        margin-bottom: 14px;
+    }
+
+    .page-contacts .contacts-intro {
+        font-size: 13px;
+        line-height: 1.5;
     }
 
     .page-contacts .contact-columns {
@@ -4194,23 +4299,59 @@ body.gift-packaging-open {
         flex-direction: column;
         gap: 18px;
 
-        margin: 46px 0 0 !important;
+        margin: 34px 0 0 !important;
         padding: 0 !important;
     }
 
     .page-contacts .contact-col {
         min-height: 0;
-        padding: 28px 24px;
+        padding: 26px 22px;
 
         border-radius: 20px;
     }
 
+    .page-contacts .contact-item {
+        grid-template-columns: 40px minmax(0, 1fr);
+        gap: 14px;
+
+        margin-bottom: 22px;
+    }
+
+    .page-contacts .contact-icon,
+    .page-contacts .contacts-benefit-icon {
+        width: 34px;
+        height: 34px;
+
+        font-size: 16px;
+    }
+
     .page-contacts .contact-col strong {
-        font-size: 19px;
+        font-size: 18px;
     }
 
     .page-contacts .contact-col p {
-        font-size: 14px;
-        line-height: 1.55;
+        font-size: 13px;
+        line-height: 1.5;
+    }
+
+    .page-contacts .contacts-benefits {
+        grid-template-columns: 1fr;
+        gap: 0;
+
+        margin-top: 18px;
+        padding: 8px 22px;
+    }
+
+    .page-contacts .contacts-benefit {
+        grid-template-columns: 38px minmax(0, 1fr);
+
+        padding: 16px 0;
+
+        border-right: none;
+        border-bottom: 1px solid rgba(232, 225, 214, 0.12);
+    }
+
+    .page-contacts .contacts-benefit:last-child {
+        border-bottom: none;
     }
 }

@@ -458,8 +458,8 @@ footer {
     inset: 0;
 
     background:
-        radial-gradient(circle at 16% 18%, rgba(215, 195, 162, 0.14), transparent 34%),
-        linear-gradient(135deg, rgba(12, 12, 11, 0.46), rgba(4, 4, 4, 0.70));
+        radial-gradient(circle at 16% 18%, rgba(215, 195, 162, 0.10), transparent 34%),
+        linear-gradient(135deg, rgba(12, 12, 11, 0.18), rgba(4, 4, 4, 0.42));
 
     pointer-events: none;
     z-index: 0;

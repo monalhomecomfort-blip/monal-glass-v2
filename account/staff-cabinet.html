@@ -323,6 +323,11 @@
 
     <div class="staff-report-filter-menu">
         <label>
+            <input type="checkbox" class="sales-report-source-checkbox" value="hide">
+            Не показувати
+        </label>
+
+        <label>
             <input type="checkbox" class="sales-report-source-checkbox" value="all" checked>
             Всі джерела
         </label>
@@ -369,6 +374,11 @@
 
         <div class="staff-report-filter-menu">
             <label>
+                <input type="checkbox" class="sales-report-category-checkbox" value="hide">
+                Не показувати
+            </label>
+
+            <label>
                 <input type="checkbox" class="sales-report-category-checkbox" value="all" checked>
                 Всі категорії
             </label>
@@ -381,6 +391,11 @@
         <summary>Ціни</summary>
 
         <div class="staff-report-filter-menu">
+            <label>
+                <input type="checkbox" class="sales-report-price-checkbox" value="hide">
+                Не показувати
+            </label>
+
             <label>
                 <input type="checkbox" class="sales-report-price-checkbox" value="all" checked>
                 Всі ціни
@@ -430,8 +445,23 @@
     </details>
 
     <label class="staff-checkbox-inline sales-report-days-toggle">
-        <input type="checkbox" id="sales-report-by-days">
-        По дням
+        <input
+            type="checkbox"
+            id="sales-report-by-days"
+            class="sales-report-days-mode-checkbox"
+            value="horizontal"
+        >
+        По дням горизонтальний
+    </label>
+
+    <label class="staff-checkbox-inline sales-report-days-toggle">
+        <input
+            type="checkbox"
+            id="sales-report-by-days-vertical"
+            class="sales-report-days-mode-checkbox"
+            value="vertical"
+        >
+        По дням вертикальний
     </label>
 
     <button id="load-sales-report-btn" class="buy-btn" type="button">
@@ -2003,7 +2033,8 @@ const salesReportEndDateInput = document.getElementById("sales-report-end-date")
 const loadSalesReportBtn = document.getElementById("load-sales-report-btn");
 const exportSalesReportBtn = document.getElementById("export-sales-report-btn");
 const salesReportResult = document.getElementById("sales-report-result");
-const salesReportByDaysInput = document.getElementById("sales-report-by-days");    
+const salesReportByDaysInput = document.getElementById("sales-report-by-days");
+const salesReportByDaysVerticalInput = document.getElementById("sales-report-by-days-vertical");
 const loadStockActsBtn = document.getElementById("load-stock-acts-btn");
 const stockActsResult = document.getElementById("stock-acts-result");
 const productionReportStartDateInput = document.getElementById("production-report-start-date");
@@ -6200,9 +6231,16 @@ function setupSalesReportCheckboxGroup(groupSelector) {
 
         const checkboxes = Array.from(menu.querySelectorAll(groupSelector));
         const allCheckbox = checkboxes.find(item => item.value === "all");
-        const itemCheckboxes = checkboxes.filter(item => item.value !== "all");
+        const itemCheckboxes = checkboxes.filter(item =>
+            item.value !== "all" &&
+            item.value !== "hide"
+        );
 
         if (!allCheckbox) return;
+
+        if (changedCheckbox.value === "hide") {
+            return;
+        }
 
         if (changedCheckbox.value === "all" && changedCheckbox.checked) {
             itemCheckboxes.forEach(item => {
@@ -6233,6 +6271,24 @@ function initSalesReportCheckboxFilters() {
 }
 
 initSalesReportCheckboxFilters();
+
+function initSalesReportDaysModeCheckboxes() {
+    document.addEventListener("change", event => {
+        const checkbox = event.target.closest(".sales-report-days-mode-checkbox");
+
+        if (!checkbox || !checkbox.checked) return;
+
+        document
+            .querySelectorAll(".sales-report-days-mode-checkbox")
+            .forEach(item => {
+                if (item !== checkbox) {
+                    item.checked = false;
+                }
+            });
+    });
+}
+
+initSalesReportDaysModeCheckboxes();
 
 function initSalesReportFilterCloseOnOutsideClick() {
     document.addEventListener("click", (event) => {
@@ -6270,18 +6326,45 @@ function getCheckedSalesReportValues(selector) {
     }
 
     return checkboxes
-        .filter(item => item.checked && item.value !== "all")
+        .filter(item =>
+            item.checked &&
+            item.value !== "all" &&
+            item.value !== "hide"
+        )
         .map(item => item.value);
 }
 
+function isSalesReportColumnHidden(selector) {
+    return Array.from(document.querySelectorAll(selector))
+        .some(item => item.value === "hide" && item.checked);
+}
+
+function getSalesReportDaysMode() {
+    if (salesReportByDaysVerticalInput?.checked) {
+        return "vertical";
+    }
+
+    if (salesReportByDaysInput?.checked) {
+        return "horizontal";
+    }
+
+    return "";
+}
+
 function getSalesReportFilters() {
+    const byDaysMode = getSalesReportDaysMode();
+
     return {
         warehouses: getCheckedSalesReportValues(".sales-report-warehouse-checkbox"),
         sources: getCheckedSalesReportValues(".sales-report-source-checkbox"),
         categories: getCheckedSalesReportValues(".sales-report-category-checkbox"),
         prices: getCheckedSalesReportValues(".sales-report-price-checkbox"),
         salesTypes: getCheckedSalesReportValues(".sales-report-sales-checkbox"),
-        byDays: Boolean(salesReportByDaysInput?.checked)
+        showSource: !isSalesReportColumnHidden(".sales-report-source-checkbox"),
+        showCategory: !isSalesReportColumnHidden(".sales-report-category-checkbox"),
+        showPrices: !isSalesReportColumnHidden(".sales-report-price-checkbox"),
+        byDaysMode,
+        byDays: Boolean(byDaysMode)
     };
 }
     
@@ -13416,7 +13499,14 @@ function renderSalesReport(data, filters) {
     const items = Array.isArray(data.items) ? data.items : [];
     const days = Array.isArray(data.days) ? data.days : [];
     const canViewCost = Boolean(data.canViewCost);
+    const byDaysMode = String(filters?.byDaysMode || "").trim();
     const byDays = Boolean(filters?.byDays);
+    const isByDaysHorizontal = byDaysMode === "horizontal";
+    const isByDaysVertical = byDaysMode === "vertical";
+
+    const showSource = filters?.showSource !== false;
+    const showCategory = filters?.showCategory !== false;
+    const showPrices = filters?.showPrices !== false;
 
     if (!items.length) {
         salesReportResult.classList.remove("staff-hidden");
@@ -13424,9 +13514,18 @@ function renderSalesReport(data, filters) {
         return;
     }
 
-    const showRetailPrice = isSalesReportSelected(filters?.prices, "retail");
-    const showCostPrice = canViewCost && isSalesReportSelected(filters?.prices, "cost");
-    const showRealizationPrice = isSalesReportSelected(filters?.prices, "realization");
+    const showRetailPrice =
+        showPrices &&
+        isSalesReportSelected(filters?.prices, "retail");
+
+    const showCostPrice =
+        showPrices &&
+        canViewCost &&
+        isSalesReportSelected(filters?.prices, "cost");
+
+    const showRealizationPrice =
+        showPrices &&
+        isSalesReportSelected(filters?.prices, "realization");
 
     const showRetailSales = isSalesReportSelected(filters?.salesTypes, "retail");
     const showCostSales = canViewCost && isSalesReportSelected(filters?.salesTypes, "cost");
@@ -13437,6 +13536,7 @@ function renderSalesReport(data, filters) {
         warehouse: 170,
         category: 160,
         product: 310,
+        date: 125,
         quantity: 115,
         money: 130,
         moneyWide: 165
@@ -13450,10 +13550,21 @@ function renderSalesReport(data, filters) {
         colgroupHtml += `<col class="${className}" style="width:${width}px;">`;
     }
 
-    addReportCol("sales-report-col-source", columnWidths.source);
-    addReportCol("sales-report-col-warehouse", columnWidths.warehouse);
-    addReportCol("sales-report-col-category", columnWidths.category);
-    addReportCol("sales-report-col-product", columnWidths.product);
+    function addBaseColumns() {
+        if (showSource) {
+            addReportCol("sales-report-col-source", columnWidths.source);
+        }
+
+        addReportCol("sales-report-col-warehouse", columnWidths.warehouse);
+
+        if (showCategory) {
+            addReportCol("sales-report-col-category", columnWidths.category);
+        }
+
+        addReportCol("sales-report-col-product", columnWidths.product);
+    }
+
+    addBaseColumns();
 
     if (!byDays) {
         addReportCol("sales-report-col-qty", columnWidths.quantity);
@@ -13467,7 +13578,7 @@ function renderSalesReport(data, filters) {
         if (showRealizationSales) addReportCol("sales-report-col-money-wide", columnWidths.moneyWide);
     }
 
-    if (byDays) {
+    if (isByDaysHorizontal) {
         if (showRetailPrice) addReportCol("sales-report-col-money", columnWidths.money);
         if (showCostPrice) addReportCol("sales-report-col-money", columnWidths.money);
         if (showRealizationPrice) addReportCol("sales-report-col-money-wide", columnWidths.moneyWide);
@@ -13481,23 +13592,54 @@ function renderSalesReport(data, filters) {
         });
     }
 
+    if (isByDaysVertical) {
+        addReportCol("sales-report-col-date", columnWidths.date);
+
+        if (showRetailPrice) addReportCol("sales-report-col-money", columnWidths.money);
+        if (showCostPrice) addReportCol("sales-report-col-money", columnWidths.money);
+        if (showRealizationPrice) addReportCol("sales-report-col-money-wide", columnWidths.moneyWide);
+
+        addReportCol("sales-report-col-qty", columnWidths.quantity);
+
+        if (showRetailSales) addReportCol("sales-report-col-money", columnWidths.money);
+        if (showCostSales) addReportCol("sales-report-col-money", columnWidths.money);
+        if (showRealizationSales) addReportCol("sales-report-col-money-wide", columnWidths.moneyWide);
+    }
+
     colgroupHtml += `</colgroup>`;
 
     let headHtml = "";
 
-    if (!byDays) {
-        headHtml = `
-            <tr>
-                <th>Джерело</th>
-                <th>Склад</th>
-                <th>Категорія</th>
-                <th>Товар</th>
-                <th>Продано к-сть</th>
-        `;
+    if (!byDays || isByDaysVertical) {
+        headHtml = `<tr>`;
+
+        if (showSource) {
+            headHtml += `<th>Джерело</th>`;
+        }
+
+        headHtml += `<th>Склад</th>`;
+
+        if (showCategory) {
+            headHtml += `<th>Категорія</th>`;
+        }
+
+        headHtml += `<th>Товар</th>`;
+
+        if (isByDaysVertical) {
+            headHtml += `<th>Дата</th>`;
+        }
+
+        if (!byDays) {
+            headHtml += `<th>Продано к-сть</th>`;
+        }
 
         if (showRetailPrice) headHtml += `<th>Ціна РЦ</th>`;
         if (showCostPrice) headHtml += `<th>Собівартість</th>`;
         if (showRealizationPrice) headHtml += `<th>Під реалізацію</th>`;
+
+        if (isByDaysVertical) {
+            headHtml += `<th>Продано к-сть</th>`;
+        }
 
         if (showRetailSales) headHtml += `<th>Продано РЦ</th>`;
         if (showCostSales) headHtml += `<th>Продано СВ</th>`;
@@ -13506,20 +13648,26 @@ function renderSalesReport(data, filters) {
         headHtml += `</tr>`;
     }
 
-    if (byDays) {
+    if (isByDaysHorizontal) {
         const dayColumnCount =
             1 +
             (showRetailSales ? 1 : 0) +
             (showCostSales ? 1 : 0) +
             (showRealizationSales ? 1 : 0);
 
-        headHtml = `
-            <tr>
-                <th rowspan="2">Джерело</th>
-                <th rowspan="2">Склад</th>
-                <th rowspan="2">Категорія</th>
-                <th rowspan="2">Товар</th>
-        `;
+        headHtml = `<tr>`;
+
+        if (showSource) {
+            headHtml += `<th rowspan="2">Джерело</th>`;
+        }
+
+        headHtml += `<th rowspan="2">Склад</th>`;
+
+        if (showCategory) {
+            headHtml += `<th rowspan="2">Категорія</th>`;
+        }
+
+        headHtml += `<th rowspan="2">Товар</th>`;
 
         if (showRetailPrice) headHtml += `<th rowspan="2">Ціна РЦ</th>`;
         if (showCostPrice) headHtml += `<th rowspan="2">Собівартість</th>`;
@@ -13549,55 +13697,151 @@ function renderSalesReport(data, filters) {
         headHtml += `</tr>`;
     }
 
-    const bodyHtml = items.map(item => {
-        let rowHtml = `
-            <tr>
-                <td>${escapeSaleHtml(item.source || "Не вказано")}</td>
-                <td>${escapeSaleHtml(item.warehouse_name || "")}</td>
-                <td>${escapeSaleHtml(item.category || "Не визначено")}</td>
-                <td>${escapeSaleHtml(item.product_name || "")}</td>
-        `;
+    const bodyHtml = (() => {
+        if (isByDaysVertical) {
+            const verticalRows = [];
 
-        if (!byDays) {
-            rowHtml += `<td>${Number(item.quantity || 0)}</td>`;
+            items.forEach(item => {
+                Object.entries(item.days || {}).forEach(([day, dayData]) => {
+                    const quantity = Number(dayData?.quantity || 0);
+                    const retailAmount = Number(dayData?.retail_amount || 0);
+                    const costAmount = Number(dayData?.cost_amount || 0);
+                    const realizationAmount = Number(dayData?.realization_amount || 0);
 
-            if (showRetailPrice) rowHtml += `<td>${formatSalesReportMoney(item.retail_price)}</td>`;
-            if (showCostPrice) rowHtml += `<td>${formatSalesReportMoney(item.cost_price)}</td>`;
-            if (showRealizationPrice) rowHtml += `<td>${formatSalesReportMoney(item.realization_price)}</td>`;
+                    if (
+                        quantity <= 0 &&
+                        retailAmount <= 0 &&
+                        costAmount <= 0 &&
+                        realizationAmount <= 0
+                    ) {
+                        return;
+                    }
 
-            if (showRetailSales) rowHtml += `<td>${formatSalesReportMoney(item.retail_amount)}</td>`;
-            if (showCostSales) rowHtml += `<td>${formatSalesReportMoney(item.cost_amount)}</td>`;
-            if (showRealizationSales) rowHtml += `<td>${formatSalesReportMoney(item.realization_amount)}</td>`;
-        }
+                    verticalRows.push({
+                        item,
+                        day,
+                        dayData
+                    });
+                });
+            });
 
-        if (byDays) {
-            if (showRetailPrice) rowHtml += `<td>${formatSalesReportMoney(item.retail_price)}</td>`;
-            if (showCostPrice) rowHtml += `<td>${formatSalesReportMoney(item.cost_price)}</td>`;
-            if (showRealizationPrice) rowHtml += `<td>${formatSalesReportMoney(item.realization_price)}</td>`;
+            verticalRows.sort((a, b) => {
+                const dayCompare = String(b.day).localeCompare(String(a.day));
 
-            days.forEach(day => {
-                const dayData = item.days && item.days[day]
-                    ? item.days[day]
-                    : {};
+                if (dayCompare) return dayCompare;
+
+                const warehouseCompare = String(a.item.warehouse_name || "").localeCompare(
+                    String(b.item.warehouse_name || ""),
+                    "uk"
+                );
+
+                if (warehouseCompare) return warehouseCompare;
+
+                return String(a.item.product_name || "").localeCompare(
+                    String(b.item.product_name || ""),
+                    "uk"
+                );
+            });
+
+            return verticalRows.map(row => {
+                const item = row.item;
+                const dayData = row.dayData || {};
+
+                let rowHtml = `<tr>`;
+
+                if (showSource) {
+                    rowHtml += `<td>${escapeSaleHtml(item.source || "Не вказано")}</td>`;
+                }
+
+                rowHtml += `<td>${escapeSaleHtml(item.warehouse_name || "")}</td>`;
+
+                if (showCategory) {
+                    rowHtml += `<td>${escapeSaleHtml(item.category || "Не визначено")}</td>`;
+                }
+
+                rowHtml += `
+                    <td>${escapeSaleHtml(item.product_name || "")}</td>
+                    <td>${escapeSaleHtml(row.day || "")}</td>
+                `;
+
+                if (showRetailPrice) rowHtml += `<td>${formatSalesReportMoney(item.retail_price)}</td>`;
+                if (showCostPrice) rowHtml += `<td>${formatSalesReportMoney(item.cost_price)}</td>`;
+                if (showRealizationPrice) rowHtml += `<td>${formatSalesReportMoney(item.realization_price)}</td>`;
 
                 rowHtml += `<td>${Number(dayData.quantity || 0)}</td>`;
 
                 if (showRetailSales) rowHtml += `<td>${formatSalesReportMoney(dayData.retail_amount)}</td>`;
                 if (showCostSales) rowHtml += `<td>${formatSalesReportMoney(dayData.cost_amount)}</td>`;
                 if (showRealizationSales) rowHtml += `<td>${formatSalesReportMoney(dayData.realization_amount)}</td>`;
-            });
+
+                rowHtml += `</tr>`;
+
+                return rowHtml;
+            }).join("");
         }
 
-        rowHtml += `</tr>`;
+        return items.map(item => {
+            let rowHtml = `<tr>`;
 
-        return rowHtml;
-    }).join("");
+            if (showSource) {
+                rowHtml += `<td>${escapeSaleHtml(item.source || "Не вказано")}</td>`;
+            }
+
+            rowHtml += `<td>${escapeSaleHtml(item.warehouse_name || "")}</td>`;
+
+            if (showCategory) {
+                rowHtml += `<td>${escapeSaleHtml(item.category || "Не визначено")}</td>`;
+            }
+
+            rowHtml += `<td>${escapeSaleHtml(item.product_name || "")}</td>`;
+
+            if (!byDays) {
+                rowHtml += `<td>${Number(item.quantity || 0)}</td>`;
+
+                if (showRetailPrice) rowHtml += `<td>${formatSalesReportMoney(item.retail_price)}</td>`;
+                if (showCostPrice) rowHtml += `<td>${formatSalesReportMoney(item.cost_price)}</td>`;
+                if (showRealizationPrice) rowHtml += `<td>${formatSalesReportMoney(item.realization_price)}</td>`;
+
+                if (showRetailSales) rowHtml += `<td>${formatSalesReportMoney(item.retail_amount)}</td>`;
+                if (showCostSales) rowHtml += `<td>${formatSalesReportMoney(item.cost_amount)}</td>`;
+                if (showRealizationSales) rowHtml += `<td>${formatSalesReportMoney(item.realization_amount)}</td>`;
+            }
+
+            if (isByDaysHorizontal) {
+                if (showRetailPrice) rowHtml += `<td>${formatSalesReportMoney(item.retail_price)}</td>`;
+                if (showCostPrice) rowHtml += `<td>${formatSalesReportMoney(item.cost_price)}</td>`;
+                if (showRealizationPrice) rowHtml += `<td>${formatSalesReportMoney(item.realization_price)}</td>`;
+
+                days.forEach(day => {
+                    const dayData = item.days && item.days[day]
+                        ? item.days[day]
+                        : {};
+
+                    rowHtml += `<td>${Number(dayData.quantity || 0)}</td>`;
+
+                    if (showRetailSales) rowHtml += `<td>${formatSalesReportMoney(dayData.retail_amount)}</td>`;
+                    if (showCostSales) rowHtml += `<td>${formatSalesReportMoney(dayData.cost_amount)}</td>`;
+                    if (showRealizationSales) rowHtml += `<td>${formatSalesReportMoney(dayData.realization_amount)}</td>`;
+                });
+            }
+
+            rowHtml += `</tr>`;
+
+            return rowHtml;
+        }).join("");
+    })();
+
+    const tableClass = isByDaysVertical
+        ? "sales-report-table-by-days-vertical"
+        : isByDaysHorizontal
+            ? "sales-report-table-by-days"
+            : "sales-report-table-period";
 
     salesReportResult.classList.remove("staff-hidden");
     salesReportResult.innerHTML = `
         <div class="staff-table-scroll">
             <table
-                class="staff-report-table ${byDays ? "sales-report-table-by-days" : "sales-report-table-period"}"
+                class="staff-report-table ${tableClass}"
                 style="width:${tableWidth}px;"
             >
                 ${colgroupHtml}
@@ -13651,6 +13895,7 @@ if (
                         categories: filters.categories,
                         prices: filters.prices,
                         salesTypes: filters.salesTypes,
+                        byDaysMode: filters.byDaysMode,
                         byDays: filters.byDays
                     })
                 }
@@ -13684,7 +13929,11 @@ function getSalesReportCheckedLabels(selector, allLabel) {
     }
 
     const labels = checkboxes
-        .filter(item => item.checked && item.value !== "all")
+        .filter(item =>
+            item.checked &&
+            item.value !== "all" &&
+            item.value !== "hide"
+        )
         .map(item => {
             const label = item.closest("label");
             return label ? label.textContent.trim() : item.value;
@@ -13732,7 +13981,14 @@ function downloadSalesReportCsv() {
         "Всі продажі"
     );
 
-    const byDaysText = salesReportByDaysInput?.checked ? "Так" : "Ні";
+    const byDaysMode = getSalesReportDaysMode();
+
+    const byDaysText =
+        byDaysMode === "vertical"
+            ? "По дням вертикальний"
+            : byDaysMode === "horizontal"
+                ? "По дням горизонтальний"
+                : "Ні";
 
     const metaRows = [
         ["Звіт по продажам"],

@@ -6231,6 +6231,7 @@ function setupSalesReportCheckboxGroup(groupSelector) {
 
         const checkboxes = Array.from(menu.querySelectorAll(groupSelector));
         const allCheckbox = checkboxes.find(item => item.value === "all");
+        const hideCheckbox = checkboxes.find(item => item.value === "hide");
         const itemCheckboxes = checkboxes.filter(item =>
             item.value !== "all" &&
             item.value !== "hide"
@@ -6238,11 +6239,9 @@ function setupSalesReportCheckboxGroup(groupSelector) {
 
         if (!allCheckbox) return;
 
-        if (changedCheckbox.value === "hide") {
-            return;
-        }
+        if (changedCheckbox.value === "hide" && changedCheckbox.checked) {
+            allCheckbox.checked = false;
 
-        if (changedCheckbox.value === "all" && changedCheckbox.checked) {
             itemCheckboxes.forEach(item => {
                 item.checked = false;
             });
@@ -6250,13 +6249,34 @@ function setupSalesReportCheckboxGroup(groupSelector) {
             return;
         }
 
-        if (changedCheckbox.value !== "all" && changedCheckbox.checked) {
+        if (changedCheckbox.value === "all" && changedCheckbox.checked) {
+            if (hideCheckbox) {
+                hideCheckbox.checked = false;
+            }
+
+            itemCheckboxes.forEach(item => {
+                item.checked = false;
+            });
+
+            return;
+        }
+
+        if (
+            changedCheckbox.value !== "all" &&
+            changedCheckbox.value !== "hide" &&
+            changedCheckbox.checked
+        ) {
             allCheckbox.checked = false;
+
+            if (hideCheckbox) {
+                hideCheckbox.checked = false;
+            }
         }
 
         const hasSpecificChecked = itemCheckboxes.some(item => item.checked);
+        const isHideChecked = Boolean(hideCheckbox?.checked);
 
-        if (!hasSpecificChecked) {
+        if (!hasSpecificChecked && !isHideChecked) {
             allCheckbox.checked = true;
         }
     });

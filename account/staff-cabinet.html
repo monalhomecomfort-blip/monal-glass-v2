@@ -2268,6 +2268,17 @@ const saleProductPicker = document.querySelector("#sales-section .staff-product-
 const saleProductSearch = document.getElementById("sale-product-search");
 const saleProductId = document.getElementById("sale-product-id");
 const saleProductDropdown = document.getElementById("sale-product-dropdown");
+
+const saleGiftPackagingPicker = document.getElementById(
+    "sale-gift-packaging-picker"
+);
+const openSaleGiftPackagingBtn = document.getElementById(
+    "open-sale-gift-packaging-btn"
+);
+const saleGiftPackagingDropdown = document.getElementById(
+    "sale-gift-packaging-dropdown"
+);
+
 const saleResult = document.getElementById("sale-result");
 const saleClientBlock = document.getElementById("sale-client-block");
 const saleClientSearchInput = document.getElementById("sale-client-search");
@@ -3750,6 +3761,53 @@ function renderProductDropdown(searchText = "") {
     `).join("");
 }
 
+function renderSaleGiftPackagingDropdown() {
+    if (!saleGiftPackagingDropdown) return;
+
+    const packagingProducts = STAFF_PRODUCTS.filter(product => {
+        const categorySlug = String(
+            product.category_slug || ""
+        ).trim().toLowerCase();
+
+        const productKey = String(
+            product.product_key || ""
+        ).trim().toLowerCase();
+
+        return (
+            categorySlug === "gift_packaging" ||
+            productKey === "gift_packaging" ||
+            productKey.startsWith("gift_packaging_")
+        );
+    });
+
+    saleGiftPackagingDropdown.classList.remove("staff-hidden");
+
+    if (!packagingProducts.length) {
+        saleGiftPackagingDropdown.innerHTML = `
+            <div class="staff-product-empty">
+                Активного подарункового пакування не знайдено
+            </div>
+        `;
+        return;
+    }
+
+    saleGiftPackagingDropdown.innerHTML = packagingProducts
+        .map(product => `
+            <div
+                class="staff-product-option"
+                data-product-id="${Number(product.id || 0)}"
+            >
+                ${escapeSaleHtml(
+                    product.display_name ||
+                    product.product_key ||
+                    "Подарункове пакування"
+                )}
+                · ${Number(product.price || 0)} грн
+            </div>
+        `)
+        .join("");
+}    
+
 function renderFocusPromoProductDropdown(searchText = "") {
     if (!focusPromoProductDropdown) return;
 
@@ -3893,6 +3951,82 @@ if (saleProductSearch && saleProductDropdown && saleProductId) {
             !saleProductDropdown.contains(e.target)
         ) {
             saleProductDropdown.classList.add("staff-hidden");
+        }
+    });
+}
+
+if (
+    saleGiftPackagingPicker &&
+    openSaleGiftPackagingBtn &&
+    saleGiftPackagingDropdown
+) {
+    openSaleGiftPackagingBtn.addEventListener("click", async (event) => {
+        event.stopPropagation();
+
+        await loadStaffProducts();
+        renderSaleGiftPackagingDropdown();
+    });
+
+    saleGiftPackagingDropdown.addEventListener("click", event => {
+        const option = event.target.closest(".staff-product-option");
+
+        if (!option) return;
+
+        const productId = Number(option.dataset.productId || 0);
+
+        const product = STAFF_PRODUCTS.find(item =>
+            Number(item.id || 0) === productId
+        );
+
+        if (!product) {
+            return;
+        }
+
+        const price = Number(product.price || 0);
+
+        if (price <= 0) {
+            saleResult?.classList.remove("staff-hidden");
+            saleResult.innerHTML =
+                "Для подарункового пакування не вказана ціна.";
+            return;
+        }
+
+        const existingItem = SALE_ITEMS.find(item =>
+            Number(item.productId || 0) === productId
+        );
+
+        if (existingItem) {
+            existingItem.quantity =
+                Number(existingItem.quantity || 0) + 1;
+        } else {
+            SALE_ITEMS.push({
+                productId,
+                title:
+                    product.display_name ||
+                    product.product_key ||
+                    "Подарункове пакування",
+                quantity: 1,
+                price,
+                discoveryAromas: []
+            });
+        }
+
+        saleGiftPackagingDropdown.classList.add("staff-hidden");
+        saleGiftPackagingDropdown.innerHTML = "";
+
+        resetSaleCertificateBox();
+        renderSaleItems();
+        syncSaleCertificatePaymentOptions();
+
+        if (saleResult) {
+            saleResult.classList.add("staff-hidden");
+            saleResult.innerHTML = "";
+        }
+    });
+
+    document.addEventListener("click", event => {
+        if (!saleGiftPackagingPicker.contains(event.target)) {
+            saleGiftPackagingDropdown.classList.add("staff-hidden");
         }
     });
 }

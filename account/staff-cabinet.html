@@ -1868,8 +1868,9 @@
             <h3>Редагування товарів і цін</h3>
 
             <p class="staff-hint">
-                Для редагування оберіть категорію товару. Доступні для зміни тільки назва і ціни.
-                ID, product_key, категорія, product_label і ємність показуються інформаційно.
+                Для редагування оберіть категорію товару. Доступні для зміни назва, ціни
+                та активність товару. ID, product_key, категорія, product_label і ємність
+                показуються інформаційно.
             </p>
 
             <div class="staff-search-row sales-report-filter-row">
@@ -11450,7 +11451,19 @@ function renderAdminProductsList(products) {
                                     style="width:110px;"
                                 >
                             </td>
-                            <td>${escapeStaffHtml(getAdminProductActiveText(product.is_active))}</td>
+                            <td>
+                                <label
+                                    class="staff-promo-checkbox"
+                                    style="justify-content:center;"
+                                >
+                                    <input
+                                        type="checkbox"
+                                        class="admin-product-active-input"
+                                        ${Number(product.is_active || 0) === 1 ? "checked" : ""}
+                                    >
+                                    Активний
+                                </label>
+                            </td>
                             <td>
                                 <button
                                     class="buy-btn save-admin-product-row-btn"
@@ -11534,12 +11547,13 @@ async function saveAdminProductRow(productId) {
     const priceInput = row.querySelector(".admin-product-price-input");
     const costPriceInput = row.querySelector(".admin-product-cost-price-input");
     const realizationPriceInput = row.querySelector(".admin-product-realization-price-input");
+    const activeInput = row.querySelector(".admin-product-active-input");
 
     const productName = productNameInput ? productNameInput.value.trim() : "";
     const price = priceInput ? Number(priceInput.value || 0) : 0;
     const costPrice = costPriceInput ? Number(costPriceInput.value || 0) : 0;
     const realizationPrice = realizationPriceInput ? Number(realizationPriceInput.value || 0) : 0;
-    const isActive = Number(row.dataset.isActive || 0);
+    const isActive = activeInput?.checked ? 1 : 0;
 
     if (!productName) {
         alert("Назва товару не може бути порожньою");

@@ -11067,6 +11067,8 @@ function renderAdminCreateProductTable() {
 
     const categorySlug = productAdminCreateCategorySelect.value;
     const sample = getAdminProductSample(categorySlug);
+    const isGiftPackaging =
+        categorySlug.toLowerCase() === "gift_packaging";
 
     if (!categorySlug || !sample) {
         productAdminCreateTableResult.innerHTML =
@@ -11125,14 +11127,28 @@ function renderAdminCreateProductTable() {
                             >
                         </td>
                         <td>
-                            <input
-                                type="number"
-                                id="new-admin-product-capacity"
-                                placeholder="ml"
-                                min="1"
-                                step="1"
-                                style="width:110px;"
-                            >
+                            ${
+                                isGiftPackaging
+                                    ? `
+                                        <input
+                                            type="text"
+                                            id="new-admin-product-capacity"
+                                            placeholder="Не потрібно"
+                                            disabled
+                                            style="width:110px;"
+                                        >
+                                    `
+                                    : `
+                                        <input
+                                            type="number"
+                                            id="new-admin-product-capacity"
+                                            placeholder="ml"
+                                            min="1"
+                                            step="1"
+                                            style="width:110px;"
+                                        >
+                                    `
+                            }
                         </td>
                         <td>
                             <input
@@ -11248,6 +11264,9 @@ async function createAdminProduct() {
         ? productAdminCreateCategorySelect.value
         : "";
 
+    const isGiftPackaging =
+        categorySlug.toLowerCase() === "gift_packaging";
+
     const productNameInput = document.getElementById("new-admin-product-name");
     const capacityInput = document.getElementById("new-admin-product-capacity");
     const priceInput = document.getElementById("new-admin-product-price");
@@ -11255,7 +11274,12 @@ async function createAdminProduct() {
     const realizationPriceInput = document.getElementById("new-admin-product-realization-price");
 
     const productName = productNameInput ? productNameInput.value.trim() : "";
-    const capacityMl = capacityInput ? Number(capacityInput.value || 0) : 0;
+    const capacityMl = isGiftPackaging
+        ? null
+        : capacityInput
+            ? Number(capacityInput.value || 0)
+            : 0;
+
     const price = priceInput ? Number(priceInput.value || 0) : 0;
     const costPrice = costPriceInput ? Number(costPriceInput.value || 0) : 0;
     const realizationPrice = realizationPriceInput ? Number(realizationPriceInput.value || 0) : 0;
@@ -11270,11 +11294,13 @@ async function createAdminProduct() {
         return;
     }
 
-    if (!Number.isInteger(capacityMl) || capacityMl <= 0) {
+    if (
+        !isGiftPackaging &&
+        (!Number.isInteger(capacityMl) || capacityMl <= 0)
+    ) {
         alert("Ємність має бути цілим числом без ml");
         return;
     }
-
     if (productAdminCreateResult) {
         productAdminCreateResult.classList.remove("staff-hidden");
         productAdminCreateResult.innerHTML = "Створюю товар...";

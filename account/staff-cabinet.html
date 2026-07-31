@@ -2430,7 +2430,9 @@ function isStaffPromoCertificateProduct(product) {
         value.startsWith("certificate_") ||
         value.includes("certificate") ||
         value.includes("certificates") ||
-        value.includes("сертиф")
+        value.includes("сертиф") ||
+        value === "gift_packaging" ||
+        value.startsWith("gift_packaging_")
     );
 }
 

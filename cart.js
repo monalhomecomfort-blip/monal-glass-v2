@@ -714,7 +714,6 @@ async function addToCart(
         catalogProduct &&
         Number(catalogProduct.is_in_stock) === 0
     ) {
-        alert("Цього товару зараз немає в наявності.");
         return;
     }
 
@@ -740,6 +739,115 @@ async function addToCart(
     PROMO_CODE = "";
 
     updateCartCount();
+}
+
+function getProductButtonCartItem(button) {
+    const onclickText = String(
+        button?.getAttribute("onclick") || ""
+    ).trim();
+
+    if (!onclickText.includes("addToCart(")) {
+        return null;
+    }
+
+    const match = onclickText.match(
+        /addToCart\(\s*(['"])(.*?)\1\s*,\s*(-?\d+(?:\.\d+)?)\s*,\s*(['"])(.*?)\4/
+    );
+
+    if (!match) {
+        return null;
+    }
+
+    return {
+        name: String(match[2] || "").trim(),
+        price: Number(match[3] || 0),
+        label: String(match[5] || "").trim()
+    };
+}
+
+function setProductAvailabilityState(
+    button,
+    catalogProduct
+) {
+    if (!button || !catalogProduct) {
+        return;
+    }
+
+    const productRow = button.closest(".product-row");
+    const buttonContainer = button.parentElement;
+
+    const existingStatus = buttonContainer
+        ? buttonContainer.querySelector(".product-stock-status")
+        : null;
+
+    const isInStock =
+        Number(catalogProduct.is_in_stock) === 1;
+
+    if (isInStock) {
+        button.disabled = false;
+        button.removeAttribute("aria-disabled");
+        button.classList.remove("product-buy-btn-unavailable");
+
+        productRow?.classList.remove("is-out-of-stock");
+
+        if (existingStatus) {
+            existingStatus.remove();
+        }
+
+        return;
+    }
+
+    button.disabled = true;
+    button.setAttribute("aria-disabled", "true");
+    button.classList.add("product-buy-btn-unavailable");
+
+    productRow?.classList.add("is-out-of-stock");
+
+    if (!existingStatus && buttonContainer) {
+        const status = document.createElement("div");
+
+        status.className = "product-stock-status";
+        status.textContent = "Нема в наявності";
+
+        button.insertAdjacentElement(
+            "afterend",
+            status
+        );
+    }
+}
+
+async function applyProductAvailabilityToPage() {
+    const productButtons = Array.from(
+        document.querySelectorAll(
+            'button[onclick*="addToCart("]'
+        )
+    );
+
+    if (!productButtons.length) {
+        return;
+    }
+
+    await loadCartProductsCatalog();
+
+    productButtons.forEach(button => {
+        const cartItem = getProductButtonCartItem(button);
+
+        if (!cartItem) {
+            return;
+        }
+
+        const catalogProduct =
+            findCartCatalogProductForItem(cartItem);
+
+        if (!catalogProduct) {
+            return;
+        }
+
+        setProductAvailabilityState(
+            button,
+            catalogProduct
+        );
+    });
 }
 
 function normalizeFocusPromoText(value) {
@@ -2254,13 +2362,17 @@ async function validateSelectedOfferInCart() {
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
-    const isCartPage = Boolean(document.getElementById("cart-list"));
+    const isCartPage = Boolean(
+        document.getElementById("cart-list")
+    );
 
     if (isCartPage) {
         await loadPublicPromoCampaigns();
         await loadCartProductsCatalog();
         await validateSelectedOfferInCart();
     }
+
+    await applyProductAvailabilityToPage();
 
     updateCartCount();
     renderCart();

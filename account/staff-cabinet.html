@@ -91,7 +91,15 @@
                 <button class="buy-btn" type="button" id="open-products-admin-section">
                     Перейти
                 </button>
-            </div>            
+            </div>
+
+            <div class="staff-card" data-access="admin" data-special-access="admin-tools">
+                <h3>Керування асортиментом</h3>
+                <p>Керування наявністю товарів на сайті без видалення товарних позицій.</p>
+                <button class="buy-btn" type="button" id="open-assortment-section">
+                    Перейти
+                </button>
+            </div>
 
             <div class="staff-card" data-access="admin">
                 <h3>Staff users</h3>
@@ -1910,6 +1918,68 @@
             <div id="products-admin-list-result" class="staff-result">
                 Оберіть категорію, щоб завантажити товари.
             </div>
+        </div>
+
+    </div>
+
+</section>
+
+<section
+    id="assortment-section"
+    class="staff-section staff-hidden"
+    data-special-access="admin-tools"
+>
+
+    <div class="account-block big">
+        <h2>Керування асортиментом</h2>
+
+        <p>
+            Керуйте доступністю товарів на сайті. Товар залишається на своїй
+            сторінці, але за відсутності його не можна буде додати в кошик.
+        </p>
+
+        <div class="staff-promo-campaign-block">
+            <h3>Наявність товарів</h3>
+
+            <p class="staff-hint">
+                Оберіть категорію. За потреби додатково відфільтруйте товари
+                за обʼємом.
+            </p>
+
+            <div class="staff-search-row sales-report-filter-row">
+                <select id="assortment-category-filter">
+                    <option value="">Оберіть категорію</option>
+                </select>
+
+                <select id="assortment-capacity-filter" disabled>
+                    <option value="all">Всі обʼєми</option>
+                </select>
+
+                <button
+                    id="load-assortment-products-btn"
+                    class="buy-btn"
+                    type="button"
+                >
+                    Показати
+                </button>
+            </div>
+
+            <div id="assortment-products-result" class="staff-result">
+                Оберіть категорію, щоб завантажити товари.
+            </div>
+
+            <button
+                id="save-assortment-btn"
+                class="buy-btn staff-hidden"
+                type="button"
+            >
+                Зберегти
+            </button>
+
+            <div
+                id="assortment-save-result"
+                class="staff-result staff-hidden"
+            ></div>
         </div>
 
     </div>

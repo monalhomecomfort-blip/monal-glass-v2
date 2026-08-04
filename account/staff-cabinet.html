@@ -11362,6 +11362,59 @@ function renderAssortmentCategoryOptions() {
         : "";
 }
 
+function getAssortmentCapacityMl(product) {
+    const directCapacity = Number(
+        product?.capacity_ml || 0
+    );
+
+    if (
+        Number.isFinite(directCapacity) &&
+        directCapacity > 0
+    ) {
+        return directCapacity;
+    }
+
+    const sourceText = [
+        product?.product_key,
+        product?.product_name,
+        product?.display_name,
+        product?.product_label
+    ]
+        .filter(Boolean)
+        .join(" ");
+
+    const markedCapacityMatch = sourceText.match(
+        /(\d{1,4})[\s_-]*(?:ml|мл)(?=$|[^a-zа-яіїєґ0-9])/i
+    );
+
+    if (markedCapacityMatch) {
+        const parsedCapacity = Number(
+            markedCapacityMatch[1] || 0
+        );
+
+        if (
+            Number.isFinite(parsedCapacity) &&
+            parsedCapacity > 0
+        ) {
+            return parsedCapacity;
+        }
+    }
+
+    const productKey = String(
+        product?.product_key || ""
+    ).trim();
+
+    const keySegmentMatch = productKey.match(
+        /(?:^|[_-])(3|15|30|50|100|200|250|275|500)(?:$|[_-])/i
+    );
+
+    if (keySegmentMatch) {
+        return Number(keySegmentMatch[1] || 0);
+    }
+
+    return 0;
+}    
+
 function renderAssortmentCapacityOptions() {
     if (!assortmentCapacityFilter || !assortmentCategoryFilter) return;
 
@@ -11381,7 +11434,9 @@ function renderAssortmentCapacityOptions() {
                 .filter(product =>
                     String(product.category_slug || "").trim() === categorySlug
                 )
-                .map(product => Number(product.capacity_ml || 0))
+                .map(product =>
+                    getAssortmentCapacityMl(product)
+                )
                 .filter(capacity => capacity > 0)
         )
     ].sort((a, b) => a - b);
@@ -11521,7 +11576,7 @@ function renderAssortmentProductsTable() {
             }
 
             return (
-                Number(product.capacity_ml || 0) ===
+                getAssortmentCapacityMl(product) ===
                 Number(capacityValue || 0)
             );
         })
@@ -11582,10 +11637,13 @@ function renderAssortmentProductsTable() {
                             product.product_key ||
                             "Товар";
 
+                        const capacityMl =
+                            getAssortmentCapacityMl(product);
+
                         const capacityText =
-                            Number(product.capacity_ml || 0) > 0
-                                ? `${Number(product.capacity_ml)} мл`
-                                : "—";
+                            capacityMl > 0
+                                ? `${capacityMl} мл`
+                                : "Не вказано";
 
                         return `
                             <tr

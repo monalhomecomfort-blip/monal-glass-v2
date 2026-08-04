@@ -685,19 +685,55 @@ function updateCartCount() {
     if (mobileCount) mobileCount.textContent = text;
 }
 
-function addToCart(name, price, label = "", items = null, extra = null) {
-    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+async function addToCart(
+    name,
+    price,
+    label = "",
+    items = null,
+    extra = null
+) {
+    await loadCartProductsCatalog();
 
-    const item = { name, price, label };
+    const item = {
+        name,
+        price,
+        label
+    };
 
-    if (items) item.items = items;
+    if (items) {
+        item.items = items;
+    }
 
     if (extra && typeof extra === "object") {
         Object.assign(item, extra);
     }
 
+    const catalogProduct = findCartCatalogProductForItem(item);
+
+    if (
+        catalogProduct &&
+        Number(catalogProduct.is_in_stock) === 0
+    ) {
+        alert("Цього товару зараз немає в наявності.");
+        return;
+    }
+
+    if (catalogProduct) {
+        item.product_id = Number(catalogProduct.id || 0);
+        item.product_key = catalogProduct.product_key || "";
+        item.category_slug = catalogProduct.category_slug || "";
+    }
+
+    const cart = JSON.parse(
+        localStorage.getItem("cart") || "[]"
+    );
+
     cart.push(item);
-    localStorage.setItem("cart", JSON.stringify(cart));
+
+    localStorage.setItem(
+        "cart",
+        JSON.stringify(cart)
+    );
 
     clearStoredPersonalPromoCodeData();
     localStorage.removeItem("promo_code");

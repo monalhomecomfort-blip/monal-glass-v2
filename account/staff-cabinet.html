@@ -2164,7 +2164,18 @@ const productsAdminListResult = document.getElementById("products-admin-list-res
 
 let ADMIN_PRODUCT_CATEGORIES = [];
 let ADMIN_PRODUCT_CATEGORIES_LOADED = false;
-let ADMIN_PRODUCTS_LIST = [];    
+let ADMIN_PRODUCTS_LIST = [];
+
+const assortmentSection = document.getElementById("assortment-section");
+const openAssortmentSectionBtn = document.getElementById("open-assortment-section");
+const assortmentCategoryFilter = document.getElementById("assortment-category-filter");
+const assortmentCapacityFilter = document.getElementById("assortment-capacity-filter");
+const loadAssortmentProductsBtn = document.getElementById("load-assortment-products-btn");
+const assortmentProductsResult = document.getElementById("assortment-products-result");
+const saveAssortmentBtn = document.getElementById("save-assortment-btn");
+const assortmentSaveResult = document.getElementById("assortment-save-result");
+
+let ASSORTMENT_PRODUCTS = [];   
 
 const promosSection = document.getElementById("promos-section");
 const openPromosSectionBtn = document.getElementById("open-promos-section");
@@ -11287,6 +11298,177 @@ function renderAdminProductCategoryOptions() {
     }
 }
 
+function renderAssortmentCategoryOptions() {
+    if (!assortmentCategoryFilter) return;
+
+    const currentValue = assortmentCategoryFilter.value;
+
+    const categoriesMap = new Map();
+
+    ASSORTMENT_PRODUCTS.forEach(product => {
+        const categorySlug = String(
+            product.category_slug || ""
+        ).trim();
+
+        if (!categorySlug) return;
+
+        if (!categoriesMap.has(categorySlug)) {
+            categoriesMap.set(
+                categorySlug,
+                String(
+                    product.product_label ||
+                    product.category_slug ||
+                    ""
+                ).trim()
+            );
+        }
+    });
+
+    const categories = Array.from(categoriesMap.entries())
+        .map(([categorySlug, productLabel]) => ({
+            categorySlug,
+            productLabel
+        }))
+        .sort((a, b) =>
+            String(a.productLabel || a.categorySlug).localeCompare(
+                String(b.productLabel || b.categorySlug),
+                "uk",
+                {
+                    numeric: true,
+                    sensitivity: "base"
+                }
+            )
+        );
+
+    assortmentCategoryFilter.innerHTML = `
+        <option value="">Оберіть категорію</option>
+
+        ${categories.map(category => `
+            <option value="${escapeStaffHtml(category.categorySlug)}">
+                ${escapeStaffHtml(
+                    category.productLabel ||
+                    category.categorySlug
+                )}
+            </option>
+        `).join("")}
+    `;
+
+    const currentCategoryExists = categories.some(category =>
+        category.categorySlug === currentValue
+    );
+
+    assortmentCategoryFilter.value = currentCategoryExists
+        ? currentValue
+        : "";
+}
+
+function renderAssortmentCapacityOptions() {
+    if (!assortmentCapacityFilter || !assortmentCategoryFilter) return;
+
+    const categorySlug = assortmentCategoryFilter.value;
+
+    if (!categorySlug) {
+        assortmentCapacityFilter.innerHTML = `
+            <option value="all">Всі обʼєми</option>
+        `;
+        assortmentCapacityFilter.disabled = true;
+        return;
+    }
+
+    const capacities = [
+        ...new Set(
+            ASSORTMENT_PRODUCTS
+                .filter(product =>
+                    String(product.category_slug || "").trim() === categorySlug
+                )
+                .map(product => Number(product.capacity_ml || 0))
+                .filter(capacity => capacity > 0)
+        )
+    ].sort((a, b) => a - b);
+
+    if (!capacities.length) {
+        assortmentCapacityFilter.innerHTML = `
+            <option value="all">Без обʼєму</option>
+        `;
+        assortmentCapacityFilter.disabled = true;
+        return;
+    }
+
+    assortmentCapacityFilter.innerHTML = `
+        <option value="all">Всі обʼєми</option>
+
+        ${capacities.map(capacity => `
+            <option value="${capacity}">
+                ${capacity} мл
+            </option>
+        `).join("")}
+    `;
+
+    assortmentCapacityFilter.disabled = false;
+}
+
+async function loadAssortmentProducts() {
+    if (!assortmentProductsResult) return;
+
+    assortmentProductsResult.innerHTML =
+        "Завантажую товари для керування асортиментом...";
+
+    if (saveAssortmentBtn) {
+        saveAssortmentBtn.classList.add("staff-hidden");
+    }
+
+    if (assortmentSaveResult) {
+        assortmentSaveResult.classList.add("staff-hidden");
+        assortmentSaveResult.innerHTML = "";
+    }
+
+    try {
+        const response = await fetch(
+            "https://monal-mono-pay-production.up.railway.app/api/staff/assortment-products-list",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    staffId: staff.id
+                })
+            }
+        );
+
+        const data = await response.json();
+
+        if (!data.ok) {
+            ASSORTMENT_PRODUCTS = [];
+
+            assortmentProductsResult.innerHTML =
+                data.error ||
+                "Не вдалося завантажити товари для керування асортиментом.";
+
+            return;
+        }
+
+        ASSORTMENT_PRODUCTS = Array.isArray(data.products)
+            ? data.products
+            : [];
+
+        renderAssortmentCategoryOptions();
+        renderAssortmentCapacityOptions();
+
+        assortmentProductsResult.innerHTML = ASSORTMENT_PRODUCTS.length
+            ? "Оберіть категорію, щоб завантажити товари."
+            : "Активних товарів сайту не знайдено.";
+
+    } catch (err) {
+        console.error("LOAD ASSORTMENT PRODUCTS ERROR:", err);
+
+        ASSORTMENT_PRODUCTS = [];
+
+        assortmentProductsResult.innerHTML =
+            "Помилка зʼєднання при завантаженні асортименту.";
+    }
+}
+
 function renderAdminCreateProductTable() {
     if (!productAdminCreateTableResult || !productAdminCreateCategorySelect) return;
 
@@ -12117,6 +12299,41 @@ if (openProductsAdminSectionBtn && productsAdminSection) {
         }
 
         await loadAdminProductCategories();
+    });
+}
+
+if (openAssortmentSectionBtn && assortmentSection) {
+    openAssortmentSectionBtn.addEventListener("click", async () => {
+        if (!CAN_MANAGE_ADMIN_TOOLS) {
+            alert("Немає права на керування асортиментом.");
+            return;
+        }
+
+        showStaffSection(assortmentSection);
+
+        await loadAssortmentProducts();
+    });
+}
+
+if (assortmentCategoryFilter) {
+    assortmentCategoryFilter.addEventListener("change", () => {
+        renderAssortmentCapacityOptions();
+
+        if (assortmentProductsResult) {
+            assortmentProductsResult.innerHTML =
+                assortmentCategoryFilter.value
+                    ? "Натисніть «Показати», щоб завантажити товари."
+                    : "Оберіть категорію, щоб завантажити товари.";
+        }
+
+        if (saveAssortmentBtn) {
+            saveAssortmentBtn.classList.add("staff-hidden");
+        }
+
+        if (assortmentSaveResult) {
+            assortmentSaveResult.classList.add("staff-hidden");
+            assortmentSaveResult.innerHTML = "";
+        }
     });
 }
 

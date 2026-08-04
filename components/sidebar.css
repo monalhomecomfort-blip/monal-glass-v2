@@ -3636,3 +3636,239 @@
         min-width: 0;
     }
 }
+
+/* ===================== STAFF ASSORTMENT MANAGEMENT ===================== */
+
+#assortment-section .staff-promo-campaign-block {
+    width: 100%;
+    max-width: none;
+}
+
+#assortment-section .staff-search-row {
+    width: 100%;
+    max-width: none;
+    display: grid;
+    grid-template-columns:
+        minmax(280px, 1fr)
+        minmax(200px, 0.55fr)
+        160px;
+    gap: 14px;
+    align-items: center;
+}
+
+#assortment-section .staff-search-row select {
+    width: 100%;
+    min-width: 0;
+    height: 44px;
+    margin: 0;
+    padding: 0 16px;
+    border: none;
+    border-radius: 14px;
+    background: #e7e4d9;
+    color: #1f1f1f;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    outline: none;
+    box-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.35) inset,
+        0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+#assortment-section .staff-search-row select:disabled {
+    color: rgba(31, 31, 31, 0.48);
+    cursor: not-allowed;
+}
+
+#assortment-section #load-assortment-products-btn {
+    width: 100%;
+    min-width: 0;
+    height: 44px;
+    margin: 0;
+    padding: 0 18px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+}
+
+#assortment-products-result {
+    width: 100%;
+    max-width: none;
+    padding: 0;
+    overflow: hidden;
+    background: rgba(231, 228, 217, 0.58);
+    border-radius: 18px;
+}
+
+#assortment-products-result .staff-table-scroll {
+    width: 100%;
+    max-width: 100%;
+    padding: 18px 20px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+}
+
+#assortment-products-result .staff-table-scroll::-webkit-scrollbar {
+    height: 8px;
+}
+
+#assortment-products-result .staff-table-scroll::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.04);
+    border-radius: 999px;
+}
+
+#assortment-products-result .staff-table-scroll::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.20);
+    border-radius: 999px;
+}
+
+#assortment-products-result .staff-report-table {
+    width: 100%;
+    min-width: 920px;
+    table-layout: fixed;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: transparent;
+}
+
+#assortment-products-result .staff-report-table th,
+#assortment-products-result .staff-report-table td {
+    box-sizing: border-box;
+    padding: 12px 14px;
+    border-right: 1px solid rgba(92, 82, 66, 0.12);
+    border-bottom: 1px solid rgba(92, 82, 66, 0.13);
+    color: #1f1f1f;
+    font-size: 14px;
+    line-height: 1.35;
+    vertical-align: middle;
+}
+
+#assortment-products-result .staff-report-table th {
+    background: rgba(218, 213, 199, 0.52);
+    font-weight: 600;
+    text-align: left;
+    white-space: nowrap;
+}
+
+#assortment-products-result .staff-report-table td {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+#assortment-products-result .staff-report-table th:last-child,
+#assortment-products-result .staff-report-table td:last-child {
+    border-right: none;
+}
+
+#assortment-products-result .staff-report-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+#assortment-products-result .staff-report-table tbody tr:hover td {
+    background: rgba(255, 255, 255, 0.30);
+}
+
+#assortment-products-result .staff-report-table th:nth-child(1),
+#assortment-products-result .staff-report-table td:nth-child(1) {
+    width: 54%;
+    text-align: left;
+    white-space: normal;
+    overflow-wrap: anywhere;
+}
+
+#assortment-products-result .staff-report-table th:nth-child(2),
+#assortment-products-result .staff-report-table td:nth-child(2) {
+    width: 10%;
+    text-align: center;
+    white-space: nowrap;
+}
+
+#assortment-products-result .staff-report-table th:nth-child(3),
+#assortment-products-result .staff-report-table td:nth-child(3) {
+    width: 11%;
+    text-align: center;
+    white-space: nowrap;
+}
+
+#assortment-products-result .staff-report-table th:nth-child(4),
+#assortment-products-result .staff-report-table td:nth-child(4) {
+    width: 9%;
+    text-align: center;
+    white-space: nowrap;
+}
+
+#assortment-products-result .staff-report-table th:nth-child(5),
+#assortment-products-result .staff-report-table td:nth-child(5) {
+    width: 16%;
+    text-align: center;
+    white-space: nowrap;
+}
+
+#assortment-products-result .assortment-stock-checkbox {
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    padding: 0;
+    accent-color: #8b725f;
+    cursor: pointer;
+    box-shadow: none;
+}
+
+#assortment-products-result .assortment-status-text {
+    min-width: 132px;
+    min-height: 34px;
+    padding: 7px 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    background: rgba(104, 125, 91, 0.12);
+    color: #536348;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.2;
+    white-space: nowrap;
+}
+
+#assortment-products-result tr.is-out-of-stock td {
+    color: rgba(31, 31, 31, 0.58);
+    background: rgba(190, 177, 165, 0.12);
+}
+
+#assortment-products-result tr.is-out-of-stock .assortment-status-text {
+    background: rgba(145, 91, 76, 0.10);
+    color: #83584d;
+}
+
+#assortment-section #save-assortment-btn {
+    width: 170px;
+    height: 44px;
+    margin-top: 14px;
+    padding: 0 22px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#assortment-section #assortment-save-result {
+    width: 100%;
+    max-width: none;
+}
+
+@media (max-width: 900px) {
+    #assortment-section .staff-search-row {
+        grid-template-columns: 1fr;
+    }
+
+    #assortment-products-result .staff-table-scroll {
+        padding: 12px;
+    }
+
+    #assortment-products-result .staff-report-table {
+        min-width: 760px;
+    }
+
+    #assortment-section #save-assortment-btn {
+        width: 100%;
+    }
+}

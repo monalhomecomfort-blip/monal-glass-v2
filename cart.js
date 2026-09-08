@@ -2250,16 +2250,49 @@ function openPaymentModal(orderId, payNow) {
     document.getElementById("check-phone").textContent =
         document.getElementById("inp-phone").value;
 
-    // місто
-    document.getElementById("check-city").textContent =
-        document.getElementById("np-city-input").value;
+    const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+    const electronicCertificateOnly =
+        isElectronicCertificateOnlyCart(cart);
 
-    // Нова пошта
-    const npManual = document.getElementById("np-manual").value;
-    const npSelect = document.getElementById("np-warehouse").value;
+    const checkCity = document.getElementById("check-city");
+    const checkNp = document.getElementById("check-np");
 
-    document.getElementById("check-np").textContent =
-        npManual ? npManual : npSelect;
+    const checkCityRow = checkCity?.closest("p");
+    const checkNpRow = checkNp?.closest("p");
+
+    if (electronicCertificateOnly) {
+        if (checkCityRow) {
+            checkCityRow.style.display = "none";
+        }
+
+        if (checkNpRow) {
+            checkNpRow.style.display = "none";
+        }
+    } else {
+        if (checkCityRow) {
+            checkCityRow.style.display = "";
+        }
+
+        if (checkNpRow) {
+            checkNpRow.style.display = "";
+        }
+
+        if (checkCity) {
+            checkCity.textContent =
+                document.getElementById("np-city-input").value;
+        }
+
+        const npManual =
+            document.getElementById("np-manual").value;
+
+        const npSelect =
+            document.getElementById("np-warehouse").value;
+
+        if (checkNp) {
+            checkNp.textContent =
+                npManual ? npManual : npSelect;
+        }
+    }
     
     const orderNote = getOrderNoteFromSelectedOffer();
     const orderNoteRow = document.getElementById("check-order-note-row");

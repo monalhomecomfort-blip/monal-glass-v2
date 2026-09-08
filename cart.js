@@ -1655,8 +1655,84 @@ function syncCertificatePaymentRules() {
     }
 }
 
+function isElectronicCertificateOnlyCart(cart = null) {
+    const currentCart = Array.isArray(cart)
+        ? cart
+        : JSON.parse(localStorage.getItem("cart") || "[]");
+
+    if (!currentCart.length) {
+        return false;
+    }
+
+    return currentCart.every(item =>
+        isCartCertificateItem(item) &&
+        String(item.certificateType || "")
+            .trim()
+            .toLowerCase() === "електронний"
+    );
+}
+
 function showCheckout() {
-    document.getElementById("checkout").style.display = "block";
+    const checkout = document.getElementById("checkout");
+    const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+
+    if (!checkout) {
+        return;
+    }
+
+    const electronicCertificateOnly =
+        isElectronicCertificateOnlyCart(cart);
+
+    const cityWrap = document.querySelector(".monal-cart-city-wrap");
+    const warehouse = document.getElementById("np-warehouse");
+    const manualHint = document.getElementById("np-manual-hint");
+    const manualInput = document.getElementById("np-manual");
+    const manualButton = checkout.querySelector(
+        'button[onclick="toggleManualNP()"]'
+    );
+
+    checkout.style.display = "block";
+
+    if (cityWrap) {
+        cityWrap.style.display =
+            electronicCertificateOnly ? "none" : "";
+    }
+
+    if (warehouse) {
+        warehouse.style.display =
+            electronicCertificateOnly ? "none" : "";
+    }
+
+    if (manualHint) {
+        manualHint.style.display = "none";
+    }
+
+    if (manualButton) {
+        manualButton.style.display =
+            electronicCertificateOnly ? "none" : "";
+    }
+
+    if (manualInput) {
+        manualInput.style.display = "none";
+
+        if (electronicCertificateOnly) {
+            manualInput.value = "";
+        }
+    }
+
+    if (electronicCertificateOnly) {
+        const cityInput =
+            document.getElementById("np-city-input");
+
+        if (cityInput) {
+            cityInput.value = "";
+        }
+
+        if (warehouse) {
+            warehouse.value = "";
+        }
+    }
+
     syncCertificatePaymentRules();
     window.scrollTo(0, document.body.scrollHeight);
 }
@@ -1898,6 +1974,9 @@ async function submitOrder() {
 
     if (!cart.length) return;
 
+    const electronicCertificateOnly =
+        isElectronicCertificateOnlyCart(cart);
+
     await refreshStoredUserAfterOrder();
 
     const savedUser = JSON.parse(localStorage.getItem("monal_user") || "null");
@@ -1984,7 +2063,19 @@ async function submitOrder() {
     const pay = document.querySelector("input[name='pay']:checked");
 
     
-    if (!last || !first || !phone || !city || !np || (remainingToPay > 0 && !pay)) {
+    if (
+        !last ||
+        !first ||
+        !phone ||
+        (
+            !electronicCertificateOnly &&
+            (!city || !np)
+        ) ||
+        (
+            remainingToPay > 0 &&
+            !pay
+        )
+    ) {
         alert("Заповніть всі поля");
         return;
     }
@@ -2063,8 +2154,10 @@ async function submitOrder() {
 `🧾 *Нове замовлення №${orderId}*
 👤 ${last} ${first}
 📞 ${phone}
-🏙 ${city}
-📦 НП: ${np}
+${electronicCertificateOnly
+  ? "📧 Доставка: електронний сертифікат"
+  : `🏙 ${city}
+📦 НП: ${np}`}
 
 💰 Загальна сума: ${total} грн
 ${focusProductDiscount > 0 ? `🌿 Аромат дня: −${focusProductDiscount} грн\n` : ""}
@@ -2113,7 +2206,9 @@ ${finalItemsText}
 
       buyerName: last + " " + first,
       buyerPhone: phone,
-      delivery: np,
+      delivery: electronicCertificateOnly
+          ? "Електронний сертифікат"
+          : np,
       itemsText: finalItemsText,
       totalAmount: total,
       orderAmount: afterDiscounts,  

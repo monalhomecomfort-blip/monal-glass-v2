@@ -2001,30 +2001,16 @@ async function submitOrder() {
     const certificateItems = cart.filter(i => i.label === "Сертифікат");
     const hasCertificate = certificateItems.length > 0;
 
-    let certificateType = null;
-
     if (hasCertificate) {
-        const uniqueCertificateTypes = [
-            ...new Set(
-                certificateItems
-                    .map(i => String(i.certificateType || "").trim().toLowerCase())
-                    .filter(Boolean)
-            )
-        ];
+        const hasCertificateWithoutType = certificateItems.some(
+            item => !String(item.certificateType || "").trim()
+        );
 
-        if (!uniqueCertificateTypes.length) {
-            alert("Для сертифіката не вибрано тип. Видаліть його з кошика і додайте заново зі сторінки сертифікатів.");
+        if (hasCertificateWithoutType) {
+            alert("Для сертифіката не вибрано тип. Видаліть його з кошика і додайте заново.");
             return;
         }
-
-        if (uniqueCertificateTypes.length > 1) {
-            alert("У одному замовленні сертифікати мають бути лише одного типу. Розділіть електронні та фізичні сертифікати на різні замовлення.");
-            return;
-        }
-
-        certificateType = uniqueCertificateTypes[0];
     }
-
     if (hasCertificate) {
         const infoEl = document.getElementById("cert-info");
         if (infoEl) {
@@ -2187,10 +2173,13 @@ ${finalItemsText}
 `;
 
     const certificatesData = cart
-      .filter(i => i.label === "Сертифікат")
-      .map(i => ({
-        nominal: i.price
-      }));
+        .filter(i => i.label === "Сертифікат")
+        .map(i => ({
+            nominal: i.price,
+            certificateType: String(i.certificateType || "")
+                .trim()
+                .toLowerCase()
+        }));
 
     PAYMENT_CONTEXT = {
       orderId,
@@ -2202,7 +2191,6 @@ ${finalItemsText}
       payNow,
       certificates: certificatesData.length ? certificatesData : null,
       usedCertificates: CERT_CODE_USED ? [CERT_CODE_USED] : [],
-      certificateType,
 
       buyerName: last + " " + first,
       buyerPhone: phone,
@@ -2338,7 +2326,6 @@ fetch("https://monal-mono-pay-production.up.railway.app/register-order", {
     text: PAYMENT_CONTEXT.text,
     certificates: PAYMENT_CONTEXT.certificates || null,
     usedCertificates: PAYMENT_CONTEXT.usedCertificates || [],
-    certificateType: PAYMENT_CONTEXT.certificateType || "електронний",
 
     buyerName: PAYMENT_CONTEXT.buyerName || "",
     buyerPhone: PAYMENT_CONTEXT.buyerPhone || "",

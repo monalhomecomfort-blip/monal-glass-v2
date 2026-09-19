@@ -421,6 +421,14 @@
                 >
 
                 <button
+                    id="download-certificates-template-btn"
+                    class="buy-btn"
+                    type="button"
+                >
+                    Скачати шаблон
+                </button>
+
+                <button
                     id="certificates-import-submit-btn"
                     class="buy-btn"
                     type="button"
@@ -2341,9 +2349,23 @@ const showCertificatesActivateBtn = document.getElementById("show-certificates-a
 const certificatesImportBox = document.getElementById("certificates-import-box");
 const certificatesActivateBox = document.getElementById("certificates-activate-box");
 
-const certificatesImportFileInput = document.getElementById("certificates-import-file");
-const certificatesImportSubmitBtn = document.getElementById("certificates-import-submit-btn");
-const certificatesImportPreview = document.getElementById("certificates-import-preview");
+const certificatesImportFileInput =
+    document.getElementById("certificates-import-file");
+
+const downloadCertificatesTemplateBtn =
+    document.getElementById(
+        "download-certificates-template-btn"
+    );
+
+const certificatesImportSubmitBtn =
+    document.getElementById(
+        "certificates-import-submit-btn"
+    );
+
+const certificatesImportPreview =
+    document.getElementById(
+        "certificates-import-preview"
+    );
 const certificatesImportResult = document.getElementById("certificates-import-result");
 
 const certificateActivateSearchInput =
@@ -13277,6 +13299,67 @@ async function loadStaffUsers() {
 }
 
 /* ===================== STAFF: PHYSICAL CERTIFICATES ===================== */
+function downloadCertificatesTemplate() {
+    if (typeof XLSX === "undefined") {
+        alert(
+            "Не вдалося завантажити модуль Excel."
+        );
+        return;
+    }
+
+    const worksheet =
+        XLSX.utils.aoa_to_sheet([
+            [
+                "Номер сертифікату",
+                "Номінал"
+            ]
+        ]);
+
+    /*
+     * Наперед створюємо текстовий формат
+     * для номерів сертифікатів.
+     * Так 0001 не перетвориться на 1.
+     */
+    for (let row = 2; row <= 501; row++) {
+        worksheet[`A${row}`] = {
+            t: "s",
+            v: "",
+            z: "@"
+        };
+    }
+
+    worksheet["!ref"] = "A1:B501";
+
+    worksheet["!cols"] = [
+        {
+            wch: 26
+        },
+        {
+            wch: 16
+        }
+    ];
+
+    const workbook =
+        XLSX.utils.book_new();
+
+    XLSX.utils.book_append_sheet(
+        workbook,
+        worksheet,
+        "Сертифікати"
+    );
+
+    XLSX.writeFile(
+        workbook,
+        "monal_certificates_template.xlsx"
+    );
+}
+
+if (downloadCertificatesTemplateBtn) {
+    downloadCertificatesTemplateBtn.addEventListener(
+        "click",
+        downloadCertificatesTemplate
+    );
+}
 
 function resetCertificatesImport() {
     CERTIFICATES_IMPORT_ROWS = [];

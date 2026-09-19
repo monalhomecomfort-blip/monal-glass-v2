@@ -15455,9 +15455,16 @@ if (createSaleBtn && saleResult) {
             items: SALE_ITEMS.map(item => ({
                 productId: item.productId,
                 quantity: item.quantity,
+
                 discoveryAromas: Array.isArray(item.discoveryAromas)
                     ? item.discoveryAromas
-                    : []
+                    : [],
+
+                certificateType:
+                    item.certificateType || null,
+
+                physicalCertificateCode:
+                    item.physicalCertificateCode || ""
             })),
             paymentType,
             warehouseId,

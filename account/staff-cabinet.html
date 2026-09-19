@@ -85,6 +85,14 @@
                 </button>
             </div>
 
+            <div class="staff-card" data-access="admin">
+                <h3>Сертифікати — завести/активувати</h3>
+                <p>Завантаження фізичних сертифікатів у БД та активація сертифікатів для онлайн-замовлень.</p>
+                <button class="buy-btn" type="button" id="open-certificates-manage-section">
+                    Перейти
+                </button>
+            </div>            
+
             <div class="staff-card" data-access="admin" data-special-access="admin-tools">
                 <h3>Товари та ціни</h3>
                 <p>Створення staff-товарів, редагування назв і цін у products_catalog.</p>
@@ -309,7 +317,98 @@
 
 </section>
 
-<section id="sales-report-section" class="staff-section staff-hidden">
+<section
+    id="certificates-manage-section"
+    class="staff-section staff-hidden"
+    data-access="admin"
+>
+    <div class="account-block big">
+
+        <h2>Сертифікати — завести/активувати</h2>
+
+        <p>
+            Керування фізичними сертифікатами з надрукованими номерами.
+        </p>
+
+        <div class="staff-search-row">
+            <button
+                id="show-certificates-import-btn"
+                class="buy-btn"
+                type="button"
+                data-special-access="admin-tools"
+            >
+                Завести сертифікати в БД
+            </button>
+
+            <button
+                id="show-certificates-activate-btn"
+                class="buy-btn"
+                type="button"
+            >
+                Активувати сертифікат
+            </button>
+        </div>
+
+        <div
+            id="certificates-import-box"
+            class="staff-promo-campaign-block staff-hidden"
+            data-special-access="admin-tools"
+            style="margin-top:24px;"
+        >
+            <h3>Завести сертифікати в БД</h3>
+
+            <p class="staff-hint">
+                Excel має містити дві колонки:
+                «Номер сертифікату» та «Номінал».
+                Колонку з номером сертифіката в Excel бажано зберігати у форматі «Текст»,
+                щоб номери з нулями на початку не змінювалися.
+            </p>
+
+            <div class="staff-search-row">
+                <input
+                    id="certificates-import-file"
+                    type="file"
+                    accept=".xlsx,.xls"
+                >
+
+                <button
+                    id="certificates-import-submit-btn"
+                    class="buy-btn"
+                    type="button"
+                    disabled
+                >
+                    Передати в БД
+                </button>
+            </div>
+
+            <div
+                id="certificates-import-preview"
+                class="staff-result staff-hidden"
+            ></div>
+
+            <div
+                id="certificates-import-result"
+                class="staff-result staff-hidden"
+            ></div>
+        </div>
+
+        <div
+            id="certificates-activate-box"
+            class="staff-promo-campaign-block staff-hidden"
+            style="margin-top:24px;"
+        >
+            <h3>Активувати сертифікат</h3>
+
+            <p class="staff-hint">
+                Тут буде пошук по номеру, відбір по номіналу,
+                № онлайн-замовлення та активація сертифіката.
+            </p>
+        </div>
+
+    </div>
+</section>
+
+<section id="products-admin-section" class="staff-section staff-hidden" data-special-access="admin-tools">
 
     <div class="account-block big">
         <h2>Звіт по продажам</h2>
@@ -2056,6 +2155,7 @@
 
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>    
 <script>
 const staff = JSON.parse(localStorage.getItem("monal_staff_user") || "null");
 
@@ -2149,6 +2249,22 @@ const staffUsersCreateBox = staffUsersSection
     ? staffUsersSection.querySelector(".staff-create-box")
     : null;
 const CAN_MANAGE_STAFF_USERS = Boolean(staff?.can_manage_staff_users);
+
+const certificatesManageSection = document.getElementById("certificates-manage-section");
+const openCertificatesManageSectionBtn = document.getElementById("open-certificates-manage-section");
+
+const showCertificatesImportBtn = document.getElementById("show-certificates-import-btn");
+const showCertificatesActivateBtn = document.getElementById("show-certificates-activate-btn");
+
+const certificatesImportBox = document.getElementById("certificates-import-box");
+const certificatesActivateBox = document.getElementById("certificates-activate-box");
+
+const certificatesImportFileInput = document.getElementById("certificates-import-file");
+const certificatesImportSubmitBtn = document.getElementById("certificates-import-submit-btn");
+const certificatesImportPreview = document.getElementById("certificates-import-preview");
+const certificatesImportResult = document.getElementById("certificates-import-result");
+
+let CERTIFICATES_IMPORT_ROWS = [];
 
 const productsAdminSection = document.getElementById("products-admin-section");
 const openProductsAdminSectionBtn = document.getElementById("open-products-admin-section");
@@ -12634,6 +12750,385 @@ async function loadStaffUsers() {
     }
 }
 
+/* ===================== STAFF: PHYSICAL CERTIFICATES ===================== */
+
+function resetCertificatesImport() {
+    CERTIFICATES_IMPORT_ROWS = [];
+
+    if (certificatesImportFileInput) {
+        certificatesImportFileInput.value = "";
+    }
+
+    if (certificatesImportSubmitBtn) {
+        certificatesImportSubmitBtn.disabled = true;
+    }
+
+    if (certificatesImportPreview) {
+        certificatesImportPreview.classList.add("staff-hidden");
+        certificatesImportPreview.innerHTML = "";
+    }
+
+    if (certificatesImportResult) {
+        certificatesImportResult.classList.add("staff-hidden");
+        certificatesImportResult.innerHTML = "";
+    }
+}
+
+function isCertificatesExcelHeader(row) {
+    const firstCell = String(row?.[0] || "")
+        .trim()
+        .toLowerCase();
+
+    const secondCell = String(row?.[1] || "")
+        .trim()
+        .toLowerCase();
+
+    return (
+        firstCell.includes("номер") ||
+        firstCell.includes("сертиф") ||
+        secondCell.includes("номін")
+    );
+}
+
+function normalizeCertificateExcelCode(value) {
+    return String(value ?? "")
+        .trim()
+        .replace(/\s+/g, "")
+        .toUpperCase();
+}
+
+function normalizeCertificateExcelNominal(value) {
+    const normalized = String(value ?? "")
+        .trim()
+        .replace(/\s+/g, "")
+        .replace(",", ".");
+
+    return Number(normalized || 0);
+}
+
+function renderCertificatesImportPreview() {
+    if (!certificatesImportPreview) return;
+
+    if (!CERTIFICATES_IMPORT_ROWS.length) {
+        certificatesImportPreview.classList.remove("staff-hidden");
+        certificatesImportPreview.innerHTML =
+            "У файлі не знайдено сертифікатів.";
+
+        if (certificatesImportSubmitBtn) {
+            certificatesImportSubmitBtn.disabled = true;
+        }
+
+        return;
+    }
+
+    certificatesImportPreview.classList.remove("staff-hidden");
+
+    certificatesImportPreview.innerHTML = `
+        <div style="margin-bottom:12px;">
+            Знайдено сертифікатів:
+            <strong>${CERTIFICATES_IMPORT_ROWS.length}</strong>
+        </div>
+
+        <div class="staff-table-scroll">
+            <table class="staff-report-table">
+                <thead>
+                    <tr>
+                        <th>№</th>
+                        <th>Номер сертифіката</th>
+                        <th>Номінал</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    ${CERTIFICATES_IMPORT_ROWS.map((certificate, index) => `
+                        <tr>
+                            <td>${index + 1}</td>
+                            <td>${escapeStaffHtml(certificate.certificateCode)}</td>
+                            <td>${Number(certificate.nominal)} грн</td>
+                        </tr>
+                    `).join("")}
+                </tbody>
+            </table>
+        </div>
+    `;
+
+    if (certificatesImportSubmitBtn) {
+        certificatesImportSubmitBtn.disabled = false;
+    }
+}
+
+async function readCertificatesExcelFile(file) {
+    if (!file) return;
+
+    if (typeof XLSX === "undefined") {
+        throw new Error("Не завантажилась бібліотека для читання Excel.");
+    }
+
+    const buffer = await file.arrayBuffer();
+
+    const workbook = XLSX.read(
+        buffer,
+        {
+            type: "array",
+            cellDates: false
+        }
+    );
+
+    const firstSheetName = workbook.SheetNames[0];
+
+    if (!firstSheetName) {
+        throw new Error("У Excel-файлі немає аркушів.");
+    }
+
+    const sheet = workbook.Sheets[firstSheetName];
+
+    const rows = XLSX.utils.sheet_to_json(
+        sheet,
+        {
+            header: 1,
+            raw: false,
+            defval: ""
+        }
+    );
+
+    const cleanRows = rows.filter(row =>
+        Array.isArray(row) &&
+        row.some(cell => String(cell ?? "").trim() !== "")
+    );
+
+    if (!cleanRows.length) {
+        throw new Error("Excel-файл порожній.");
+    }
+
+    const startIndex = isCertificatesExcelHeader(cleanRows[0])
+        ? 1
+        : 0;
+
+    const parsedCertificates = cleanRows
+        .slice(startIndex)
+        .map((row, index) => ({
+            excelRow: index + startIndex + 1,
+            certificateCode: normalizeCertificateExcelCode(row[0]),
+            nominal: normalizeCertificateExcelNominal(row[1])
+        }));
+
+    const invalidRow = parsedCertificates.find(certificate =>
+        !certificate.certificateCode ||
+        !Number.isFinite(certificate.nominal) ||
+        certificate.nominal <= 0
+    );
+
+    if (invalidRow) {
+        throw new Error(
+            `Некоректні дані в рядку Excel ${invalidRow.excelRow}. ` +
+            `Перевірте номер сертифіката та номінал.`
+        );
+    }
+
+    CERTIFICATES_IMPORT_ROWS = parsedCertificates;
+
+    renderCertificatesImportPreview();
+}
+
+async function submitCertificatesImport() {
+    if (!CAN_MANAGE_ADMIN_TOOLS) {
+        alert("Немає права заводити сертифікати.");
+        return;
+    }
+
+    if (!CERTIFICATES_IMPORT_ROWS.length) {
+        alert("Спочатку завантажте Excel-файл.");
+        return;
+    }
+
+    if (certificatesImportSubmitBtn) {
+        certificatesImportSubmitBtn.disabled = true;
+        certificatesImportSubmitBtn.textContent = "Передаю...";
+    }
+
+    if (certificatesImportResult) {
+        certificatesImportResult.classList.remove("staff-hidden");
+        certificatesImportResult.innerHTML =
+            "Передаю сертифікати в БД...";
+    }
+
+    try {
+        const response = await fetch(
+            "https://monal-mono-pay-production.up.railway.app/api/staff/certificates-import",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    staffId: staff.id,
+                    certificates: CERTIFICATES_IMPORT_ROWS.map(certificate => ({
+                        certificateCode: certificate.certificateCode,
+                        nominal: certificate.nominal
+                    }))
+                })
+            }
+        );
+
+        const data = await response.json();
+
+        if (!data.ok) {
+            if (certificatesImportResult) {
+                certificatesImportResult.innerHTML =
+                    data.error ||
+                    "Не вдалося завантажити сертифікати.";
+            }
+
+            return;
+        }
+
+        if (certificatesImportResult) {
+            certificatesImportResult.innerHTML =
+                `Сертифікати передано в БД і Google таблицю: ` +
+                `<strong>${Number(data.imported || 0)}</strong>.`;
+        }
+
+        CERTIFICATES_IMPORT_ROWS = [];
+
+        if (certificatesImportFileInput) {
+            certificatesImportFileInput.value = "";
+        }
+
+        if (certificatesImportPreview) {
+            certificatesImportPreview.classList.add("staff-hidden");
+            certificatesImportPreview.innerHTML = "";
+        }
+
+    } catch (err) {
+        console.error(
+            "CERTIFICATES IMPORT ERROR:",
+            err
+        );
+
+        if (certificatesImportResult) {
+            certificatesImportResult.classList.remove("staff-hidden");
+            certificatesImportResult.innerHTML =
+                err.message ||
+                "Помилка зʼєднання при завантаженні сертифікатів.";
+        }
+
+    } finally {
+        if (certificatesImportSubmitBtn) {
+            certificatesImportSubmitBtn.disabled =
+                !CERTIFICATES_IMPORT_ROWS.length;
+
+            certificatesImportSubmitBtn.textContent =
+                "Передати в БД";
+        }
+    }
+}
+
+if (
+    openCertificatesManageSectionBtn &&
+    certificatesManageSection
+) {
+    openCertificatesManageSectionBtn.addEventListener(
+        "click",
+        () => {
+            showStaffSection(certificatesManageSection);
+
+            if (
+                CAN_MANAGE_ADMIN_TOOLS &&
+                certificatesImportBox
+            ) {
+                certificatesImportBox.classList.remove("staff-hidden");
+
+                if (certificatesActivateBox) {
+                    certificatesActivateBox.classList.add("staff-hidden");
+                }
+            } else if (certificatesActivateBox) {
+                certificatesActivateBox.classList.remove("staff-hidden");
+            }
+        }
+    );
+}
+
+if (showCertificatesImportBtn) {
+    showCertificatesImportBtn.addEventListener(
+        "click",
+        () => {
+            if (!CAN_MANAGE_ADMIN_TOOLS) return;
+
+            if (certificatesImportBox) {
+                certificatesImportBox.classList.remove("staff-hidden");
+            }
+
+            if (certificatesActivateBox) {
+                certificatesActivateBox.classList.add("staff-hidden");
+            }
+        }
+    );
+}
+
+if (showCertificatesActivateBtn) {
+    showCertificatesActivateBtn.addEventListener(
+        "click",
+        () => {
+            if (certificatesImportBox) {
+                certificatesImportBox.classList.add("staff-hidden");
+            }
+
+            if (certificatesActivateBox) {
+                certificatesActivateBox.classList.remove("staff-hidden");
+            }
+        }
+    );
+}
+
+if (certificatesImportFileInput) {
+    certificatesImportFileInput.addEventListener(
+        "change",
+        async () => {
+            CERTIFICATES_IMPORT_ROWS = [];
+
+            if (certificatesImportSubmitBtn) {
+                certificatesImportSubmitBtn.disabled = true;
+            }
+
+            if (certificatesImportResult) {
+                certificatesImportResult.classList.add("staff-hidden");
+                certificatesImportResult.innerHTML = "";
+            }
+
+            const file =
+                certificatesImportFileInput.files?.[0];
+
+            if (!file) {
+                return;
+            }
+
+            try {
+                await readCertificatesExcelFile(file);
+
+            } catch (err) {
+                console.error(
+                    "READ CERTIFICATES EXCEL ERROR:",
+                    err
+                );
+
+                if (certificatesImportPreview) {
+                    certificatesImportPreview.classList.remove("staff-hidden");
+                    certificatesImportPreview.innerHTML =
+                        err.message ||
+                        "Не вдалося прочитати Excel-файл.";
+                }
+            }
+        }
+    );
+}
+
+if (certificatesImportSubmitBtn) {
+    certificatesImportSubmitBtn.addEventListener(
+        "click",
+        submitCertificatesImport
+    );
+}
+    
 if (openProductsAdminSectionBtn && productsAdminSection) {
     openProductsAdminSectionBtn.addEventListener("click", async () => {
         if (!CAN_MANAGE_ADMIN_TOOLS) {

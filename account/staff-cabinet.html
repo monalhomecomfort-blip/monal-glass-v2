@@ -4238,7 +4238,11 @@ if (saleProductSearch && saleProductDropdown && saleProductId) {
             saleProductPriceInput.value = "";
         }
 
-        renderProductDropdown(saleProductSearch.value);
+        resetNewSaleCertificateSelection();
+
+        renderProductDropdown(
+            saleProductSearch.value
+        );
     });
 
     saleProductSearch.addEventListener("focus", () => {
@@ -4266,12 +4270,16 @@ if (saleProductSearch && saleProductDropdown && saleProductId) {
         saleProductSearch.value = option.dataset.productTitle;
 
         if (saleProductPriceInput) {
-            saleProductPriceInput.value = option.dataset.productPrice || 0;
+            saleProductPriceInput.value =
+                option.dataset.productPrice || 0;
         }
 
         renderDiscoverySelector();
+        syncNewSaleCertificateBox();
 
-        saleProductDropdown.classList.add("staff-hidden");
+        saleProductDropdown.classList.add(
+            "staff-hidden"
+        );
         saleProductDropdown.innerHTML = "";
     });
 
@@ -6340,6 +6348,304 @@ function syncSaleCertificatePaymentOptions() {
         }
     }
 }
+
+function isStaffSaleCertificateProduct(product) {
+    if (!product) return false;
+
+    const productKey = String(
+        product.product_key || ""
+    ).trim().toLowerCase();
+
+    const displayName = String(
+        product.display_name || ""
+    ).trim().toLowerCase();
+
+    const productLabel = String(
+        product.product_label || ""
+    ).trim().toLowerCase();
+
+    const categorySlug = String(
+        product.category_slug || ""
+    ).trim().toLowerCase();
+
+    return (
+        productKey.startsWith("certificate_") ||
+        categorySlug === "certificates" ||
+        productLabel.includes("сертифікат") ||
+        displayName.includes("сертифікат")
+    );
+}
+
+
+function resetNewSaleCertificateSelection() {
+    SALE_NEW_CERTIFICATE_TYPE = "";
+    SALE_NEW_PHYSICAL_CERTIFICATE = null;
+
+    if (saleNewCertificateBox) {
+        saleNewCertificateBox.classList.add(
+            "staff-hidden"
+        );
+    }
+
+    if (saleNewCertificatePhysicalBox) {
+        saleNewCertificatePhysicalBox.classList.add(
+            "staff-hidden"
+        );
+    }
+
+    if (saleNewCertificateCodeInput) {
+        saleNewCertificateCodeInput.value = "";
+    }
+
+    if (saleNewCertificateResult) {
+        saleNewCertificateResult.textContent = "";
+    }
+
+    if (saleNewCertificateElectronicBtn) {
+        saleNewCertificateElectronicBtn.classList.remove(
+            "is-confirmed"
+        );
+    }
+
+    if (saleNewCertificatePhysicalBtn) {
+        saleNewCertificatePhysicalBtn.classList.remove(
+            "is-confirmed"
+        );
+    }
+
+    if (saleNewCertificateCheckBtn) {
+        saleNewCertificateCheckBtn.disabled = false;
+        saleNewCertificateCheckBtn.textContent = "Перевірити";
+    }
+}
+
+
+function syncNewSaleCertificateBox() {
+    const productId = Number(
+        saleProductId?.value || 0
+    );
+
+    const product = STAFF_PRODUCTS.find(item =>
+        Number(item.id || 0) === productId
+    );
+
+    if (!isStaffSaleCertificateProduct(product)) {
+        resetNewSaleCertificateSelection();
+        return;
+    }
+
+    if (saleNewCertificateBox) {
+        saleNewCertificateBox.classList.remove(
+            "staff-hidden"
+        );
+    }
+}
+
+
+async function checkNewPhysicalCertificate() {
+    const certificateCode = String(
+        saleNewCertificateCodeInput?.value || ""
+    )
+        .trim()
+        .toUpperCase();
+
+    if (!certificateCode) {
+        if (saleNewCertificateResult) {
+            saleNewCertificateResult.textContent =
+                "Введіть номер сертифіката.";
+        }
+
+        return;
+    }
+
+    SALE_NEW_PHYSICAL_CERTIFICATE = null;
+
+    if (saleNewCertificateCheckBtn) {
+        saleNewCertificateCheckBtn.disabled = true;
+        saleNewCertificateCheckBtn.textContent =
+            "Перевіряю...";
+    }
+
+    if (saleNewCertificateResult) {
+        saleNewCertificateResult.textContent =
+            "Перевіряю сертифікат...";
+    }
+
+    try {
+        const response = await fetch(
+            "https://monal-mono-pay-production.up.railway.app/api/staff/physical-certificate-check",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    staffId: staff.id,
+                    certificateCode
+                })
+            }
+        );
+
+        const data = await response.json();
+
+        if (!data.ok) {
+            if (saleNewCertificateResult) {
+                saleNewCertificateResult.textContent =
+                    data.error ||
+                    "Сертифікат не знайдено.";
+            }
+
+            return;
+        }
+
+        const nominal = Number(
+            data.certificate?.nominal || 0
+        );
+
+        const matchingProduct = STAFF_PRODUCTS.find(
+            product =>
+                isStaffSaleCertificateProduct(product) &&
+                Number(product.price || 0) === nominal
+        );
+
+        if (!matchingProduct) {
+            if (saleNewCertificateResult) {
+                saleNewCertificateResult.textContent =
+                    `Сертифікат знайдено: ${nominal} грн, ` +
+                    `але staff-товар такого номіналу не знайдений.`;
+            }
+
+            return;
+        }
+
+        SALE_NEW_PHYSICAL_CERTIFICATE = {
+            code:
+                data.certificate?.code ||
+                certificateCode,
+            nominal
+        };
+
+        SALE_NEW_CERTIFICATE_TYPE = "фізичний";
+
+        if (saleProductId) {
+            saleProductId.value =
+                matchingProduct.id;
+        }
+
+        if (saleProductSearch) {
+            saleProductSearch.value =
+                matchingProduct.display_name ||
+                matchingProduct.product_key ||
+                `Сертифікат ${nominal} грн`;
+        }
+
+        if (saleProductPriceInput) {
+            saleProductPriceInput.value = nominal;
+        }
+
+        if (saleProductQuantityInput) {
+            saleProductQuantityInput.value = 1;
+        }
+
+        if (saleNewCertificateResult) {
+            saleNewCertificateResult.textContent =
+                `Сертифікат ${SALE_NEW_PHYSICAL_CERTIFICATE.code} · ` +
+                `номінал ${nominal} грн`;
+        }
+
+    } catch (err) {
+        console.error(
+            "CHECK PHYSICAL CERTIFICATE ERROR:",
+            err
+        );
+
+        if (saleNewCertificateResult) {
+            saleNewCertificateResult.textContent =
+                "Помилка зʼєднання при перевірці сертифіката.";
+        }
+
+    } finally {
+        if (saleNewCertificateCheckBtn) {
+            saleNewCertificateCheckBtn.disabled = false;
+            saleNewCertificateCheckBtn.textContent =
+                "Перевірити";
+        }
+    }
+}
+
+
+if (saleNewCertificateElectronicBtn) {
+    saleNewCertificateElectronicBtn.addEventListener(
+        "click",
+        () => {
+            SALE_NEW_CERTIFICATE_TYPE =
+                "електронний";
+
+            SALE_NEW_PHYSICAL_CERTIFICATE = null;
+
+            saleNewCertificateElectronicBtn.classList.add(
+                "is-confirmed"
+            );
+
+            saleNewCertificatePhysicalBtn?.classList.remove(
+                "is-confirmed"
+            );
+
+            saleNewCertificatePhysicalBox?.classList.add(
+                "staff-hidden"
+            );
+
+            if (saleNewCertificateCodeInput) {
+                saleNewCertificateCodeInput.value = "";
+            }
+
+            if (saleNewCertificateResult) {
+                saleNewCertificateResult.textContent =
+                    "Електронний сертифікат. Код буде згенеровано автоматично.";
+            }
+        }
+    );
+}
+
+
+if (saleNewCertificatePhysicalBtn) {
+    saleNewCertificatePhysicalBtn.addEventListener(
+        "click",
+        () => {
+            SALE_NEW_CERTIFICATE_TYPE =
+                "фізичний";
+
+            SALE_NEW_PHYSICAL_CERTIFICATE = null;
+
+            saleNewCertificatePhysicalBtn.classList.add(
+                "is-confirmed"
+            );
+
+            saleNewCertificateElectronicBtn?.classList.remove(
+                "is-confirmed"
+            );
+
+            saleNewCertificatePhysicalBox?.classList.remove(
+                "staff-hidden"
+            );
+
+            if (saleNewCertificateResult) {
+                saleNewCertificateResult.textContent =
+                    "";
+            }
+
+            saleNewCertificateCodeInput?.focus();
+        }
+    );
+}
+
+
+if (saleNewCertificateCheckBtn) {
+    saleNewCertificateCheckBtn.addEventListener(
+        "click",
+        checkNewPhysicalCertificate
+    );
+}    
     
 if (addSaleItemBtn) {
     addSaleItemBtn.addEventListener("click", () => {
@@ -6356,6 +6662,53 @@ if (addSaleItemBtn) {
             saleResult.innerHTML = "Спочатку оберіть товар зі списку.";
             return;
         }
+
+        const isCertificate =
+            isStaffSaleCertificateProduct(product);
+
+        if (
+            isCertificate &&
+            !SALE_NEW_CERTIFICATE_TYPE
+        ) {
+            saleResult?.classList.remove(
+                "staff-hidden"
+            );
+
+            saleResult.innerHTML =
+                "Оберіть тип сертифіката: електронний або фізичний.";
+
+            return;
+        }
+
+        if (
+            isCertificate &&
+            SALE_NEW_CERTIFICATE_TYPE === "фізичний" &&
+            !SALE_NEW_PHYSICAL_CERTIFICATE
+        ) {
+            saleResult?.classList.remove(
+                "staff-hidden"
+            );
+
+            saleResult.innerHTML =
+                "Введіть і перевірте номер фізичного сертифіката.";
+
+            return;
+        }
+
+        if (
+            isCertificate &&
+            SALE_NEW_CERTIFICATE_TYPE === "фізичний" &&
+            Number(quantity) !== 1
+        ) {
+            saleResult?.classList.remove(
+                "staff-hidden"
+            );
+
+            saleResult.innerHTML =
+                "Один фізичний номер відповідає одному сертифікату. Кількість має бути 1.";
+
+            return;
+        }        
 
         if (!Number.isInteger(quantity) || quantity <= 0) {
             saleResult?.classList.remove("staff-hidden");
@@ -6387,11 +6740,49 @@ if (addSaleItemBtn) {
         }
 
         SALE_ITEMS.push({
-            productId,
-            title: product.display_name || product.product_key || "Товар",
+            productId:
+                isCertificate &&
+                SALE_NEW_CERTIFICATE_TYPE === "фізичний"
+                    ? Number(saleProductId?.value || productId)
+                    : productId,
+
+            title:
+                isCertificate &&
+                SALE_NEW_CERTIFICATE_TYPE === "фізичний"
+                    ? (
+                        saleProductSearch?.value ||
+                        product.display_name ||
+                        product.product_key ||
+                        "Сертифікат"
+                    )
+                    : (
+                        product.display_name ||
+                        product.product_key ||
+                        "Товар"
+                    ),
+
             quantity,
-            price,
-            discoveryAromas: selectedDiscoveryAromas
+            price:
+                isCertificate &&
+                SALE_NEW_CERTIFICATE_TYPE === "фізичний"
+                    ? Number(
+                        SALE_NEW_PHYSICAL_CERTIFICATE?.nominal || 0
+                    )
+                    : price,
+
+            discoveryAromas:
+                selectedDiscoveryAromas,
+
+            certificateType:
+                isCertificate
+                    ? SALE_NEW_CERTIFICATE_TYPE
+                    : null,
+
+            physicalCertificateCode:
+                isCertificate &&
+                SALE_NEW_CERTIFICATE_TYPE === "фізичний"
+                    ? SALE_NEW_PHYSICAL_CERTIFICATE?.code || ""
+                    : ""
         });
 
         if (saleProductSearch) saleProductSearch.value = "";
@@ -6401,6 +6792,8 @@ if (addSaleItemBtn) {
 
         if (saleDiscoveryBox) saleDiscoveryBox.classList.add("staff-hidden");
         if (saleDiscoveryList) saleDiscoveryList.innerHTML = "";
+
+        resetNewSaleCertificateSelection();        
 
         resetSaleCertificateBox();
         renderSaleItems();

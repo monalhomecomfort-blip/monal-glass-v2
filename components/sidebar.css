@@ -2632,10 +2632,12 @@
     width: 100%;
     max-width: none;
     display: grid;
-    grid-template-columns: minmax(320px, 860px) 220px;
+    grid-template-columns:
+        minmax(320px, 1fr)
+        190px
+        220px;
     gap: 14px;
     align-items: center;
-    justify-content: space-between;
 }
 
 #certificates-import-file {
@@ -2674,6 +2676,15 @@
 
 #certificates-import-file::file-selector-button:hover {
     background: rgba(205, 200, 184, 1);
+}
+
+#certificates-manage-section #download-certificates-template-btn {
+    width: 190px;
+    min-width: 190px;
+    height: 44px;
+    margin: 0;
+    padding: 0 18px;
+    white-space: nowrap;
 }
 
 #certificates-manage-section #certificates-import-submit-btn {
@@ -2828,6 +2839,7 @@
         grid-template-columns: 1fr;
     }
 
+    #certificates-manage-section #download-certificates-template-btn,
     #certificates-manage-section #certificates-import-submit-btn {
         width: 100%;
     }

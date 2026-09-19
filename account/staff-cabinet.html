@@ -400,9 +400,42 @@
             <h3>Активувати сертифікат</h3>
 
             <p class="staff-hint">
-                Тут буде пошук по номеру, відбір по номіналу,
-                № онлайн-замовлення та активація сертифіката.
+                Оберіть заведений фізичний сертифікат,
+                введіть № онлайн-замовлення та активуйте його.
             </p>
+
+            <div class="staff-search-row sales-report-filter-row">
+
+                <input
+                    id="certificate-activate-search"
+                    type="text"
+                    placeholder="Пошук за номером сертифіката"
+                    autocomplete="off"
+                >
+
+                <select id="certificate-activate-nominal">
+                    <option value="">Всі номінали</option>
+                    <option value="1000">1000 грн</option>
+                    <option value="2500">2500 грн</option>
+                    <option value="3500">3500 грн</option>
+                    <option value="5000">5000 грн</option>
+                </select>
+
+            </div>
+
+            <div
+                id="certificates-activate-result"
+                class="staff-result"
+                style="margin-top:18px;"
+            >
+                Завантажую сертифікати...
+            </div>
+
+            <div
+                id="certificate-activate-message"
+                class="staff-result staff-hidden"
+            ></div>
+
         </div>
 
     </div>
@@ -2264,7 +2297,21 @@ const certificatesImportSubmitBtn = document.getElementById("certificates-import
 const certificatesImportPreview = document.getElementById("certificates-import-preview");
 const certificatesImportResult = document.getElementById("certificates-import-result");
 
+const certificateActivateSearchInput =
+    document.getElementById("certificate-activate-search");
+
+const certificateActivateNominalSelect =
+    document.getElementById("certificate-activate-nominal");
+
+const certificatesActivateResult =
+    document.getElementById("certificates-activate-result");
+
+const certificateActivateMessage =
+    document.getElementById("certificate-activate-message");
+
 let CERTIFICATES_IMPORT_ROWS = [];
+let AVAILABLE_PHYSICAL_CERTIFICATES = [];
+let CERTIFICATE_SEARCH_TIMER = null;
 
 const productsAdminSection = document.getElementById("products-admin-section");
 const openProductsAdminSectionBtn = document.getElementById("open-products-admin-section");
@@ -13042,7 +13089,11 @@ if (
                     certificatesActivateBox.classList.add("staff-hidden");
                 }
             } else if (certificatesActivateBox) {
-                certificatesActivateBox.classList.remove("staff-hidden");
+                certificatesActivateBox.classList.remove(
+                    "staff-hidden"
+                );
+
+                loadAvailablePhysicalCertificates();
             }
         }
     );
@@ -13065,20 +13116,340 @@ if (showCertificatesImportBtn) {
     );
 }
 
+function renderAvailablePhysicalCertificates() {
+    if (!certificatesActivateResult) return;
+
+    if (!AVAILABLE_PHYSICAL_CERTIFICATES.length) {
+        certificatesActivateResult.innerHTML =
+            "Неактивованих фізичних сертифікатів за цим відбором немає.";
+        return;
+    }
+
+    certificatesActivateResult.innerHTML = `
+        <div class="staff-table-scroll">
+            <table class="staff-report-table">
+                <thead>
+                    <tr>
+                        <th>Номер сертифіката</th>
+                        <th>Номінал</th>
+                        <th>№ онлайн-замовлення</th>
+                        <th>Дія</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    ${AVAILABLE_PHYSICAL_CERTIFICATES.map(certificate => `
+                        <tr
+                            class="certificate-activate-row"
+                            data-certificate-code="${escapeStaffHtml(
+                                certificate.certificate_code
+                            )}"
+                        >
+                            <td>
+                                <strong>
+                                    ${escapeStaffHtml(
+                                        certificate.certificate_code
+                                    )}
+                                </strong>
+                            </td>
+
+                            <td>
+                                ${Number(certificate.nominal || 0)} грн
+                            </td>
+
+                            <td>
+                                <input
+                                    type="text"
+                                    class="certificate-order-id-input"
+                                    data-certificate-code="${escapeStaffHtml(
+                                        certificate.certificate_code
+                                    )}"
+                                    placeholder="№ замовлення"
+                                    autocomplete="off"
+                                >
+                            </td>
+
+                            <td>
+                                <button
+                                    type="button"
+                                    class="buy-btn certificate-activate-btn"
+                                    data-certificate-code="${escapeStaffHtml(
+                                        certificate.certificate_code
+                                    )}"
+                                    disabled
+                                >
+                                    Активувати
+                                </button>
+                            </td>
+                        </tr>
+                    `).join("")}
+                </tbody>
+            </table>
+        </div>
+    `;
+
+    certificatesActivateResult
+        .querySelectorAll(".certificate-order-id-input")
+        .forEach(input => {
+            input.addEventListener("input", () => {
+                const code = input.dataset.certificateCode || "";
+
+                const row = input.closest(
+                    ".certificate-activate-row"
+                );
+
+                const button = row?.querySelector(
+                    ".certificate-activate-btn"
+                );
+
+                if (!button) return;
+
+                button.disabled =
+                    !String(input.value || "").trim();
+            });
+        });
+
+    certificatesActivateResult
+        .querySelectorAll(".certificate-activate-btn")
+        .forEach(button => {
+            button.addEventListener(
+                "click",
+                async () => {
+                    const code =
+                        button.dataset.certificateCode || "";
+
+                    const row = button.closest(
+                        ".certificate-activate-row"
+                    );
+
+                    const orderInput = row?.querySelector(
+                        ".certificate-order-id-input"
+                    );
+
+                    const orderId = String(
+                        orderInput?.value || ""
+                    ).trim();
+
+                    if (!orderId) {
+                        return;
+                    }
+
+                    await activatePhysicalCertificate(
+                        code,
+                        orderId,
+                        button
+                    );
+                }
+            );
+        });
+}
+
+
+async function loadAvailablePhysicalCertificates() {
+    if (!certificatesActivateResult) return;
+
+    certificatesActivateResult.innerHTML =
+        "Завантажую сертифікати...";
+
+    if (certificateActivateMessage) {
+        certificateActivateMessage.classList.add(
+            "staff-hidden"
+        );
+
+        certificateActivateMessage.innerHTML = "";
+    }
+
+    try {
+        const response = await fetch(
+            "https://monal-mono-pay-production.up.railway.app/api/staff/certificates-available",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    staffId: staff.id,
+                    search:
+                        certificateActivateSearchInput
+                            ? certificateActivateSearchInput.value.trim()
+                            : "",
+                    nominal:
+                        certificateActivateNominalSelect
+                            ? certificateActivateNominalSelect.value
+                            : ""
+                })
+            }
+        );
+
+        const data = await response.json();
+
+        if (!data.ok) {
+            AVAILABLE_PHYSICAL_CERTIFICATES = [];
+
+            certificatesActivateResult.innerHTML =
+                data.error ||
+                "Не вдалося завантажити сертифікати.";
+
+            return;
+        }
+
+        AVAILABLE_PHYSICAL_CERTIFICATES =
+            Array.isArray(data.certificates)
+                ? data.certificates
+                : [];
+
+        renderAvailablePhysicalCertificates();
+
+    } catch (err) {
+        console.error(
+            "LOAD AVAILABLE CERTIFICATES ERROR:",
+            err
+        );
+
+        AVAILABLE_PHYSICAL_CERTIFICATES = [];
+
+        certificatesActivateResult.innerHTML =
+            "Помилка зʼєднання при завантаженні сертифікатів.";
+    }
+}
+
+
+async function activatePhysicalCertificate(
+    certificateCode,
+    orderId,
+    button
+) {
+    if (!certificateCode || !orderId) return;
+
+    if (button) {
+        button.disabled = true;
+        button.textContent = "Активую...";
+    }
+
+    if (certificateActivateMessage) {
+        certificateActivateMessage.classList.add(
+            "staff-hidden"
+        );
+
+        certificateActivateMessage.innerHTML = "";
+    }
+
+    try {
+        const response = await fetch(
+            "https://monal-mono-pay-production.up.railway.app/api/staff/certificate-activate",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    staffId: staff.id,
+                    certificateCode,
+                    orderId
+                })
+            }
+        );
+
+        const data = await response.json();
+
+        if (!data.ok) {
+            if (certificateActivateMessage) {
+                certificateActivateMessage.classList.remove(
+                    "staff-hidden"
+                );
+
+                certificateActivateMessage.innerHTML =
+                    data.error ||
+                    "Не вдалося активувати сертифікат.";
+            }
+
+            if (button) {
+                button.disabled = false;
+                button.textContent = "Активувати";
+            }
+
+            return;
+        }
+
+        if (certificateActivateMessage) {
+            certificateActivateMessage.classList.remove(
+                "staff-hidden"
+            );
+
+            certificateActivateMessage.innerHTML =
+                `Сертифікат <strong>${escapeStaffHtml(
+                    data.certificate?.code || certificateCode
+                )}</strong> активовано. ` +
+                `№ замовлення: <strong>${escapeStaffHtml(
+                    data.certificate?.orderId || orderId
+                )}</strong>.`;
+        }
+
+        await loadAvailablePhysicalCertificates();
+
+    } catch (err) {
+        console.error(
+            "ACTIVATE PHYSICAL CERTIFICATE ERROR:",
+            err
+        );
+
+        if (certificateActivateMessage) {
+            certificateActivateMessage.classList.remove(
+                "staff-hidden"
+            );
+
+            certificateActivateMessage.innerHTML =
+                "Помилка зʼєднання при активації сертифіката.";
+        }
+
+        if (button) {
+            button.disabled = false;
+            button.textContent = "Активувати";
+        }
+    }
+}    
+
 if (showCertificatesActivateBtn) {
     showCertificatesActivateBtn.addEventListener(
         "click",
-        () => {
+        async () => {
             if (certificatesImportBox) {
-                certificatesImportBox.classList.add("staff-hidden");
+                certificatesImportBox.classList.add(
+                    "staff-hidden"
+                );
             }
 
             if (certificatesActivateBox) {
-                certificatesActivateBox.classList.remove("staff-hidden");
+                certificatesActivateBox.classList.remove(
+                    "staff-hidden"
+                );
             }
+
+            await loadAvailablePhysicalCertificates();
         }
     );
 }
+
+if (certificateActivateSearchInput) {
+    certificateActivateSearchInput.addEventListener(
+        "input",
+        () => {
+            clearTimeout(CERTIFICATE_SEARCH_TIMER);
+
+            CERTIFICATE_SEARCH_TIMER = setTimeout(
+                loadAvailablePhysicalCertificates,
+                300
+            );
+        }
+    );
+}
+
+if (certificateActivateNominalSelect) {
+    certificateActivateNominalSelect.addEventListener(
+        "change",
+        loadAvailablePhysicalCertificates
+    );
+}    
 
 if (certificatesImportFileInput) {
     certificatesImportFileInput.addEventListener(

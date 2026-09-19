@@ -2632,9 +2632,10 @@
     width: 100%;
     max-width: none;
     display: grid;
-    grid-template-columns: minmax(320px, 1fr) 170px;
+    grid-template-columns: minmax(320px, 860px) 220px;
     gap: 14px;
     align-items: center;
+    justify-content: space-between;
 }
 
 #certificates-import-file {
@@ -2676,10 +2677,13 @@
 }
 
 #certificates-manage-section #certificates-import-submit-btn {
-    width: 100%;
-    min-width: 0;
+    width: 220px;
+    min-width: 220px;
     height: 44px;
     margin: 0;
+    padding: 0 20px;
+    white-space: nowrap;
+    line-height: 1.1;
 }
 
 

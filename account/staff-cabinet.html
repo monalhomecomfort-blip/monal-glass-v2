@@ -195,6 +195,55 @@
             </div>
 
             <div
+                id="sale-new-certificate-box"
+                class="staff-result staff-hidden"
+            >
+                <div class="staff-search-row">
+                    <button
+                        id="sale-new-certificate-electronic-btn"
+                        class="buy-btn"
+                        type="button"
+                    >
+                        Електронний
+                    </button>
+
+                    <button
+                        id="sale-new-certificate-physical-btn"
+                        class="buy-btn"
+                        type="button"
+                    >
+                        Фізичний
+                    </button>
+                </div>
+
+                <div
+                    id="sale-new-certificate-physical-box"
+                    class="staff-payment-inline staff-hidden"
+                    style="margin-top:14px;"
+                >
+                    <input
+                        type="text"
+                        id="sale-new-certificate-code"
+                        placeholder="Номер фізичного сертифіката"
+                        autocomplete="off"
+                    >
+
+                    <button
+                        id="sale-new-certificate-check-btn"
+                        class="buy-btn"
+                        type="button"
+                    >
+                        Перевірити
+                    </button>
+
+                    <span
+                        id="sale-new-certificate-result"
+                        class="staff-payment-note"
+                    ></span>
+                </div>
+            </div>
+
+            <div
                 id="sale-gift-packaging-picker"
                 class="staff-product-picker"
             >
@@ -2533,6 +2582,40 @@ const saleWarehouseSelect = document.getElementById("sale-warehouse-select");
 const saleProductQuantityInput = document.getElementById("sale-product-quantity");
 const saleProductPriceInput = document.getElementById("sale-product-price");
 const addSaleItemBtn = document.getElementById("add-sale-item-btn");
+
+const saleNewCertificateBox =
+    document.getElementById("sale-new-certificate-box");
+
+const saleNewCertificateElectronicBtn =
+    document.getElementById(
+        "sale-new-certificate-electronic-btn"
+    );
+
+const saleNewCertificatePhysicalBtn =
+    document.getElementById(
+        "sale-new-certificate-physical-btn"
+    );
+
+const saleNewCertificatePhysicalBox =
+    document.getElementById(
+        "sale-new-certificate-physical-box"
+    );
+
+const saleNewCertificateCodeInput =
+    document.getElementById(
+        "sale-new-certificate-code"
+    );
+
+const saleNewCertificateCheckBtn =
+    document.getElementById(
+        "sale-new-certificate-check-btn"
+    );
+
+const saleNewCertificateResult =
+    document.getElementById(
+        "sale-new-certificate-result"
+    );
+
 const saleDiscoveryBox = document.getElementById("sale-discovery-box");
 const saleDiscoveryHint = document.getElementById("sale-discovery-hint");
 const saleDiscoveryList = document.getElementById("sale-discovery-list");
@@ -2581,6 +2664,9 @@ let SALE_AVAILABLE_PUBLIC_PROMO_CODES = [];
 let STAFF_PRODUCTS_LOADED = false;
 let STAFF_PRODUCTS = [];
 let SALE_ITEMS = [];
+
+let SALE_NEW_CERTIFICATE_TYPE = "";
+let SALE_NEW_PHYSICAL_CERTIFICATE = null;
 
 function syncPartnerSaleClientBlock() {
     if (!saleClientBlock) return;

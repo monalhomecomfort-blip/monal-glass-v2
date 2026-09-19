@@ -2618,6 +2618,225 @@
     white-space: nowrap;
 }
 
+/* ===================== STAFF CERTIFICATES MANAGEMENT ===================== */
+
+#certificates-manage-section .staff-promo-campaign-block {
+    width: 100%;
+    max-width: none;
+}
+
+
+/* ===== IMPORT FILE ===== */
+
+#certificates-manage-section #certificates-import-box .staff-search-row {
+    width: 100%;
+    max-width: none;
+    display: grid;
+    grid-template-columns: minmax(320px, 1fr) 170px;
+    gap: 14px;
+    align-items: center;
+}
+
+#certificates-import-file {
+    width: 100%;
+    min-width: 0;
+    height: 46px;
+    padding: 4px 12px 4px 5px;
+    box-sizing: border-box;
+    border: none;
+    border-radius: 14px;
+    background: #e7e4d9;
+    color: rgba(31, 31, 31, 0.72);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    cursor: pointer;
+    box-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.35) inset,
+        0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+#certificates-import-file::file-selector-button {
+    height: 38px;
+    margin: 0 14px 0 0;
+    padding: 0 20px;
+    border: none;
+    border-radius: 11px;
+    background: rgba(215, 211, 197, 0.95);
+    color: #1f1f1f;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease;
+}
+
+#certificates-import-file::file-selector-button:hover {
+    background: rgba(205, 200, 184, 1);
+}
+
+#certificates-manage-section #certificates-import-submit-btn {
+    width: 100%;
+    min-width: 0;
+    height: 44px;
+    margin: 0;
+}
+
+
+/* ===== ACTIVATE FILTERS ===== */
+
+#certificates-manage-section #certificates-activate-box .staff-search-row {
+    width: 100%;
+    max-width: none;
+    display: grid;
+    grid-template-columns: minmax(320px, 1fr) 190px;
+    gap: 14px;
+    align-items: center;
+}
+
+#certificates-manage-section #certificate-activate-search,
+#certificates-manage-section #certificate-activate-nominal {
+    width: 100%;
+    min-width: 0;
+    height: 44px;
+    box-sizing: border-box;
+}
+
+
+/* ===== ACTIVATE TABLE ===== */
+
+#certificates-activate-result {
+    width: 100%;
+    max-width: none;
+    padding: 0;
+    overflow: hidden;
+    background: rgba(231, 228, 217, 0.55);
+    border-radius: 18px;
+}
+
+#certificates-activate-result .staff-table-scroll {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 14px 18px;
+    overflow-x: auto;
+}
+
+#certificates-activate-result .staff-report-table {
+    width: 100%;
+    min-width: 900px;
+    table-layout: fixed;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: transparent;
+}
+
+#certificates-activate-result .staff-report-table th,
+#certificates-activate-result .staff-report-table td {
+    box-sizing: border-box;
+    padding: 13px 16px;
+    vertical-align: middle;
+    text-align: left;
+    font-size: 14px;
+    line-height: 1.35;
+    color: #1f1f1f;
+    border-right: 1px solid rgba(0, 0, 0, 0.07);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+#certificates-activate-result .staff-report-table th {
+    padding-top: 11px;
+    padding-bottom: 11px;
+    font-weight: 600;
+    background: rgba(218, 214, 198, 0.34);
+    white-space: nowrap;
+}
+
+#certificates-activate-result .staff-report-table th:first-child {
+    border-top-left-radius: 12px;
+}
+
+#certificates-activate-result .staff-report-table th:last-child {
+    border-top-right-radius: 12px;
+}
+
+#certificates-activate-result .staff-report-table th:last-child,
+#certificates-activate-result .staff-report-table td:last-child {
+    border-right: none;
+}
+
+#certificates-activate-result .staff-report-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+#certificates-activate-result .staff-report-table th:nth-child(1),
+#certificates-activate-result .staff-report-table td:nth-child(1) {
+    width: 23%;
+}
+
+#certificates-activate-result .staff-report-table th:nth-child(2),
+#certificates-activate-result .staff-report-table td:nth-child(2) {
+    width: 17%;
+}
+
+#certificates-activate-result .staff-report-table th:nth-child(3),
+#certificates-activate-result .staff-report-table td:nth-child(3) {
+    width: 38%;
+}
+
+#certificates-activate-result .staff-report-table th:nth-child(4),
+#certificates-activate-result .staff-report-table td:nth-child(4) {
+    width: 22%;
+}
+
+#certificates-activate-result .certificate-order-id-input {
+    width: 100%;
+    min-width: 0;
+    height: 42px;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0 15px;
+    border: none;
+    border-radius: 12px;
+    background: rgba(218, 214, 198, 0.48);
+    color: #1f1f1f;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    outline: none;
+    box-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.35) inset,
+        0 2px 7px rgba(0, 0, 0, 0.05);
+}
+
+#certificates-activate-result .certificate-activate-btn {
+    width: 100%;
+    max-width: 170px;
+    min-width: 130px;
+    height: 42px;
+    margin: 0;
+}
+
+
+/* ===== MOBILE ===== */
+
+@media (max-width: 900px) {
+    #certificates-manage-section #certificates-import-box .staff-search-row,
+    #certificates-manage-section #certificates-activate-box .staff-search-row {
+        grid-template-columns: 1fr;
+    }
+
+    #certificates-manage-section #certificates-import-submit-btn {
+        width: 100%;
+    }
+
+    #certificates-activate-result .staff-table-scroll {
+        padding: 12px;
+    }
+
+    #certificates-activate-result .staff-report-table {
+        min-width: 760px;
+    }
+}
+
 /* ===================== STAFF PRODUCTS ADMIN ===================== */
 
 #products-admin-section .staff-promo-campaign-block {

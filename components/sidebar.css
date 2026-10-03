@@ -353,6 +353,157 @@
     background: rgba(232, 225, 214, 0.45);
     background-clip: padding-box;
 }
+
+
+/* ===================== CUSTOMER SIDEBAR — NEW DESIGN ===================== */
+
+body.home .sidebar-panel,
+body.site-page:not(.account-page) .sidebar-panel {
+    width: min(460px, 100vw);
+
+    padding: 30px 34px;
+
+    background: #050505;
+    color: #f5f3ed;
+
+    border-radius: 0;
+}
+
+body.home .sidebar-block,
+body.site-page:not(.account-page) .sidebar-block {
+    margin: 0;
+    padding: 0;
+}
+
+body.home .sidebar-profile,
+body.site-page:not(.account-page) .sidebar-profile {
+    padding-bottom: 26px;
+    margin-bottom: 20px;
+
+    border-bottom: 1px solid rgba(245, 243, 237, 0.18);
+}
+
+body.home #sidebar-user-name,
+body.home #sidebar-user-discount,
+body.home #sidebar-user-next-level,
+body.site-page:not(.account-page) #sidebar-user-name,
+body.site-page:not(.account-page) #sidebar-user-discount,
+body.site-page:not(.account-page) #sidebar-user-next-level {
+    color: #f5f3ed;
+
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px;
+    line-height: 1.45;
+
+    text-transform: uppercase;
+}
+
+body.home #sidebar-user-name,
+body.site-page:not(.account-page) #sidebar-user-name {
+    margin-top: 12px;
+
+    font-weight: 800;
+}
+
+body.home #sidebar-user-discount,
+body.home #sidebar-user-next-level,
+body.site-page:not(.account-page) #sidebar-user-discount,
+body.site-page:not(.account-page) #sidebar-user-next-level {
+    margin-top: 4px;
+
+    font-weight: 200;
+}
+
+body.home .sidebar-menu,
+body.site-page:not(.account-page) .sidebar-menu {
+    gap: 4px;
+}
+
+body.home .sidebar-link,
+body.site-page:not(.account-page) .sidebar-link {
+    min-height: 38px;
+    padding: 9px 0;
+
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    border-radius: 0;
+    border-bottom: 1px solid rgba(245, 243, 237, 0.10);
+
+    color: #f5f3ed;
+
+    font-weight: 200;
+    line-height: 1.35;
+
+    text-transform: uppercase;
+
+    white-space: normal;
+}
+
+body.home .sidebar-label,
+body.site-page:not(.account-page) .sidebar-label {
+    font-size: 12px;
+    line-height: 1.3;
+}
+
+body.home .sidebar-icon,
+body.site-page:not(.account-page) .sidebar-icon {
+    width: 18px;
+    height: 18px;
+    flex: 0 0 18px;
+}
+
+body.home .sidebar-icon svg,
+body.site-page:not(.account-page) .sidebar-icon svg {
+    width: 18px;
+    height: 18px;
+}
+
+body.home .sidebar-link:hover,
+body.site-page:not(.account-page) .sidebar-link:hover {
+    background: transparent;
+
+    opacity: 0.65;
+
+    box-shadow: none;
+}
+
+body.home .sidebar-link.is-active,
+body.site-page:not(.account-page) .sidebar-link.is-active {
+    background: transparent;
+
+    font-weight: 700;
+
+    box-shadow: none;
+}
+
+body.home #sidebar-logout,
+body.site-page:not(.account-page) #sidebar-logout {
+    margin-top: 26px;
+    padding-top: 0;
+}
+
+body.home #sidebar-logout .buy-btn,
+body.site-page:not(.account-page) #sidebar-logout .buy-btn {
+    width: 100%;
+
+    margin: 0;
+    padding: 11px 16px;
+
+    border: 1px solid rgba(245, 243, 237, 0.32);
+    border-radius: 0;
+
+    background: transparent;
+    color: #f5f3ed;
+
+    font-size: 10px;
+    font-weight: 400;
+
+    text-transform: uppercase;
+}
+
+
 /* прибрати синє підсвічування при тапі */
 .sidebar-link,
 .sidebar-link *,
@@ -1593,15 +1744,25 @@
 #promos-section .staff-promo-table-head > div {
     height: 42px;
     color: rgba(31, 31, 31, 0.62);
-    font-size: 14px;
-    line-height: 1.2;
+    font-size: 9px;
+    line-height: 1.3;
     font-weight: 300;
+    text-transform: uppercase;
 }
 
 #promos-section .staff-promo-cell {
-    height: 64px;
-    font-size: 15px;
+    height: auto;
+    min-height: 52px;
+    font-size: 9px;
     line-height: 1.35;
+    font-weight: 400;
+    word-break: break-word;
+}
+
+#promos-section .staff-promo-cell span,
+#promos-section .staff-promo-cell small {
+    font-size: 8px;
+    line-height: 1.3;
 }
 
 #promos-section .staff-promo-table-head > div:nth-child(1),
@@ -1993,14 +2154,15 @@
 #promos-section .staff-promo-actions .buy-btn {
     width: 100%;
     max-width: 116px;
-    height: 44px;
+    height: 40px;
     margin: 0;
     padding: 0 10px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     white-space: nowrap;
-    font-size: 13px;
+    font-size: 9px;
+    line-height: 1;
 }
 
 #promos-section #focus-promos-list-result {
@@ -2616,241 +2778,6 @@
     padding: 0 12px;
     font-size: 13px;
     white-space: nowrap;
-}
-
-/* ===================== STAFF CERTIFICATES MANAGEMENT ===================== */
-
-#certificates-manage-section .staff-promo-campaign-block {
-    width: 100%;
-    max-width: none;
-}
-
-
-/* ===== IMPORT FILE ===== */
-
-#certificates-manage-section #certificates-import-box .staff-search-row {
-    width: 100%;
-    max-width: none;
-    display: grid;
-    grid-template-columns:
-        minmax(320px, 1fr)
-        190px
-        220px;
-    gap: 14px;
-    align-items: center;
-}
-
-#certificates-import-file {
-    width: 100%;
-    min-width: 0;
-    height: 46px;
-    padding: 4px 12px 4px 5px;
-    box-sizing: border-box;
-    border: none;
-    border-radius: 14px;
-    background: #e7e4d9;
-    color: rgba(31, 31, 31, 0.72);
-    font-family: 'Montserrat', sans-serif;
-    font-size: 14px;
-    cursor: pointer;
-    box-shadow:
-        0 1px 0 rgba(255, 255, 255, 0.35) inset,
-        0 2px 8px rgba(0, 0, 0, 0.06);
-}
-
-#certificates-import-file::file-selector-button {
-    height: 38px;
-    margin: 0 14px 0 0;
-    padding: 0 20px;
-    border: none;
-    border-radius: 11px;
-    background: rgba(215, 211, 197, 0.95);
-    color: #1f1f1f;
-    font-family: 'Montserrat', sans-serif;
-    font-size: 13px;
-    cursor: pointer;
-    transition:
-        background 0.2s ease,
-        transform 0.2s ease;
-}
-
-#certificates-import-file::file-selector-button:hover {
-    background: rgba(205, 200, 184, 1);
-}
-
-#certificates-manage-section #download-certificates-template-btn {
-    width: 190px;
-    min-width: 190px;
-    height: 44px;
-    margin: 0;
-    padding: 0 18px;
-    white-space: nowrap;
-}
-
-#certificates-manage-section #certificates-import-submit-btn {
-    width: 220px;
-    min-width: 220px;
-    height: 44px;
-    margin: 0;
-    padding: 0 20px;
-    white-space: nowrap;
-    line-height: 1.1;
-}
-
-
-/* ===== ACTIVATE FILTERS ===== */
-
-#certificates-manage-section #certificates-activate-box .staff-search-row {
-    width: 100%;
-    max-width: none;
-    display: grid;
-    grid-template-columns: minmax(320px, 1fr) 190px;
-    gap: 14px;
-    align-items: center;
-}
-
-#certificates-manage-section #certificate-activate-search,
-#certificates-manage-section #certificate-activate-nominal {
-    width: 100%;
-    min-width: 0;
-    height: 44px;
-    box-sizing: border-box;
-}
-
-
-/* ===== ACTIVATE TABLE ===== */
-
-#certificates-activate-result {
-    width: 100%;
-    max-width: none;
-    padding: 0;
-    overflow: hidden;
-    background: rgba(231, 228, 217, 0.55);
-    border-radius: 18px;
-}
-
-#certificates-activate-result .staff-table-scroll {
-    width: 100%;
-    box-sizing: border-box;
-    padding: 14px 18px;
-    overflow-x: auto;
-}
-
-#certificates-activate-result .staff-report-table {
-    width: 100%;
-    min-width: 900px;
-    table-layout: fixed;
-    border-collapse: separate;
-    border-spacing: 0;
-    background: transparent;
-}
-
-#certificates-activate-result .staff-report-table th,
-#certificates-activate-result .staff-report-table td {
-    box-sizing: border-box;
-    padding: 13px 16px;
-    vertical-align: middle;
-    text-align: left;
-    font-size: 14px;
-    line-height: 1.35;
-    color: #1f1f1f;
-    border-right: 1px solid rgba(0, 0, 0, 0.07);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-}
-
-#certificates-activate-result .staff-report-table th {
-    padding-top: 11px;
-    padding-bottom: 11px;
-    font-weight: 600;
-    background: rgba(218, 214, 198, 0.34);
-    white-space: nowrap;
-}
-
-#certificates-activate-result .staff-report-table th:first-child {
-    border-top-left-radius: 12px;
-}
-
-#certificates-activate-result .staff-report-table th:last-child {
-    border-top-right-radius: 12px;
-}
-
-#certificates-activate-result .staff-report-table th:last-child,
-#certificates-activate-result .staff-report-table td:last-child {
-    border-right: none;
-}
-
-#certificates-activate-result .staff-report-table tbody tr:last-child td {
-    border-bottom: none;
-}
-
-#certificates-activate-result .staff-report-table th:nth-child(1),
-#certificates-activate-result .staff-report-table td:nth-child(1) {
-    width: 23%;
-}
-
-#certificates-activate-result .staff-report-table th:nth-child(2),
-#certificates-activate-result .staff-report-table td:nth-child(2) {
-    width: 17%;
-}
-
-#certificates-activate-result .staff-report-table th:nth-child(3),
-#certificates-activate-result .staff-report-table td:nth-child(3) {
-    width: 38%;
-}
-
-#certificates-activate-result .staff-report-table th:nth-child(4),
-#certificates-activate-result .staff-report-table td:nth-child(4) {
-    width: 22%;
-}
-
-#certificates-activate-result .certificate-order-id-input {
-    width: 100%;
-    min-width: 0;
-    height: 42px;
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0 15px;
-    border: none;
-    border-radius: 12px;
-    background: rgba(218, 214, 198, 0.48);
-    color: #1f1f1f;
-    font-family: 'Montserrat', sans-serif;
-    font-size: 14px;
-    outline: none;
-    box-shadow:
-        0 1px 0 rgba(255, 255, 255, 0.35) inset,
-        0 2px 7px rgba(0, 0, 0, 0.05);
-}
-
-#certificates-activate-result .certificate-activate-btn {
-    width: 100%;
-    max-width: 170px;
-    min-width: 130px;
-    height: 42px;
-    margin: 0;
-}
-
-
-/* ===== MOBILE ===== */
-
-@media (max-width: 900px) {
-    #certificates-manage-section #certificates-import-box .staff-search-row,
-    #certificates-manage-section #certificates-activate-box .staff-search-row {
-        grid-template-columns: 1fr;
-    }
-
-    #certificates-manage-section #download-certificates-template-btn,
-    #certificates-manage-section #certificates-import-submit-btn {
-        width: 100%;
-    }
-
-    #certificates-activate-result .staff-table-scroll {
-        padding: 12px;
-    }
-
-    #certificates-activate-result .staff-report-table {
-        min-width: 760px;
-    }
 }
 
 /* ===================== STAFF PRODUCTS ADMIN ===================== */
@@ -4105,5 +4032,1339 @@
 
     #assortment-section #save-assortment-btn {
         width: 100%;
+    }
+}
+
+/* ===================== STAFF CABINET — NEW MŌNAL DESIGN ===================== */
+
+.staff-page {
+    background: #f8f7f2;
+    color: #0b0b0b;
+
+    font-family: 'Montserrat', sans-serif;
+}
+
+.staff-page .account-container {
+    width: 100%;
+    max-width: none;
+
+    margin: 0;
+    padding: 54px 44px 72px;
+}
+
+.staff-page .account-main {
+    width: 100%;
+    max-width: none;
+
+    margin: 0;
+    padding: 0;
+}
+
+
+/* ===================== STAFF DASHBOARD HEADER ===================== */
+
+.staff-page .staff-icons-sprite {
+    position: absolute;
+
+    width: 0;
+    height: 0;
+
+    overflow: hidden;
+}
+
+.staff-page .staff-dashboard-header {
+    position: relative;
+
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+
+    margin-bottom: 34px;
+    padding: 0 0 18px;
+
+    border-bottom: 1px solid rgba(11, 11, 11, 0.16);
+}
+
+.staff-page .staff-dashboard-brand {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.staff-page .staff-dashboard-wordmark {
+    color: #0b0b0b;
+
+    text-decoration: none;
+}
+
+.staff-page .staff-dashboard-brand-divider {
+    width: 1px;
+    height: 28px;
+
+    background: rgba(11, 11, 11, 0.24);
+}
+
+.staff-page .staff-dashboard-brand-label {
+    color: rgba(11, 11, 11, 0.65);
+}
+
+.staff-page .staff-profile {
+    position: relative;
+}
+
+.staff-page .staff-profile-toggle {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    padding: 0;
+
+    border: 0;
+
+    background: transparent;
+    color: #0b0b0b;
+
+    cursor: pointer;
+}
+
+.staff-page .staff-profile-avatar {
+    width: 38px;
+    height: 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex: 0 0 38px;
+
+    border-radius: 50%;
+
+    background: #ddd6c8;
+    color: #0b0b0b;
+}
+
+.staff-page .staff-profile-copy {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.staff-page .staff-profile-copy strong,
+.staff-page .staff-profile-copy span {
+    color: #0b0b0b;
+}
+
+.staff-page .staff-profile-copy strong {
+    font-size: 1.12em;
+}
+
+.staff-page .staff-profile-arrow {
+    margin-left: 4px;
+
+    color: #0b0b0b;
+}
+
+.staff-page .staff-profile-menu {
+    position: absolute;
+    top: calc(100% + 12px);
+    right: 0;
+
+    z-index: 100;
+
+    min-width: 240px;
+
+    padding: 8px;
+
+    border: 1px solid rgba(11, 11, 11, 0.18);
+
+    background: #f8f7f2;
+
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+}
+
+.staff-page .staff-profile-menu-warehouse {
+    padding: 10px 12px;
+
+    border-bottom: 1px solid rgba(11, 11, 11, 0.12);
+
+    color: rgba(11, 11, 11, 0.60);
+
+    font-size: 10px;
+    line-height: 1.2;
+}
+
+.staff-page .staff-profile-menu a,
+.staff-page .staff-profile-menu button {
+    width: 100%;
+
+    display: block;
+
+    padding: 11px 12px;
+
+    border: 0;
+
+    background: transparent;
+    color: #0b0b0b;
+
+    text-align: left;
+    text-decoration: none;
+
+    font-size: 10px;
+    line-height: 1.2;
+
+    cursor: pointer;
+}
+
+.staff-page .staff-profile-menu a:hover,
+.staff-page .staff-profile-menu button:hover {
+    background: rgba(11, 11, 11, 0.05);
+}
+
+
+/* ===================== STAFF DASHBOARD INTRO ===================== */
+
+.staff-page .staff-dashboard-intro {
+    margin-bottom: 24px;
+}
+
+.staff-page .staff-dashboard-intro h2 {
+    margin-bottom: 8px;
+}
+
+
+/* ===================== STAFF MAIN CARDS ===================== */
+
+.staff-page .staff-dashboard-layout {
+    display: grid;
+    grid-template-columns:
+        minmax(0, 2fr)
+        minmax(330px, 0.78fr);
+
+    gap: 18px;
+
+    align-items: start;
+}
+
+.staff-page .staff-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(2, minmax(260px, 1fr));
+
+    gap: 16px;
+
+    margin-top: 0;
+}
+
+.staff-page .staff-card {
+    min-height: 190px;
+
+    padding: 20px;
+
+    display: flex;
+    flex-direction: column;
+
+    border: 1px solid #0b0b0b;
+    border-radius: 0;
+
+    background: #efede6;
+    color: #0b0b0b;
+
+    box-shadow: none;
+}
+
+.staff-page .staff-card-content {
+    display: grid;
+    grid-template-columns: 52px minmax(0, 1fr);
+    gap: 14px;
+
+    align-items: start;
+
+    margin-bottom: 18px;
+}
+
+.staff-page .staff-card-icon {
+    width: 48px;
+    height: 48px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #e3ded2;
+    color: #0b0b0b;
+}
+
+.staff-page .staff-card-icon svg {
+    width: 25px;
+    height: 25px;
+
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.staff-page .staff-card-copy {
+    min-width: 0;
+}
+
+.staff-page .staff-card h3 {
+    margin: 0 0 10px;
+
+    color: #0b0b0b;
+
+    font-size: 12px;
+    line-height: 1.35;
+
+    text-transform: uppercase;
+}
+
+.staff-page .staff-card p {
+    margin: 0;
+
+    color: rgba(11, 11, 11, 0.64);
+
+    font-size: 11px;
+    line-height: 1.35;
+
+    text-transform: uppercase;
+}
+
+.staff-page .staff-card .buy-btn {
+    width: 100%;
+    height: 40px;
+
+    margin-top: auto;
+    padding: 0 18px;
+
+    border: 1px solid #0b0b0b;
+    border-radius: 0;
+
+    background: #0b0b0b;
+    color: #f5f3ed;
+
+    box-shadow: none;
+}
+
+.staff-page .staff-card .buy-btn:hover:not(:disabled) {
+    background: #252525;
+    color: #f5f3ed;
+
+    border-color: #252525;
+}
+
+/* ===================== STAFF NOTEBOOK ===================== */
+
+.staff-page .staff-notebook {
+    position: sticky;
+    top: 18px;
+
+    min-width: 0;
+    height: 100%;
+
+    padding: 22px 18px 18px;
+
+    border: 1px solid #0b0b0b;
+    border-radius: 0;
+
+    background:
+        linear-gradient(
+            145deg,
+            #f4efe6 0%,
+            #f8f5ef 52%,
+            #efe7dc 100%
+        );
+
+    color: #0b0b0b;
+}
+
+.staff-page .staff-notebook-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 14px;
+
+    padding-bottom: 16px;
+}
+
+.staff-page .staff-notebook-head > div:first-child {
+    align-self: stretch;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.staff-page .staff-notebook-head h2 {
+    margin: 0 0 5px;
+
+    font-size: 18px;
+    line-height: 1.2;
+    letter-spacing: 0.12em;
+}
+
+.staff-page .staff-notebook-head p {
+    margin: 0;
+
+    font-size: 8px;
+    line-height: 1.35;
+    opacity: 0.58;
+}
+
+.staff-page .staff-notebook-pencil {
+    position: relative;
+
+    width: 64px;
+    height: 82px;
+
+    display: block;
+    flex: 0 0 64px;
+
+    font-size: 0;
+    line-height: 1;
+
+    background:
+        url("../images/staff-notebook/logo_tree.png")
+        center top / 54px auto
+        no-repeat;
+}
+
+.staff-page .staff-notebook-pencil::after {
+    content: "Isaiah 55:8";
+
+    position: absolute;
+
+    left: 50%;
+    bottom: 0;
+
+    transform: translateX(-50%);
+
+    color: #0b0b0b;
+
+    font-family: "Montserrat", sans-serif;
+    font-size: 8px;
+    font-weight: 400;
+    line-height: 1.2;
+
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+}
+
+.staff-page .staff-notebook-tabs {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+
+    border-top: 1px solid rgba(11, 11, 11, 0.18);
+    border-bottom: 1px solid rgba(11, 11, 11, 0.18);
+}
+
+.staff-page .staff-notebook-tab {
+    height: 38px;
+    padding: 0 8px;
+
+    border: 0;
+    border-right: 1px solid rgba(11, 11, 11, 0.14);
+
+    background: transparent;
+    color: #0b0b0b;
+
+    font-size: 9px;
+    line-height: 1.2;
+
+    cursor: pointer;
+}
+
+.staff-page .staff-notebook-tab:last-child {
+    border-right: 0;
+}
+
+.staff-page .staff-notebook-tab.active {
+    background: rgba(205, 187, 164, 0.28);
+}
+
+.staff-page .staff-notebook-create {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 38px;
+
+    gap: 8px;
+
+    margin-top: 14px;
+}
+
+.staff-page #staff-notebook-input {
+    width: 100%;
+    height: 38px;
+
+    padding: 0 10px;
+
+    border: 1px solid rgba(11, 11, 11, 0.22);
+    border-radius: 0;
+
+    background: rgba(255, 255, 255, 0.32);
+    color: #0b0b0b;
+    opacity: 1;
+
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.2;
+
+    outline: none;
+}
+
+.staff-page #staff-notebook-input::placeholder {
+    color: rgba(11, 11, 11, 0.55);
+    opacity: 1;
+    font-weight: 400;
+}
+
+.staff-page #staff-notebook-add-btn {
+    width: 38px;
+    height: 38px;
+
+    padding: 0;
+
+    border: 1px solid #0b0b0b;
+    border-radius: 0;
+
+    background: #0b0b0b;
+    color: #f8f7f2;
+
+    font-size: 18px;
+    line-height: 1;
+
+    cursor: pointer;
+}
+
+.staff-page .staff-notebook-list {
+    height: 520px;
+
+    margin-top: 14px;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    scrollbar-width: thin;
+}
+
+.staff-page .staff-notebook-row {
+    min-height: 38px;
+
+    display: grid;
+    grid-template-columns:
+        24px
+        minmax(0, 1fr)
+        28px;
+
+    align-items: center;
+
+    border-bottom: 1px dotted rgba(11, 11, 11, 0.18);
+}
+
+.staff-page .staff-notebook-number {
+    font-size: 12px;
+    opacity: 0.62;
+}
+
+.staff-page .staff-notebook-text {
+    padding: 8px 10px 8px 0;
+
+    font-size: 12px;
+    line-height: 1.4;
+
+    overflow-wrap: anywhere;
+}
+
+.staff-page .staff-notebook-check {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+}
+
+.staff-page .staff-notebook-check input {
+    position: absolute;
+
+    opacity: 0;
+    pointer-events: none;
+}
+
+.staff-page .staff-notebook-check span {
+    width: 14px;
+    height: 14px;
+
+    display: block;
+
+    border: 1px solid rgba(11, 11, 11, 0.55);
+
+    background: transparent;
+}
+
+.staff-page .staff-notebook-check input:checked + span {
+    background: #0b0b0b;
+
+    box-shadow:
+        inset 0 0 0 3px #f4efe6;
+}
+
+.staff-page .staff-notebook-empty {
+    padding: 24px 4px;
+
+    font-size: 9px;
+    line-height: 1.4;
+
+    text-align: center;
+    opacity: 0.55;
+}
+
+/* ===================== STAFF TASK ASSIGNMENT ===================== */
+
+.staff-page .staff-task-form {
+    display: grid;
+    grid-template-columns:
+        minmax(260px, 1.6fr)
+        minmax(180px, 0.8fr)
+        minmax(180px, 0.8fr)
+        minmax(220px, 1fr)
+        auto;
+
+    gap: 12px;
+
+    align-items: center;
+
+    margin-top: 20px;
+    margin-bottom: 18px;
+}
+
+.staff-page .staff-task-form input[type="text"],
+.staff-page .staff-task-form select {
+    width: 100%;
+    height: 42px;
+
+    padding: 0 12px;
+
+    border: 1px solid rgba(11, 11, 11, 0.22);
+    border-radius: 0;
+
+    background: transparent;
+    color: #0b0b0b;
+
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.35;
+}
+
+.staff-page .staff-task-form input[type="text"]::placeholder {
+    color: rgba(11, 11, 11, 0.55);
+    opacity: 1;
+    font-weight: 400;
+}
+
+.staff-page .staff-task-roles {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+
+    grid-column: 1 / -1;
+
+    padding: 4px 0;
+}
+
+.staff-page .staff-task-roles label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+
+    font-size: 9px;
+}
+
+.staff-page #create-staff-task-btn {
+    height: 42px;
+    margin: 0;
+    white-space: nowrap;
+}
+
+.staff-page #staff-task-create-result {
+    grid-column: 1 / -1;
+    margin-top: 0;
+}
+
+.staff-page .staff-task-table th,
+.staff-page .staff-task-table td {
+    vertical-align: middle;
+    font-size: 11px;
+    line-height: 1.4;
+}
+
+.staff-page .staff-task-table th:last-child,
+.staff-page .staff-task-table td:last-child {
+    width: 90px;
+    text-align: center;
+}
+
+@media (max-width: 1100px) {
+    .staff-page .staff-task-form {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .staff-page .staff-task-roles,
+    .staff-page #staff-task-create-result {
+        grid-column: 1 / -1;
+    }
+
+    .staff-page #create-staff-task-btn {
+        width: 100%;
+    }
+}
+
+@media (max-width: 700px) {
+    .staff-page .staff-task-form {
+        grid-template-columns: 1fr;
+    }
+
+    .staff-page .staff-task-roles,
+    .staff-page #staff-task-create-result {
+        grid-column: auto;
+    }
+
+    .staff-page .staff-task-roles {
+        flex-wrap: wrap;
+    }
+}
+
+/* ===================== STAFF SECTIONS ===================== */
+
+.staff-page .account-block,
+.staff-page .staff-section .account-block {
+    width: 100%;
+    max-width: none;
+
+    margin: 0;
+    padding: 28px 0 30px;
+
+    border: 0;
+    border-bottom: 1px solid rgba(11, 11, 11, 0.16);
+    border-radius: 0;
+
+    background: transparent;
+    color: #0b0b0b;
+
+    box-shadow: none;
+}
+
+.staff-page .account-block:first-child {
+    padding-top: 0;
+}
+
+.staff-page .account-block h2,
+.staff-page .staff-section .account-block h2 {
+    margin: 0 0 16px;
+
+    color: #0b0b0b;
+
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px;
+    font-weight: 800;
+    line-height: 1.35;
+    letter-spacing: -0.01em;
+
+    text-transform: uppercase;
+}
+
+.staff-page .account-block p,
+.staff-page .account-block span,
+.staff-page .account-block label,
+.staff-page .staff-section p,
+.staff-page .staff-section span,
+.staff-page .staff-section label {
+    font-size: 11px;
+    font-weight: 400;
+    line-height: 1.4;
+}
+
+.staff-page .account-block strong {
+    font-weight: 700;
+}
+
+.staff-page .staff-section {
+    width: 100%;
+
+    margin-top: 34px;
+}
+
+.staff-page .staff-create-box,
+.staff-page .staff-result,
+.staff-page .staff-promo-campaign-block,
+.staff-page .staff-payment-card {
+    border-radius: 0;
+
+    color: #0b0b0b;
+
+    box-shadow: none;
+}
+
+.staff-page .staff-create-box {
+    width: 100%;
+    max-width: none;
+
+    margin-top: 22px;
+
+    gap: 12px;
+}
+
+.staff-page .staff-create-box h3,
+.staff-page .staff-stock-table-wrap h3,
+.staff-page .staff-promo-campaign-block h3 {
+    margin: 0 0 12px;
+
+    color: #0b0b0b;
+
+    font-size: 10px;
+    font-weight: 800;
+    line-height: 1.35;
+
+    text-transform: uppercase;
+}
+
+.staff-page .staff-result {
+    margin-top: 18px;
+    padding: 16px 0;
+
+    border-bottom: 1px solid rgba(11, 11, 11, 0.14);
+
+    font-size: 9px;
+    line-height: 1.35;
+}
+
+.staff-page .staff-hint {
+    margin: 0;
+
+    color: rgba(11, 11, 11, 0.58);
+
+    font-size: 9px;
+    font-weight: 200;
+    line-height: 1.35;
+}
+
+
+/* ===================== STAFF INPUTS ===================== */
+
+.staff-page input[type="text"],
+.staff-page input[type="email"],
+.staff-page input[type="tel"],
+.staff-page input[type="password"],
+.staff-page input[type="number"],
+.staff-page input[type="date"],
+.staff-page input[type="datetime-local"],
+.staff-page select,
+.staff-page textarea {
+    min-width: 0;
+
+    height: 40px;
+    padding: 0 12px;
+
+    border: 1px solid rgba(11, 11, 11, 0.24);
+    border-radius: 0 !important;
+    outline: none;
+
+    background: transparent;
+    color: #0b0b0b;
+
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px !important;
+    font-weight: 400;
+    line-height: 1.35;
+
+    box-shadow: none !important;
+}
+
+.staff-page textarea {
+    height: auto;
+    min-height: 100px;
+
+    padding-top: 11px;
+    padding-bottom: 11px;
+
+    resize: vertical;
+}
+
+.staff-page input:focus,
+.staff-page select:focus,
+.staff-page textarea:focus {
+    border-color: #0b0b0b;
+
+    box-shadow: none;
+}
+
+.staff-page input::placeholder,
+.staff-page textarea::placeholder {
+    color: rgba(11, 11, 11, 0.42);
+
+    font-size: 10px;
+}
+
+.staff-page select {
+    cursor: pointer;
+}
+
+.staff-page option {
+    font-size: 9px;
+}
+
+
+/* NOTEBOOK — readable input text */
+
+.staff-page .staff-notebook-create input {
+    color: #1a1215 !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+}
+
+.staff-page .staff-notebook-create input::placeholder {
+    color: rgba(26, 18, 21, 0.48);
+    font-size: 12px !important;
+    font-weight: 400;
+}
+
+
+/* TASK ASSIGNMENT — readable controls */
+
+.staff-page .staff-task-form input[type="text"],
+.staff-page .staff-task-form select {
+    color: #0b0b0b !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+}
+
+.staff-page .staff-task-form input[type="text"]::placeholder {
+    font-size: 13px !important;
+    font-weight: 400;
+}
+
+.staff-page .staff-task-form select option {
+    font-size: 14px;
+    font-weight: 400;
+}
+
+
+/* ===================== STAFF FILE INPUT ===================== */
+
+.staff-page input[type="file"] {
+    width: 100%;
+    height: 40px;
+
+    padding: 0;
+
+    border: 1px solid rgba(11, 11, 11, 0.24);
+    border-radius: 0 !important;
+
+    background: transparent;
+    color: #0b0b0b;
+
+    font-family: 'Montserrat', sans-serif;
+    font-size: 9px;
+    font-weight: 200;
+    line-height: 38px;
+
+    box-shadow: none;
+
+    cursor: pointer;
+}
+
+.staff-page input[type="file"]::file-selector-button {
+    height: 100%;
+
+    margin: 0 14px 0 0;
+    padding: 0 18px;
+
+    border: 0;
+    border-right: 1px solid rgba(11, 11, 11, 0.24);
+    border-radius: 0;
+
+    background: #0b0b0b;
+    color: #f5f3ed;
+
+    font-family: 'Montserrat', sans-serif;
+    font-size: 9px;
+    font-weight: 600;
+
+    text-transform: uppercase;
+
+    cursor: pointer;
+}
+
+.staff-page input[type="file"]::file-selector-button:hover {
+    background: #1b1b1b;
+}
+
+.staff-page input[type="file"]::-webkit-file-upload-button {
+    height: 100%;
+
+    margin: 0 14px 0 0;
+    padding: 0 18px;
+
+    border: 0;
+    border-right: 1px solid rgba(11, 11, 11, 0.24);
+    border-radius: 0;
+
+    background: #0b0b0b;
+    color: #f5f3ed;
+
+    font-family: 'Montserrat', sans-serif;
+    font-size: 9px;
+    font-weight: 600;
+
+    text-transform: uppercase;
+
+    cursor: pointer;
+}
+
+
+/* ===================== STAFF FORM ROWS ===================== */
+
+.staff-page .staff-search-row,
+.staff-page .staff-register-row,
+.staff-page .staff-sale-row,
+.staff-page .staff-sale-item-row,
+.staff-page .staff-stock-select-row,
+.staff-page .staff-stock-create-row,
+.staff-page .staff-stock-report-row,
+.staff-page .staff-sale-payment-row {
+    gap: 10px;
+}
+
+.staff-page .staff-search-row {
+    max-width: none;
+}
+
+.staff-page .staff-register-row {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) auto;
+}
+
+
+/* ===================== STAFF BUTTONS ===================== */
+
+.staff-page .buy-btn {
+    min-height: 40px;
+
+    margin: 0;
+    padding: 0 18px;
+
+    border: 1px solid #0b0b0b;
+    border-radius: 0 !important;
+
+    background: #0b0b0b;
+    color: #f5f3ed;
+
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px !important;
+    font-weight: 600;
+    line-height: 1;
+
+    text-transform: uppercase;
+
+    box-shadow: none;
+}
+
+.staff-page .buy-btn:hover:not(:disabled) {
+    background: #1b1b1b;
+    color: #f5f3ed;
+
+    border-color: #1b1b1b;
+}
+
+.staff-page .buy-btn:disabled {
+    background: rgba(11, 11, 11, 0.10);
+    color: rgba(11, 11, 11, 0.35);
+
+    border-color: rgba(11, 11, 11, 0.14);
+
+    cursor: not-allowed;
+}
+
+
+/* ===================== PRODUCT DROPDOWNS ===================== */
+
+.staff-page .staff-product-dropdown {
+    border: 1px solid rgba(11, 11, 11, 0.18);
+    border-radius: 0 !important;
+
+    background: #f8f7f2;
+    color: #0b0b0b;
+
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+.staff-page .staff-product-option {
+    padding: 8px 10px;
+
+    border-bottom: 1px solid rgba(11, 11, 11, 0.08);
+
+    font-size: 9px !important;
+    line-height: 1.3;
+}
+
+.staff-page .staff-product-option:hover {
+    background: rgba(11, 11, 11, 0.05);
+}
+
+.staff-page .staff-product-empty {
+    padding: 10px;
+
+    color: rgba(11, 11, 11, 0.55);
+
+    font-size: 9px !important;
+}
+
+
+/* ===================== STAFF TABLES ===================== */
+
+.staff-page table,
+.staff-page .staff-stock-table,
+.staff-page .staff-report-table {
+    width: 100%;
+
+    border-collapse: collapse;
+
+    background: transparent;
+    color: #0b0b0b;
+
+    font-family: 'Montserrat', sans-serif;
+}
+
+.staff-page table th,
+.staff-page table td,
+.staff-page .staff-stock-table th,
+.staff-page .staff-stock-table td,
+.staff-page .staff-report-table th,
+.staff-page .staff-report-table td {
+    padding: 8px 10px;
+
+    border-right: 1px solid rgba(11, 11, 11, 0.10);
+    border-bottom: 1px solid rgba(11, 11, 11, 0.14);
+
+    background: transparent;
+    color: #0b0b0b;
+
+    font-size: 10px !important;
+    line-height: 1.4;
+
+    box-shadow: none;
+}
+
+.staff-page table th,
+.staff-page .staff-stock-table th,
+.staff-page .staff-report-table th {
+    font-weight: 700;
+
+    text-transform: uppercase;
+}
+
+.staff-page table tbody tr:hover td,
+.staff-page .staff-stock-table tbody tr:hover td,
+.staff-page .staff-report-table tbody tr:hover td {
+    background: rgba(11, 11, 11, 0.025);
+}
+
+
+/* ===================== STAFF FILTERS ===================== */
+
+.staff-page details summary,
+.staff-page .staff-users-filter-btn,
+.staff-page .staff-report-filter summary {
+    border: 1px solid rgba(11, 11, 11, 0.20);
+    border-radius: 0 !important;
+
+    background: transparent;
+    color: #0b0b0b;
+
+    font-family: 'Montserrat', sans-serif;
+    font-size: 9px !important;
+    font-weight: 400;
+
+    box-shadow: none;
+}
+
+.staff-page .staff-users-filter-btn.is-active {
+    background: #d8d2c2;
+    color: #0b0b0b;
+
+    border-color: #0b0b0b;
+}
+
+.staff-page .staff-report-filter-menu,
+.staff-page .staff-personal-status-menu {
+    border: 1px solid rgba(11, 11, 11, 0.18);
+    border-radius: 0 !important;
+
+    background: #f8f7f2;
+    color: #0b0b0b;
+
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+.staff-page .staff-report-filter-menu *,
+.staff-page .staff-personal-status-menu * {
+    font-size: 9px !important;
+    line-height: 1.3;
+}
+
+
+/* ===================== STAFF INTERNAL TYPOGRAPHY ===================== */
+
+.staff-page #promos-section input,
+.staff-page #promos-section select,
+.staff-page #promos-section button,
+.staff-page #promos-section label,
+.staff-page #promos-section span,
+.staff-page #promos-section p,
+.staff-page #sales-section input,
+.staff-page #sales-section select,
+.staff-page #sales-section button,
+.staff-page #sales-section label,
+.staff-page #sales-section span,
+.staff-page #sales-section p,
+.staff-page #stock-section input,
+.staff-page #stock-section select,
+.staff-page #stock-section button,
+.staff-page #stock-section label,
+.staff-page #stock-section span,
+.staff-page #stock-section p,
+.staff-page #certificates-section input,
+.staff-page #certificates-section select,
+.staff-page #certificates-section button,
+.staff-page #certificates-section label,
+.staff-page #certificates-section span,
+.staff-page #certificates-section p,
+.staff-page #products-admin-section input,
+.staff-page #products-admin-section select,
+.staff-page #products-admin-section button,
+.staff-page #products-admin-section label,
+.staff-page #products-admin-section span,
+.staff-page #products-admin-section p {
+    font-size: 11px !important;
+    line-height: 1.4 !important;
+}
+
+
+/* ===================== STAFF CHECKBOXES ===================== */
+
+.staff-page input[type="checkbox"] {
+    width: 14px;
+    height: 14px;
+
+    accent-color: #0b0b0b;
+}
+
+
+/* ===================== STAFF STATUS / INFO ===================== */
+
+.staff-page .staff-sale-gift-info,
+.staff-page .staff-empty-state {
+    padding: 14px 16px;
+
+    border: 1px solid rgba(11, 11, 11, 0.14);
+    border-radius: 0;
+
+    color: #0b0b0b;
+
+    box-shadow: none;
+
+    font-size: 9px;
+    line-height: 1.35;
+}
+
+
+/* ===================== STAFF MOBILE ===================== */
+
+@media (max-width: 900px) {
+
+    .staff-page .account-container {
+        padding: 28px 18px 56px;
+    }
+    
+    .staff-page .staff-dashboard-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .staff-page .staff-notebook {
+        position: static;
+    }
+
+    .staff-page .staff-notebook-list {
+        height: 145px;
+    }    
+
+    .staff-page .staff-grid {
+        grid-template-columns: 1fr;
+
+        gap: 2px;
+    }
+
+    .staff-page .staff-card {
+        min-height: 0;
+
+        padding: 24px 18px;
+    }
+
+    .staff-page .staff-register-row,
+    .staff-page .staff-sale-row,
+    .staff-page .staff-sale-item-row,
+    .staff-page .staff-stock-select-row,
+    .staff-page .staff-stock-create-row,
+    .staff-page .staff-stock-report-row,
+    .staff-page .staff-sale-payment-row {
+        grid-template-columns: 1fr;
+
+        width: 100%;
+    }
+
+    .staff-page .staff-search-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .staff-page .account-block h2,
+    .staff-page .staff-section h2,
+    .staff-page .staff-card h3,
+    .staff-page .staff-section h3 {
+        font-size: 10px !important;
+        line-height: 1.35;
+    }
+
+    .staff-page input,
+    .staff-page select,
+    .staff-page textarea,
+    .staff-page button,
+    .staff-page .buy-btn,
+    .staff-page label,
+    .staff-page p,
+    .staff-page span,
+    .staff-page .staff-hint,
+    .staff-page .staff-result,
+    .staff-page .staff-product-option,
+    .staff-page .staff-product-empty {
+        font-size: 9px !important;
+        line-height: 1.35;
+    }
+
+    .staff-page .buy-btn {
+        width: 100%;
+    }
+
+    .staff-page table th,
+    .staff-page table td,
+    .staff-page .staff-stock-table th,
+    .staff-page .staff-stock-table td,
+    .staff-page .staff-report-table th,
+    .staff-page .staff-report-table td {
+        font-size: 8px !important;
+        line-height: 1.3;
     }
 }

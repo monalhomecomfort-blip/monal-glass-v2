@@ -107,45 +107,120 @@ function showCabinetChoiceModal(user, staff) {
             position: fixed;
             inset: 0;
             z-index: 99999;
+
+            font-family: 'Montserrat', sans-serif;
         }
 
         .cabinet-choice-overlay {
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.72);
+
             display: flex;
             align-items: center;
             justify-content: center;
+
             padding: 24px;
+
+            background: rgba(0, 0, 0, 0.72);
+
             box-sizing: border-box;
         }
 
         .cabinet-choice-box {
-            width: min(420px, 100%);
-            background: #f4f1ea;
-            color: #171717;
-            border-radius: 22px;
-            padding: 30px 26px;
-            box-shadow: 0 24px 70px rgba(0, 0, 0, 0.35);
-            text-align: center;
+            width: min(520px, 100%);
+            padding: 34px 38px 38px;
+
+            background: #050505;
+            color: #f5f3ed;
+
+            border: 0;
+            border-radius: 0;
+
+            box-shadow: 0 24px 70px rgba(0, 0, 0, 0.34);
+
+            text-align: left;
+            text-transform: uppercase;
         }
 
         .cabinet-choice-box h2 {
-            margin-top: 0;
-            margin-bottom: 12px;
+            margin: 0 0 14px;
+
+            color: #f5f3ed;
+
+            font-size: clamp(14px, 1.15vw, 16px);
+            font-weight: 800;
+            line-height: 1.2;
         }
 
         .cabinet-choice-box p {
-            margin-bottom: 22px;
-            opacity: 0.78;
-            line-height: 1.45;
+            margin: 0 0 26px;
+
+            color: #f5f3ed;
+
+            font-size: clamp(10px, 0.72vw, 13px);
+            font-weight: 200;
+            line-height: 1.4;
+
+            opacity: 1;
         }
 
         .cabinet-choice-box .buy-btn {
             width: 100%;
-            margin-top: 12px;
-            text-align: center;
+            height: 42px;
+
+            margin: 0 0 10px;
+            padding: 0 18px;
+
+            display: flex;
+            align-items: center;
             justify-content: center;
+
+            border: 0;
+            border-radius: 7px;
+
+            background: #f5f3ed;
+            color: #050505;
+
+            font-family: 'Montserrat', sans-serif;
+            font-size: clamp(10px, 0.72vw, 13px);
+            font-weight: 600;
+
+            text-align: center;
+            text-transform: uppercase;
+
+            cursor: pointer;
+        }
+
+        .cabinet-choice-box .buy-btn:last-child {
+            margin-bottom: 0;
+        }
+
+        .cabinet-choice-box .buy-btn:hover {
+            background: #e8e5de;
+        }
+
+        @media (max-width: 600px) {
+            .cabinet-choice-overlay {
+                padding: 18px;
+            }
+
+            .cabinet-choice-box {
+                width: 100%;
+                padding: 28px 18px 30px;
+            }
+
+            .cabinet-choice-box h2 {
+                font-size: 14px;
+            }
+
+            .cabinet-choice-box p,
+            .cabinet-choice-box .buy-btn {
+                font-size: 10px;
+            }
+
+            .cabinet-choice-box .buy-btn {
+                height: 40px;
+            }
         }
     `;
 

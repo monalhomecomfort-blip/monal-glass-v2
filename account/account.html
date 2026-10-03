@@ -21,6 +21,7 @@
 <meta property="og:site_name" content="Monal">
 
 <link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="../site-shell.css">
 
 <!-- Google tag (gtag.js) + Consent Mode v2 -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17895832671"></script>
@@ -48,7 +49,7 @@
 
 </head>
 
-<body class="account-page">
+<body class="account-page site-page">
 
 <!-- МЕНЮ -->
 <nav>
@@ -217,16 +218,22 @@ Email:
 Зберегти ✔
 </span>
 </h2>
-<p>
-Дата народження:
-<span id="acc-birthday">не вказано</span>
-<br>
-Стать:
-<span id="acc-gender">не вказано</span>
-<br>
-Телефон:
-<span id="acc-phone">не вказано</span>
-</p>
+<div class="account-personal-data">
+    <div class="account-personal-row">
+        <span class="account-personal-label">Дата народження:</span>
+        <span id="acc-birthday" class="account-personal-value">не вказано</span>
+    </div>
+
+    <div class="account-personal-row">
+        <span class="account-personal-label">Стать:</span>
+        <span id="acc-gender" class="account-personal-value">не вказано</span>
+    </div>
+
+    <div class="account-personal-row">
+        <span class="account-personal-label">Телефон:</span>
+        <span id="acc-phone" class="account-personal-value">не вказано</span>
+    </div>
+</div>
 </div>
 
 <!-- 3. Безпека акаунту -->
@@ -580,5 +587,6 @@ window.addEventListener("resize", function () {
 </script>
 
 <script src="cookie-consent.js"></script>     
+<script src="../site-shell.js" data-root="../"></script>
 </body>
 </html>

@@ -1,3 +1,12 @@
+const registerEmailInput = document.getElementById("email");
+
+const registerUrlParams = new URLSearchParams(window.location.search);
+const registerPrefilledEmail = registerUrlParams.get("email");
+
+if (registerEmailInput && registerPrefilledEmail) {
+    registerEmailInput.value = registerPrefilledEmail;
+}
+
 document.getElementById("registerForm").addEventListener("submit", async function (e) {
     e.preventDefault();
 

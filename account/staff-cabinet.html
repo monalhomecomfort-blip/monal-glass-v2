@@ -13,109 +13,486 @@
 </head>
 
 <body class="account-page staff-page">
+    
+<svg
+    class="staff-icons-sprite"
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden="true"
+    style="display: none;"
+>
+    <symbol id="staff-icon-sales" viewBox="0 0 24 24">
+        <path d="M6 7h12l1 14H5L6 7Z"></path>
+        <path d="M9 7V5a3 3 0 0 1 6 0v2"></path>
+    </symbol>
+
+    <symbol id="staff-icon-report" viewBox="0 0 24 24">
+        <path d="M5 20V11h3v9"></path>
+        <path d="M11 20V6h3v14"></path>
+        <path d="M17 20V3h3v17"></path>
+    </symbol>
+
+    <symbol id="staff-icon-clients" viewBox="0 0 24 24">
+        <circle cx="9" cy="8" r="3"></circle>
+        <circle cx="17" cy="9" r="2.5"></circle>
+        <path d="M3 20v-2a6 6 0 0 1 12 0v2"></path>
+        <path d="M14 14a5 5 0 0 1 7 4v2"></path>
+    </symbol>
+
+    <symbol id="staff-icon-stock" viewBox="0 0 24 24">
+        <path d="M12 3 21 8 12 13 3 8 12 3Z"></path>
+        <path d="M3 8v9l9 5 9-5V8"></path>
+        <path d="M12 13v9"></path>
+    </symbol>
+
+    <symbol id="staff-icon-warehouse" viewBox="0 0 24 24">
+        <path d="M3 10 12 3l9 7v11H3V10Z"></path>
+        <path d="M8 21v-7h8v7"></path>
+    </symbol>
+
+    <symbol id="staff-icon-my-stock" viewBox="0 0 24 24">
+        <path d="M4 7 12 3l8 4v10l-8 4-8-4V7Z"></path>
+        <path d="m8 12 3 3 5-6"></path>
+    </symbol>
+
+    <symbol id="staff-icon-promo" viewBox="0 0 24 24">
+        <path d="M4 13V9l12-5v14L4 13Z"></path>
+        <path d="M8 14l1 6h4l-2-5"></path>
+        <path d="M19 8v6"></path>
+    </symbol>
+
+    <symbol id="staff-icon-certificate" viewBox="0 0 24 24">
+        <rect x="5" y="3" width="14" height="18"></rect>
+        <path d="M8 7h8"></path>
+        <path d="M8 11h5"></path>
+        <circle cx="12" cy="16" r="2"></circle>
+    </symbol>
+
+    <symbol id="staff-icon-price" viewBox="0 0 24 24">
+        <path d="M3 12 12 3h8v8l-9 9L3 12Z"></path>
+        <circle cx="16" cy="7" r="1"></circle>
+    </symbol>
+
+    <symbol id="staff-icon-assortment" viewBox="0 0 24 24">
+        <path d="M4 6h7"></path>
+        <path d="M15 6h5"></path>
+        <circle cx="13" cy="6" r="2"></circle>
+        <path d="M4 12h3"></path>
+        <path d="M11 12h9"></path>
+        <circle cx="9" cy="12" r="2"></circle>
+        <path d="M4 18h10"></path>
+        <path d="M18 18h2"></path>
+        <circle cx="16" cy="18" r="2"></circle>
+    </symbol>
+
+    <symbol id="staff-icon-wishes" viewBox="0 0 24 24">
+        <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"></path>
+    </symbol>
+
+    <symbol id="staff-icon-users" viewBox="0 0 24 24">
+        <circle cx="12" cy="8" r="4"></circle>
+        <path d="M4 21v-2a8 8 0 0 1 16 0v2"></path>
+    </symbol>
+</svg>
+    
 
 <div class="container account-container">
 
     <div class="account-main">
 
-        <div class="account-block big">
-            <h2>Staff кабінет Mōnal</h2>
+        <header class="staff-dashboard-header">
+
+            <div class="staff-dashboard-brand">
+                <a href="../index.html" class="staff-dashboard-wordmark">
+                    Mōnal
+                </a>
+
+                <span class="staff-dashboard-brand-divider"></span>
+
+                <span class="staff-dashboard-brand-label">
+                    STAFF CABINET
+                </span>
+            </div>
+
+            <div class="staff-profile">
+
+                <button
+                    id="staff-profile-toggle"
+                    class="staff-profile-toggle"
+                    type="button"
+                    aria-expanded="false"
+                    aria-controls="staff-profile-menu"
+                >
+                    <span
+                        id="staff-profile-avatar"
+                        class="staff-profile-avatar"
+                        aria-hidden="true"
+                    >
+                        M
+                    </span>
+
+                    <span class="staff-profile-copy">
+                        <strong id="staff-name">—</strong>
+                        <span id="staff-role">—</span>
+                    </span>
+
+                    <span class="staff-profile-arrow" aria-hidden="true">
+                        ▾
+                    </span>
+                </button>
+
+                <div
+                    id="staff-profile-menu"
+                    class="staff-profile-menu staff-hidden"
+                >
+                    <div class="staff-profile-menu-warehouse">
+                        СКЛАД ID:
+                        <span id="staff-warehouse">—</span>
+                    </div>
+
+                    <a href="../index.html">
+                        ПЕРЕЙТИ НА САЙТ
+                    </a>
+
+                    <button
+                        id="staff-logout"
+                        type="button"
+                    >
+                        ВИЙТИ
+                    </button>
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <div class="staff-dashboard-intro">
+            <h2>STAFF КАБІНЕТ MŌNAL</h2>
+
             <p>
-                <strong id="staff-name">—</strong><br>
-                Роль: <span id="staff-role">—</span><br>
-                Склад ID: <span id="staff-warehouse">—</span>
+                ОБЕРІТЬ ПОТРІБНИЙ РОЗДІЛ ДЛЯ РОБОТИ.
             </p>
         </div>
 
-        <div class="staff-grid">
+
+        <div class="staff-dashboard-layout">
+
+            <div class="staff-grid">
 
             <div class="staff-card" data-access="admin,manager,partner">
-                <h3>Продажі</h3>
-                <p>Провести продаж: обрати клієнта, товари, оплату.</p>
+                <div class="staff-card-content">
+                    <span class="staff-card-icon">
+                        <svg><use href="#staff-icon-sales"></use></svg>
+                    </span>
+
+                    <div class="staff-card-copy">
+                        <h3>Продажі</h3>
+                        <p>Провести продаж: обрати клієнта, товари, оплату.</p>
+                    </div>
+                </div>
+
                 <button class="buy-btn" type="button" id="open-sales-section">
                     Перейти
                 </button>
             </div>
 
             <div class="staff-card" data-access="admin,manager,partner">
-                <h3>Звіт по продажам</h3>
-                <p>Подивитися продажі за період: товари, кількість, суми, джерела і склади.</p>
+                <div class="staff-card-content">
+                    <span class="staff-card-icon">
+                        <svg><use href="#staff-icon-report"></use></svg>
+                    </span>
+
+                    <div class="staff-card-copy">
+                        <h3>Звіт по продажам</h3>
+                        <p>Подивитися продажі за період: товари, кількість, суми, джерела і склади.</p>
+                    </div>
+                </div>
+
                 <button class="buy-btn" type="button" id="open-sales-report-section">
                     Перейти
                 </button>
             </div>
 
             <div class="staff-card" data-access="admin,manager">
-                <h3>Клієнти</h3>
-                <p>Пошук клієнта по телефону або email, створення нового клієнта.</p>
+                <div class="staff-card-content">
+                    <span class="staff-card-icon">
+                        <svg><use href="#staff-icon-clients"></use></svg>
+                    </span>
+
+                    <div class="staff-card-copy">
+                        <h3>Клієнти</h3>
+                        <p>Пошук клієнта по телефону або email, створення нового клієнта.</p>
+                    </div>
+                </div>
+
                 <button class="buy-btn" type="button" id="open-clients-section">
                     Перейти
                 </button>
             </div>
 
             <div class="staff-card" data-access="admin">
-                <h3>Залишки</h3>
-                <p>Звіт по залишках у розрізі складів, товарів, цін та руху.</p>
+                <div class="staff-card-content">
+                    <span class="staff-card-icon">
+                        <svg><use href="#staff-icon-stock"></use></svg>
+                    </span>
+
+                    <div class="staff-card-copy">
+                        <h3>Залишки</h3>
+                        <p>Звіт по залишках у розрізі складів, товарів, цін та руху.</p>
+                    </div>
+                </div>
+
                 <button class="buy-btn" type="button" id="open-stock-section">
                     Перейти
                 </button>
             </div>
 
             <div class="staff-card" data-access="admin">
-                <h3>Залишки по складам/Створення складу</h3>
-                <p>Створення складу, вибір складу та внесення початкових кількостей.</p>
+                <div class="staff-card-content">
+                    <span class="staff-card-icon">
+                        <svg><use href="#staff-icon-warehouse"></use></svg>
+                    </span>
+
+                    <div class="staff-card-copy">
+                        <h3>Залишки по складам/Створення складу</h3>
+                        <p>Створення складу, вибір складу та внесення початкових кількостей.</p>
+                    </div>
+                </div>
+
                 <button class="buy-btn" type="button" id="open-stock-manage-section">
                     Перейти
                 </button>
             </div>
 
             <div class="staff-card" data-access="manager,partner">
-                <h3>Мої залишки</h3>
-                <p>Перегляд залишків по складу, привʼязаному до вашого акаунта.</p>
+                <div class="staff-card-content">
+                    <span class="staff-card-icon">
+                        <svg><use href="#staff-icon-my-stock"></use></svg>
+                    </span>
+
+                    <div class="staff-card-copy">
+                        <h3>Мої залишки</h3>
+                        <p>Перегляд залишків по складу, привʼязаному до вашого акаунта.</p>
+                    </div>
+                </div>
+
                 <button class="buy-btn" type="button" id="open-my-stock-section">
                     Перейти
                 </button>
             </div>
 
             <div class="staff-card" data-access="admin">
-                <h3>Акції та пропозиції</h3>
-                <p>Керування промокодами, персональними пропозиціями та акціями.</p>
+                <div class="staff-card-content">
+                    <span class="staff-card-icon">
+                        <svg><use href="#staff-icon-promo"></use></svg>
+                    </span>
+
+                    <div class="staff-card-copy">
+                        <h3>Акції та пропозиції</h3>
+                        <p>Керування промокодами, персональними пропозиціями та акціями.</p>
+                    </div>
+                </div>
+
                 <button class="buy-btn" type="button" id="open-promos-section">
                     Перейти
                 </button>
             </div>
 
             <div class="staff-card" data-access="admin">
-                <h3>Сертифікати — завести/активувати</h3>
-                <p>Завантаження фізичних сертифікатів у БД та активація сертифікатів для онлайн-замовлень.</p>
+                <div class="staff-card-content">
+                    <span class="staff-card-icon">
+                        <svg><use href="#staff-icon-certificate"></use></svg>
+                    </span>
+
+                    <div class="staff-card-copy">
+                        <h3>Сертифікати — завести/активувати</h3>
+                        <p>Завантаження фізичних сертифікатів у БД та активація сертифікатів для онлайн-замовлень.</p>
+                    </div>
+                </div>
+
                 <button class="buy-btn" type="button" id="open-certificates-manage-section">
                     Перейти
                 </button>
-            </div>            
+            </div>
 
-            <div class="staff-card" data-access="admin" data-special-access="admin-tools">
-                <h3>Товари та ціни</h3>
-                <p>Створення staff-товарів, редагування назв і цін у products_catalog.</p>
+            <div
+                class="staff-card"
+                data-access="admin"
+                data-special-access="admin-tools"
+            >
+                <div class="staff-card-content">
+                    <span class="staff-card-icon">
+                        <svg><use href="#staff-icon-price"></use></svg>
+                    </span>
+
+                    <div class="staff-card-copy">
+                        <h3>Товари та ціни</h3>
+                        <p>Створення staff-товарів, редагування назв і цін у products_catalog.</p>
+                    </div>
+                </div>
+
                 <button class="buy-btn" type="button" id="open-products-admin-section">
                     Перейти
                 </button>
             </div>
 
-            <div class="staff-card" data-access="admin" data-special-access="admin-tools">
-                <h3>Керування асортиментом</h3>
-                <p>Керування наявністю товарів на сайті без видалення товарних позицій.</p>
+            <div
+                class="staff-card"
+                data-access="admin"
+                data-special-access="admin-tools"
+            >
+                <div class="staff-card-content">
+                    <span class="staff-card-icon">
+                        <svg><use href="#staff-icon-assortment"></use></svg>
+                    </span>
+
+                    <div class="staff-card-copy">
+                        <h3>Керування асортиментом</h3>
+                        <p>Керування наявністю товарів на сайті без видалення товарних позицій.</p>
+                    </div>
+                </div>
+
                 <button class="buy-btn" type="button" id="open-assortment-section">
                     Перейти
                 </button>
             </div>
 
+            <div
+                class="staff-card"
+                data-access="admin"
+                data-special-access="admin-tools"
+            >
+                <div class="staff-card-content">
+                    <span class="staff-card-icon">
+                        <svg><use href="#staff-icon-wishes"></use></svg>
+                    </span>
+
+                    <div class="staff-card-copy">
+                        <h3>Побажання від покупців</h3>
+                        <p>Публічні та персональні побажання щодо асортименту Mōnal.</p>
+                    </div>
+                </div>
+
+                <button class="buy-btn" type="button" id="open-customer-wishes-section">
+                    Перейти
+                </button>
+            </div>
+
+            <div
+                class="staff-card"
+                data-access="admin"
+                data-special-access="admin-tools"
+            >
+                <div class="staff-card-content">
+                    <span class="staff-card-icon">
+                        <svg><use href="#staff-icon-promo"></use></svg>
+                    </span>
+
+                    <div class="staff-card-copy">
+                        <h3>Призначити завдання</h3>
+                        <p>Створення циклічних задач для ролей або конкретних staff users.</p>
+                    </div>
+                </div>
+
+                <button class="buy-btn" type="button" id="open-task-assignment-section">
+                    Перейти
+                </button>
+            </div>
+
             <div class="staff-card" data-access="admin">
-                <h3>Staff users</h3>
-                <p>Перегляд внутрішніх користувачів: адмінів, менеджерів, партнерів.</p>
+                <div class="staff-card-content">
+                    <span class="staff-card-icon">
+                        <svg><use href="#staff-icon-users"></use></svg>
+                    </span>
+
+                    <div class="staff-card-copy">
+                        <h3>Staff users</h3>
+                        <p>Перегляд внутрішніх користувачів: адмінів, менеджерів, партнерів.</p>
+                    </div>
+                </div>
+
                 <button class="buy-btn" type="button" id="open-staff-section">
                     Перейти
                 </button>
             </div>
+
+            </div>
+
+
+            <aside class="staff-notebook">
+
+                <div class="staff-notebook-head">
+                    <div>
+                        <h2>МОЇ НОТАТКИ</h2>
+                        <p>РОБОЧІ СПРАВИ, ІДЕЇ ТА ЗАМІТКИ.</p>
+                    </div>
+
+                    <span class="staff-notebook-pencil" aria-hidden="true">
+                        ✎
+                    </span>
+                </div>
+
+
+                <div class="staff-notebook-tabs">
+
+                    <button
+                        class="staff-notebook-tab active"
+                        type="button"
+                        data-notebook-tab="today"
+                    >
+                        СЬОГОДНІ
+                    </button>
+
+                    <button
+                        class="staff-notebook-tab"
+                        type="button"
+                        data-notebook-tab="idea"
+                    >
+                        ІДЕЇ
+                    </button>
+
+                    <button
+                        class="staff-notebook-tab"
+                        type="button"
+                        data-notebook-tab="other"
+                    >
+                        РІЗНЕ
+                    </button>
+
+                </div>
+
+
+                <div
+                    id="staff-notebook-create"
+                    class="staff-notebook-create staff-hidden"
+                >
+                    <input
+                        id="staff-notebook-input"
+                        type="text"
+                        maxlength="2000"
+                        placeholder="НОВА НОТАТКА"
+                        autocomplete="off"
+                    >
+
+                    <button
+                        id="staff-notebook-add-btn"
+                        type="button"
+                    >
+                        +
+                    </button>
+                </div>
+
+
+                <div
+                    id="staff-notebook-list"
+                    class="staff-notebook-list"
+                >
+                    <div class="staff-notebook-empty">
+                        ЗАВАНТАЖУЄМО...
+                    </div>
+                </div>
+
+            </aside>
 
         </div>
 
@@ -2174,7 +2551,180 @@
     </div>
 
 </section>
-        
+
+<section
+    id="customer-wishes-section"
+    class="staff-section staff-hidden"
+    data-special-access="admin-tools"
+>
+
+    <div class="account-block big">
+        <h2>Побажання від покупців</h2>
+
+        <p>
+            Побажання щодо асортименту з особистого кабінету
+            та публічної форми на сторінці «Про нас».
+        </p>
+
+        <div class="staff-promo-campaign-block">
+
+            <div class="staff-search-row sales-report-filter-row">
+                <select id="customer-wishes-type-filter">
+                    <option value="all">Всі</option>
+                    <option value="public">Публічні</option>
+                    <option value="personal">Персональні</option>
+                </select>
+
+                <button
+                    id="load-customer-wishes-btn"
+                    class="buy-btn"
+                    type="button"
+                >
+                    Показати
+                </button>
+
+                <button
+                    id="download-customer-wishes-btn"
+                    class="buy-btn"
+                    type="button"
+                >
+                    Скачати XLSX
+                </button>
+
+                <button
+                    id="delete-customer-wishes-btn"
+                    class="buy-btn"
+                    type="button"
+                    disabled
+                >
+                    Видалити
+                </button>
+            </div>
+
+            <div id="customer-wishes-result" class="staff-result">
+                Натисніть «Показати», щоб завантажити побажання.
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<section
+    id="task-assignment-section"
+    class="staff-section staff-hidden"
+    data-special-access="admin-tools"
+>
+
+    <div class="account-block big">
+
+        <h2>Призначити завдання</h2>
+
+        <p>
+            Створення циклічних задач для вкладки «Сьогодні».
+        </p>
+
+        <div class="staff-task-form">
+
+            <input
+                type="text"
+                id="staff-task-title"
+                placeholder="Назва завдання"
+                maxlength="500"
+            >
+
+            <select id="staff-task-frequency">
+                <option value="daily">Щодня</option>
+                <option value="weekdays">Пн–Пт</option>
+                <option value="weekly">Раз на тиждень</option>
+                <option value="monthly">Раз на місяць</option>
+            </select>
+
+            <select
+                id="staff-task-week-day"
+                class="staff-hidden"
+            >
+                <option value="">День тижня</option>
+                <option value="1">Понеділок</option>
+                <option value="2">Вівторок</option>
+                <option value="3">Середа</option>
+                <option value="4">Четвер</option>
+                <option value="5">Пʼятниця</option>
+                <option value="6">Субота</option>
+                <option value="7">Неділя</option>
+            </select>
+
+            <select
+                id="staff-task-month-day"
+                class="staff-hidden"
+            >
+                <option value="">День місяця</option>
+            </select>
+
+            <div class="staff-task-roles">
+                <label>
+                    <input
+                        type="checkbox"
+                        class="staff-task-role"
+                        value="admin"
+                    >
+                    ADMIN
+                </label>
+
+                <label>
+                    <input
+                        type="checkbox"
+                        class="staff-task-role"
+                        value="manager"
+                    >
+                    MANAGER
+                </label>
+
+                <label>
+                    <input
+                        type="checkbox"
+                        class="staff-task-role"
+                        value="partner"
+                    >
+                    PARTNER
+                </label>
+            </div>
+
+            <select id="staff-task-user">
+                <option value="">
+                    Додатково конкретний staff user
+                </option>
+            </select>
+
+            <button
+                id="create-staff-task-btn"
+                class="buy-btn"
+                type="button"
+            >
+                Створити завдання
+            </button>
+
+            <div
+                id="staff-task-create-result"
+                class="staff-result staff-hidden"
+            ></div>
+
+        </div>
+
+        <div
+            id="staff-task-list-result"
+            class="staff-result"
+        >
+            Завдання ще не завантажені.
+        </div>
+
+    </div>
+
+</section>
+
+
 <section id="staff-users-section" class="staff-section staff-hidden">
 
     <div class="account-block big">
@@ -2236,16 +2786,14 @@
     </div>
 
 </section>
-        
-        <button id="staff-logout" class="buy-btn staff-logout-btn">
-            Вийти
-        </button>
+
 
     </div>
 
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>    
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
 <script>
 const staff = JSON.parse(localStorage.getItem("monal_staff_user") || "null");
 
@@ -2260,6 +2808,72 @@ document.getElementById("staff-warehouse").textContent =
         ? staff.warehouse_id
         : "—";
 
+const staffProfileToggle =
+    document.getElementById("staff-profile-toggle");
+
+const staffProfileMenu =
+    document.getElementById("staff-profile-menu");
+
+const staffProfileAvatar =
+    document.getElementById("staff-profile-avatar");
+
+
+if (staffProfileAvatar) {
+    const staffName =
+        String(staff?.name || "M").trim();
+
+    staffProfileAvatar.textContent =
+        staffName.charAt(0).toUpperCase() || "M";
+}
+
+if (
+    staffProfileToggle &&
+    staffProfileMenu
+) {
+    staffProfileToggle.addEventListener(
+        "click",
+        event => {
+            event.stopPropagation();
+
+            const isOpen =
+                !staffProfileMenu.classList.contains(
+                    "staff-hidden"
+                );
+
+            staffProfileMenu.classList.toggle(
+                "staff-hidden",
+                isOpen
+            );
+
+            staffProfileToggle.setAttribute(
+                "aria-expanded",
+                String(!isOpen)
+            );
+        }
+    );
+
+    staffProfileMenu.addEventListener(
+        "click",
+        event => {
+            event.stopPropagation();
+        }
+    );
+
+    document.addEventListener(
+        "click",
+        () => {
+            staffProfileMenu.classList.add(
+                "staff-hidden"
+            );
+
+            staffProfileToggle.setAttribute(
+                "aria-expanded",
+                "false"
+            );
+        }
+    );
+}
+
 document.querySelectorAll("[data-access]").forEach(card => {
     const allowedRoles = card.dataset.access.split(",").map(r => r.trim());
     const role = String(staff?.role || "").trim();
@@ -2273,11 +2887,429 @@ const CAN_MANAGE_ADMIN_TOOLS =
     String(staff?.role || "").trim() === "admin" &&
     Boolean(staff?.can_manage_staff_users);
 
+
+const staffNotebookList =
+    document.getElementById("staff-notebook-list");
+
+const staffNotebookCreate =
+    document.getElementById("staff-notebook-create");
+
+const staffNotebookInput =
+    document.getElementById("staff-notebook-input");
+
+const staffNotebookAddBtn =
+    document.getElementById("staff-notebook-add-btn");
+
+const staffNotebookTabs =
+    Array.from(
+        document.querySelectorAll(
+            ".staff-notebook-tab"
+        )
+    );
+
+let STAFF_NOTEBOOK_DATA = {
+    todayTasks: [],
+    notes: []
+};
+
+let STAFF_NOTEBOOK_ACTIVE_TAB = "today";
+
+
 document.querySelectorAll('[data-special-access="admin-tools"]').forEach(item => {
     if (!CAN_MANAGE_ADMIN_TOOLS) {
         item.classList.add("staff-hidden");
     }
-});    
+});
+
+function escapeNotebookHtml(value) {
+    return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+
+function getNotebookItems() {
+    if (STAFF_NOTEBOOK_ACTIVE_TAB === "today") {
+        return STAFF_NOTEBOOK_DATA.todayTasks.map(
+            task => ({
+                id: Number(task.id),
+                type: "task",
+                text: task.title
+            })
+        );
+    }
+
+    return STAFF_NOTEBOOK_DATA.notes
+        .filter(
+            note =>
+                String(note.note_type) ===
+                STAFF_NOTEBOOK_ACTIVE_TAB
+        )
+        .map(note => ({
+            id: Number(note.id),
+            type: "note",
+            text: note.note_text
+        }));
+}
+
+
+function renderStaffNotebook() {
+    if (!staffNotebookList) return;
+
+    const items = getNotebookItems();
+
+    if (staffNotebookCreate) {
+        staffNotebookCreate.classList.toggle(
+            "staff-hidden",
+            STAFF_NOTEBOOK_ACTIVE_TAB === "today"
+        );
+    }
+
+    if (!items.length) {
+        staffNotebookList.innerHTML = `
+            <div class="staff-notebook-empty">
+                ${
+                    STAFF_NOTEBOOK_ACTIVE_TAB === "today"
+                        ? "НА СЬОГОДНІ АКТИВНИХ ЗАВДАНЬ НЕМАЄ."
+                        : "ТУТ ПОКИ НЕМАЄ НОТАТОК."
+                }
+            </div>
+        `;
+
+        return;
+    }
+
+    staffNotebookList.innerHTML =
+        items
+            .map(
+                (item, index) => `
+                    <div class="staff-notebook-row">
+                        <span class="staff-notebook-number">
+                            ${index + 1}.
+                        </span>
+
+                        <span class="staff-notebook-text">
+                            ${escapeNotebookHtml(item.text)}
+                        </span>
+
+                        <label
+                            class="staff-notebook-check"
+                            title="Виконано"
+                        >
+                            <input
+                                type="checkbox"
+                                class="staff-notebook-complete"
+                                data-item-id="${item.id}"
+                                data-item-type="${item.type}"
+                            >
+                            <span></span>
+                        </label>
+                    </div>
+                `
+            )
+            .join("");
+
+    staffNotebookList
+        .querySelectorAll(
+            ".staff-notebook-complete"
+        )
+        .forEach(checkbox => {
+            checkbox.addEventListener(
+                "change",
+                async () => {
+                    if (!checkbox.checked) {
+                        return;
+                    }
+
+                    checkbox.disabled = true;
+
+                    const itemId =
+                        Number(
+                            checkbox.dataset.itemId || 0
+                        );
+
+                    const itemType =
+                        checkbox.dataset.itemType;
+
+                    if (itemType === "task") {
+                        await completeStaffTask(itemId);
+                    } else {
+                        await completeStaffNote(itemId);
+                    }
+                }
+            );
+        });
+}
+
+
+async function loadStaffNotebook() {
+    if (!staffNotebookList) return;
+
+    try {
+        const response = await fetch(
+            "https://monal-mono-pay-production.up.railway.app/api/staff/notebook-data",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type":
+                        "application/json"
+                },
+                body: JSON.stringify({
+                    staffId: staff.id
+                })
+            }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok || !data.ok) {
+            staffNotebookList.innerHTML = `
+                <div class="staff-notebook-empty">
+                    ${escapeNotebookHtml(
+                        data.error ||
+                        "НЕ ВДАЛОСЯ ЗАВАНТАЖИТИ НОТАТКИ."
+                    )}
+                </div>
+            `;
+
+            return;
+        }
+
+        STAFF_NOTEBOOK_DATA = {
+            todayTasks:
+                Array.isArray(data.todayTasks)
+                    ? data.todayTasks
+                    : [],
+
+            notes:
+                Array.isArray(data.notes)
+                    ? data.notes
+                    : []
+        };
+
+        renderStaffNotebook();
+
+    } catch (err) {
+        console.error(
+            "LOAD STAFF NOTEBOOK ERROR:",
+            err
+        );
+
+        staffNotebookList.innerHTML = `
+            <div class="staff-notebook-empty">
+                ПОМИЛКА ЗʼЄДНАННЯ.
+            </div>
+        `;
+    }
+}
+
+
+async function createStaffNote() {
+    if (
+        !staffNotebookInput ||
+        !staffNotebookAddBtn
+    ) {
+        return;
+    }
+
+    const noteText =
+        staffNotebookInput.value.trim();
+
+    if (!noteText) {
+        return;
+    }
+
+    if (
+        !["idea", "other"].includes(
+            STAFF_NOTEBOOK_ACTIVE_TAB
+        )
+    ) {
+        return;
+    }
+
+    staffNotebookAddBtn.disabled = true;
+
+    try {
+        const response = await fetch(
+            "https://monal-mono-pay-production.up.railway.app/api/staff/create-note",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type":
+                        "application/json"
+                },
+                body: JSON.stringify({
+                    staffId: staff.id,
+                    noteType:
+                        STAFF_NOTEBOOK_ACTIVE_TAB,
+                    noteText
+                })
+            }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok || !data.ok) {
+            alert(
+                data.error ||
+                "Не вдалося створити нотатку."
+            );
+
+            return;
+        }
+
+        staffNotebookInput.value = "";
+
+        await loadStaffNotebook();
+
+    } catch (err) {
+        console.error(
+            "CREATE STAFF NOTE ERROR:",
+            err
+        );
+
+        alert(
+            "Помилка зʼєднання при створенні нотатки."
+        );
+
+    } finally {
+        staffNotebookAddBtn.disabled = false;
+    }
+}
+
+
+async function completeStaffTask(taskId) {
+    try {
+        const response = await fetch(
+            "https://monal-mono-pay-production.up.railway.app/api/staff/complete-task",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type":
+                        "application/json"
+                },
+                body: JSON.stringify({
+                    staffId: staff.id,
+                    taskId
+                })
+            }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok || !data.ok) {
+            alert(
+                data.error ||
+                "Не вдалося завершити завдання."
+            );
+
+            await loadStaffNotebook();
+            return;
+        }
+
+        await loadStaffNotebook();
+
+    } catch (err) {
+        console.error(
+            "COMPLETE STAFF TASK ERROR:",
+            err
+        );
+
+        await loadStaffNotebook();
+    }
+}
+
+
+async function completeStaffNote(noteId) {
+    try {
+        const response = await fetch(
+            "https://monal-mono-pay-production.up.railway.app/api/staff/complete-note",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type":
+                        "application/json"
+                },
+                body: JSON.stringify({
+                    staffId: staff.id,
+                    noteId
+                })
+            }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok || !data.ok) {
+            alert(
+                data.error ||
+                "Не вдалося завершити нотатку."
+            );
+
+            await loadStaffNotebook();
+            return;
+        }
+
+        await loadStaffNotebook();
+
+    } catch (err) {
+        console.error(
+            "COMPLETE STAFF NOTE ERROR:",
+            err
+        );
+
+        await loadStaffNotebook();
+    }
+}
+
+
+staffNotebookTabs.forEach(tab => {
+    tab.addEventListener(
+        "click",
+        () => {
+            STAFF_NOTEBOOK_ACTIVE_TAB =
+                tab.dataset.notebookTab;
+
+            staffNotebookTabs.forEach(item => {
+                item.classList.toggle(
+                    "active",
+                    item === tab
+                );
+            });
+
+            renderStaffNotebook();
+        }
+    );
+});
+
+
+if (staffNotebookAddBtn) {
+    staffNotebookAddBtn.addEventListener(
+        "click",
+        createStaffNote
+    );
+}
+
+
+if (staffNotebookInput) {
+    staffNotebookInput.addEventListener(
+        "keydown",
+        event => {
+            if (event.key !== "Enter") {
+                return;
+            }
+
+            event.preventDefault();
+
+            createStaffNote();
+        }
+    );
+}
+
+
+loadStaffNotebook();
 
 const salesSection = document.getElementById("sales-section");
 const openSalesSectionBtn = document.getElementById("open-sales-section");
@@ -2409,7 +3441,67 @@ const assortmentProductsResult = document.getElementById("assortment-products-re
 const saveAssortmentBtn = document.getElementById("save-assortment-btn");
 const assortmentSaveResult = document.getElementById("assortment-save-result");
 
-let ASSORTMENT_PRODUCTS = [];   
+let ASSORTMENT_PRODUCTS = [];
+
+const customerWishesSection =
+    document.getElementById("customer-wishes-section");
+
+const openCustomerWishesSectionBtn =
+    document.getElementById("open-customer-wishes-section");
+
+const customerWishesTypeFilter =
+    document.getElementById("customer-wishes-type-filter");
+
+const loadCustomerWishesBtn =
+    document.getElementById("load-customer-wishes-btn");
+
+const downloadCustomerWishesBtn =
+    document.getElementById("download-customer-wishes-btn");
+
+const deleteCustomerWishesBtn =
+    document.getElementById("delete-customer-wishes-btn");
+
+const customerWishesResult =
+    document.getElementById("customer-wishes-result");
+
+let CUSTOMER_WISHES = [];
+
+
+const taskAssignmentSection =
+    document.getElementById("task-assignment-section");
+
+const openTaskAssignmentSectionBtn =
+    document.getElementById("open-task-assignment-section");
+
+const staffTaskTitleInput =
+    document.getElementById("staff-task-title");
+
+const staffTaskFrequencySelect =
+    document.getElementById("staff-task-frequency");
+
+const staffTaskWeekDaySelect =
+    document.getElementById("staff-task-week-day");
+
+const staffTaskMonthDaySelect =
+    document.getElementById("staff-task-month-day");
+
+const staffTaskUserSelect =
+    document.getElementById("staff-task-user");
+
+const createStaffTaskBtn =
+    document.getElementById("create-staff-task-btn");
+
+const staffTaskCreateResult =
+    document.getElementById("staff-task-create-result");
+
+const staffTaskListResult =
+    document.getElementById("staff-task-list-result");
+
+let STAFF_TASK_ASSIGNMENT_DATA = {
+    staffUsers: [],
+    tasks: []
+};
+
 
 const promosSection = document.getElementById("promos-section");
 const openPromosSectionBtn = document.getElementById("open-promos-section");
@@ -6667,7 +7759,7 @@ if (saleNewCertificateCheckBtn) {
         "click",
         checkNewPhysicalCertificate
     );
-}    
+}
     
 if (addSaleItemBtn) {
     addSaleItemBtn.addEventListener("click", () => {
@@ -6684,7 +7776,7 @@ if (addSaleItemBtn) {
             saleResult.innerHTML = "Спочатку оберіть товар зі списку.";
             return;
         }
-
+        
         const isCertificate =
             isStaffSaleCertificateProduct(product);
 
@@ -6814,7 +7906,7 @@ if (addSaleItemBtn) {
 
         if (saleDiscoveryBox) saleDiscoveryBox.classList.add("staff-hidden");
         if (saleDiscoveryList) saleDiscoveryList.innerHTML = "";
-
+        
         resetNewSaleCertificateSelection();        
 
         resetSaleCertificateBox();
@@ -13299,6 +14391,7 @@ async function loadStaffUsers() {
 }
 
 /* ===================== STAFF: PHYSICAL CERTIFICATES ===================== */
+
 function downloadCertificatesTemplate() {
     if (typeof XLSX === "undefined") {
         alert(
@@ -13360,6 +14453,7 @@ if (downloadCertificatesTemplateBtn) {
         downloadCertificatesTemplate
     );
 }
+
 
 function resetCertificatesImport() {
     CERTIFICATES_IMPORT_ROWS = [];
@@ -13969,7 +15063,7 @@ async function activatePhysicalCertificate(
             button.textContent = "Активувати";
         }
     }
-}    
+}
 
 if (showCertificatesActivateBtn) {
     showCertificatesActivateBtn.addEventListener(
@@ -14011,7 +15105,7 @@ if (certificateActivateNominalSelect) {
         "change",
         loadAvailablePhysicalCertificates
     );
-}    
+}
 
 if (certificatesImportFileInput) {
     certificatesImportFileInput.addEventListener(
@@ -14061,7 +15155,8 @@ if (certificatesImportSubmitBtn) {
         submitCertificatesImport
     );
 }
-    
+
+
 if (openProductsAdminSectionBtn && productsAdminSection) {
     openProductsAdminSectionBtn.addEventListener("click", async () => {
         if (!CAN_MANAGE_ADMIN_TOOLS) {
@@ -14079,6 +15174,955 @@ if (openProductsAdminSectionBtn && productsAdminSection) {
         await loadAdminProductCategories();
     });
 }
+
+function formatCustomerWishDate(value) {
+    if (!value) return "—";
+
+    const date = new Date(value);
+
+    if (Number.isNaN(date.getTime())) {
+        return "—";
+    }
+
+    return date.toLocaleString("uk-UA");
+}
+
+function getCustomerWishTypeLabel(type) {
+    return type === "public"
+        ? "ПУБЛІЧНЕ"
+        : "ПЕРСОНАЛЬНЕ";
+}
+
+function getFilteredCustomerWishes() {
+    const type = customerWishesTypeFilter?.value || "all";
+
+    if (type === "all") {
+        return CUSTOMER_WISHES;
+    }
+
+    return CUSTOMER_WISHES.filter(item => item.wish_type === type);
+}
+
+function renderCustomerWishes() {
+    if (!customerWishesResult) return;
+
+    const wishes = getFilteredCustomerWishes();
+
+    if (!wishes.length) {
+        customerWishesResult.innerHTML =
+            "Побажань за обраним фільтром немає.";
+
+        if (deleteCustomerWishesBtn) {
+            deleteCustomerWishesBtn.disabled = true;
+        }
+
+        return;
+    }
+
+    customerWishesResult.innerHTML = `
+        <div class="staff-table-responsive">
+            <table class="staff-report-table">
+                <thead>
+                    <tr>
+                        <th>
+                            <input
+                                type="checkbox"
+                                id="customer-wishes-select-all"
+                                aria-label="Обрати всі побажання"
+                            >
+                        </th>
+                        <th>Тип</th>
+                        <th>Покупець</th>
+                        <th>Email</th>
+                        <th>Побажання</th>
+                        <th>Дата</th>
+                        <th>Статус</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    ${wishes.map(item => `
+                        <tr>
+                            <td>
+                                <input
+                                    type="checkbox"
+                                    class="customer-wish-checkbox"
+                                    data-wish-type="${escapeStaffHtml(
+                                        item.wish_type
+                                    )}"
+                                    data-wish-id="${Number(
+                                        item.wish_id || 0
+                                    )}"
+                                    aria-label="Обрати побажання"
+                                >
+                            </td>
+
+                            <td>
+                                ${getCustomerWishTypeLabel(item.wish_type)}
+                            </td>
+
+                            <td>
+                                ${escapeStaffHtml(
+                                    item.customer_name || "—"
+                                )}
+                            </td>
+
+                            <td>
+                                ${escapeStaffHtml(
+                                    item.customer_email || "—"
+                                )}
+                            </td>
+
+                            <td>
+                                ${escapeStaffHtml(
+                                    item.wish_text || ""
+                                )}
+                            </td>
+
+                            <td>
+                                ${escapeStaffHtml(
+                                    formatCustomerWishDate(
+                                        item.created_at
+                                    )
+                                )}
+                            </td>
+
+                            <td>
+                                ${escapeStaffHtml(
+                                    item.status || "new"
+                                )}
+                            </td>
+                        </tr>
+                    `).join("")}
+                </tbody>
+            </table>
+        </div>
+    `;
+
+    const rowCheckboxes = Array.from(
+        customerWishesResult.querySelectorAll(
+            ".customer-wish-checkbox"
+        )
+    );
+
+    const selectAllCheckbox =
+        customerWishesResult.querySelector(
+            "#customer-wishes-select-all"
+        );
+
+    function updateDeleteCustomerWishesButton() {
+        if (!deleteCustomerWishesBtn) return;
+
+        deleteCustomerWishesBtn.disabled =
+            !rowCheckboxes.some(
+                checkbox => checkbox.checked
+            );
+    }
+
+    rowCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener(
+            "change",
+            function () {
+                if (selectAllCheckbox) {
+                    selectAllCheckbox.checked =
+                        rowCheckboxes.length > 0 &&
+                        rowCheckboxes.every(
+                            item => item.checked
+                        );
+                }
+
+                updateDeleteCustomerWishesButton();
+            }
+        );
+    });
+
+    if (selectAllCheckbox) {
+        selectAllCheckbox.addEventListener(
+            "change",
+            function () {
+                rowCheckboxes.forEach(checkbox => {
+                    checkbox.checked =
+                        selectAllCheckbox.checked;
+                });
+
+                updateDeleteCustomerWishesButton();
+            }
+        );
+    }
+
+    updateDeleteCustomerWishesButton();
+}
+
+async function loadCustomerWishes() {
+    if (!customerWishesResult) return;
+
+    customerWishesResult.innerHTML =
+        "Завантажуємо побажання...";
+
+    try {
+        const response = await fetch(
+            "https://monal-mono-pay-production.up.railway.app/api/staff/customer-wishes",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    staffId: staff.id
+                })
+            }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok || !data.ok) {
+            customerWishesResult.innerHTML =
+                data.error ||
+                "Не вдалося завантажити побажання.";
+            return;
+        }
+
+        CUSTOMER_WISHES =
+            Array.isArray(data.wishes)
+                ? data.wishes
+                : [];
+
+        renderCustomerWishes();
+
+    } catch (err) {
+        console.error(
+            "LOAD CUSTOMER WISHES ERROR:",
+            err
+        );
+
+        customerWishesResult.innerHTML =
+            "Помилка зʼєднання при завантаженні побажань.";
+    }
+}
+
+async function deleteSelectedCustomerWishes() {
+    if (
+        !customerWishesResult ||
+        !deleteCustomerWishesBtn
+    ) {
+        return;
+    }
+
+    if (!CAN_MANAGE_ADMIN_TOOLS) {
+        alert(
+            "Немає права на видалення побажань покупців."
+        );
+        return;
+    }
+
+    const selectedCheckboxes = Array.from(
+        customerWishesResult.querySelectorAll(
+            ".customer-wish-checkbox:checked"
+        )
+    );
+
+    if (!selectedCheckboxes.length) {
+        return;
+    }
+
+    const confirmed = confirm(
+        `Видалити обрані побажання: ${selectedCheckboxes.length}?`
+    );
+
+    if (!confirmed) {
+        return;
+    }
+
+    const records = selectedCheckboxes.map(
+        checkbox => ({
+            type: checkbox.dataset.wishType,
+            id: Number(
+                checkbox.dataset.wishId || 0
+            )
+        })
+    );
+
+    deleteCustomerWishesBtn.disabled = true;
+    deleteCustomerWishesBtn.textContent =
+        "ВИДАЛЯЄМО...";
+
+    try {
+        const response = await fetch(
+            "https://monal-mono-pay-production.up.railway.app/api/staff/delete-customer-wishes",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    staffId: staff.id,
+                    records
+                })
+            }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok || !data.ok) {
+            alert(
+                data.error ||
+                "Не вдалося видалити побажання."
+            );
+            return;
+        }
+
+        await loadCustomerWishes();
+
+    } catch (err) {
+        console.error(
+            "DELETE CUSTOMER WISHES ERROR:",
+            err
+        );
+
+        alert(
+            "Помилка зʼєднання при видаленні побажань."
+        );
+
+    } finally {
+        deleteCustomerWishesBtn.textContent =
+            "ВИДАЛИТИ";
+
+        deleteCustomerWishesBtn.disabled = true;
+    }
+}
+
+function downloadCustomerWishesXlsx() {
+    if (typeof XLSX === "undefined") {
+        alert("Не вдалося завантажити модуль Excel.");
+        return;
+    }
+
+    const wishes = getFilteredCustomerWishes();
+
+    if (!wishes.length) {
+        alert("Немає даних для завантаження.");
+        return;
+    }
+
+    const rows = wishes.map(item => ({
+        "Тип": getCustomerWishTypeLabel(
+            item.wish_type
+        ),
+        "Покупець": item.customer_name || "",
+        "Email": item.customer_email || "",
+        "Побажання": item.wish_text || "",
+        "Дата": formatCustomerWishDate(
+            item.created_at
+        ),
+        "Статус": item.status || ""
+    }));
+
+    const worksheet =
+        XLSX.utils.json_to_sheet(rows);
+
+    worksheet["!cols"] = [
+        { wch: 16 },
+        { wch: 24 },
+        { wch: 30 },
+        { wch: 70 },
+        { wch: 22 },
+        { wch: 14 }
+    ];
+
+    const workbook =
+        XLSX.utils.book_new();
+
+    XLSX.utils.book_append_sheet(
+        workbook,
+        worksheet,
+        "Побажання"
+    );
+
+    XLSX.writeFile(
+        workbook,
+        "monal_customer_wishes.xlsx"
+    );
+}
+
+if (
+    openCustomerWishesSectionBtn &&
+    customerWishesSection
+) {
+    openCustomerWishesSectionBtn.addEventListener(
+        "click",
+        async () => {
+            if (!CAN_MANAGE_ADMIN_TOOLS) {
+                alert(
+                    "Немає права на перегляд побажань покупців."
+                );
+                return;
+            }
+
+            showStaffSection(
+                customerWishesSection
+            );
+
+            await loadCustomerWishes();
+        }
+    );
+}
+
+if (loadCustomerWishesBtn) {
+    loadCustomerWishesBtn.addEventListener(
+        "click",
+        loadCustomerWishes
+    );
+}
+
+if (customerWishesTypeFilter) {
+    customerWishesTypeFilter.addEventListener(
+        "change",
+        renderCustomerWishes
+    );
+}
+
+if (downloadCustomerWishesBtn) {
+    downloadCustomerWishesBtn.addEventListener(
+        "click",
+        downloadCustomerWishesXlsx
+    );
+}
+
+if (deleteCustomerWishesBtn) {
+    deleteCustomerWishesBtn.addEventListener(
+        "click",
+        deleteSelectedCustomerWishes
+    );
+}
+
+
+/* ===================== STAFF TASK ASSIGNMENT ===================== */
+
+function getStaffTaskFrequencyLabel(task) {
+    const type =
+        String(task.frequency_type || "");
+
+    if (type === "daily") {
+        return "ЩОДНЯ";
+    }
+
+    if (type === "weekdays") {
+        return "ПН–ПТ";
+    }
+
+    if (type === "weekly") {
+        const days = {
+            1: "ПН",
+            2: "ВТ",
+            3: "СР",
+            4: "ЧТ",
+            5: "ПТ",
+            6: "СБ",
+            7: "НД"
+        };
+
+        return `ЩОТИЖНЯ · ${
+            days[Number(task.week_day)] || "—"
+        }`;
+    }
+
+    if (type === "monthly") {
+        return `ЩОМІСЯЦЯ · ${
+            Number(task.month_day || 0)
+        } ЧИСЛА`;
+    }
+
+    return type;
+}
+
+
+function getStaffTaskTargetLabel(task) {
+    let roles = [];
+
+    if (Array.isArray(task.target_roles)) {
+        roles = task.target_roles;
+    } else if (task.target_roles) {
+        try {
+            roles =
+                JSON.parse(task.target_roles);
+        } catch (error) {
+            roles = [];
+        }
+    }
+
+    const parts = [];
+
+    if (roles.length) {
+        parts.push(
+            roles
+                .map(role =>
+                    String(role).toUpperCase()
+                )
+                .join(", ")
+        );
+    }
+
+    if (task.target_staff_user_name) {
+        parts.push(
+            task.target_staff_user_name
+        );
+    }
+
+    return parts.length
+        ? parts.join(" + ")
+        : "—";
+}
+
+
+function renderStaffTaskUsers() {
+    if (!staffTaskUserSelect) return;
+
+    staffTaskUserSelect.innerHTML = `
+        <option value="">
+            Додатково конкретний staff user
+        </option>
+    `;
+
+    STAFF_TASK_ASSIGNMENT_DATA.staffUsers
+        .forEach(user => {
+            const option =
+                document.createElement("option");
+
+            option.value =
+                String(user.id);
+
+            option.textContent =
+                `${user.name} · ${String(
+                    user.role || ""
+                ).toUpperCase()}`;
+
+            staffTaskUserSelect.appendChild(option);
+        });
+}
+
+
+function renderStaffTaskList() {
+    if (!staffTaskListResult) return;
+
+    const tasks =
+        STAFF_TASK_ASSIGNMENT_DATA.tasks;
+
+    if (!tasks.length) {
+        staffTaskListResult.innerHTML =
+            "СТВОРЕНИХ ЗАВДАНЬ ПОКИ НЕМАЄ.";
+
+        return;
+    }
+
+    staffTaskListResult.innerHTML = `
+        <div class="staff-table-scroll">
+            <table class="staff-report-table staff-task-table">
+                <thead>
+                    <tr>
+                        <th>ЗАВДАННЯ</th>
+                        <th>ПЕРІОДИЧНІСТЬ</th>
+                        <th>КОМУ</th>
+                        <th>АКТИВНЕ</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    ${tasks.map(task => `
+                        <tr>
+                            <td>
+                                ${escapeNotebookHtml(
+                                    task.title || ""
+                                )}
+                            </td>
+
+                            <td>
+                                ${escapeNotebookHtml(
+                                    getStaffTaskFrequencyLabel(
+                                        task
+                                    )
+                                )}
+                            </td>
+
+                            <td>
+                                ${escapeNotebookHtml(
+                                    getStaffTaskTargetLabel(
+                                        task
+                                    )
+                                )}
+                            </td>
+
+                            <td>
+                                <input
+                                    type="checkbox"
+                                    class="staff-task-active-checkbox"
+                                    data-task-id="${Number(task.id)}"
+                                    ${Number(task.is_active) === 1
+                                        ? "checked"
+                                        : ""}
+                                >
+                            </td>
+                        </tr>
+                    `).join("")}
+                </tbody>
+            </table>
+        </div>
+    `;
+}
+
+
+async function loadStaffTaskAssignmentData() {
+    if (!staffTaskListResult) return;
+
+    staffTaskListResult.innerHTML =
+        "ЗАВАНТАЖУЮ ЗАВДАННЯ...";
+
+    try {
+        const response = await fetch(
+            "https://monal-mono-pay-production.up.railway.app/api/staff/task-assignment-data",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type":
+                        "application/json"
+                },
+                body: JSON.stringify({
+                    staffId: staff.id
+                })
+            }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok || !data.ok) {
+            staffTaskListResult.innerHTML =
+                data.error ||
+                "НЕ ВДАЛОСЯ ЗАВАНТАЖИТИ ЗАВДАННЯ.";
+
+            return;
+        }
+
+        STAFF_TASK_ASSIGNMENT_DATA = {
+            staffUsers:
+                Array.isArray(data.staffUsers)
+                    ? data.staffUsers
+                    : [],
+
+            tasks:
+                Array.isArray(data.tasks)
+                    ? data.tasks
+                    : []
+        };
+
+        renderStaffTaskUsers();
+        renderStaffTaskList();
+
+    } catch (err) {
+        console.error(
+            "LOAD TASK ASSIGNMENT DATA ERROR:",
+            err
+        );
+
+        staffTaskListResult.innerHTML =
+            "ПОМИЛКА ЗʼЄДНАННЯ.";
+    }
+}
+
+
+function updateStaffTaskFrequencyFields() {
+    if (
+        !staffTaskFrequencySelect ||
+        !staffTaskWeekDaySelect ||
+        !staffTaskMonthDaySelect
+    ) {
+        return;
+    }
+
+    const type =
+        staffTaskFrequencySelect.value;
+
+    staffTaskWeekDaySelect.classList.toggle(
+        "staff-hidden",
+        type !== "weekly"
+    );
+
+    staffTaskMonthDaySelect.classList.toggle(
+        "staff-hidden",
+        type !== "monthly"
+    );
+}
+
+
+async function createStaffTask() {
+    if (
+        !staffTaskTitleInput ||
+        !staffTaskFrequencySelect ||
+        !createStaffTaskBtn
+    ) {
+        return;
+    }
+
+    const title =
+        staffTaskTitleInput.value.trim();
+
+    const frequencyType =
+        staffTaskFrequencySelect.value;
+
+    const targetRoles =
+        Array.from(
+            document.querySelectorAll(
+                ".staff-task-role:checked"
+            )
+        ).map(input => input.value);
+
+    const targetStaffUserId =
+        staffTaskUserSelect?.value || "";
+
+    const weekDay =
+        staffTaskWeekDaySelect?.value || "";
+
+    const monthDay =
+        staffTaskMonthDaySelect?.value || "";
+
+    if (!title) {
+        alert("Введіть назву завдання.");
+        return;
+    }
+
+    if (
+        !targetRoles.length &&
+        !targetStaffUserId
+    ) {
+        alert(
+            "Оберіть роль або конкретного staff user."
+        );
+
+        return;
+    }
+
+    createStaffTaskBtn.disabled = true;
+    createStaffTaskBtn.textContent =
+        "СТВОРЮЮ...";
+
+    try {
+        const response = await fetch(
+            "https://monal-mono-pay-production.up.railway.app/api/staff/create-task-template",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type":
+                        "application/json"
+                },
+                body: JSON.stringify({
+                    staffId: staff.id,
+                    title,
+                    frequencyType,
+                    targetRoles,
+                    targetStaffUserId,
+                    weekDay,
+                    monthDay
+                })
+            }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok || !data.ok) {
+            alert(
+                data.error ||
+                "Не вдалося створити завдання."
+            );
+
+            return;
+        }
+
+        staffTaskTitleInput.value = "";
+
+        document
+            .querySelectorAll(
+                ".staff-task-role"
+            )
+            .forEach(input => {
+                input.checked = false;
+            });
+
+        if (staffTaskUserSelect) {
+            staffTaskUserSelect.value = "";
+        }
+
+        if (staffTaskWeekDaySelect) {
+            staffTaskWeekDaySelect.value = "";
+        }
+
+        if (staffTaskMonthDaySelect) {
+            staffTaskMonthDaySelect.value = "";
+        }
+
+        if (staffTaskCreateResult) {
+            staffTaskCreateResult.classList.remove(
+                "staff-hidden"
+            );
+
+            staffTaskCreateResult.textContent =
+                "ЗАВДАННЯ СТВОРЕНО.";
+        }
+
+        await loadStaffTaskAssignmentData();
+
+        await loadStaffNotebook();
+
+    } catch (err) {
+        console.error(
+            "CREATE STAFF TASK ERROR:",
+            err
+        );
+
+        alert(
+            "Помилка зʼєднання при створенні завдання."
+        );
+
+    } finally {
+        createStaffTaskBtn.disabled = false;
+        createStaffTaskBtn.textContent =
+            "СТВОРИТИ ЗАВДАННЯ";
+    }
+}
+
+
+async function changeStaffTaskStatus(
+    taskId,
+    isActive
+) {
+    try {
+        const response = await fetch(
+            "https://monal-mono-pay-production.up.railway.app/api/staff/task-template-status",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type":
+                        "application/json"
+                },
+                body: JSON.stringify({
+                    staffId: staff.id,
+                    taskId,
+                    isActive:
+                        isActive ? 1 : 0
+                })
+            }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok || !data.ok) {
+            alert(
+                data.error ||
+                "Не вдалося змінити статус."
+            );
+
+            await loadStaffTaskAssignmentData();
+            return;
+        }
+
+        await loadStaffTaskAssignmentData();
+        await loadStaffNotebook();
+
+    } catch (err) {
+        console.error(
+            "CHANGE STAFF TASK STATUS ERROR:",
+            err
+        );
+
+        await loadStaffTaskAssignmentData();
+    }
+}
+
+
+if (
+    openTaskAssignmentSectionBtn &&
+    taskAssignmentSection
+) {
+    openTaskAssignmentSectionBtn.addEventListener(
+        "click",
+        async () => {
+            if (!CAN_MANAGE_ADMIN_TOOLS) {
+                alert(
+                    "Немає права призначати завдання."
+                );
+
+                return;
+            }
+
+            showStaffSection(
+                taskAssignmentSection
+            );
+
+            await loadStaffTaskAssignmentData();
+        }
+    );
+}
+
+
+if (staffTaskFrequencySelect) {
+    staffTaskFrequencySelect.addEventListener(
+        "change",
+        updateStaffTaskFrequencyFields
+    );
+}
+
+
+if (createStaffTaskBtn) {
+    createStaffTaskBtn.addEventListener(
+        "click",
+        createStaffTask
+    );
+}
+
+
+if (staffTaskListResult) {
+    staffTaskListResult.addEventListener(
+        "change",
+        event => {
+            const checkbox =
+                event.target.closest(
+                    ".staff-task-active-checkbox"
+                );
+
+            if (!checkbox) return;
+
+            changeStaffTaskStatus(
+                Number(
+                    checkbox.dataset.taskId || 0
+                ),
+                checkbox.checked
+            );
+        }
+    );
+}
+
+
+if (staffTaskMonthDaySelect) {
+    for (
+        let day = 1;
+        day <= 31;
+        day += 1
+    ) {
+        const option =
+            document.createElement("option");
+
+        option.value =
+            String(day);
+
+        option.textContent =
+            `${day}`;
+
+        staffTaskMonthDaySelect.appendChild(
+            option
+        );
+    }
+}
+
+
+updateStaffTaskFrequencyFields();
+
 
 if (openAssortmentSectionBtn && assortmentSection) {
     openAssortmentSectionBtn.addEventListener("click", async () => {

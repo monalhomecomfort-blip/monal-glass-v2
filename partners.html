@@ -22,6 +22,7 @@
 
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="components/sidebar.css">
+    <link rel="stylesheet" href="site-shell.css">
  
 <!-- Google tag (gtag.js) + Consent Mode v2 -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17895832671"></script>
@@ -47,7 +48,7 @@
 
 </head>
 
-<body class="partners">
+<body class="partners site-page">
 
 <!-- НАВІГАЦІЯ -->
 <nav>
@@ -84,7 +85,7 @@
         <div class="catalog-dropdown">
             <a href="aromadiffusers.html">Аромадифузори</a>
             <a href="refills.html">Рефіли</a>
-            <a href="parfums.html">Парфуми для дому</a>
+            <a href="parfums.html">Парфуми для інтер'єру</a>
             <a href="discovery.html">Discovery set</a>
             <a href="candles.html">Свічки</a>
 
@@ -136,7 +137,7 @@
 <!-- TOP CATEGORIES — HOME ONLY -->
 <div class="nav-top-categories">
   <a href="aromadiffusers.html">Аромадифузори</a>
-  <a href="parfums.html">Парфуми для дому</a>
+  <a href="parfums.html">Парфуми для інтер'єру</a>
   <a href="refills.html">Рефіл</a>
   <a href="discovery.html">Discovery set</a>
   <a href="gift-sets.html">Подарункові набори</a>
@@ -156,170 +157,269 @@
   <a href="cart.html">Кошик <span class="burger-cart-count"></span></a>
 </div>
 
-<main class="container">
-    <h1 class="page-title">Партнерство з Mōnal</h1>
+<main class="privacy-story partners-story">
 
-<p class="page-intro">
-    Тут зібрані простори, де представлений бренд Mōnal. 
-    Ми працюємо з концептуальними магазинами та студіями, 
-    що поділяють нашу естетику та підхід до простору.
-</p>
+    <section class="privacy-story-intro">
 
-<div class="about-container">
+        <h1>ПАРТНЕРСТВО З MŌNAL</h1>
 
-    <!-- Великий блок -->
-    <div class="about-block big">
-        <h2>Про партнерство</h2>
-        <p>
-            mōnal представлений у просторах, що близькі нам за відчуттям.
-            Це місця з характером, увагою до деталей та власною атмосферою.
-            <br><br>
-            Для нас партнерство — це природне продовження філософії бренду
-            у реальному середовищі.
-        </p>
-    </div>
+        <div class="privacy-story-intro-copy">
+            <p class="privacy-story-intro-lead">
+                МИ ВІДКРИТІ ДО СПІВПРАЦІ З ПРОСТОРАМИ, БРЕНДАМИ ТА ЛЮДЬМИ,
+                ЯКІ ПОДІЛЯЮТЬ НАШУ ЕСТЕТИКУ Й ПІДХІД.
+            </p>
 
-
-    <div class="about-block big">
-    <h2>Пропозиція партнерства</h2>
-
-<form id="partner-form" class="review-form">
-    <input
-        type="text"
-        id="partner-name"
-        class="input"
-        placeholder="Ім'я контактної особи"
-        required
-    >
-
-    <input
-        type="email"
-        id="partner-email"
-        class="input"
-        placeholder="E-mail"
-        required
-    >
-
-    <input
-        type="tel"
-        id="partner-phone"
-        class="input"
-        placeholder="Номер телефону"
-        required
-    >
-
-    <textarea
-        id="partner-message"
-        class="input"
-        placeholder="Запрошуємо до співпраці постачальників, партнерів для взаємореклами"
-        required
-        style="min-height:180px; resize:vertical;"
-    ></textarea>
-
-    <div id="partner-form-message" style="font-size:14px; min-height:20px;"></div>
-
-    <button
-        type="button"
-        class="buy-btn"
-        onclick="submitPartnerForm()"
-    >
-        Надіслати
-    </button>
-</form>
-</div>
-
-    <!-- Великий блок -->
-<div class="about-block big">
-    <h2>Наш партнер</h2>
-
-    <div class="partner-content">
-
-        <!-- ЛІВО: текст -->
-        <div class="partner-info">
             <p>
-                <strong>
+                ДЛЯ НАС ПАРТНЕРСТВО — ЦЕ НЕ ПРОСТО ПРИСУТНІСТЬ ПРОДУКТУ В ІНШОМУ ПРОСТОРІ.
+                ЦЕ ПРО СПІЛЬНЕ ВІДЧУТТЯ, УВАГУ ДО ДЕТАЛЕЙ І ПРИРОДНЕ ПРОДОВЖЕННЯ ФІЛОСОФІЇ MŌNAL.
+            </p>
+        </div>
+
+    </section>
+
+    <section class="privacy-story-gallery" aria-label="Атмосфера Mōnal">
+        <div class="privacy-story-gallery-top">
+
+            <img
+                src="images/backgrounds/ліва.webp"
+                alt="Атмосфера бренду Mōnal"
+                loading="lazy"
+            >
+
+            <img
+                src="images/backgrounds/центральна.webp"
+                alt="Простір Mōnal"
+                loading="lazy"
+            >
+
+            <img
+                src="images/backgrounds/права.webp"
+                alt="Деталі бренду Mōnal"
+                loading="lazy"
+            >
+
+        </div>
+    </section>
+
+    <section class="privacy-story-note">
+        <strong>ПАРТНЕРСТВО — ЦЕ СПІЛЬНІ ЦІННОСТІ.</strong>
+
+        <p>
+            НАМ ВАЖЛИВО ПРАЦЮВАТИ З ТИМИ, ХТО ТАК САМО ЦІНУЄ АТМОСФЕРУ,
+            ЯКІСТЬ, ЧЕСНІСТЬ І УВАГУ ДО ПРОСТОРУ.
+        </p>
+    </section>
+
+    <section class="privacy-story-content">
+
+        <article class="privacy-story-section">
+            <h2>ПРО ПАРТНЕРСТВО</h2>
+
+            <p>
+                MŌNAL ПРЕДСТАВЛЕНИЙ У ПРОСТОРАХ,
+                ЯКІ БЛИЗЬКІ НАМ ЗА ВІДЧУТТЯМ.
+            </p>
+
+            <p>
+                ЦЕ МІСЦЯ З ХАРАКТЕРОМ,
+                УВАГОЮ ДО ДЕТАЛЕЙ ТА ВЛАСНОЮ АТМОСФЕРОЮ.
+            </p>
+
+            <p>
+                ДЛЯ НАС ПАРТНЕРСТВО — ЦЕ ПРИРОДНЕ ПРОДОВЖЕННЯ
+                ФІЛОСОФІЇ БРЕНДУ У РЕАЛЬНОМУ СЕРЕДОВИЩІ.
+            </p>
+        </article>
+
+        <article class="privacy-story-section">
+            <h2>МИ ВІДКРИТІ ДО СПІВПРАЦІ</h2>
+
+            <p>
+                РОЗГЛЯДАЄМО ПАРТНЕРСТВА З КОНЦЕПТУАЛЬНИМИ МАГАЗИНАМИ,
+                СТУДІЯМИ, ШОУРУМАМИ, ПРОСТОРАМИ,
+                А ТАКОЖ ФОРМАТИ ВЗАЄМОРЕКЛАМИ ТА СПІЛЬНИХ ПРОЄКТІВ.
+            </p>
+
+            <p>
+                ЯКЩО ВИ БАЧИТЕ ТОЧКУ ДОТИКУ З MŌNAL,
+                НАПИШІТЬ НАМ КІЛЬКА СЛІВ ПРО СЕБЕ ТА ВАШУ ІДЕЮ.
+            </p>
+        </article>
+
+    </section>
+
+    <section class="partners-story-form-section">
+
+        <div class="partners-story-form-inner">
+
+            <div class="partners-story-form-copy">
+                <h2>ПРОПОЗИЦІЯ ПАРТНЕРСТВА</h2>
+
+                <p>
+                    ЗАЛИШТЕ КОНТАКТИ Й КОРОТКО ОПИШІТЬ,
+                    ЯКИЙ ФОРМАТ СПІВПРАЦІ ВАС ЦІКАВИТЬ.
+                </p>
+            </div>
+
+            <form id="partner-form" class="partners-story-form">
+
+                <input
+                    type="text"
+                    id="partner-name"
+                    placeholder="Ім'я контактної особи"
+                    required
+                >
+
+                <input
+                    type="email"
+                    id="partner-email"
+                    placeholder="E-mail"
+                    required
+                >
+
+                <input
+                    type="tel"
+                    id="partner-phone"
+                    placeholder="Номер телефону"
+                    required
+                >
+
+                <textarea
+                    id="partner-message"
+                    placeholder="Коротко опишіть пропозицію співпраці"
+                    required
+                ></textarea>
+
+                <div id="partner-form-message"></div>
+
+                <button
+                    type="button"
+                    onclick="submitPartnerForm()"
+                >
+                    НАДІСЛАТИ
+                </button>
+
+            </form>
+
+        </div>
+
+    </section>
+
+    <section class="privacy-story-content partners-story-current">
+
+        <article class="privacy-story-section">
+            <h2>НАШІ ПАРТНЕРИ</h2>
+
+            <p>
+                ПРОСТОРИ Й ЛЮДИ, З ЯКИМИ MŌNAL УЖЕ МАЄ СПІЛЬНІ ТОЧКИ ДОТИКУ.
+            </p>
+        </article>
+
+        <article class="partners-story-partner">
+
+            <div class="partners-story-partner-copy">
+
+                <h2>
                     <a href="https://brusnytsia.com/" target="_blank">
                         BRUSNYTSIA
                     </a>
-                </strong>
-                — даруй живі емоції<br>
-                Україна, м. Вінниця
-            </p>
+                </h2>
 
-            <p>
-                вул. Зодчих, 12<br>
-                вул. Коріатовичів, 145
-            </p>
+                <p>
+                    ДАРУЙ ЖИВІ ЕМОЦІЇ<br>
+                    УКРАЇНА, М. ВІННИЦЯ
+                </p>
 
-            <p>
-                <a href="tel:+380971207900">+38 (097) 120-79-00</a><br>
-                <a href="tel:+380731207900">+38 (073) 120-79-00</a>
-            </p>
+                <p>
+                    ВУЛ. ЗОДЧИХ, 12<br>
+                    ВУЛ. КОРІАТОВИЧІВ, 145
+                </p>
 
-            <p>
-                <a href="mailto:info@brusnytsia.com">info@brusnytsia.com</a><br>
-                <a href="https://brusnytsia.com/" target="_blank">
-                    brusnytsia.com
-                </a>
-            </p>
-        </div>
+                <p>
+                    <a href="tel:+380971207900">+38 (097) 120-79-00</a><br>
+                    <a href="tel:+380731207900">+38 (073) 120-79-00</a>
+                </p>
 
-        <!-- ПРАВО: фото -->
-        <div class="partner-photo">
-            <img src="images/brusnytsia-partner.jpg"
-                 alt="BRUSNYTSIA — ДАРУЙ ЖИВІ ЕМОЦІЇ, м. Вінниця">
-        </div>
+                <p>
+                    <a href="mailto:info@brusnytsia.com">
+                        INFO@BRUSNYTSIA.COM
+                    </a><br>
 
-    </div>
-</div>
-
-<!-- Великий блок -->
-<div class="about-block big">
-    <h2>Наш партнер</h2>
-
-    <div class="partner-content">
-
-        <!-- ЛІВО: текст -->
-        <div class="partner-info">
-            <p>
-                <strong>
-                    <a href="https://www.instagram.com/killer_kilogramiv" target="_blank">
-                        Killer Kilogramiv
+                    <a href="https://brusnytsia.com/" target="_blank">
+                        BRUSNYTSIA.COM
                     </a>
-                </strong>
-                — здоров'я / краса
-            </p>
+                </p>
 
-            <p>
-                Майстер з масажу, тейпування та контенту — Анастасія 🐾.<br>
-                Працює з тілом уважно й професійно, допомагає зняти напруження, відновити баланс і покращити самопочуття.
-            </p>
+            </div>
 
-            <p>
-                Поєднує практичний досвід, навчання та власну студію, де створює простір турботи про здоров'я, красу та внутрішній комфорт.
-            </p>
+            <div class="partners-story-partner-photo">
+                <img
+                    src="images/brusnytsia-partner.jpg"
+                    alt="BRUSNYTSIA — даруй живі емоції, м. Вінниця"
+                    loading="lazy"
+                >
+            </div>
 
-            <p>
-                Досвід роботи — 6,5 років
-            </p>
+        </article>
 
-            <p>
-                <a href="https://www.instagram.com/killer_kilogramiv" target="_blank">
-                    instagram.com/killer_kilogramiv
-                </a>
-            </p>
-        </div>
+        <article class="partners-story-partner">
 
-        <!-- ПРАВО: фото -->
-        <div class="partner-photo">
-            <img src="images/killer-partner.jpg"
-                 alt="Killer Kilogramiv — майстер масажу та тейпування">
-        </div>
+            <div class="partners-story-partner-copy">
 
-    </div>
-</div>
-    
-</div>
+                <h2>
+                    <a
+                        href="https://www.instagram.com/killer_kilogramiv"
+                        target="_blank"
+                    >
+                        KILLER KILOGRAMIV
+                    </a>
+                </h2>
+
+                <p>
+                    ЗДОРОВ'Я / КРАСА
+                </p>
+
+                <p>
+                    МАЙСТЕР З МАСАЖУ, ТЕЙПУВАННЯ ТА КОНТЕНТУ — АНАСТАСІЯ.
+                    ПРАЦЮЄ З ТІЛОМ УВАЖНО Й ПРОФЕСІЙНО,
+                    ДОПОМАГАЄ ЗНЯТИ НАПРУЖЕННЯ,
+                    ВІДНОВИТИ БАЛАНС І ПОКРАЩИТИ САМОПОЧУТТЯ.
+                </p>
+
+                <p>
+                    ПОЄДНУЄ ПРАКТИЧНИЙ ДОСВІД,
+                    НАВЧАННЯ ТА ВЛАСНУ СТУДІЮ,
+                    ДЕ СТВОРЮЄ ПРОСТІР ТУРБОТИ ПРО ЗДОРОВ'Я,
+                    КРАСУ ТА ВНУТРІШНІЙ КОМФОРТ.
+                </p>
+
+                <p>
+                    ДОСВІД РОБОТИ — 6,5 РОКІВ
+                </p>
+
+                <p>
+                    <a
+                        href="https://www.instagram.com/killer_kilogramiv"
+                        target="_blank"
+                    >
+                        INSTAGRAM.COM/KILLER_KILOGRAMIV
+                    </a>
+                </p>
+
+            </div>
+
+            <div class="partners-story-partner-photo">
+                <img
+                    src="images/killer-partner.jpg"
+                    alt="Killer Kilogramiv — майстер масажу та тейпування"
+                    loading="lazy"
+                >
+            </div>
+
+        </article>
+
+    </section>
+
 </main>
   
 <footer>
@@ -548,5 +648,6 @@ async function submitPartnerForm() {
 </script>
 
 <script src="cookie-consent.js"></script>    
+<script src="site-shell.js"></script>
 </body>
 </html>

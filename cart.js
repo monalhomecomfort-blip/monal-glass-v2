@@ -685,6 +685,39 @@ function updateCartCount() {
     if (mobileCount) mobileCount.textContent = text;
 }
 
+function showCartAddedToast() {
+    let toast = document.getElementById("monal-cart-toast");
+
+    if (!toast) {
+        toast = document.createElement("div");
+        toast.id = "monal-cart-toast";
+        toast.className = "monal-cart-toast";
+        toast.setAttribute("role", "status");
+        toast.setAttribute("aria-live", "polite");
+
+        toast.innerHTML = `
+            <span class="monal-cart-toast-icon">✓</span>
+            <span>Додано в кошик</span>
+        `;
+
+        document.body.appendChild(toast);
+    }
+
+    clearTimeout(window.monalCartToastTimer);
+
+    toast.classList.remove("show");
+
+    requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+            toast.classList.add("show");
+        });
+    });
+
+    window.monalCartToastTimer = setTimeout(() => {
+        toast.classList.remove("show");
+    }, 1200);
+}
+
 async function addToCart(
     name,
     price,
@@ -739,6 +772,7 @@ async function addToCart(
     PROMO_CODE = "";
 
     updateCartCount();
+    showCartAddedToast();
 }
 
 function getProductButtonCartItem(button) {
@@ -2176,9 +2210,42 @@ ${finalItemsText}
         .filter(i => i.label === "Сертифікат")
         .map(i => ({
             nominal: i.price,
-            certificateType: String(i.certificateType || "")
+
+            certificateType: String(
+                i.certificateType || ""
+            )
                 .trim()
-                .toLowerCase()
+                .toLowerCase(),
+
+            giftMode: String(
+                i.giftMode || "self"
+            )
+                .trim()
+                .toLowerCase(),
+
+            recipientName: String(
+                i.recipientName || ""
+            ).trim(),
+
+            recipientPhone: String(
+                i.recipientPhone || ""
+            ).trim(),
+
+            recipientTelegram: String(
+                i.recipientTelegram || ""
+            ).trim(),
+
+            recipientEmail: String(
+                i.recipientEmail || ""
+            ).trim(),
+
+            greetingText: String(
+                i.greetingText || ""
+            ).trim(),
+
+            greetingDate: String(
+                i.greetingDate || ""
+            ).trim()
         }));
 
     PAYMENT_CONTEXT = {

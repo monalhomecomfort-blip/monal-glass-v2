@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <!-- FAVICON -->
-    <link rel="icon" type="image/png" sizes="32x32" href="favicon32_only_o.png">а
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon32_only_o.png">
     
     <title>Ваш кошик | Monal</title>
     <meta name="description" content="Оформлення замовлення в кошику Monal. Перевірте обрані товари та завершіть покупку.">
@@ -22,6 +22,7 @@
     
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="components/sidebar.css">
+    <link rel="stylesheet" href="site-shell.css">
 
 <!-- Google tag (gtag.js) + Consent Mode v2 -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17895832671"></script>
@@ -47,7 +48,7 @@
 
 </head>
 
-<body class="page-cart">
+<body class="page-cart site-page">
 
 <!-- МЕНЮ -->
 <nav>
@@ -84,7 +85,7 @@
         <div class="catalog-dropdown">
             <a href="aromadiffusers.html">Аромадифузори</a>
             <a href="refills.html">Рефіли</a>
-            <a href="parfums.html">Парфуми для дому</a>
+            <a href="parfums.html">Парфуми для інтер'єру</a>
             <a href="discovery.html">Discovery set</a>
             <a href="candles.html">Свічки</a>
 
@@ -136,7 +137,7 @@
 <!-- TOP CATEGORIES — HOME ONLY -->
 <div class="nav-top-categories">
   <a href="aromadiffusers.html">Аромадифузори</a>
-  <a href="parfums.html">Парфуми для дому</a>
+  <a href="parfums.html">Парфуми для інтер'єру</a>
   <a href="refills.html">Рефіл</a>
   <a href="discovery.html">Discovery set</a>
   <a href="gift-sets.html">Подарункові набори</a>
@@ -168,7 +169,7 @@
                     <p>Перевірте товари, промо та деталі замовлення.</p>
                 </div>
 
-                <a href="index.html" class="monal-cart-back">
+                <a href="catalog.html" class="monal-cart-back">
                     ← Продовжити покупки
                 </a>
             </div>
@@ -177,9 +178,6 @@
 
                 <!-- ЛІВА ЧАСТИНА: ТОВАРИ -->
                 <div class="monal-cart-main">
-                    <div class="monal-cart-section-title">
-                        <h2>Ваші товари</h2>
-                    </div>
 
                     <div id="cart-list" class="monal-cart-list"></div>
 
@@ -678,5 +676,6 @@ window.addEventListener("resize", function () {
 </script>
 
 <script src="cookie-consent.js"></script>    
+<script src="site-shell.js"></script>
 </body>
 </html>

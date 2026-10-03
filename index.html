@@ -4,572 +4,639 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        <!-- FAVICON -->
     <link rel="icon" type="image/png" sizes="32x32" href="favicon32_only_o.png">
-    
-    <title>Аромати для дому та подарунки | Monal</title>
-    <meta name="description" content="Аромати для дому Monal створюють атмосферу спокою і затишку. Дифузори, парфуми для дому, подарункові набори та сертифікати.">
-    <meta name="robots" content="index, follow">
 
+    <title>Аромати для дому та подарунки | Monal</title>
+    <meta name="description" content="Аромати для дому Monal створюють атмосферу спокою і затишку. Дифузори, парфуми для інтер'єру, подарункові набори та сертифікати.">
+    <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://monal.com.ua/">
 
-    <!-- Open Graph -->
     <meta property="og:title" content="Аромати для дому та подарунки | Monal">
-    <meta property="og:description" content="Аромати для дому Monal створюють атмосферу спокою і затишку. Дифузори, парфуми для дому, подарункові набори та сертифікати.">
+    <meta property="og:description" content="Аромати для дому Monal створюють атмосферу спокою і затишку.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://monal.com.ua/">
     <meta property="og:image" content="https://monal.com.ua/favicon32_only_o.png">
     <meta property="og:site_name" content="Monal">
-    <link rel="stylesheet" href="style.css">
-     <link rel="stylesheet" href="components/sidebar.css">
-    <link rel="stylesheet" href="mobile-index.css">
 
-<!-- Google tag (gtag.js) + Consent Mode v2 -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=AW-17895832671"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
+    <link rel="stylesheet" href="components/sidebar.css">
+    <link rel="stylesheet" href="catalog.css">
+    <link rel="stylesheet" href="home.css">
 
-  gtag('consent', 'default', {
-    ad_storage: 'denied',
-    analytics_storage: 'denied',
-    ad_user_data: 'denied',
-    ad_personalization: 'denied',
-    functionality_storage: 'granted',
-    security_storage: 'granted',
-    wait_for_update: 500
-  });
+    <!-- Google tag (gtag.js) + Consent Mode v2 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17895832671"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
 
-  gtag('js', new Date());
+        gtag('consent', 'default', {
+            ad_storage: 'denied',
+            analytics_storage: 'denied',
+            ad_user_data: 'denied',
+            ad_personalization: 'denied',
+            functionality_storage: 'granted',
+            security_storage: 'granted',
+            wait_for_update: 500
+        });
 
-  gtag('config', 'AW-17895832671');
-  gtag('config', 'G-87PVMWLBDF');
-</script>
-
+        gtag('js', new Date());
+        gtag('config', 'AW-17895832671');
+        gtag('config', 'G-87PVMWLBDF');
+    </script>
 </head>
 
-<body class="home">
+<body class="home catalog-page">
 
-<!-- НАВІГАЦІЯ -->
-<nav>
-    <div class="nav-left">
-        <a href="index.html" class="nav-logo-link">
-            <img src="images/лого_08.02.2026-Photoroom.png" alt="Monal — аромадифузори, парфуми та подарунки для дому" class="nav-logo">
+<header class="home-header">
+    <nav class="home-nav" aria-label="Головна навігація">
+        <a href="index.html" class="home-wordmark" aria-label="Mōnal — головна">
+            Mōnal
         </a>
 
-        <div class="nav-social">
-            <a href="https://www.tiktok.com/@monalofficial?is_from_webapp=1&sender_device=pc">
-                <img src="images/social/tiktok.png">
-            </a>
-            <a href="https://www.instagram.com/monal.official/">
-                <img src="images/social/instagram.png">
-            </a>
-            <a href="https://www.facebook.com/people/Monal/61552030280894/">
-                <img src="images/social/facebook.png">
-            </a>
-            <a href="https://t.me/Monalgroup/1" target="_blank">
-                <img src="images/social/tg.png" alt="Telegram">
-            </a>
+        <div class="home-nav-center">
+            <a href="about.html">Про нас</a>
+            <span class="home-nav-divider">|</span>
+
+            <div class="home-catalog-menu">
+                <button class="home-catalog-button" type="button" aria-expanded="false">
+                    Магазин
+                </button>
+
+                <div class="home-catalog-dropdown">
+                    <a href="catalog.html#aromadiffusers">Аромадифузори</a>
+                    <a href="catalog.html#refills">Рефіли</a>
+                    <a href="catalog.html#parfums-100">Парфуми для інтер'єру</a>
+                    <a href="catalog.html#discovery">Discovery set</a>
+                    <a href="catalog.html#candles">Свічки</a>
+                    <a href="catalog.html#gift-sets">Подарункові набори</a>
+                    <a href="catalog.html#certificates">Сертифікати</a>
+                    <a href="catalog.html#car-sachets">Аромасаше для авто</a>
+                    <a href="catalog.html#wardrobe-sachets">Аромасаше для гардеробу</a>
+                    <a href="catalog.html#hand-soap">Мило для рук</a>
+                    <a href="catalog.html#hand-cream">Крем для рук</a>
+                    <a href="catalog.html#shower-gel">Гель для душу</a>
+                </div>
+            </div>
+
+            <span class="home-nav-divider">|</span>
+
+            <div class="home-catalog-menu">
+                <button class="home-catalog-button" type="button" aria-expanded="false">
+                    Аромати
+                </button>
+
+                <div class="home-catalog-dropdown">
+                    <a href="catalog.html?aroma=fairytale#catalog">FAIRYTALE</a>
+                    <a href="catalog.html?aroma=golden-rum#catalog">GOLDEN RUM</a>
+                    <a href="catalog.html?aroma=stone-salt#catalog">STONE &amp; SALT</a>
+                    <a href="catalog.html?aroma=drift#catalog">DRIFT</a>
+                    <a href="catalog.html?aroma=freedom#catalog">FREEDOM</a>
+                    <a href="catalog.html?aroma=green-haven#catalog">GREEN HAVEN</a>
+                    <a href="catalog.html?aroma=nocturne#catalog">NOCTURNE</a>
+                    <a href="catalog.html?aroma=crown-of-olive#catalog">CROWN OF OLIVE</a>
+                    <a href="catalog.html?aroma=shadow-of-fig#catalog">SHADOW OF FIG</a>
+                    <a href="catalog.html?aroma=vesper#catalog">VESPER</a>
+                    <a href="catalog.html?aroma=rosalya#catalog">ROSALYA</a>
+                    <a href="catalog.html?aroma=leather-absolute#catalog">LEATHER ABSOLUTE</a>
+                    <a href="catalog.html?aroma=amber-elite#catalog">AMBER ELITE</a>
+                    <a href="catalog.html?aroma=bois-noir#catalog">BOIS NOIR</a>
+                </div>
+            </div>
+
+            <span class="home-nav-divider">|</span>
+            <a href="user-account.html" id="nav-account">Кабінет</a>
         </div>
-    </div>
 
-    <div class="nav-center">
+        <div class="home-nav-right">
+            <button class="home-search-trigger" type="button">Пошук</button>
+            <span class="home-nav-divider">|</span>
+            <a href="cart.html">Кошик <span id="cart-count"></span></a>
+        </div>
 
-    <!-- КАТАЛОГ -->
-    <div class="nav-catalog">
-        <button class="catalog-btn" type="button">
-            Каталог
-            <span class="catalog-arrow">▾</span>
+        <button class="home-burger" type="button" aria-label="Відкрити меню">
+            ☰
+        </button>
+    </nav>
+
+    <div class="home-mobile-menu">
+        <button class="home-mobile-close" type="button" aria-label="Закрити меню">✕</button>
+
+        <a href="about.html">Про нас</a>
+
+        <div class="home-mobile-nav-group">
+            <button
+                class="home-mobile-nav-toggle"
+                type="button"
+                aria-expanded="false"
+            >
+                Магазин
+            </button>
+
+            <div class="home-mobile-nav-dropdown">
+                <a href="catalog.html#aromadiffusers">Аромадифузори</a>
+                <a href="catalog.html#refills">Рефіли</a>
+                <a href="catalog.html#parfums-100">Парфуми для інтер’єру</a>
+                <a href="catalog.html#discovery">Discovery set</a>
+                <a href="catalog.html#candles">Свічки</a>
+                <a href="catalog.html#gift-sets">Подарункові набори</a>
+                <a href="catalog.html#certificates">Сертифікати</a>
+                <a href="catalog.html#car-sachets">Аромасаше для авто</a>
+                <a href="catalog.html#wardrobe-sachets">Аромасаше для гардеробу</a>
+                <a href="catalog.html#hand-soap">Мило для рук</a>
+                <a href="catalog.html#hand-cream">Крем для рук</a>
+                <a href="catalog.html#shower-gel">Гель для душу</a>
+            </div>
+        </div>
+
+        <div class="home-mobile-nav-group">
+            <button
+                class="home-mobile-nav-toggle"
+                type="button"
+                aria-expanded="false"
+            >
+                Аромати
+            </button>
+
+            <div class="home-mobile-nav-dropdown">
+                <a href="catalog.html?aroma=fairytale#catalog">FAIRYTALE</a>
+                <a href="catalog.html?aroma=golden-rum#catalog">GOLDEN RUM</a>
+                <a href="catalog.html?aroma=stone-salt#catalog">STONE &amp; SALT</a>
+                <a href="catalog.html?aroma=drift#catalog">DRIFT</a>
+                <a href="catalog.html?aroma=freedom#catalog">FREEDOM</a>
+                <a href="catalog.html?aroma=green-haven#catalog">GREEN HAVEN</a>
+                <a href="catalog.html?aroma=nocturne#catalog">NOCTURNE</a>
+                <a href="catalog.html?aroma=crown-of-olive#catalog">CROWN OF OLIVE</a>
+                <a href="catalog.html?aroma=shadow-of-fig#catalog">SHADOW OF FIG</a>
+                <a href="catalog.html?aroma=vesper#catalog">VESPER</a>
+                <a href="catalog.html?aroma=rosalya#catalog">ROSALYA</a>
+                <a href="catalog.html?aroma=leather-absolute#catalog">LEATHER ABSOLUTE</a>
+                <a href="catalog.html?aroma=amber-elite#catalog">AMBER ELITE</a>
+                <a href="catalog.html?aroma=bois-noir#catalog">BOIS NOIR</a>
+            </div>
+        </div>
+
+        <a href="user-account.html" id="mobile-account">Кабінет</a>
+
+        <button class="home-search-trigger home-mobile-search-trigger" type="button">
+            Пошук
         </button>
 
-        <div class="catalog-dropdown">
-            <a href="aromadiffusers.html">Аромадифузори</a>
-            <a href="refills.html">Рефіли</a>
-            <a href="parfums.html">Парфуми для дому</a>
-            <a href="discovery.html">Discovery set</a>
-            <a href="candles.html">Свічки</a>
-
-            <div class="dropdown-divider"></div>
-
-            <a href="certificates.html">Подарункові сертифікати</a>
-            <a href="gift-sets.html">Подарункові набори</a>
-
-            <div class="dropdown-divider"></div>
-
-            <a href="car-sachets.html">Аромасаше для авто</a>
-            <a href="wardrobe-sachets.html">Аромасаше для гардеробу</a>
-
-            <div class="dropdown-divider"></div>
-
-            <a href="hand-soap.html">Мило для рук</a>
-            <a href="hand-cream.html">Крем для рук</a>
-            <a href="shower-gel.html">Гель для душу</a>
-        </div>
+        <a href="cart.html">
+            Кошик <span class="burger-cart-count"></span>
+        </a>
     </div>
+</header>
 
-    <a href="about.html">Про бренд</a>
-    <a href="partners.html">Партнерам</a>  
-    <a href="contacts.html">Контакти</a>
-    <a href="news.html">Новини</a>  
+<main class="home-main">
+    <section class="home-hero" aria-label="Monal Home Edition">
+        <img
+            class="home-hero-image"
+            src="images/backgrounds/home-hero.webp"
+            alt="Mōnal Home Edition"
+        >
 
+        <div class="home-hero-slogan">
+            НЕВИДИМЕ СТАЄ ВІДЧУТНИМ
+        </div>
+    </section>
+
+    <section class="home-bestsellers">
+        <h1>BESTSELLERS</h1>
+
+        <div class="home-products-grid">
+            <a class="home-product-card catalog-card" id="parfum-nocturne-100" href="catalog.html#parfum-nocturne-100">
+                <div class="home-product-image-wrap">
+                    <img src="images/perfumes/nocturne.png" alt="Парфуми для інтер'єру Nocturne">
+                </div>
+                <h2>NOCTURNE</h2>
+                <p>МАНДАРИН | ТЮТЮН | ПАЧУЛІ</p>
+            </a>
+
+            <a class="home-product-card catalog-card" id="parfum-stone-salt-100" href="catalog.html#parfum-stone-salt-100">
+                <div class="home-product-image-wrap">
+                    <img src="images/perfumes/stone_salt.png" alt="Парфуми для інтер'єру Stone &amp; Salt">
+                </div>
+                <h2>STONE &amp; SALT</h2>
+                <p>МОРСЬКА СІЛЬ | ШАВЛІЯ | ГРЕЙПФРУТ</p>
+            </a>
+
+            <a class="home-product-card catalog-card" id="parfum-golden-rum-100" href="catalog.html#parfum-golden-rum-100">
+                <div class="home-product-image-wrap">
+                    <img src="images/perfumes/golden_rum.png" alt="Парфуми для інтер'єру Golden Rum">
+                </div>
+                <h2>GOLDEN RUM</h2>
+                <p>РОМ | ВАНІЛЬ | САНДАЛ</p>
+            </a>
+        </div>
+    </section>
+
+    <section class="home-brand-strip">
+        <p>
+            БРЕНД НАРОДИВСЯ З ЛЮБОВІ ДО ПРОСТОТИ Й ДЕТАЛЕЙ, ДО ЧИСТОТИ ЛІНІЙ,
+            М’ЯКИХ ВІДТІНКІВ, СПОКІЙНИХ МОМЕНТІВ.<br>
+            СПОЧАТКУ ЦЕ БУВ МАЛЕНЬКИЙ ДОМАШНІЙ ПРОЄКТ, АЛЕ ВІН ПЕРЕТВОРИВСЯ
+            НА АТМОСФЕРУ, ЯКУ ЛЮДИ ПОЧАЛИ ВПІЗНАВАТИ.
+        </p>
+    </section>
+
+    <section class="home-closing">
+        <div class="home-closing-title">
+            <h2>MAKE IT YOURS</h2>
+            <p>ЗНАЙДИ АРОМАТ, ЯКИЙ СТАНЕ ЧАСТИНОЮ ТВОГО ДОМУ</p>
+        </div>
+
+        <form class="home-subscribe" id="home-subscribe-form">
+            <h2>STAY CLOSE.</h2>
+            <p>Будь першою / першим, хто дізнається про нові аромати<br>та особливі колекції</p>
+
+            <label class="home-subscribe-label" for="home-email">Email</label>
+
+            <input
+                id="home-email"
+                type="email"
+                autocomplete="email"
+                placeholder="Введіть ваш e-mail"
+                required
+            >
+
+            <button type="submit">ПІДПИСАТИСЯ</button>
+
+            <small>
+                Ми з вашого профілю. Спаму не відправлятимемо.
+                Ніколи не надсилатимемо пароль.
+            </small>
+        </form>
+    </section>
+</main>
+
+<div class="product-modal" id="parfum-modal" hidden>
+    <div class="product-modal-backdrop" data-close-parfum-modal></div>
+
+    <section
+        class="product-modal-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="parfum-modal-title"
+    >
+        <button
+            class="product-modal-close"
+            type="button"
+            aria-label="Закрити картку товару"
+            data-close-parfum-modal
+        >
+            ✕
+        </button>
+
+        <div class="product-modal-media">
+            <div class="product-modal-gallery">
+                <button
+                    class="product-modal-gallery-prev"
+                    id="parfum-modal-gallery-prev"
+                    type="button"
+                    aria-label="Попереднє фото"
+                >
+                    ‹
+                </button>
+
+                <img id="parfum-modal-image" src="" alt="">
+
+                <button
+                    class="product-modal-gallery-next"
+                    id="parfum-modal-gallery-next"
+                    type="button"
+                    aria-label="Наступне фото"
+                >
+                    ›
+                </button>
+            </div>
+
+            <div class="product-modal-ratings" aria-label="Властивості аромату">
+                <div class="product-modal-rating-row">
+                    <span>Стійкість</span>
+                    <span id="parfum-modal-longevity"></span>
+                </div>
+
+                <div class="product-modal-rating-row">
+                    <span>Інтенсивність</span>
+                    <span id="parfum-modal-intensity"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="product-modal-info">
+            <h2 id="parfum-modal-title">
+                <span id="product-modal-type">ПАРФУМИ ДЛЯ ІНТЕР’ЄРУ</span>
+                <strong id="parfum-modal-name"></strong>
+            </h2>
+
+            <div class="product-modal-pyramid" aria-label="Піраміда аромату">
+                <p><span>Верхні ноти:</span> <strong id="parfum-modal-top-notes"></strong></p>
+                <p><span>Серце:</span> <strong id="parfum-modal-heart-notes"></strong></p>
+                <p><span>База:</span> <strong id="parfum-modal-base-notes"></strong></p>
+            </div>
+
+            <p class="product-modal-description" id="parfum-modal-description"></p>
+            <div class="product-modal-volumes" id="parfum-modal-volumes" aria-label="Оберіть ємність"></div>
+
+            <div class="product-modal-order-row">
+                <div class="product-modal-quantity" aria-label="Кількість товару">
+                    <button type="button" id="parfum-modal-minus" aria-label="Зменшити кількість">−</button>
+                    <span id="parfum-modal-quantity">1</span>
+                    <button type="button" id="parfum-modal-plus" aria-label="Збільшити кількість">+</button>
+                </div>
+
+                <div class="product-modal-price" id="parfum-modal-price"></div>
+            </div>
+
+            <button class="product-modal-buy" id="parfum-modal-buy" type="button">
+                ДОДАТИ У КОШИК
+            </button>
+        </div>
+    </section>
 </div>
 
+<footer class="home-footer">
+    <div class="home-footer-main">
+        <div class="home-footer-copy">
+            © 2023 Аромати для дому та<br>
+            подарунки
+        </div>
 
-    <div class="nav-right">
-        <a href="user-account.html" id="nav-account">Кабінет</a>
-        <a href="delivery.html">Доставка</a>
-        <a href="cart.html">Кошик <span id="cart-count"></span></a>
-    </div>
-<a href="cart.html" class="mobile-cart">
-  <img src="images/social/cart.png" alt="Кошик">
-  <span class="mobile-cart-count"></span>
-</a>
-<a href="user-account.html" class="mobile-account-trigger" id="mobile-account-trigger" aria-label="Кабінет">
-  <span class="mobile-account-trigger-letter" id="mobile-account-trigger-letter">М</span>
-  <img src="images/avatar-placeholder.png" alt="Акаунт" class="mobile-account-trigger-avatar" id="mobile-account-trigger-avatar">
-</a>    
-<!-- BURGER BUTTON -->
-<button class="burger-btn" aria-label="Відкрити меню">
-  ☰
-</button>
-</nav>
-    
-<!-- TOP CATEGORIES — HOME ONLY -->
-<div class="nav-top-categories">
-  <a href="aromadiffusers.html">Аромадифузори</a>
-  <a href="parfums.html">Парфуми для дому</a>
-  <a href="refills.html">Рефіл</a>
-  <a href="discovery.html">Discovery set</a>
-  <a href="gift-sets.html">Подарункові набори</a>
-  <a href="certificates.html">Сертифікати</a>
-</div>
+        <nav class="home-footer-links" aria-label="Додаткова навігація">
+            <a href="partners.html">Партнерам</a>
+            <a href="account/loyalty.html">Програма лояльності</a>
+            <a href="delivery.html">Обмін та повернення</a>
+            <a href="delivery.html">Оплата та доставка</a>
+            <a href="privacy.html">Політика конфіденційності</a>
+        </nav>
 
-<!-- MOBILE MENU -->
-<div class="mobile-menu">
-  <button class="mobile-close">✕</button>
-  <a href="user-account.html" id="mobile-account">Кабінет</a>
-  <a href="index.html">Головна</a>
-  <a href="about.html">Про бренд</a>
-  <a href="partners.html">Партнерам</a>
-  <a href="delivery.html">Доставка</a>
-  <a href="contacts.html">Контакти</a>
-  <a href="news.html">Новини</a>
-  <a href="cart.html">Кошик <span class="burger-cart-count"></span></a>
-</div>    
-    
-<!-- КАТАЛОГ -->
-<main class="container">
-
-    <h1 class="page-title">Аромадифузори, парфуми та подарунки Mōnal</h1>
-    <p class="page-intro">
-        Наші аромадифузори та парфуми - композиції ароматів, що залишаються з вами надовго.
-    </p>
-
-<div class="mobile-home-carousel">
-<a href="aromadiffusers.html" class="mobile-carousel-card">
-<img src="images/дифузори_.jpg">
-<div class="mobile-carousel-title">Аромадифузори</div>
-</a>
-<a href="parfums.html" class="mobile-carousel-card">
-<img src="images/парфуми_.jpg">
-<div class="mobile-carousel-title">Парфуми для дому</div>
-</a>
-<a href="refills.html" class="mobile-carousel-card">
-<img src="images/рефіл_.jpg">
-<div class="mobile-carousel-title">Рефіли</div>
-</a>
-<a href="discovery.html" class="mobile-carousel-card">
-<img src="images/діскавері_.jpg">
-<div class="mobile-carousel-title">Discovery set</div>
-</a>
-<a href="gift-sets.html" class="mobile-carousel-card">
-<img src="images/ферітейл_плитка.jpg">
-<div class="mobile-carousel-title">Подарункові набори</div>
-</a>
-<a href="certificates.html" class="mobile-carousel-card">
-<img src="images/сертифікат_.jpg">
-<div class="mobile-carousel-title">Подарункові сертифікати</div>
-</a>
-</div>
-
-    <!-- ДІМ -->
-    <div class="catalog-row">
-        <a class="subcategory" href="home.html">
-            <img src="images/дім_.jpg" alt="">
-            <div class="subcategory-title">Дім</div>
-        </a>
-
-        <div class="arrow">→</div>
-
-        <div class="mini-line">
-            <a class="sub-mini" href="aromadiffusers.html">
-                <img src="images/дифузори_.jpg">
-                <div class="mini-title">Аромадифузори</div>
-            </a>
-
-            <a class="sub-mini" href="refills.html">
-                <img src="images/рефіл_.jpg">
-                <div class="mini-title">Рефіли</div>
-            </a>            
-                        
-            <a class="sub-mini" href="parfums.html">
-                <img src="images/парфуми_.jpg">
-                <div class="mini-title">Парфуми для дому</div>
-            </a>
-
-            <a class="sub-mini" href="discovery.html">
-                <img src="images/діскавері_.jpg">
-                <div class="mini-title">Discovery set</div>
-            </a>
-
-            <a class="sub-mini" href="candles.html">
-                <img src="images/свічки_.jpg">
-                <div class="mini-title">Свічки</div>
-            </a>            
-          
+        <div class="home-footer-contacts">
+            <a href="tel:+380930109000">+38 093 01 09 000</a>
+            <a href="mailto:monalofficial.ua@gmail.com">monalofficial.ua@gmail.com</a>
         </div>
     </div>
 
-
-    <!-- ПОДАРУНКИ -->
-    <div class="catalog-row">
-        <a class="subcategory" href="gifts.html">
-            <img src="images/1подарунки_каталог.JPG" alt="">
-            <div class="subcategory-title">Подарунки</div>
-        </a>
-
-        <div class="arrow">→</div>
-
-        <div class="mini-line"> 
-            <a class="sub-mini" href="certificates.html">
-                <img src="images/сертифікат_.jpg">
-                <div class="mini-title">Подарункові сертифікати</div>
-            </a>                
-            
-            <a class="sub-mini" href="gift-sets.html">
-                <img src="images/ферітейл_плитка.jpg">
-                <div class="mini-title">Подарункові набори</div>
-            </a>           
-
-        </div>
-    </div>
-
-
-    <!-- САШЕ -->
-    <div class="catalog-row">
-        <a class="subcategory" href="sachets.html">
-            <img src="images/1саше_каталог.jpg" alt="">
-            <div class="subcategory-title">Саше</div>
-        </a>
-
-        <div class="arrow">→</div>
-        
-        <div class="mini-line">
-            <a class="sub-mini" href="car-sachets.html">
-                <img src="images/далі буде.jpg">
-                <div class="mini-title">Аромасаше для авто</div>
-            </a>
-
-            <a class="sub-mini" href="wardrobe-sachets.html">
-                <img src="images/далі буде.jpg">
-                <div class="mini-title">Аромасаше для гардеробу</div>
-            </a>        
-
-        </div>
-    </div>
-
-
-    <!-- ДОГЛЯД -->
-    <div class="catalog-row">
-        <a class="subcategory" href="care.html">
-            <img src="images/Догляд_плитка.jpg" alt="">
-            <div class="subcategory-title">Догляд</div>
-        </a>
-
-        <div class="arrow">→</div>
-
-        <div class="mini-line">
-            <a class="sub-mini" href="hand-soap.html">
-                <img src="images/далі буде.jpg">
-                <div class="mini-title">Мило для рук</div>
-            </a>
-
-            <a class="sub-mini" href="hand-cream.html">
-                <img src="images/далі буде.jpg">
-                <div class="mini-title">Крем для рук</div>
-            </a>    
-
-            <a class="sub-mini" href="shower-gel.html">
-                <img src="images/далі буде.jpg">
-                <div class="mini-title">Гель для душу</div>
-            </a>            
-        </div>
-    </div>  
-
-</main>    
-
-<footer>
-    <div class="footer-policy">
-        <a href="privacy.html">Політика конфіденційності</a>
-    </div>
-
-    <div class="footer-logo">
-        <img src="images/лого_08.02.2026-Photoroom.png" alt="Monal — аромадифузори, парфуми та подарунки для дому">
-    </div>
-    <span class="footer-copy">© 2023 Аромати для дому та подарунки</span>
-
-    <div class="footer-payments">
-        <img src="images/social/mastercard.svg" alt="Mastercard">
-        <img src="images/social/visa.svg" alt="Visa">
-        <img src="images/social/applepay.svg" alt="Apple Pay">
-        <img src="images/social/googlepay.svg" alt="Google Pay">
+    <div class="home-footer-socials">
+        <a href="https://www.instagram.com/monal.official/" target="_blank" rel="noopener">Instagram</a>
+        <span>|</span>
+        <a href="https://t.me/Monalgroup" target="_blank" rel="noopener">Telegram</a>
+        <span>|</span>
+        <a href="https://www.facebook.com/people/Monal/61552030280894/" target="_blank" rel="noopener">Facebook</a>
+        <span>|</span>
+        <a href="https://www.tiktok.com/@monalofficial" target="_blank" rel="noopener">Tik Tok</a>
+        <span>|</span>
+        <span class="home-footer-social-label">Pinterest</span>
     </div>
 </footer>
-  
-<script src="cart.js"></script>
-
-<!-- ✅ ОЧИСТКА КОШИКА ПІСЛЯ УСПІШНОЇ ОПЛАТИ -->
-<script>
-  const params = new URLSearchParams(window.location.search);
-  if (
-    params.get("status") === "success" ||
-    params.get("invoiceId") || 
-    params.get("reference")
-  ) {
-    localStorage.removeItem("cart");
-    localStorage.removeItem("discoverySetItems");
-  }
-</script>
-
-<script>
-  document.addEventListener("click", function (e) {
-    const mainTile = e.target.closest("a.subcategory");
-    if (!mainTile) return;
-    // блокуємо перехід ТІЛЬКИ для великих плиток
-    e.preventDefault();
-  });
-</script>
-
-<script>
-  const burgerBtn = document.querySelector('.burger-btn');
-  const mobileMenu = document.querySelector('.mobile-menu');
-  const closeBtn = document.querySelector('.mobile-close');
-  const burgerCartCount = document.querySelector('.burger-cart-count');
-  function updateBurgerCartCount() {
-    if (!burgerCartCount) return;
-    const cart = JSON.parse(localStorage.getItem("cart")) || [];
-    burgerCartCount.textContent = cart.length ? `(${cart.length})` : "";
-  }
-  if (burgerBtn && mobileMenu && closeBtn) {
-    burgerBtn.addEventListener('click', () => {
-      updateBurgerCartCount();          // ← оновлюємо при відкритті
-      mobileMenu.style.display = 'flex';
-    });
-    closeBtn.addEventListener('click', () => {
-      mobileMenu.style.display = 'none';
-    });
-    mobileMenu.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', () => {
-        mobileMenu.style.display = 'none';
-      });
-    });
-  }
-  // первинне оновлення при завантаженні сторінки
-  updateBurgerCartCount();
-</script>
-
-<script>
-  if (window.innerWidth > 900) {
-    const navCatalog = document.querySelector('.nav-catalog');
-    const catalogBtn = document.querySelector('.catalog-btn');
-
-    if (navCatalog && catalogBtn) {
-      catalogBtn.addEventListener('click', function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        navCatalog.classList.toggle('open');
-      });
-
-      document.addEventListener('click', function () {
-        navCatalog.classList.remove('open');
-      });
-    }
-  }
-</script>  
-
-<script type="application/ld+json">
-{
-"@context":"https://schema.org",
-"@type":"Organization",
-"name":"Monal",
-"alternateName":"Mōnal",    
-"url":"https://monal.com.ua/",
-"logo":"https://monal.com.ua/images/лого_08.02.2026-Photoroom.png",
-"sameAs":[
-"https://www.instagram.com/monal.official/",
-"https://www.facebook.com/people/Monal/61552030280894/",
-"https://www.tiktok.com/@monalofficial",
-"https://t.me/Monalgroup"
-]
-}
-</script>
-
-<script type="application/ld+json">
-{
-"@context":"https://schema.org",
-"@type":"WebSite",
-"name":"Monal",
-"url":"https://monal.com.ua/",
-"inLanguage":"uk"
-}
-</script>
-
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-const carousel = document.querySelector(".mobile-home-carousel");
-if (!carousel) return;
-/* беремо оригінальні плитки */
-const originalCards = Array.from(carousel.children);
-/* створюємо 2 додаткові копії (разом = ×3) */
-for (let i = 0; i < 2; i++) {
-originalCards.forEach(card => {
-const clone = card.cloneNode(true);
-carousel.appendChild(clone);
-});
-}
-const allCards = document.querySelectorAll(".mobile-carousel-card");
-/* стартова позиція — центр */
-carousel.scrollLeft = carousel.scrollWidth / 3;
-/* визначення центральної плитки */
-function updateActiveCard() {
-let center = window.innerWidth / 2;
-let closestCard = null;
-let closestDistance = Infinity;
-allCards.forEach(card => {
-const rect = card.getBoundingClientRect();
-const cardCenter = rect.left + rect.width / 2;
-const distance = Math.abs(center - cardCenter);
-if (distance < closestDistance) {
-closestDistance = distance;
-closestCard = card;
-}
-});
-allCards.forEach(card => card.classList.remove("active"));
-if (closestCard) closestCard.classList.add("active");
-}
-/* reposition тільки якщо реально дійшли до краю */
-carousel.addEventListener("scroll", () => {
-updateActiveCard();
-const scrollLeft = carousel.scrollLeft;
-const maxScroll = carousel.scrollWidth - carousel.offsetWidth;
-/* якщо дійшли майже до початку */
-if (scrollLeft < carousel.offsetWidth * 0.25) {
-carousel.scrollLeft += carousel.scrollWidth / 3;
-}
-/* якщо дійшли майже до кінця */
-if (scrollLeft > maxScroll - carousel.offsetWidth * 0.25) {
-carousel.scrollLeft -= carousel.scrollWidth / 3;
-}
-});
-updateActiveCard();
-});
-</script>
-
-
-<script>
-(function () {
-    const storedUser = localStorage.getItem("monal_user");
-    const navAccountEl = document.getElementById("nav-account");
-    const mobileAccountEl = document.getElementById("mobile-account");
-    const mobileTrigger = document.getElementById("mobile-account-trigger");
-    const mobileTriggerLetter = document.getElementById("mobile-account-trigger-letter");
-    const mobileTriggerAvatar = document.getElementById("mobile-account-trigger-avatar");
-    if (mobileTrigger) {
-        mobileTrigger.style.display = "none";
-    }
-    if (storedUser) {
-        const userData = JSON.parse(storedUser);
-        if (navAccountEl) {
-            navAccountEl.textContent = userData.name;
-            navAccountEl.setAttribute("href", "#");
-            navAccountEl.addEventListener("click", function (e) {
-                e.preventDefault();
-                if (typeof openSidebar === "function") {
-                    openSidebar();
-                }
-            });
-        }
-        if (mobileAccountEl) {
-            mobileAccountEl.textContent = userData.name;
-            mobileAccountEl.setAttribute("href", "#");
-            mobileAccountEl.addEventListener("click", function (e) {
-                e.preventDefault();
-                if (typeof openSidebar === "function") {
-                    openSidebar();
-                }
-            });
-        }
-        if (mobileTrigger && window.innerWidth <= 600) {
-            mobileTrigger.style.display = "inline-flex";
-            mobileTrigger.setAttribute("href", "#");
-            mobileTrigger.addEventListener("click", function (e) {
-                e.preventDefault();
-                if (typeof openSidebar === "function") {
-                    openSidebar();
-                }
-            });
-        }
-        if (mobileTriggerAvatar && userData.avatar_data) {
-            mobileTriggerAvatar.src = userData.avatar_data;
-            mobileTriggerAvatar.style.display = "block";
-            if (mobileTriggerLetter) {
-                mobileTriggerLetter.style.display = "none";
-            }
-        } else if (mobileTriggerLetter) {
-            mobileTriggerLetter.textContent =
-                (userData.name || "К").trim().charAt(0).toUpperCase();
-            mobileTriggerLetter.style.display = "flex";
-
-            if (mobileTriggerAvatar) {
-                mobileTriggerAvatar.style.display = "none";
-            }
-        }
-    } else {
-        if (navAccountEl) {
-            navAccountEl.setAttribute("href", "user-account.html");
-        }
-        if (mobileAccountEl) {
-            mobileAccountEl.setAttribute("href", "user-account.html");
-        }
-    }
-})();
-</script>
 
 <div id="sidebar-container"></div>
-    
-<script src="components/sidebar.js"></script>   
-    
+
+<script src="cart.js"></script>
+<script src="components/sidebar.js"></script>
+<script src="parfums-gallery.js"></script>
+<script src="catalog.js"></script>
+
 <script>
-fetch("components/sidebar.html")
-  .then(res => res.text())
-  .then(html => {
-    document.getElementById("sidebar-container").innerHTML = html;
-    if (typeof initSidebarUserState === "function") {
-        initSidebarUserState();
+    const catalogMenus = document.querySelectorAll('.home-catalog-menu');
+
+    catalogMenus.forEach(function (catalogMenu) {
+        const catalogButton = catalogMenu.querySelector('.home-catalog-button');
+
+        if (!catalogButton) return;
+
+        catalogButton.addEventListener('click', function (event) {
+            event.stopPropagation();
+
+            catalogMenus.forEach(function (otherMenu) {
+                if (otherMenu !== catalogMenu) {
+                    otherMenu.classList.remove('open');
+
+                    const otherButton = otherMenu.querySelector('.home-catalog-button');
+
+                    if (otherButton) {
+                        otherButton.setAttribute('aria-expanded', 'false');
+                    }
+                }
+            });
+
+            const isOpen = catalogMenu.classList.toggle('open');
+
+            catalogButton.setAttribute(
+                'aria-expanded',
+                String(isOpen)
+            );
+        });
+
+        catalogMenu.querySelectorAll('a').forEach(function (link) {
+            link.addEventListener('click', function () {
+                catalogMenu.classList.remove('open');
+                catalogButton.setAttribute('aria-expanded', 'false');
+            });
+        });
+    });
+
+    document.addEventListener('click', function () {
+        catalogMenus.forEach(function (catalogMenu) {
+            catalogMenu.classList.remove('open');
+
+            const catalogButton = catalogMenu.querySelector('.home-catalog-button');
+
+            if (catalogButton) {
+                catalogButton.setAttribute('aria-expanded', 'false');
+            }
+        });
+    });
+
+    const burgerButton = document.querySelector('.home-burger');
+    const mobileMenu = document.querySelector('.home-mobile-menu');
+    const mobileClose = document.querySelector('.home-mobile-close');
+
+    if (burgerButton && mobileMenu && mobileClose) {
+        function setMobileMenu(open) {
+            mobileMenu.classList.toggle('open', open);
+            burgerButton.setAttribute('aria-expanded', String(open));
+            document.body.classList.toggle('mobile-menu-open', open);
+        }
+
+        burgerButton.addEventListener('click', function () {
+            setMobileMenu(true);
+        });
+
+        mobileClose.addEventListener('click', function () {
+            setMobileMenu(false);
+        });
+
+        mobileMenu.querySelectorAll('a').forEach(function (link) {
+            link.addEventListener('click', function () {
+                setMobileMenu(false);
+            });
+        });
+        
+        
+        mobileMenu.querySelectorAll('.home-mobile-nav-toggle').forEach(function (toggle) {
+            toggle.addEventListener('click', function () {
+                const group = toggle.closest('.home-mobile-nav-group');
+
+                mobileMenu.querySelectorAll('.home-mobile-nav-group').forEach(function (otherGroup) {
+                    if (otherGroup !== group) {
+                        otherGroup.classList.remove('open');
+
+                        const otherToggle = otherGroup.querySelector('.home-mobile-nav-toggle');
+
+                        if (otherToggle) {
+                            otherToggle.setAttribute('aria-expanded', 'false');
+                        }
+                    }
+                });
+
+                const isOpen = group.classList.toggle('open');
+
+                toggle.setAttribute(
+                    'aria-expanded',
+                    String(isOpen)
+                );
+            });
+        });
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape' && mobileMenu.classList.contains('open')) {
+                setMobileMenu(false);
+            }
+        });
     }
-    if (typeof setSidebarTopOffset === "function") {
-        setSidebarTopOffset();
-    }
-  });
-    
-window.addEventListener("resize", function () {
-    if (typeof setSidebarTopOffset === "function") {
-        setSidebarTopOffset();
-    }
-});
 </script>
 
-<script src="cookie-consent.js"></script> 
-    
+<script>
+    (function () {
+        const storedStaffUser = localStorage.getItem('monal_staff_user');
+        const storedUser = localStorage.getItem('monal_user');
+
+        const navAccountEl = document.getElementById('nav-account');
+        const mobileAccountEl = document.getElementById('mobile-account');
+
+        if (storedStaffUser) {
+            try {
+                const staffData = JSON.parse(storedStaffUser);
+
+                const staffName =
+                    String(staffData.name || 'STAFF').trim();
+
+                const staffRole =
+                    String(staffData.role || '').trim().toUpperCase();
+
+                const staffLabel =
+                    staffRole
+                        ? `${staffName} · ${staffRole}`
+                        : staffName;
+
+                [navAccountEl, mobileAccountEl].forEach(function (accountLink) {
+                    if (!accountLink) return;
+
+                    accountLink.textContent = staffLabel;
+                    accountLink.setAttribute(
+                        'href',
+                        'account/staff-cabinet.html'
+                    );
+                });
+
+            } catch (error) {
+                localStorage.removeItem('monal_staff_user');
+            }
+
+            return;
+        }
+
+        if (!storedUser) return;
+
+        try {
+            const userData = JSON.parse(storedUser);
+
+            [navAccountEl, mobileAccountEl].forEach(function (accountLink) {
+                if (!accountLink) return;
+
+                accountLink.textContent =
+                    userData.name || 'Кабінет';
+
+                accountLink.setAttribute('href', '#');
+
+                accountLink.addEventListener(
+                    'click',
+                    function (event) {
+                        event.preventDefault();
+
+                        if (typeof openSidebar === 'function') {
+                            openSidebar();
+                        }
+                    }
+                );
+            });
+
+        } catch (error) {
+            localStorage.removeItem('monal_user');
+        }
+    })();
+</script>
+
+<script>
+    fetch('components/sidebar.html')
+        .then(function (response) {
+            return response.text();
+        })
+        .then(function (html) {
+            document.getElementById('sidebar-container').innerHTML = html;
+
+            if (typeof initSidebarUserState === 'function') {
+                initSidebarUserState();
+            }
+
+            if (typeof setSidebarTopOffset === 'function') {
+                setSidebarTopOffset();
+            }
+        });
+</script>
+
+<script src="search.js"></script>
+
+<script>
+    (function () {
+        const subscribeForm = document.getElementById('home-subscribe-form');
+        const emailInput = document.getElementById('home-email');
+
+        if (!subscribeForm || !emailInput) return;
+
+        subscribeForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const email = emailInput.value.trim();
+
+            if (!email) {
+                emailInput.reportValidity();
+                return;
+            }
+
+            window.location.href =
+                'account/register.html?email=' +
+                encodeURIComponent(email);
+        });
+    })();
+</script>
+
+<script src="cookie-consent.js"></script>
+
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Monal",
+    "alternateName": "Mōnal",
+    "url": "https://monal.com.ua/",
+    "logo": "https://monal.com.ua/images/logo.svg",
+    "sameAs": [
+        "https://www.instagram.com/monal.official/",
+        "https://www.facebook.com/people/Monal/61552030280894/",
+        "https://www.tiktok.com/@monalofficial",
+        "https://t.me/Monalgroup"
+    ]
+}
+</script>
+
 </body>
 </html>

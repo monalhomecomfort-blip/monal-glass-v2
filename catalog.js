@@ -341,16 +341,16 @@ Object.entries(DISCOVERY_TESTER_IMAGES).forEach(function ([productKey, image]) {
 
 const DIFFUSER_MODAL_IMAGES = {
     "fairytale": "images/aromadiffusers/diffuser_11.png",
-    "shadow-of-fig": "images/aromadiffusers/diffuser_13.png",
-    "nocturne": "images/aromadiffusers/diffuser_7.png",
-    "crown-of-olive": "images/aromadiffusers/diffuser_3.png",
-    "green-haven": "images/aromadiffusers/diffuser_10.png",
-    "vesper": "images/aromadiffusers/diffuser_8.png",
-    "rosalya": "images/aromadiffusers/diffuser_13.png",
-    "drift": "images/aromadiffusers/diffuser_7.png",
-    "freedom": "images/aromadiffusers/diffuser_3.png",
-    "golden-rum": "images/aromadiffusers/diffuser_10.png",
-    "stone-salt": "images/aromadiffusers/diffuser_8.png"
+    "shadow-of-fig": "images/aromadiffusers/diffuser_shadow_of_fig.png",
+    "nocturne": "images/aromadiffusers/diffuser_nocturne.png",
+    "crown-of-olive": "images/aromadiffusers/diffuser_crown_of_olive.png",
+    "green-haven": "images/aromadiffusers/diffuser_green_haven.png",
+    "vesper": "images/aromadiffusers/diffuser_vesper.png",
+    "rosalya": "images/aromadiffusers/diffuser_rosalya.png",
+    "drift": "images/aromadiffusers/diffuser_drift.png",
+    "freedom": "images/aromadiffusers/diffuser_freedom.png",
+    "golden-rum": "images/aromadiffusers/diffuser_golden_rum.png",
+    "stone-salt": "images/aromadiffusers/diffuser_stone_salt.png"
 };
 
 const REFILL_MODAL_IMAGES = {

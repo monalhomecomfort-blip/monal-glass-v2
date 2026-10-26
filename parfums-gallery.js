@@ -295,15 +295,14 @@ const giftsGalleries = {
 /* ===================== AROMADIFFUSERS ===================== */
 const aromadiffusersGalleries = {
   "fairytale": [
-    "images/aromadiffusers/diffuser_15.png",
+    "images/aromadiffusers/diffuser_12.png",
     "images/aromadiffusers/diffuser_11.png",
     "images/aromadiffusers/diffuser_2.png",
     "images/aromadiffusers/diffuser_16.png",
     "images/aromadiffusers/diffuser_14.png",
     "images/aromadiffusers/diffuser_6.png",
     "images/aromadiffusers/diffuser_15.png",    
-    "images/aromadiffusers/diffuser_4.png",
-    "images/aromadiffusers/diffuser_12.png" 
+    "images/aromadiffusers/diffuser_4.png"
   ],
    
   "shadow-of-fig": [

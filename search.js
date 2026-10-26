@@ -498,16 +498,16 @@
 
         const diffuserImages = {
             fairytale: "diffuser_11.png",
-            "shadow-of-fig": "diffuser_13.png",
-            nocturne: "diffuser_7.png",
-            "crown-of-olive": "diffuser_3.png",
-            "green-haven": "diffuser_10.png",
-            vesper: "diffuser_8.png",
-            rosalya: "diffuser_13.png",
-            drift: "diffuser_7.png",
-            freedom: "diffuser_3.png",
-            "golden-rum": "diffuser_10.png",
-            "stone-salt": "diffuser_8.png"
+            "shadow-of-fig": "diffuser_shadow_of_fig.png",
+            nocturne: "diffuser_nocturne.png",
+            "crown-of-olive": "diffuser_crown_of_olive.png",
+            "green-haven": "diffuser_green_haven.png",
+            vesper: "diffuser_vesper.png",
+            rosalya: "diffuser_rosalya.png",
+            drift: "diffuser_drift.png",
+            freedom: "diffuser_freedom.png",
+            "golden-rum": "diffuser_golden_rum.png",
+            "stone-salt": "diffuser_stone_salt.png"
         };
 
         Object.keys(

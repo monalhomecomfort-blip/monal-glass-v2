@@ -497,7 +497,7 @@
         });
 
         const diffuserImages = {
-            fairytale: "diffuser_11.png",
+            fairytale: "diffuser_15.png",
             "shadow-of-fig": "diffuser_shadow_of_fig.png",
             nocturne: "diffuser_nocturne.png",
             "crown-of-olive": "diffuser_crown_of_olive.png",

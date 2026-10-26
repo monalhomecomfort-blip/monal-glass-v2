@@ -340,7 +340,7 @@ Object.entries(DISCOVERY_TESTER_IMAGES).forEach(function ([productKey, image]) {
 });
 
 const DIFFUSER_MODAL_IMAGES = {
-    "fairytale": "images/aromadiffusers/diffuser_15.png",
+    "fairytale": "images/aromadiffusers/diffuser_12.png",
     "shadow-of-fig": "images/aromadiffusers/diffuser_shadow_of_fig.png",
     "nocturne": "images/aromadiffusers/diffuser_nocturne.png",
     "crown-of-olive": "images/aromadiffusers/diffuser_crown_of_olive.png",

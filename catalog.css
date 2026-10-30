@@ -2324,3 +2324,130 @@ body.catalog-page .discovery-modal .product-title {
         font-size: clamp(18px, 6.2vw, 26px);
     }
 }
+
+/* =========================================================
+   PRODUCT MODAL — COMPACT CLASSIC LAYOUT
+   PARFUMS / DIFFUSERS / REFILLS
+   ========================================================= */
+
+@media (min-width: 761px) {
+
+    /* Права частина картки */
+    body.catalog-page #parfum-modal .product-modal-info {
+        width: 100%;
+        max-width: 500px;
+        margin: 0 auto;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: stretch;
+    }
+
+    /* Категорія + назва аромату */
+    body.catalog-page #parfum-modal .product-modal-info h2 {
+        margin: 0;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        text-align: center;
+    }
+
+    body.catalog-page #parfum-modal .product-modal-info h2 > span,
+    body.catalog-page #parfum-modal .product-modal-info h2 > strong {
+        text-align: center;
+    }
+
+    body.catalog-page #parfum-modal .product-modal-info h2 > strong {
+        margin-top: 5px;
+    }
+
+    /* Піраміда — компактним рядком як у старій картці */
+    body.catalog-page #parfum-modal .product-modal-pyramid {
+        margin-top: 34px;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+
+        text-align: center;
+    }
+
+    /* Ховаємо "Верхні ноти / Серце / База" */
+    body.catalog-page #parfum-modal .product-modal-pyramid p > span {
+        display: none;
+    }
+
+    body.catalog-page #parfum-modal .product-modal-pyramid p {
+        margin: 0 !important;
+
+        display: inline-flex;
+        align-items: center;
+
+        font-size: 11px;
+        line-height: 1.5;
+    }
+
+    body.catalog-page #parfum-modal .product-modal-pyramid p > strong {
+        font-weight: 600;
+    }
+
+    /* Роздільник між частинами піраміди */
+    body.catalog-page #parfum-modal .product-modal-pyramid p:not(:last-child)::after {
+        content: "|";
+        margin: 0 7px;
+
+        font-weight: 400;
+    }
+
+    /* Опис */
+    body.catalog-page #parfum-modal .product-modal-description {
+        width: 100%;
+        max-width: 460px;
+
+        margin: 28px auto 0;
+
+        font-size: 11px;
+        line-height: 1.55;
+
+        text-align: center;
+    }
+
+    /* Вибір об'єму */
+    body.catalog-page #parfum-modal .product-modal-volumes {
+        margin-top: 30px;
+
+        justify-content: center;
+        gap: 10px;
+    }
+
+    /* Кількість + ціна */
+    body.catalog-page #parfum-modal .product-modal-order-row {
+        width: 100%;
+        max-width: 390px;
+
+        margin: 20px auto 0;
+
+        justify-content: space-between;
+        gap: 26px;
+    }
+
+    /* Кнопка ДОДАТИ У КОШИК */
+    body.catalog-page #parfum-modal .product-modal-buy {
+        width: 100%;
+        max-width: 390px;
+
+        margin: 14px auto 0;
+    }
+
+    /* Стійкість / інтенсивність під фото */
+    body.catalog-page #parfum-modal .product-modal-ratings {
+        width: 100%;
+        max-width: 300px;
+
+        margin: 20px auto 0;
+    }
+}

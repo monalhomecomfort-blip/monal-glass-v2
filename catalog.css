@@ -2451,3 +2451,6 @@ body.catalog-page .discovery-modal .product-title {
         margin: 20px auto 0;
     }
 }
+body.catalog-page #parfum-modal .product-modal-note-separator {
+    font-weight: 300;
+}

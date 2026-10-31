@@ -2397,10 +2397,16 @@ body.catalog-page .discovery-modal .product-title {
 
     /* Роздільник між частинами піраміди */
     body.catalog-page #parfum-modal .product-modal-pyramid p:not(:last-child)::after {
-        content: "|";
+        content: "";
+
+        width: 1px;
+        height: 12px;
+        flex: 0 0 1px;
+
         margin: 0 7px;
 
-        font-weight: 400;
+        background: currentColor;
+        opacity: 0.55;
     }
 
     /* Опис */
@@ -2451,6 +2457,17 @@ body.catalog-page .discovery-modal .product-title {
         margin: 20px auto 0;
     }
 }
-body.catalog-page #parfum-modal .product-modal-note-separator {
-    font-weight: 300;
-}
+    body.catalog-page #parfum-modal .product-modal-note-separator {
+        display: inline-block;
+
+        width: 1px;
+        height: 12px;
+        flex: 0 0 1px;
+
+        margin: 0 7px;
+
+        background: currentColor;
+        opacity: 0.55;
+
+        vertical-align: middle;
+    }

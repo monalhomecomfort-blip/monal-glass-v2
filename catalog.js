@@ -583,14 +583,13 @@ function getModalProduct(productType, productKey) {
             if (index > 0) {
                 const separator = document.createElement("span");
                 separator.className = "product-modal-note-separator";
-                separator.textContent = "|";
 
-                element.append(" ", separator, " ");
+                element.append(separator);
             }
 
             element.append(part);
         });
-    }    
+    }
 
     function openModal(productType, productKey, initialVolume, card) {
         const product = getModalProduct(productType, productKey);

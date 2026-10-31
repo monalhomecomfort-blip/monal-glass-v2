@@ -2395,20 +2395,21 @@ body.catalog-page .discovery-modal .product-title {
         font-weight: 600;
     }
 
-    /* Роздільник між частинами піраміди */
-    body.catalog-page #parfum-modal .product-modal-pyramid p:not(:last-child)::after {
-        content: "";
-
-        width: 1px;
-        height: 12px;
-        flex: 0 0 1px;
-
-        margin: 0 7px;
-
-        background: currentColor;
-        opacity: 0.55;
+    body.catalog-page #parfum-modal .product-modal-pyramid p:nth-child(2),
+    body.catalog-page #parfum-modal .product-modal-pyramid p:nth-child(3) {
+        display: none;
     }
 
+    body.catalog-page #parfum-modal .product-modal-pyramid p:first-child {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    body.catalog-page #parfum-modal .product-modal-note {
+        display: inline-block;
+    }    
     /* Опис */
     body.catalog-page #parfum-modal .product-modal-description {
         width: 100%;

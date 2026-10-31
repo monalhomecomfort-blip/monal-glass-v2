@@ -574,6 +574,24 @@ function getModalProduct(productType, productKey) {
             });
     }
 
+    function setModalNotes(element, text) {
+        const parts = String(text || "").split(" | ");
+
+        element.innerHTML = "";
+
+        parts.forEach(function (part, index) {
+            if (index > 0) {
+                const separator = document.createElement("span");
+                separator.className = "product-modal-note-separator";
+                separator.textContent = "|";
+
+                element.append(" ", separator, " ");
+            }
+
+            element.append(part);
+        });
+    }    
+
     function openModal(productType, productKey, initialVolume, card) {
         const product = getModalProduct(productType, productKey);
 
@@ -595,14 +613,9 @@ function getModalProduct(productType, productKey) {
         modalName.textContent =
             formatMonalText(product.name);
 
-        modalTopNotes.textContent =
-            formatMonalText(product.pyramid.top);
-
-        modalHeartNotes.textContent =
-            formatMonalText(product.pyramid.heart);
-
-        modalBaseNotes.textContent =
-            formatMonalText(product.pyramid.base);
+        setModalNotes(modalTopNotes, product.pyramid.top);
+        setModalNotes(modalHeartNotes, product.pyramid.heart);
+        setModalNotes(modalBaseNotes, product.pyramid.base);
 
         modalDescription.textContent =
             formatMonalText(product.description);

@@ -2458,17 +2458,20 @@ body.catalog-page .discovery-modal .product-title {
         margin: 20px auto 0;
     }
 }
+    body.catalog-page #parfum-modal #parfum-modal-top-notes {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
     body.catalog-page #parfum-modal .product-modal-note-separator {
-        display: inline-block;
+        display: none;
+    }
 
-        width: 1px;
-        height: 12px;
-        flex: 0 0 1px;
+    body.catalog-page #parfum-modal .product-modal-note-separator + .product-modal-note {
+        margin-left: 7px;
+        padding-left: 7px;
 
-        margin: 0 7px;
-
-        background: currentColor;
-        opacity: 0.55;
-
-        vertical-align: middle;
+        border-left: 1px solid rgba(11, 11, 10, 0.55);
     }

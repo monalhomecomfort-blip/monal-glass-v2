@@ -574,21 +574,41 @@ function getModalProduct(productType, productKey) {
             });
     }
 
-    function setModalNotes(element, text) {
-        const parts = String(text || "").split(" | ");
+    function renderModalNotes(product) {
+        const notes = [
+            product.pyramid.top,
+            product.pyramid.heart,
+            product.pyramid.base
+        ]
+            .flatMap(function (value) {
+                return String(value || "")
+                    .split(" | ")
+                    .map(function (note) {
+                        return note.trim();
+                    })
+                    .filter(Boolean);
+            });
 
-        element.innerHTML = "";
+        modalTopNotes.innerHTML = "";
 
-        parts.forEach(function (part, index) {
+        notes.forEach(function (note, index) {
             if (index > 0) {
                 const separator = document.createElement("span");
                 separator.className = "product-modal-note-separator";
+                separator.setAttribute("aria-hidden", "true");
 
-                element.append(separator);
+                modalTopNotes.appendChild(separator);
             }
 
-            element.append(part);
+            const noteElement = document.createElement("span");
+            noteElement.className = "product-modal-note";
+            noteElement.textContent = note;
+
+            modalTopNotes.appendChild(noteElement);
         });
+
+        modalHeartNotes.textContent = "";
+        modalBaseNotes.textContent = "";
     }
 
     function openModal(productType, productKey, initialVolume, card) {
@@ -612,9 +632,7 @@ function getModalProduct(productType, productKey) {
         modalName.textContent =
             formatMonalText(product.name);
 
-        setModalNotes(modalTopNotes, product.pyramid.top);
-        setModalNotes(modalHeartNotes, product.pyramid.heart);
-        setModalNotes(modalBaseNotes, product.pyramid.base);
+        renderModalNotes(product);
 
         modalDescription.textContent =
             formatMonalText(product.description);

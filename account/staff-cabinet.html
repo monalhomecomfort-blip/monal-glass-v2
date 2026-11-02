@@ -343,6 +343,27 @@
             >
                 <div class="staff-card-content">
                     <span class="staff-card-icon">
+                        <svg><use href="#staff-icon-price"></use></svg>
+                    </span>
+
+                    <div class="staff-card-copy">
+                        <h3>Каталог сайту</h3>
+                        <p>Створення та редагування товарів і розділів публічного каталогу.</p>
+                    </div>
+                </div>
+
+                <button class="buy-btn" type="button" id="open-site-catalog-section">
+                    Перейти
+                </button>
+            </div>                
+
+            <div
+                class="staff-card"
+                data-access="admin"
+                data-special-access="admin-tools"
+            >
+                <div class="staff-card-content">
+                    <span class="staff-card-icon">
                         <svg><use href="#staff-icon-assortment"></use></svg>
                     </span>
 
@@ -2491,6 +2512,61 @@
 </section>
 
 <section
+    id="site-catalog-section"
+    class="staff-section staff-hidden"
+    data-special-access="admin-tools"
+>
+
+    <div class="account-block big">
+        <h2>Каталог сайту</h2>
+
+        <p>
+            Керування публічним каталогом Mōnal: редагування товарів,
+            додавання товарів до існуючих розділів та створення нових розділів.
+        </p>
+
+        <div class="staff-promo-campaign-block">
+            <h3>Оберіть дію</h3>
+
+            <div class="staff-search-row">
+                <button
+                    id="site-catalog-edit-btn"
+                    class="buy-btn"
+                    type="button"
+                >
+                    Редагування
+                </button>
+
+                <button
+                    id="site-catalog-add-existing-btn"
+                    class="buy-btn"
+                    type="button"
+                >
+                    Додати до існуючого розділу
+                </button>
+
+                <button
+                    id="site-catalog-add-section-btn"
+                    class="buy-btn"
+                    type="button"
+                >
+                    Додати в новий розділ
+                </button>
+            </div>
+
+            <div
+                id="site-catalog-workspace"
+                class="staff-result"
+            >
+                Оберіть дію.
+            </div>
+        </div>
+
+    </div>
+
+</section>
+        
+<section
     id="assortment-section"
     class="staff-section staff-hidden"
     data-special-access="admin-tools"
@@ -3418,6 +3494,24 @@ let CERTIFICATE_SEARCH_TIMER = null;
 
 const productsAdminSection = document.getElementById("products-admin-section");
 const openProductsAdminSectionBtn = document.getElementById("open-products-admin-section");
+
+const siteCatalogSection =
+    document.getElementById("site-catalog-section");
+
+const openSiteCatalogSectionBtn =
+    document.getElementById("open-site-catalog-section");
+
+const siteCatalogEditBtn =
+    document.getElementById("site-catalog-edit-btn");
+
+const siteCatalogAddExistingBtn =
+    document.getElementById("site-catalog-add-existing-btn");
+
+const siteCatalogAddSectionBtn =
+    document.getElementById("site-catalog-add-section-btn");
+
+const siteCatalogWorkspace =
+    document.getElementById("site-catalog-workspace");    
 
 const productAdminCreateCategorySelect = document.getElementById("product-admin-create-category");
 const productAdminCreateTableResult = document.getElementById("product-admin-create-table-result");
@@ -15156,7 +15250,6 @@ if (certificatesImportSubmitBtn) {
     );
 }
 
-
 if (openProductsAdminSectionBtn && productsAdminSection) {
     openProductsAdminSectionBtn.addEventListener("click", async () => {
         if (!CAN_MANAGE_ADMIN_TOOLS) {
@@ -15174,6 +15267,83 @@ if (openProductsAdminSectionBtn && productsAdminSection) {
         await loadAdminProductCategories();
     });
 }
+
+function setSiteCatalogMode(mode) {
+    if (!siteCatalogWorkspace) return;
+
+    if (mode === "edit") {
+        siteCatalogWorkspace.innerHTML = `
+            <h3>Редагування</h3>
+            <p>
+                Тут буде вибір існуючого розділу та товару
+                для редагування даних публічного каталогу.
+            </p>
+        `;
+
+        return;
+    }
+
+    if (mode === "add-existing") {
+        siteCatalogWorkspace.innerHTML = `
+            <h3>Додати до існуючого розділу</h3>
+            <p>
+                Тут буде конструктор нового товару
+                з вибором уже існуючої категорії сайту.
+            </p>
+        `;
+
+        return;
+    }
+
+    if (mode === "add-section") {
+        siteCatalogWorkspace.innerHTML = `
+            <h3>Додати в новий розділ</h3>
+            <p>
+                Тут буде створення нового розділу каталогу
+                та додавання першого товару.
+            </p>
+        `;
+
+        return;
+    }
+
+    siteCatalogWorkspace.innerHTML =
+        "Оберіть дію.";
+}
+
+
+if (openSiteCatalogSectionBtn && siteCatalogSection) {
+    openSiteCatalogSectionBtn.addEventListener("click", () => {
+        if (!CAN_MANAGE_ADMIN_TOOLS) {
+            alert("Немає права на керування каталогом сайту.");
+            return;
+        }
+
+        showStaffSection(siteCatalogSection);
+        setSiteCatalogMode("");
+    });
+}
+
+
+if (siteCatalogEditBtn) {
+    siteCatalogEditBtn.addEventListener("click", () => {
+        setSiteCatalogMode("edit");
+    });
+}
+
+
+if (siteCatalogAddExistingBtn) {
+    siteCatalogAddExistingBtn.addEventListener("click", () => {
+        setSiteCatalogMode("add-existing");
+    });
+}
+
+
+if (siteCatalogAddSectionBtn) {
+    siteCatalogAddSectionBtn.addEventListener("click", () => {
+        setSiteCatalogMode("add-section");
+    });
+}    
 
 function formatCustomerWishDate(value) {
     if (!value) return "—";

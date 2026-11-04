@@ -2556,7 +2556,7 @@
 
             <div
                 id="site-catalog-workspace"
-                class="staff-result"
+                class="site-catalog-workspace"
             >
                 Оберіть дію.
             </div>
@@ -3514,6 +3514,8 @@ const siteCatalogWorkspace =
     document.getElementById("site-catalog-workspace");    
 
 let SITE_CATALOG_CATEGORIES = [];
+
+let SITE_CATALOG_SELECTED_IMAGES = [];    
     
 const productAdminCreateCategorySelect = document.getElementById("product-admin-create-category");
 const productAdminCreateTableResult = document.getElementById("product-admin-create-table-result");
@@ -15474,96 +15476,437 @@ function renderSiteCatalogAttributeField(
     `;
 }
 
-
-function addSiteCatalogImageRow(
-    container
+function getSiteCatalogCategoryConfig(
+    categorySlug
 ) {
-    if (!container) return;
+    const slug =
+        String(
+            categorySlug || ""
+        )
+            .trim()
+            .toLowerCase();
 
-    const index =
-        container.querySelectorAll(
-            ".site-catalog-image-row"
-        ).length;
+    const mlCategories =
+        new Set([
+            "aromadiffusers",
+            "refills",
+            "parfums",
+            "hand-soap",
+            "hand-cream",
+            "shower-gel"
+        ]);
 
-    const row =
-        document.createElement("div");
+    if (
+        mlCategories.has(slug)
+    ) {
+        return {
+            showVolume: true,
+            unit: "ml",
+            unitLabel: "ML"
+        };
+    }
 
-    row.className =
-        "site-catalog-image-row";
-
-    row.style.cssText = `
-        display:grid;
-        grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto;
-        gap:10px;
-        align-items:center;
-        margin-top:10px;
-    `;
-
-    row.innerHTML = `
-        <input
-            type="text"
-            class="site-catalog-image-url"
-            placeholder="Шлях / URL фото"
-        >
-
-        <input
-            type="text"
-            class="site-catalog-image-alt"
-            placeholder="ALT-текст"
-        >
-
-        <label
-            class="staff-checkbox-inline"
-            style="white-space:nowrap;"
-        >
-            <input
-                type="radio"
-                name="site-catalog-main-image"
-                class="site-catalog-image-main"
-                ${index === 0 ? "checked" : ""}
-            >
-            Головне
-        </label>
-    `;
-
-    container.appendChild(row);
+    return {
+        showVolume: false,
+        unit: "",
+        unitLabel: ""
+    };
 }
 
 
-function collectSiteCatalogImages() {
-    const rows =
-        Array.from(
-            document.querySelectorAll(
-                ".site-catalog-image-row"
-            )
+function readSiteCatalogFileAsBase64(
+    file
+) {
+    return new Promise(
+        (resolve, reject) => {
+            const reader =
+                new FileReader();
+
+            reader.onload =
+                () => {
+                    const dataUrl =
+                        String(
+                            reader.result || ""
+                        );
+
+                    const commaIndex =
+                        dataUrl.indexOf(",");
+
+                    if (
+                        commaIndex === -1
+                    ) {
+                        reject(
+                            new Error(
+                                "Не вдалося прочитати фото."
+                            )
+                        );
+
+                        return;
+                    }
+
+                    resolve(
+                        dataUrl.slice(
+                            commaIndex + 1
+                        )
+                    );
+                };
+
+            reader.onerror =
+                () => {
+                    reject(
+                        new Error(
+                            "Не вдалося прочитати фото."
+                        )
+                    );
+                };
+
+            reader.readAsDataURL(
+                file
+            );
+        }
+    );
+}
+
+
+function clearSiteCatalogSelectedImages() {
+    SITE_CATALOG_SELECTED_IMAGES
+        .forEach(image => {
+            if (
+                image.localPreviewUrl
+            ) {
+                URL.revokeObjectURL(
+                    image.localPreviewUrl
+                );
+            }
+        });
+
+    SITE_CATALOG_SELECTED_IMAGES = [];
+}
+
+
+function renderSiteCatalogSelectedImages() {
+    const preview =
+        document.getElementById(
+            "site-catalog-image-preview"
         );
 
-    return rows
-        .map((row, index) => ({
-            imageUrl:
-                row.querySelector(
-                    ".site-catalog-image-url"
-                )?.value.trim() || "",
+    if (!preview) {
+        return;
+    }
 
-            altText:
-                row.querySelector(
-                    ".site-catalog-image-alt"
-                )?.value.trim() || "",
+    if (
+        !SITE_CATALOG_SELECTED_IMAGES.length
+    ) {
+        preview.innerHTML = `
+            <div class="site-catalog-photo-empty">
+                Фото ще не додані.
+            </div>
+        `;
+
+        return;
+    }
+
+    preview.innerHTML =
+        SITE_CATALOG_SELECTED_IMAGES
+            .map(
+                (image, index) => `
+                    <div
+                        class="site-catalog-photo-card"
+                    >
+                        <img
+                            src="${escapeSiteCatalogHtml(
+                                image.localPreviewUrl
+                            )}"
+                            alt=""
+                        >
+
+                        <div
+                            class="site-catalog-photo-name"
+                        >
+                            ${escapeSiteCatalogHtml(
+                                image.file.name
+                            )}
+                        </div>
+
+                        <div
+                            class="site-catalog-photo-controls"
+                        >
+                            <label>
+                                <input
+                                    type="radio"
+                                    name="site-catalog-main-photo"
+                                    data-site-catalog-main-photo="${index}"
+                                    ${image.isMain ? "checked" : ""}
+                                >
+
+                                Головне
+                            </label>
+
+                            <button
+                                type="button"
+                                data-site-catalog-remove-photo="${index}"
+                            >
+                                Видалити
+                            </button>
+                        </div>
+                    </div>
+                `
+            )
+            .join("");
+
+    preview
+        .querySelectorAll(
+            "[data-site-catalog-main-photo]"
+        )
+        .forEach(radio => {
+            radio.addEventListener(
+                "change",
+                () => {
+                    const selectedIndex =
+                        Number(
+                            radio.dataset
+                                .siteCatalogMainPhoto
+                        );
+
+                    SITE_CATALOG_SELECTED_IMAGES =
+                        SITE_CATALOG_SELECTED_IMAGES
+                            .map(
+                                (
+                                    image,
+                                    index
+                                ) => ({
+                                    ...image,
+
+                                    isMain:
+                                        index ===
+                                        selectedIndex
+                                })
+                            );
+
+                    renderSiteCatalogSelectedImages();
+                }
+            );
+        });
+
+    preview
+        .querySelectorAll(
+            "[data-site-catalog-remove-photo]"
+        )
+        .forEach(button => {
+            button.addEventListener(
+                "click",
+                () => {
+                    const removeIndex =
+                        Number(
+                            button.dataset
+                                .siteCatalogRemovePhoto
+                        );
+
+                    const removedImage =
+                        SITE_CATALOG_SELECTED_IMAGES[
+                            removeIndex
+                        ];
+
+                    const wasMain =
+                        Boolean(
+                            removedImage?.isMain
+                        );
+
+                    if (
+                        removedImage?.localPreviewUrl
+                    ) {
+                        URL.revokeObjectURL(
+                            removedImage.localPreviewUrl
+                        );
+                    }
+
+                    SITE_CATALOG_SELECTED_IMAGES.splice(
+                        removeIndex,
+                        1
+                    );
+
+                    if (
+                        wasMain &&
+                        SITE_CATALOG_SELECTED_IMAGES.length
+                    ) {
+                        SITE_CATALOG_SELECTED_IMAGES[
+                            0
+                        ].isMain = true;
+                    }
+
+                    renderSiteCatalogSelectedImages();
+                }
+            );
+        });
+}
+
+
+function addSiteCatalogSelectedFiles(
+    fileList
+) {
+    const files =
+        Array.from(
+            fileList || []
+        );
+
+    if (!files.length) {
+        return;
+    }
+
+    const allowedTypes =
+        new Set([
+            "image/jpeg",
+            "image/png",
+            "image/webp"
+        ]);
+
+    for (const file of files) {
+        if (
+            !allowedTypes.has(
+                file.type
+            )
+        ) {
+            alert(
+                `${file.name}: дозволені JPG, PNG або WEBP.`
+            );
+
+            continue;
+        }
+
+        if (
+            file.size >
+            5 * 1024 * 1024
+        ) {
+            alert(
+                `${file.name}: максимальний розмір 5 МБ.`
+            );
+
+            continue;
+        }
+
+        SITE_CATALOG_SELECTED_IMAGES.push({
+            file,
+
+            localPreviewUrl:
+                URL.createObjectURL(
+                    file
+                ),
 
             isMain:
-                row.querySelector(
-                    ".site-catalog-image-main"
-                )?.checked
+                SITE_CATALOG_SELECTED_IMAGES
+                    .length === 0,
+
+            imageUrl: "",
+            previewUrl: ""
+        });
+    }
+
+    renderSiteCatalogSelectedImages();
+}
+
+
+async function uploadSiteCatalogImage(
+    image
+) {
+    if (image.imageUrl) {
+        return image;
+    }
+
+    const dataBase64 =
+        await readSiteCatalogFileAsBase64(
+            image.file
+        );
+
+    const response =
+        await fetch(
+            "https://monal-mono-pay-production.up.railway.app/api/staff/site-catalog-upload-image",
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type":
+                        "application/json"
+                },
+
+                body:
+                    JSON.stringify({
+                        staffId:
+                            staff.id,
+
+                        fileName:
+                            image.file.name,
+
+                        mimeType:
+                            image.file.type,
+
+                        dataBase64
+                    })
+            }
+        );
+
+    const data =
+        await response.json();
+
+    if (
+        !response.ok ||
+        !data.ok ||
+        !data.imageUrl
+    ) {
+        throw new Error(
+            data.error ||
+            `Не вдалося завантажити ${image.file.name}`
+        );
+    }
+
+    image.imageUrl =
+        data.imageUrl;
+
+    image.previewUrl =
+        data.previewUrl || "";
+
+    return image;
+}
+
+
+async function uploadSiteCatalogSelectedImages(
+    displayName
+) {
+    const uploadedImages = [];
+
+    for (
+        let index = 0;
+        index <
+        SITE_CATALOG_SELECTED_IMAGES.length;
+        index++
+    ) {
+        const image =
+            SITE_CATALOG_SELECTED_IMAGES[
+                index
+            ];
+
+        await uploadSiteCatalogImage(
+            image
+        );
+
+        uploadedImages.push({
+            imageUrl:
+                image.imageUrl,
+
+            altText:
+                `${displayName} Monal`,
+
+            isMain:
+                image.isMain
                     ? 1
                     : 0,
 
-            sortOrder: index
-        }))
-        .filter(
-            image => image.imageUrl
-        );
-}
+            sortOrder:
+                index
+        });
+    }
 
+    return uploadedImages;
+}
 
 function collectSiteCatalogAttributes() {
     const fields =
@@ -15600,9 +15943,9 @@ function collectSiteCatalogAttributes() {
     });
 }
 
-
 async function saveSiteCatalogProduct(
-    categoryId
+    categoryId,
+    status
 ) {
     const form =
         document.getElementById(
@@ -15614,18 +15957,23 @@ async function saveSiteCatalogProduct(
             "site-catalog-create-result"
         );
 
-    const saveBtn =
-        document.getElementById(
-            "site-catalog-create-btn"
-        );
-
     if (
         !form ||
-        !resultBox ||
-        !saveBtn
+        !resultBox
     ) {
         return;
     }
+
+    const categorySlug =
+        String(
+            form.dataset.categorySlug ||
+            ""
+        );
+
+    const categoryConfig =
+        getSiteCatalogCategoryConfig(
+            categorySlug
+        );
 
     const displayName =
         document.getElementById(
@@ -15643,94 +15991,167 @@ async function saveSiteCatalogProduct(
         return;
     }
 
-    const payload = {
-        staffId: staff.id,
-        categoryId,
-
-        aromaId:
-            Number(
-                document.getElementById(
-                    "site-catalog-aroma"
-                )?.value || 0
-            ) || null,
-
-        displayName,
-
-        productDescription:
-            document.getElementById(
-                "site-catalog-description"
-            )?.value.trim() || "",
-
-        volumeValue:
-            document.getElementById(
+    const volumeValue =
+        categoryConfig.showVolume
+            ? document.getElementById(
                 "site-catalog-volume-value"
-            )?.value || "",
+            )?.value || ""
+            : "";
 
-        volumeUnit:
-            document.getElementById(
-                "site-catalog-volume-unit"
-            )?.value || "",
+    if (
+        categoryConfig.showVolume &&
+        Number(volumeValue) <= 0
+    ) {
+        resultBox.classList.remove(
+            "staff-hidden"
+        );
 
-        volumeLabel:
-            document.getElementById(
-                "site-catalog-volume-label"
-            )?.value.trim() || "",
+        resultBox.textContent =
+            "Вкажіть обʼєм товару.";
 
-        price:
-            document.getElementById(
-                "site-catalog-price"
-            )?.value || 0,
+        return;
+    }
 
-        badge:
-            document.getElementById(
-                "site-catalog-badge"
-            )?.value.trim() || "",
+    const price =
+        document.getElementById(
+            "site-catalog-price"
+        )?.value || "";
 
-        status:
-            document.getElementById(
-                "site-catalog-status"
-            )?.value || "draft",
+    if (
+        status === "published" &&
+        Number(price) <= 0
+    ) {
+        resultBox.classList.remove(
+            "staff-hidden"
+        );
 
-        sortOrder:
-            Number(
-                document.getElementById(
-                    "site-catalog-sort-order"
-                )?.value || 0
-            ),
+        resultBox.textContent =
+            "Для публікації вкажіть ціну.";
 
-        images:
-            collectSiteCatalogImages(),
+        return;
+    }
 
-        attributes:
-            collectSiteCatalogAttributes()
-    };
+    if (
+        status === "published" &&
+        !SITE_CATALOG_SELECTED_IMAGES.length
+    ) {
+        resultBox.classList.remove(
+            "staff-hidden"
+        );
 
-    saveBtn.disabled = true;
-    saveBtn.textContent =
-        "Зберігаємо...";
+        resultBox.textContent =
+            "Для публікації додайте хоча б одне фото.";
+
+        return;
+    }
+
+    const draftBtn =
+        document.getElementById(
+            "site-catalog-save-draft-btn"
+        );
+
+    const publishBtn =
+        document.getElementById(
+            "site-catalog-publish-btn"
+        );
+
+    if (draftBtn) {
+        draftBtn.disabled = true;
+    }
+
+    if (publishBtn) {
+        publishBtn.disabled = true;
+    }
 
     resultBox.classList.remove(
         "staff-hidden"
     );
 
-    resultBox.textContent =
-        "Зберігаємо товар...";
-
     try {
-        const response = await fetch(
-            "https://monal-mono-pay-production.up.railway.app/api/staff/site-catalog-create-product",
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type":
-                        "application/json"
-                },
-                body:
-                    JSON.stringify(
-                        payload
-                    )
-            }
-        );
+        let uploadedImages = [];
+
+        if (
+            SITE_CATALOG_SELECTED_IMAGES.length
+        ) {
+            resultBox.textContent =
+                "Завантажуємо фото...";
+
+            uploadedImages =
+                await uploadSiteCatalogSelectedImages(
+                    displayName
+                );
+        }
+
+        resultBox.textContent =
+            status === "published"
+                ? "Публікуємо товар..."
+                : "Зберігаємо чернетку...";
+
+        const payload = {
+            staffId:
+                staff.id,
+
+            categoryId,
+
+            aromaId:
+                Number(
+                    document.getElementById(
+                        "site-catalog-aroma"
+                    )?.value || 0
+                ) || null,
+
+            displayName,
+
+            productDescription:
+                document.getElementById(
+                    "site-catalog-description"
+                )?.value.trim() || "",
+
+            volumeValue,
+
+            volumeUnit:
+                categoryConfig.unit,
+
+            volumeLabel:
+                categoryConfig.showVolume
+                    ? `${volumeValue} ${categoryConfig.unitLabel}`
+                    : "",
+
+            price,
+
+            badge:
+                document.getElementById(
+                    "site-catalog-badge"
+                )?.value.trim() || "",
+
+            status,
+
+            sortOrder: 0,
+
+            images:
+                uploadedImages,
+
+            attributes:
+                collectSiteCatalogAttributes()
+        };
+
+        const response =
+            await fetch(
+                "https://monal-mono-pay-production.up.railway.app/api/staff/site-catalog-create-product",
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify(
+                            payload
+                        )
+                }
+            );
 
         const data =
             await response.json();
@@ -15741,46 +16162,25 @@ async function saveSiteCatalogProduct(
         ) {
             throw new Error(
                 data.error ||
-                "Не вдалося створити товар."
+                "Не вдалося зберегти товар."
             );
         }
 
-        const published =
-            data.product?.status ===
-            "published";
-
         resultBox.innerHTML = `
             <strong>
-                Товар створено.
+                ${
+                    status === "published"
+                        ? "Товар опубліковано."
+                        : "Чернетку збережено."
+                }
             </strong>
-
-            <br>
-
-            ${published
-                ? "Опубліковано та додано в products_catalog."
-                : "Збережено в каталозі сайту."}
-
-            <br>
-
-            product_key:
-            ${escapeSiteCatalogHtml(
-                data.product?.product_key || "—"
-            )}
         `;
 
         form.reset();
 
-        const imageContainer =
-            document.getElementById(
-                "site-catalog-images"
-            );
+        clearSiteCatalogSelectedImages();
 
-        if (imageContainer) {
-            imageContainer.innerHTML = "";
-            addSiteCatalogImageRow(
-                imageContainer
-            );
-        }
+        renderSiteCatalogSelectedImages();
 
     } catch (err) {
         console.error(
@@ -15790,15 +16190,18 @@ async function saveSiteCatalogProduct(
 
         resultBox.textContent =
             err.message ||
-            "Не вдалося створити товар.";
+            "Не вдалося зберегти товар.";
 
     } finally {
-        saveBtn.disabled = false;
-        saveBtn.textContent =
-            "Створити товар";
+        if (draftBtn) {
+            draftBtn.disabled = false;
+        }
+
+        if (publishBtn) {
+            publishBtn.disabled = false;
+        }
     }
 }
-
 
 async function renderSiteCatalogProductForm(
     categoryId
@@ -15808,7 +16211,9 @@ async function renderSiteCatalogProductForm(
             "site-catalog-product-form"
         );
 
-    if (!formBox) return;
+    if (!formBox) {
+        return;
+    }
 
     if (!categoryId) {
         formBox.innerHTML =
@@ -15816,6 +16221,8 @@ async function renderSiteCatalogProductForm(
 
         return;
     }
+
+    clearSiteCatalogSelectedImages();
 
     formBox.innerHTML =
         "Завантажуємо форму...";
@@ -15829,341 +16236,403 @@ async function renderSiteCatalogProductForm(
         const category =
             data.category || {};
 
+        const categoryConfig =
+            getSiteCatalogCategoryConfig(
+                category.category_slug
+            );
+
         const aromas =
-            Array.isArray(data.aromas)
+            Array.isArray(
+                data.aromas
+            )
                 ? data.aromas
                 : [];
 
         const attributes =
-            Array.isArray(data.attributes)
+            Array.isArray(
+                data.attributes
+            )
                 ? data.attributes
                 : [];
 
         const options =
-            Array.isArray(data.options)
+            Array.isArray(
+                data.options
+            )
                 ? data.options
                 : [];
 
         const aromasHtml =
             aromas
                 .map(aroma => `
-                    <option value="${Number(aroma.id)}">
-                        ${escapeSiteCatalogHtml(aroma.display_name)}
+                    <option
+                        value="${Number(
+                            aroma.id
+                        )}"
+                    >
+                        ${escapeSiteCatalogHtml(
+                            aroma.display_name
+                        )}
                     </option>
                 `)
                 .join("");
 
+        const volumeHtml =
+            categoryConfig.showVolume
+                ? `
+                    <label
+                        class="site-catalog-field"
+                    >
+                        <span>
+                            Обʼєм *
+                        </span>
+
+                        <div
+                            class="site-catalog-volume-field"
+                        >
+                            <input
+                                id="site-catalog-volume-value"
+                                type="number"
+                                min="1"
+                                step="1"
+                                placeholder="Наприклад: 200"
+                            >
+
+                            <strong>
+                                ${categoryConfig.unitLabel}
+                            </strong>
+                        </div>
+                    </label>
+                `
+                : "";
+
         const attributesHtml =
             attributes.length
-                ? attributes
-                    .map(attribute =>
-                        renderSiteCatalogAttributeField(
-                            attribute,
-                            options
-                        )
-                    )
-                    .join("")
-                : `
-                    <div class="staff-hint">
-                        Для цього розділу додаткових характеристик немає.
+                ? `
+                    <div
+                        class="site-catalog-form-card"
+                    >
+                        <div
+                            class="site-catalog-form-heading"
+                        >
+                            <h4>
+                                Характеристики
+                            </h4>
+
+                            <p>
+                                Поля зі * обовʼязкові.
+                            </p>
+                        </div>
+
+                        <div
+                            class="site-catalog-attributes-grid"
+                        >
+                            ${attributes
+                                .map(attribute =>
+                                    renderSiteCatalogAttributeField(
+                                        attribute,
+                                        options
+                                    )
+                                )
+                                .join("")}
+                        </div>
                     </div>
-                `;
+                `
+                : "";
 
         formBox.innerHTML = `
             <form
                 id="site-catalog-create-product-form"
+                class="site-catalog-editor"
+                data-category-slug="${escapeSiteCatalogHtml(
+                    category.category_slug ||
+                    ""
+                )}"
                 onsubmit="return false;"
             >
-                <div
-                    class="staff-promo-campaign-block"
-                    style="margin-top:18px;"
-                >
-                    <h3>
-                        ${escapeSiteCatalogHtml(category.display_name || "")}
-                    </h3>
 
-                    <p class="staff-hint">
-                        Дані товару
+                <div
+                    class="site-catalog-editor-head"
+                >
+                    <div>
+                        <span>
+                            РОЗДІЛ
+                        </span>
+
+                        <h3>
+                            ${escapeSiteCatalogHtml(
+                                category.display_name ||
+                                ""
+                            )}
+                        </h3>
+                    </div>
+
+                    <p>
+                        * обовʼязкові поля
                     </p>
+                </div>
+
+
+                <div
+                    class="site-catalog-form-card"
+                >
 
                     <div
-                        style="
-                            display:grid;
-                            grid-template-columns:
-                                repeat(
-                                    2,
-                                    minmax(0,1fr)
-                                );
-                            gap:14px;
-                        "
+                        class="site-catalog-form-heading"
                     >
-                        <div>
-                            <label class="staff-hint">
-                                Аромат
-                            </label>
+                        <h4>
+                            Основна інформація
+                        </h4>
 
-                            <select id="site-catalog-aroma">
+                        <p>
+                            Те, що потрібно для картки товару.
+                        </p>
+                    </div>
+
+
+                    <div
+                        class="site-catalog-form-grid"
+                    >
+
+                        <label
+                            class="site-catalog-field"
+                        >
+                            <span>
+                                Аромат
+
+                                <small>
+                                    необовʼязково
+                                </small>
+                            </span>
+
+                            <select
+                                id="site-catalog-aroma"
+                            >
                                 <option value="">
                                     Без привʼязки до аромату
                                 </option>
 
                                 ${aromasHtml}
                             </select>
-                        </div>
+                        </label>
 
-                        <div>
-                            <label class="staff-hint">
+
+                        <label
+                            class="site-catalog-field"
+                        >
+                            <span>
                                 Назва товару *
-                            </label>
+                            </span>
 
                             <input
                                 id="site-catalog-display-name"
                                 type="text"
-                                placeholder="Назва товару"
+                                placeholder="Наприклад: SHADOW OF FIG"
                             >
-                        </div>
+                        </label>
 
-                        <div>
-                            <label class="staff-hint">
-                                Обʼєм
-                            </label>
 
-                            <input
-                                id="site-catalog-volume-value"
-                                type="number"
-                                step="any"
-                                min="0"
-                                placeholder="Наприклад: 100"
-                            >
-                        </div>
+                        ${volumeHtml}
 
-                        <div>
-                            <label class="staff-hint">
-                                Одиниця
-                            </label>
 
-                            <select id="site-catalog-volume-unit">
-                                <option value="">
-                                    —
-                                </option>
-
-                                <option value="ml">
-                                    ml
-                                </option>
-
-                                <option value="g">
-                                    g
-                                </option>
-
-                                <option value="pcs">
-                                    шт
-                                </option>
-
-                                <option value="set">
-                                    set
-                                </option>
-                            </select>
-                        </div>
-
-                        <div>
-                            <label class="staff-hint">
-                                Підпис формату
-                            </label>
-
-                            <input
-                                id="site-catalog-volume-label"
-                                type="text"
-                                placeholder="Наприклад: 100 ML"
-                            >
-                        </div>
-
-                        <div>
-                            <label class="staff-hint">
+                        <label
+                            class="site-catalog-field"
+                        >
+                            <span>
                                 Ціна, грн
-                            </label>
+
+                                <small>
+                                    обовʼязково для публікації
+                                </small>
+                            </span>
 
                             <input
                                 id="site-catalog-price"
                                 type="number"
                                 min="0"
                                 step="1"
-                                placeholder="0"
+                                placeholder="Наприклад: 1590"
                             >
-                        </div>
+                        </label>
 
-                        <div>
-                            <label class="staff-hint">
-                                Badge
-                            </label>
+                    </div>
+                </div>
+
+
+                <div
+                    class="site-catalog-form-card"
+                >
+                    <div
+                        class="site-catalog-form-heading"
+                    >
+                        <h4>
+                            Опис
+                        </h4>
+
+                        <p>
+                            Необовʼязково.
+                        </p>
+                    </div>
+
+                    <textarea
+                        id="site-catalog-description"
+                        rows="6"
+                        placeholder="Опис товару..."
+                    ></textarea>
+                </div>
+
+
+                ${attributesHtml}
+
+
+                <div
+                    class="site-catalog-form-card"
+                >
+                    <div
+                        class="site-catalog-form-heading"
+                    >
+                        <h4>
+                            Фото
+                        </h4>
+
+                        <p>
+                            Для публікації потрібне хоча б одне фото.
+                            JPG, PNG або WEBP, до 5 МБ.
+                        </p>
+                    </div>
+
+                    <label
+                        class="site-catalog-upload-button"
+                    >
+                        <input
+                            id="site-catalog-image-files"
+                            type="file"
+                            accept="image/jpeg,image/png,image/webp"
+                            multiple
+                        >
+
+                        <span>
+                            Вибрати фото
+                        </span>
+                    </label>
+
+                    <div
+                        id="site-catalog-image-preview"
+                        class="site-catalog-image-preview"
+                    ></div>
+                </div>
+
+
+                <details
+                    class="site-catalog-extra"
+                >
+                    <summary>
+                        Додатково
+                    </summary>
+
+                    <div
+                        class="site-catalog-extra-content"
+                    >
+                        <label
+                            class="site-catalog-field"
+                        >
+                            <span>
+                                Позначка
+
+                                <small>
+                                    необовʼязково
+                                </small>
+                            </span>
 
                             <input
                                 id="site-catalog-badge"
                                 type="text"
                                 placeholder="NEW / LIMITED / BESTSELLER"
                             >
-                        </div>
-
-                        <div>
-                            <label class="staff-hint">
-                                Порядок
-                            </label>
-
-                            <input
-                                id="site-catalog-sort-order"
-                                type="number"
-                                value="0"
-                                step="1"
-                            >
-                        </div>
-
-                        <div>
-                            <label class="staff-hint">
-                                Статус
-                            </label>
-
-                            <select id="site-catalog-status">
-                                <option value="draft">
-                                    Чернетка
-                                </option>
-
-                                <option value="published">
-                                    Опубліковано
-                                </option>
-
-                                <option value="hidden">
-                                    Приховано
-                                </option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div
-                        style="margin-top:14px;"
-                    >
-                        <label class="staff-hint">
-                            Опис товару
                         </label>
-
-                        <textarea
-                            id="site-catalog-description"
-                            rows="5"
-                            style="width:100%;"
-                            placeholder="Опис товару"
-                        ></textarea>
                     </div>
-                </div>
+                </details>
 
 
                 <div
-                    class="staff-promo-campaign-block"
-                    style="margin-top:18px;"
-                >
-                    <h3>
-                        Характеристики
-                    </h3>
-
-                    <div
-                        style="
-                            display:grid;
-                            grid-template-columns:
-                                repeat(
-                                    2,
-                                    minmax(0,1fr)
-                                );
-                            gap:14px;
-                        "
-                    >
-                        ${attributesHtml}
-                    </div>
-                </div>
-
-
-                <div
-                    class="staff-promo-campaign-block"
-                    style="margin-top:18px;"
-                >
-                    <h3>
-                        Фото
-                    </h3>
-
-                    <p class="staff-hint">
-                        Поки тут вказуємо шлях або URL фото.
-                        Головне фото позначте окремо.
-                    </p>
-
-                    <div id="site-catalog-images"></div>
-
-                    <button
-                        id="site-catalog-add-image-btn"
-                        class="buy-btn"
-                        type="button"
-                        style="margin-top:12px;"
-                    >
-                        + Додати фото
-                    </button>
-                </div>
-
-
-                <div
-                    style="
-                        margin-top:20px;
-                        display:flex;
-                        gap:12px;
-                        align-items:center;
-                        flex-wrap:wrap;
-                    "
+                    class="site-catalog-actions"
                 >
                     <button
-                        id="site-catalog-create-btn"
+                        id="site-catalog-save-draft-btn"
                         class="buy-btn"
                         type="button"
                     >
-                        Створити товар
+                        Зберегти чернетку
+                    </button>
+
+                    <button
+                        id="site-catalog-publish-btn"
+                        class="buy-btn"
+                        type="button"
+                    >
+                        Опублікувати
                     </button>
                 </div>
+
 
                 <div
                     id="site-catalog-create-result"
                     class="staff-result staff-hidden"
-                    style="margin-top:14px;"
                 ></div>
+
             </form>
         `;
 
-        const imageContainer =
-            document.getElementById(
-                "site-catalog-images"
-            );
 
-        addSiteCatalogImageRow(
-            imageContainer
-        );
+        renderSiteCatalogSelectedImages();
+
 
         document
             .getElementById(
-                "site-catalog-add-image-btn"
+                "site-catalog-image-files"
             )
             ?.addEventListener(
-                "click",
-                () => {
-                    addSiteCatalogImageRow(
-                        imageContainer
+                "change",
+                event => {
+                    addSiteCatalogSelectedFiles(
+                        event.target.files
                     );
+
+                    event.target.value =
+                        "";
                 }
             );
 
+
         document
             .getElementById(
-                "site-catalog-create-btn"
+                "site-catalog-save-draft-btn"
             )
             ?.addEventListener(
                 "click",
                 () => {
                     saveSiteCatalogProduct(
-                        categoryId
+                        categoryId,
+                        "draft"
                     );
                 }
             );
+
+
+        document
+            .getElementById(
+                "site-catalog-publish-btn"
+            )
+            ?.addEventListener(
+                "click",
+                () => {
+                    saveSiteCatalogProduct(
+                        categoryId,
+                        "published"
+                    );
+                }
+            );
+
 
         const aromaSelect =
             document.getElementById(
@@ -16175,76 +16644,36 @@ async function renderSiteCatalogProductForm(
                 "site-catalog-display-name"
             );
 
-        aromaSelect?.addEventListener(
-            "change",
-            () => {
-                if (
-                    !displayNameInput ||
-                    displayNameInput.value.trim()
-                ) {
-                    return;
+        aromaSelect
+            ?.addEventListener(
+                "change",
+                () => {
+                    if (
+                        !displayNameInput ||
+                        displayNameInput
+                            .value
+                            .trim()
+                    ) {
+                        return;
+                    }
+
+                    const selectedOption =
+                        aromaSelect.options[
+                            aromaSelect
+                                .selectedIndex
+                        ];
+
+                    if (
+                        selectedOption &&
+                        selectedOption.value
+                    ) {
+                        displayNameInput.value =
+                            selectedOption
+                                .textContent
+                                .trim();
+                    }
                 }
-
-                const selectedOption =
-                    aromaSelect.options[
-                        aromaSelect.selectedIndex
-                    ];
-
-                if (
-                    selectedOption &&
-                    selectedOption.value
-                ) {
-                    displayNameInput.value =
-                        selectedOption.textContent
-                            .trim();
-                }
-            }
-        );
-
-        const volumeValueInput =
-            document.getElementById(
-                "site-catalog-volume-value"
             );
-
-        const volumeUnitSelect =
-            document.getElementById(
-                "site-catalog-volume-unit"
-            );
-
-        const volumeLabelInput =
-            document.getElementById(
-                "site-catalog-volume-label"
-            );
-
-        function syncVolumeLabel() {
-            if (
-                !volumeLabelInput ||
-                volumeLabelInput.value.trim()
-            ) {
-                return;
-            }
-
-            const value =
-                volumeValueInput?.value || "";
-
-            const unit =
-                volumeUnitSelect?.value || "";
-
-            if (value && unit) {
-                volumeLabelInput.value =
-                    `${value} ${unit.toUpperCase()}`;
-            }
-        }
-
-        volumeValueInput?.addEventListener(
-            "input",
-            syncVolumeLabel
-        );
-
-        volumeUnitSelect?.addEventListener(
-            "change",
-            syncVolumeLabel
-        );
 
     } catch (err) {
         console.error(
@@ -16262,7 +16691,6 @@ async function renderSiteCatalogProductForm(
         `;
     }
 }
-
 
 async function renderSiteCatalogAddExisting() {
     if (!siteCatalogWorkspace) return;
@@ -16346,7 +16774,7 @@ async function renderSiteCatalogAddExisting() {
 
             <div
                 id="site-catalog-product-form"
-                class="staff-result"
+                class="site-catalog-product-form-wrap"
             >
                 Оберіть розділ.
             </div>

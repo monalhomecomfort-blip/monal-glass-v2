@@ -15313,12 +15313,964 @@ async function loadSiteCatalogCategories() {
     }
 }
 
+function escapeSiteCatalogHtml(value) {
+    return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+}
+
+
+async function loadSiteCatalogProductFormData(
+    categoryId
+) {
+    const response = await fetch(
+        "https://monal-mono-pay-production.up.railway.app/api/staff/site-catalog-form-data",
+        {
+            method: "POST",
+            headers: {
+                "Content-Type":
+                    "application/json"
+            },
+            body: JSON.stringify({
+                staffId: staff.id,
+                categoryId
+            })
+        }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok || !data.ok) {
+        throw new Error(
+            data.error ||
+            "Не вдалося завантажити форму товару."
+        );
+    }
+
+    return data;
+}
+
+
+function renderSiteCatalogAttributeField(
+    attribute,
+    options
+) {
+    const attributeId =
+        Number(
+            attribute.attribute_id || 0
+        );
+
+    const label =
+        escapeSiteCatalogHtml(
+            attribute.display_name || ""
+        );
+
+    const unitLabel =
+        escapeSiteCatalogHtml(
+            attribute.unit_label || ""
+        );
+
+    const required =
+        Number(
+            attribute.is_required || 0
+        ) === 1;
+
+    const requiredMark =
+        required
+            ? " *"
+            : "";
+
+    const fieldType =
+        String(
+            attribute.field_type || "text"
+        ).toLowerCase();
+
+    if (fieldType === "select") {
+        const attributeOptions =
+            options.filter(
+                option =>
+                    Number(
+                        option.attribute_id
+                    ) === attributeId
+            );
+
+        const optionHtml =
+            attributeOptions
+                .map(option => `
+                    <option value="${Number(option.id)}">
+                        ${escapeSiteCatalogHtml(option.display_name)}
+                    </option>
+                `)
+                .join("");
+
+        return `
+            <div>
+                <label class="staff-hint">
+                    ${label}${requiredMark}
+                </label>
+
+                <select
+                    data-site-catalog-attribute-id="${attributeId}"
+                >
+                    <option value="">
+                        Оберіть
+                    </option>
+
+                    ${optionHtml}
+                </select>
+            </div>
+        `;
+    }
+
+    if (fieldType === "boolean") {
+        return `
+            <label
+                class="staff-checkbox-inline"
+                style="margin-top:8px;"
+            >
+                <input
+                    type="checkbox"
+                    data-site-catalog-attribute-id="${attributeId}"
+                >
+
+                ${label}
+            </label>
+        `;
+    }
+
+    if (fieldType === "number") {
+        return `
+            <div>
+                <label class="staff-hint">
+                    ${label}${requiredMark}
+                    ${unitLabel ? `(${unitLabel})` : ""}
+                </label>
+
+                <input
+                    type="number"
+                    step="any"
+                    data-site-catalog-attribute-id="${attributeId}"
+                    placeholder="${label}"
+                >
+            </div>
+        `;
+    }
+
+    return `
+        <div>
+            <label class="staff-hint">
+                ${label}${requiredMark}
+            </label>
+
+            <input
+                type="text"
+                data-site-catalog-attribute-id="${attributeId}"
+                placeholder="${label}"
+            >
+        </div>
+    `;
+}
+
+
+function addSiteCatalogImageRow(
+    container
+) {
+    if (!container) return;
+
+    const index =
+        container.querySelectorAll(
+            ".site-catalog-image-row"
+        ).length;
+
+    const row =
+        document.createElement("div");
+
+    row.className =
+        "site-catalog-image-row";
+
+    row.style.cssText = `
+        display:grid;
+        grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto;
+        gap:10px;
+        align-items:center;
+        margin-top:10px;
+    `;
+
+    row.innerHTML = `
+        <input
+            type="text"
+            class="site-catalog-image-url"
+            placeholder="Шлях / URL фото"
+        >
+
+        <input
+            type="text"
+            class="site-catalog-image-alt"
+            placeholder="ALT-текст"
+        >
+
+        <label
+            class="staff-checkbox-inline"
+            style="white-space:nowrap;"
+        >
+            <input
+                type="radio"
+                name="site-catalog-main-image"
+                class="site-catalog-image-main"
+                ${index === 0 ? "checked" : ""}
+            >
+            Головне
+        </label>
+    `;
+
+    container.appendChild(row);
+}
+
+
+function collectSiteCatalogImages() {
+    const rows =
+        Array.from(
+            document.querySelectorAll(
+                ".site-catalog-image-row"
+            )
+        );
+
+    return rows
+        .map((row, index) => ({
+            imageUrl:
+                row.querySelector(
+                    ".site-catalog-image-url"
+                )?.value.trim() || "",
+
+            altText:
+                row.querySelector(
+                    ".site-catalog-image-alt"
+                )?.value.trim() || "",
+
+            isMain:
+                row.querySelector(
+                    ".site-catalog-image-main"
+                )?.checked
+                    ? 1
+                    : 0,
+
+            sortOrder: index
+        }))
+        .filter(
+            image => image.imageUrl
+        );
+}
+
+
+function collectSiteCatalogAttributes() {
+    const fields =
+        Array.from(
+            document.querySelectorAll(
+                "[data-site-catalog-attribute-id]"
+            )
+        );
+
+    return fields.map(field => {
+        const attributeId =
+            Number(
+                field.dataset
+                    .siteCatalogAttributeId ||
+                0
+            );
+
+        let value = "";
+
+        if (
+            field.type === "checkbox"
+        ) {
+            value =
+                field.checked;
+        } else {
+            value =
+                field.value;
+        }
+
+        return {
+            attributeId,
+            value
+        };
+    });
+}
+
+
+async function saveSiteCatalogProduct(
+    categoryId
+) {
+    const form =
+        document.getElementById(
+            "site-catalog-create-product-form"
+        );
+
+    const resultBox =
+        document.getElementById(
+            "site-catalog-create-result"
+        );
+
+    const saveBtn =
+        document.getElementById(
+            "site-catalog-create-btn"
+        );
+
+    if (
+        !form ||
+        !resultBox ||
+        !saveBtn
+    ) {
+        return;
+    }
+
+    const displayName =
+        document.getElementById(
+            "site-catalog-display-name"
+        )?.value.trim() || "";
+
+    if (!displayName) {
+        resultBox.classList.remove(
+            "staff-hidden"
+        );
+
+        resultBox.textContent =
+            "Вкажіть назву товару.";
+
+        return;
+    }
+
+    const payload = {
+        staffId: staff.id,
+        categoryId,
+
+        aromaId:
+            Number(
+                document.getElementById(
+                    "site-catalog-aroma"
+                )?.value || 0
+            ) || null,
+
+        displayName,
+
+        productDescription:
+            document.getElementById(
+                "site-catalog-description"
+            )?.value.trim() || "",
+
+        volumeValue:
+            document.getElementById(
+                "site-catalog-volume-value"
+            )?.value || "",
+
+        volumeUnit:
+            document.getElementById(
+                "site-catalog-volume-unit"
+            )?.value || "",
+
+        volumeLabel:
+            document.getElementById(
+                "site-catalog-volume-label"
+            )?.value.trim() || "",
+
+        price:
+            document.getElementById(
+                "site-catalog-price"
+            )?.value || 0,
+
+        badge:
+            document.getElementById(
+                "site-catalog-badge"
+            )?.value.trim() || "",
+
+        status:
+            document.getElementById(
+                "site-catalog-status"
+            )?.value || "draft",
+
+        sortOrder:
+            Number(
+                document.getElementById(
+                    "site-catalog-sort-order"
+                )?.value || 0
+            ),
+
+        images:
+            collectSiteCatalogImages(),
+
+        attributes:
+            collectSiteCatalogAttributes()
+    };
+
+    saveBtn.disabled = true;
+    saveBtn.textContent =
+        "Зберігаємо...";
+
+    resultBox.classList.remove(
+        "staff-hidden"
+    );
+
+    resultBox.textContent =
+        "Зберігаємо товар...";
+
+    try {
+        const response = await fetch(
+            "https://monal-mono-pay-production.up.railway.app/api/staff/site-catalog-create-product",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type":
+                        "application/json"
+                },
+                body:
+                    JSON.stringify(
+                        payload
+                    )
+            }
+        );
+
+        const data =
+            await response.json();
+
+        if (
+            !response.ok ||
+            !data.ok
+        ) {
+            throw new Error(
+                data.error ||
+                "Не вдалося створити товар."
+            );
+        }
+
+        const published =
+            data.product?.status ===
+            "published";
+
+        resultBox.innerHTML = `
+            <strong>
+                Товар створено.
+            </strong>
+
+            <br>
+
+            ${published
+                ? "Опубліковано та додано в products_catalog."
+                : "Збережено в каталозі сайту."}
+
+            <br>
+
+            product_key:
+            ${escapeSiteCatalogHtml(
+                data.product?.product_key || "—"
+            )}
+        `;
+
+        form.reset();
+
+        const imageContainer =
+            document.getElementById(
+                "site-catalog-images"
+            );
+
+        if (imageContainer) {
+            imageContainer.innerHTML = "";
+            addSiteCatalogImageRow(
+                imageContainer
+            );
+        }
+
+    } catch (err) {
+        console.error(
+            "SAVE SITE CATALOG PRODUCT ERROR:",
+            err
+        );
+
+        resultBox.textContent =
+            err.message ||
+            "Не вдалося створити товар.";
+
+    } finally {
+        saveBtn.disabled = false;
+        saveBtn.textContent =
+            "Створити товар";
+    }
+}
+
+
+async function renderSiteCatalogProductForm(
+    categoryId
+) {
+    const formBox =
+        document.getElementById(
+            "site-catalog-product-form"
+        );
+
+    if (!formBox) return;
+
+    if (!categoryId) {
+        formBox.innerHTML =
+            "Оберіть розділ.";
+
+        return;
+    }
+
+    formBox.innerHTML =
+        "Завантажуємо форму...";
+
+    try {
+        const data =
+            await loadSiteCatalogProductFormData(
+                categoryId
+            );
+
+        const category =
+            data.category || {};
+
+        const aromas =
+            Array.isArray(data.aromas)
+                ? data.aromas
+                : [];
+
+        const attributes =
+            Array.isArray(data.attributes)
+                ? data.attributes
+                : [];
+
+        const options =
+            Array.isArray(data.options)
+                ? data.options
+                : [];
+
+        const aromasHtml =
+            aromas
+                .map(aroma => `
+                    <option value="${Number(aroma.id)}">
+                        ${escapeSiteCatalogHtml(aroma.display_name)}
+                    </option>
+                `)
+                .join("");
+
+        const attributesHtml =
+            attributes.length
+                ? attributes
+                    .map(attribute =>
+                        renderSiteCatalogAttributeField(
+                            attribute,
+                            options
+                        )
+                    )
+                    .join("")
+                : `
+                    <div class="staff-hint">
+                        Для цього розділу додаткових характеристик немає.
+                    </div>
+                `;
+
+        formBox.innerHTML = `
+            <form
+                id="site-catalog-create-product-form"
+                onsubmit="return false;"
+            >
+                <div
+                    class="staff-promo-campaign-block"
+                    style="margin-top:18px;"
+                >
+                    <h3>
+                        ${escapeSiteCatalogHtml(category.display_name || "")}
+                    </h3>
+
+                    <p class="staff-hint">
+                        Дані товару
+                    </p>
+
+                    <div
+                        style="
+                            display:grid;
+                            grid-template-columns:
+                                repeat(
+                                    2,
+                                    minmax(0,1fr)
+                                );
+                            gap:14px;
+                        "
+                    >
+                        <div>
+                            <label class="staff-hint">
+                                Аромат
+                            </label>
+
+                            <select id="site-catalog-aroma">
+                                <option value="">
+                                    Без привʼязки до аромату
+                                </option>
+
+                                ${aromasHtml}
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="staff-hint">
+                                Назва товару *
+                            </label>
+
+                            <input
+                                id="site-catalog-display-name"
+                                type="text"
+                                placeholder="Назва товару"
+                            >
+                        </div>
+
+                        <div>
+                            <label class="staff-hint">
+                                Обʼєм
+                            </label>
+
+                            <input
+                                id="site-catalog-volume-value"
+                                type="number"
+                                step="any"
+                                min="0"
+                                placeholder="Наприклад: 100"
+                            >
+                        </div>
+
+                        <div>
+                            <label class="staff-hint">
+                                Одиниця
+                            </label>
+
+                            <select id="site-catalog-volume-unit">
+                                <option value="">
+                                    —
+                                </option>
+
+                                <option value="ml">
+                                    ml
+                                </option>
+
+                                <option value="g">
+                                    g
+                                </option>
+
+                                <option value="pcs">
+                                    шт
+                                </option>
+
+                                <option value="set">
+                                    set
+                                </option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="staff-hint">
+                                Підпис формату
+                            </label>
+
+                            <input
+                                id="site-catalog-volume-label"
+                                type="text"
+                                placeholder="Наприклад: 100 ML"
+                            >
+                        </div>
+
+                        <div>
+                            <label class="staff-hint">
+                                Ціна, грн
+                            </label>
+
+                            <input
+                                id="site-catalog-price"
+                                type="number"
+                                min="0"
+                                step="1"
+                                placeholder="0"
+                            >
+                        </div>
+
+                        <div>
+                            <label class="staff-hint">
+                                Badge
+                            </label>
+
+                            <input
+                                id="site-catalog-badge"
+                                type="text"
+                                placeholder="NEW / LIMITED / BESTSELLER"
+                            >
+                        </div>
+
+                        <div>
+                            <label class="staff-hint">
+                                Порядок
+                            </label>
+
+                            <input
+                                id="site-catalog-sort-order"
+                                type="number"
+                                value="0"
+                                step="1"
+                            >
+                        </div>
+
+                        <div>
+                            <label class="staff-hint">
+                                Статус
+                            </label>
+
+                            <select id="site-catalog-status">
+                                <option value="draft">
+                                    Чернетка
+                                </option>
+
+                                <option value="published">
+                                    Опубліковано
+                                </option>
+
+                                <option value="hidden">
+                                    Приховано
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div
+                        style="margin-top:14px;"
+                    >
+                        <label class="staff-hint">
+                            Опис товару
+                        </label>
+
+                        <textarea
+                            id="site-catalog-description"
+                            rows="5"
+                            style="width:100%;"
+                            placeholder="Опис товару"
+                        ></textarea>
+                    </div>
+                </div>
+
+
+                <div
+                    class="staff-promo-campaign-block"
+                    style="margin-top:18px;"
+                >
+                    <h3>
+                        Характеристики
+                    </h3>
+
+                    <div
+                        style="
+                            display:grid;
+                            grid-template-columns:
+                                repeat(
+                                    2,
+                                    minmax(0,1fr)
+                                );
+                            gap:14px;
+                        "
+                    >
+                        ${attributesHtml}
+                    </div>
+                </div>
+
+
+                <div
+                    class="staff-promo-campaign-block"
+                    style="margin-top:18px;"
+                >
+                    <h3>
+                        Фото
+                    </h3>
+
+                    <p class="staff-hint">
+                        Поки тут вказуємо шлях або URL фото.
+                        Головне фото позначте окремо.
+                    </p>
+
+                    <div id="site-catalog-images"></div>
+
+                    <button
+                        id="site-catalog-add-image-btn"
+                        class="buy-btn"
+                        type="button"
+                        style="margin-top:12px;"
+                    >
+                        + Додати фото
+                    </button>
+                </div>
+
+
+                <div
+                    style="
+                        margin-top:20px;
+                        display:flex;
+                        gap:12px;
+                        align-items:center;
+                        flex-wrap:wrap;
+                    "
+                >
+                    <button
+                        id="site-catalog-create-btn"
+                        class="buy-btn"
+                        type="button"
+                    >
+                        Створити товар
+                    </button>
+                </div>
+
+                <div
+                    id="site-catalog-create-result"
+                    class="staff-result staff-hidden"
+                    style="margin-top:14px;"
+                ></div>
+            </form>
+        `;
+
+        const imageContainer =
+            document.getElementById(
+                "site-catalog-images"
+            );
+
+        addSiteCatalogImageRow(
+            imageContainer
+        );
+
+        document
+            .getElementById(
+                "site-catalog-add-image-btn"
+            )
+            ?.addEventListener(
+                "click",
+                () => {
+                    addSiteCatalogImageRow(
+                        imageContainer
+                    );
+                }
+            );
+
+        document
+            .getElementById(
+                "site-catalog-create-btn"
+            )
+            ?.addEventListener(
+                "click",
+                () => {
+                    saveSiteCatalogProduct(
+                        categoryId
+                    );
+                }
+            );
+
+        const aromaSelect =
+            document.getElementById(
+                "site-catalog-aroma"
+            );
+
+        const displayNameInput =
+            document.getElementById(
+                "site-catalog-display-name"
+            );
+
+        aromaSelect?.addEventListener(
+            "change",
+            () => {
+                if (
+                    !displayNameInput ||
+                    displayNameInput.value.trim()
+                ) {
+                    return;
+                }
+
+                const selectedOption =
+                    aromaSelect.options[
+                        aromaSelect.selectedIndex
+                    ];
+
+                if (
+                    selectedOption &&
+                    selectedOption.value
+                ) {
+                    displayNameInput.value =
+                        selectedOption.textContent
+                            .trim();
+                }
+            }
+        );
+
+        const volumeValueInput =
+            document.getElementById(
+                "site-catalog-volume-value"
+            );
+
+        const volumeUnitSelect =
+            document.getElementById(
+                "site-catalog-volume-unit"
+            );
+
+        const volumeLabelInput =
+            document.getElementById(
+                "site-catalog-volume-label"
+            );
+
+        function syncVolumeLabel() {
+            if (
+                !volumeLabelInput ||
+                volumeLabelInput.value.trim()
+            ) {
+                return;
+            }
+
+            const value =
+                volumeValueInput?.value || "";
+
+            const unit =
+                volumeUnitSelect?.value || "";
+
+            if (value && unit) {
+                volumeLabelInput.value =
+                    `${value} ${unit.toUpperCase()}`;
+            }
+        }
+
+        volumeValueInput?.addEventListener(
+            "input",
+            syncVolumeLabel
+        );
+
+        volumeUnitSelect?.addEventListener(
+            "change",
+            syncVolumeLabel
+        );
+
+    } catch (err) {
+        console.error(
+            "RENDER SITE CATALOG PRODUCT FORM ERROR:",
+            err
+        );
+
+        formBox.innerHTML = `
+            <div class="staff-result">
+                ${escapeSiteCatalogHtml(
+                    err.message ||
+                    "Не вдалося завантажити форму."
+                )}
+            </div>
+        `;
+    }
+}
+
 
 async function renderSiteCatalogAddExisting() {
     if (!siteCatalogWorkspace) return;
 
     siteCatalogWorkspace.innerHTML = `
-        <h3>Додати до існуючого розділу</h3>
+        <h3>
+            Додати до існуючого розділу
+        </h3>
 
         <div class="staff-result">
             Завантажуємо розділи...
@@ -15330,14 +16282,25 @@ async function renderSiteCatalogAddExisting() {
             await loadSiteCatalogCategories();
 
         const existingCategories =
-            categories.filter(category =>
-                String(category.section_type || "") === "existing" &&
-                Number(category.is_active || 0) === 1
+            categories.filter(
+                category =>
+                    String(
+                        category.section_type ||
+                        ""
+                    ) === "existing" &&
+                    Number(
+                        category.is_active ||
+                        0
+                    ) === 1
             );
 
-        if (!existingCategories.length) {
+        if (
+            !existingCategories.length
+        ) {
             siteCatalogWorkspace.innerHTML = `
-                <h3>Додати до існуючого розділу</h3>
+                <h3>
+                    Додати до існуючого розділу
+                </h3>
 
                 <div class="staff-result">
                     Активних розділів не знайдено.
@@ -15347,26 +16310,32 @@ async function renderSiteCatalogAddExisting() {
             return;
         }
 
-        const options = existingCategories
-            .map(category => `
-                <option value="${category.id}">
-                    ${category.display_name}
-                </option>
-            `)
-            .join("");
+        const options =
+            existingCategories
+                .map(category => `
+                    <option value="${Number(category.id)}">
+                        ${escapeSiteCatalogHtml(category.display_name)}
+                    </option>
+                `)
+                .join("");
 
         siteCatalogWorkspace.innerHTML = `
-            <h3>Додати до існуючого розділу</h3>
+            <h3>
+                Додати до існуючого розділу
+            </h3>
 
             <p class="staff-hint">
-                Оберіть розділ сайту, до якого потрібно додати новий товар.
+                Оберіть розділ сайту.
+                Форма товару сформується автоматично.
             </p>
 
             <div
                 class="staff-search-row"
                 style="max-width:520px;"
             >
-                <select id="site-catalog-existing-category">
+                <select
+                    id="site-catalog-existing-category"
+                >
                     <option value="">
                         Оберіть розділ
                     </option>
@@ -15383,9 +16352,31 @@ async function renderSiteCatalogAddExisting() {
             </div>
         `;
 
+        const categorySelect =
+            document.getElementById(
+                "site-catalog-existing-category"
+            );
+
+        categorySelect?.addEventListener(
+            "change",
+            () => {
+                const categoryId =
+                    Number(
+                        categorySelect.value ||
+                        0
+                    );
+
+                renderSiteCatalogProductForm(
+                    categoryId
+                );
+            }
+        );
+
     } catch (err) {
         siteCatalogWorkspace.innerHTML = `
-            <h3>Додати до існуючого розділу</h3>
+            <h3>
+                Додати до існуючого розділу
+            </h3>
 
             <div class="staff-result">
                 Не вдалося завантажити розділи каталогу.

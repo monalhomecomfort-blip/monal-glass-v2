@@ -1776,6 +1776,25 @@ body.catalog-page .catalog-quick-buy:disabled {
     cursor: not-allowed;
 }
 
+body.catalog-page .catalog-card.is-out-of-stock .catalog-card-image,
+body.catalog-page .catalog-card.is-out-of-stock .catalog-card-copy {
+    opacity: 0.52;
+}
+
+body.catalog-page .catalog-card-stock-status {
+    order: 5;
+    margin-top: 12px;
+    font-size: 10px;
+    font-weight: 600;
+    line-height: 1.35;
+    letter-spacing: 0.08em;
+}
+
+body.catalog-page .product-modal-buy:disabled {
+    opacity: 0.42;
+    cursor: not-allowed;
+}
+
 @media (max-width: 760px) {
     body.catalog-page .catalog-card-wrap .catalog-card {
         padding-bottom: 14px;

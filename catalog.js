@@ -564,18 +564,53 @@ function getModalProduct(productType, productKey) {
     function updateOrderState() {
         if (!currentProduct || !currentVolume) return;
 
-        const selectedVariant = currentProduct.volumes[currentVolume];
+        const selectedVariant =
+            currentProduct.volumes[
+                currentVolume
+            ];
+
+        const isInStock =
+            currentProduct.isInStock !== false;
 
         updateGallery();
-        modalImage.alt = `${currentProduct.typeLabel} Monal ${currentProduct.name} ${currentVolume} ml`;
-        modalQuantity.textContent = String(currentQuantity);
-        modalPrice.textContent = formatPrice(selectedVariant.price * currentQuantity);
 
-        modalVolumes.querySelectorAll("button").forEach(function (button) {
-            const isActive = button.dataset.volume === currentVolume;
-            button.classList.toggle("active", isActive);
-            button.setAttribute("aria-pressed", String(isActive));
-        });
+        modalImage.alt =
+            `${currentProduct.typeLabel} Monal ${currentProduct.name} ${currentVolume} ml`;
+
+        modalQuantity.textContent =
+            String(currentQuantity);
+
+        modalPrice.textContent =
+            formatPrice(
+                selectedVariant.price *
+                currentQuantity
+            );
+
+        buyButton.disabled =
+            !isInStock;
+
+        buyButton.textContent =
+            isInStock
+                ? "ДОДАТИ У КОШИК"
+                : "НЕМА В НАЯВНОСТІ";
+
+        modalVolumes
+            .querySelectorAll("button")
+            .forEach(function (button) {
+                const isActive =
+                    button.dataset.volume ===
+                    currentVolume;
+
+                button.classList.toggle(
+                    "active",
+                    isActive
+                );
+
+                button.setAttribute(
+                    "aria-pressed",
+                    String(isActive)
+                );
+            });
     }
 
     function selectVolume(volume) {
@@ -856,9 +891,19 @@ function getModalProduct(productType, productKey) {
     });
 
     buyButton.addEventListener("click", function () {
-        if (!currentProduct || !currentVolume || typeof window.addToCart !== "function") return;
+        if (
+            !currentProduct ||
+            !currentVolume ||
+            currentProduct.isInStock === false ||
+            typeof window.addToCart !== "function"
+        ) {
+            return;
+        }
 
-        const selectedVariant = currentProduct.volumes[currentVolume];
+        const selectedVariant =
+            currentProduct.volumes[
+                currentVolume
+            ];
 
         for (let index = 0; index < currentQuantity; index += 1) {
             window.addToCart(
@@ -2212,6 +2257,24 @@ function initCatalogQuickBuy() {
         buyButton.type = "button";
         buyButton.textContent = "КУПИТИ";
 
+        const isOutOfStock =
+            card.dataset
+                .siteCatalogProduct === "1" &&
+            card.dataset
+                .inStock === "0";
+
+        if (isOutOfStock) {
+            buyButton.disabled = true;
+
+            buyButton.setAttribute(
+                "aria-label",
+                "Нема в наявності"
+            );
+
+            buyButton.title =
+                "Нема в наявності";
+        }
+
         card.parentNode.insertBefore(
             wrapper,
             card
@@ -2285,6 +2348,10 @@ function initCatalogQuickBuy() {
             }
         );
 
+        if (isOutOfStock) {
+            return;
+        }
+        
         if (requiresSelection) {
             buyButton.addEventListener(
                 "click",
@@ -2552,7 +2619,6 @@ function ensureSiteCatalogSection(
     return section;
 }
 
-
 function createSiteCatalogModalProduct(
     product
 ) {
@@ -2613,6 +2679,9 @@ function createSiteCatalogModalProduct(
         cartLabel:
             typeLabel,
 
+        isInStock:
+            product.is_in_stock !== false,
+
         aromaSlug:
             product.aroma_slug || "",
 
@@ -2670,7 +2739,6 @@ function createSiteCatalogModalProduct(
 
     return volumeKey;
 }
-
 
 function createSiteCatalogCard(
     product
@@ -2760,11 +2828,20 @@ function createSiteCatalogCard(
         product.product_description ||
         "";
 
+    const isInStock =
+        product.is_in_stock !== false;
+
     const card =
         document.createElement("a");
 
     card.className =
         "catalog-card";
+
+    if (!isInStock) {
+        card.classList.add(
+            "is-out-of-stock"
+        );
+    }
 
     card.id =
         `site-product-${Number(
@@ -2789,6 +2866,11 @@ function createSiteCatalogCard(
 
     card.dataset.siteVolume =
         volumeKey;
+
+    card.dataset.inStock =
+        isInStock
+            ? "1"
+            : "0";
 
     card.dataset.aromaKey =
         product.aroma_slug || "";
@@ -2862,7 +2944,11 @@ function createSiteCatalogCard(
 
                 <link
                     itemprop="availability"
-                    href="https://schema.org/InStock"
+                    href="${
+                        isInStock
+                            ? "https://schema.org/InStock"
+                            : "https://schema.org/OutOfStock"
+                    }"
                 >
 
                 <span>
@@ -2881,6 +2967,16 @@ function createSiteCatalogCard(
                     descriptionLine
                 )}
             </p>
+
+            ${
+                isInStock
+                    ? ""
+                    : `
+                        <div class="catalog-card-stock-status">
+                            НЕМА В НАЯВНОСТІ
+                        </div>
+                    `
+            }
 
             <meta
                 itemprop="brand"

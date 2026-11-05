@@ -7,6 +7,8 @@ function formatMonalText(value) {
         .replaceAll(brandMarker, "Monal");
 }
 
+const SITE_CATALOG_MODAL_PRODUCTS = {};
+
 const PARFUM_MODAL_PRODUCTS = {
     "fairytale": {
         name: "FAIRYTALE",
@@ -367,7 +369,16 @@ const REFILL_MODAL_IMAGES = {
 };
 
 function getModalProduct(productType, productKey) {
-    const aroma = PARFUM_MODAL_PRODUCTS[productKey];
+    if (productType === "site") {
+        return (
+            SITE_CATALOG_MODAL_PRODUCTS[
+                productKey
+            ] || null
+        );
+    }
+
+    const aroma =
+        PARFUM_MODAL_PRODUCTS[productKey];
 
     if (!aroma) return null;
 
@@ -438,6 +449,16 @@ function getModalProduct(productType, productKey) {
     const buyButton = document.getElementById("parfum-modal-buy");
     const closeButton = modal.querySelector(".product-modal-close");
 
+    const modalPyramid =
+        modal.querySelector(
+            ".product-modal-pyramid"
+        );
+
+    const modalRatings =
+        modal.querySelector(
+            ".product-modal-ratings"
+        );    
+
     let currentProduct = null;
     let currentProductType = null;
     let currentProductKey = null;
@@ -463,6 +484,15 @@ function getModalProduct(productType, productKey) {
             return [];
         }
 
+        if (
+            currentProductType === "site"
+        ) {
+            return (
+                currentProduct.galleryImages ||
+                []
+            );
+        }
+        
         if (currentProductType === "parfum") {
             if (currentVolume === "3") {
                 return discoveryGalleries[currentProductKey] || [];
@@ -632,12 +662,41 @@ function getModalProduct(productType, productKey) {
         modalName.textContent =
             formatMonalText(product.name);
 
-        renderModalNotes(product);
+        const showAromaDetails =
+            product.hasAroma !== false;
+
+        if (modalPyramid) {
+            modalPyramid.hidden =
+                !showAromaDetails;
+        }
+
+        if (modalRatings) {
+            modalRatings.hidden =
+                !showAromaDetails;
+        }
+
+        if (showAromaDetails) {
+            renderModalNotes(product);
+
+            modalLongevity.textContent =
+                makeRating(
+                    product.longevity
+                );
+
+            modalIntensity.textContent =
+                makeRating(
+                    product.intensity
+                );
+        } else {
+            modalTopNotes.textContent = "";
+            modalHeartNotes.textContent = "";
+            modalBaseNotes.textContent = "";
+        }
 
         modalDescription.textContent =
-            formatMonalText(product.description);
-        modalLongevity.textContent = makeRating(product.longevity);
-        modalIntensity.textContent = makeRating(product.intensity);
+            formatMonalText(
+                product.description
+            );
 
         renderVolumeButtons(product);
         updateOrderState();
@@ -660,37 +719,127 @@ function getModalProduct(productType, productKey) {
     document.querySelectorAll(
         '.catalog-card[id^="parfum-"], .catalog-card[id^="diffuser-"], .catalog-card[id^="refill-"]'
     ).forEach(function (card) {
-        card.setAttribute("aria-haspopup", "dialog");
+        card.setAttribute(
+            "aria-haspopup",
+            "dialog"
+        );
+    });
 
-        card.addEventListener("click", function (event) {
-            const parfumMatch = card.id.match(/^parfum-(.+)-(15|100)$/);
-            const diffuserMatch = card.id.match(/^diffuser-(.+)$/);
-            const refillMatch = card.id.match(/^refill-(.+)$/);
+
+    const catalogRoot =
+        document.getElementById(
+            "catalog"
+        );
+
+
+    catalogRoot?.addEventListener(
+        "click",
+        function (event) {
+            const card =
+                event.target.closest(
+                    ".catalog-card"
+                );
+
+            if (
+                !card ||
+                !catalogRoot.contains(card)
+            ) {
+                return;
+            }
 
             let productType = "";
             let productKey = "";
             let initialVolume = "";
 
-            if (parfumMatch) {
-                productType = "parfum";
-                productKey = parfumMatch[1];
-                initialVolume = parfumMatch[2];
-            } else if (diffuserMatch) {
-                productType = "diffuser";
-                productKey = diffuserMatch[1];
-                initialVolume = "200";
-            } else if (refillMatch) {
-                productType = "refill";
-                productKey = refillMatch[1];
-                initialVolume = "275";
+            if (
+                card.dataset
+                    .siteCatalogProduct === "1"
+            ) {
+                productType = "site";
+
+                productKey =
+                    card.dataset
+                        .siteProductKey ||
+                    "";
+
+                initialVolume =
+                    card.dataset
+                        .siteVolume ||
+                    "";
+
+            } else {
+                const parfumMatch =
+                    card.id.match(
+                        /^parfum-(.+)-(15|100)$/
+                    );
+
+                const diffuserMatch =
+                    card.id.match(
+                        /^diffuser-(.+)$/
+                    );
+
+                const refillMatch =
+                    card.id.match(
+                        /^refill-(.+)$/
+                    );
+
+                if (parfumMatch) {
+                    productType =
+                        "parfum";
+
+                    productKey =
+                        parfumMatch[1];
+
+                    initialVolume =
+                        parfumMatch[2];
+
+                } else if (
+                    diffuserMatch
+                ) {
+                    productType =
+                        "diffuser";
+
+                    productKey =
+                        diffuserMatch[1];
+
+                    initialVolume =
+                        "200";
+
+                } else if (
+                    refillMatch
+                ) {
+                    productType =
+                        "refill";
+
+                    productKey =
+                        refillMatch[1];
+
+                    initialVolume =
+                        "275";
+                }
             }
 
-            if (!productType || !getModalProduct(productType, productKey)) return;
+            if (
+                !productType ||
+                !productKey ||
+                !getModalProduct(
+                    productType,
+                    productKey
+                )
+            ) {
+                return;
+            }
 
             event.preventDefault();
-            openModal(productType, productKey, initialVolume, card);
-        });
-    });
+
+            openModal(
+                productType,
+                productKey,
+                initialVolume,
+                card
+            );
+        }
+    );
 
     modal.querySelectorAll("[data-close-parfum-modal]").forEach(function (element) {
         element.addEventListener("click", closeModal);
@@ -1757,7 +1906,8 @@ const SOON_MODAL_PRODUCTS = {
     });
 })();
 
-(function initCatalogQuickBuy() {
+window.initCatalogQuickBuy =
+function initCatalogQuickBuy() {
     const PRODUCT_LIKES_API_URL =
         "https://monal-mono-pay-production.up.railway.app/api/product-likes";
 
@@ -1885,61 +2035,121 @@ const SOON_MODAL_PRODUCTS = {
     }
 
     function getDirectCartItem(card) {
-        const parfumMatch = card.id.match(
-            /^parfum-(.+)-(15|100)$/
-        );
-
-        const diffuserMatch = card.id.match(
-            /^diffuser-(.+)$/
-        );
-
-        const refillMatch = card.id.match(
-            /^refill-(.+)$/
-        );
-
         let productType = "";
         let productKey = "";
         let volume = "";
 
-        if (parfumMatch) {
-            productType = "parfum";
-            productKey = parfumMatch[1];
-            volume = parfumMatch[2];
+        if (
+            card.dataset
+                .siteCatalogProduct === "1"
+        ) {
+            productType = "site";
 
-        } else if (diffuserMatch) {
-            productType = "diffuser";
-            productKey = diffuserMatch[1];
-            volume = "200";
+            productKey =
+                card.dataset
+                    .siteProductKey ||
+                "";
 
-        } else if (refillMatch) {
-            productType = "refill";
-            productKey = refillMatch[1];
-            volume = "275";
-
-        } else if (card.id === "ten-mini-card") {
-            return {
-                name: "TEN MINI",
-                price: 750,
-                label: "Подарунковий набір"
-            };
+            volume =
+                card.dataset
+                    .siteVolume ||
+                "";
 
         } else {
+            const parfumMatch =
+                card.id.match(
+                    /^parfum-(.+)-(15|100)$/
+                );
+
+            const diffuserMatch =
+                card.id.match(
+                    /^diffuser-(.+)$/
+                );
+
+            const refillMatch =
+                card.id.match(
+                    /^refill-(.+)$/
+                );
+
+            if (parfumMatch) {
+                productType =
+                    "parfum";
+
+                productKey =
+                    parfumMatch[1];
+
+                volume =
+                    parfumMatch[2];
+
+            } else if (
+                diffuserMatch
+            ) {
+                productType =
+                    "diffuser";
+
+                productKey =
+                    diffuserMatch[1];
+
+                volume =
+                    "200";
+
+            } else if (
+                refillMatch
+            ) {
+                productType =
+                    "refill";
+
+                productKey =
+                    refillMatch[1];
+
+                volume =
+                    "275";
+
+            } else if (
+                card.id ===
+                "ten-mini-card"
+            ) {
+                return {
+                    name:
+                        "TEN MINI",
+
+                    price:
+                        750,
+
+                    label:
+                        "Подарунковий набір"
+                };
+
+            } else {
+                return null;
+            }
+        }
+
+        const product =
+            getModalProduct(
+                productType,
+                productKey
+            );
+
+        const variant =
+            product?.volumes?.[
+                volume
+            ];
+
+        if (
+            !product ||
+            !variant
+        ) {
             return null;
         }
 
-        const product = getModalProduct(
-            productType,
-            productKey
-        );
-
-        const variant =
-            product?.volumes?.[volume];
-
-        if (!product || !variant) return null;
-
         return {
-            name: variant.cartName,
-            price: variant.price,
+            name:
+                variant.cartName,
+
+            price:
+                variant.price,
+
             label:
                 variant.cartLabel ||
                 product.cartLabel
@@ -2095,7 +2305,9 @@ const SOON_MODAL_PRODUCTS = {
     });
 
     loadLikedProducts(visitorId);
-})();
+};
+
+window.initCatalogQuickBuy();
 
 (function initCatalogScrollControls() {
     const controls = document.querySelector(
@@ -2174,8 +2386,579 @@ const SOON_MODAL_PRODUCTS = {
     });
 })();
 
-(function initAromaCatalogFilter() {
-    const params = new URLSearchParams(window.location.search);
+function escapeCatalogHtml(value) {
+    return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+}
+
+
+function getSiteCatalogTypeLabel(
+    product
+) {
+    const labels = {
+        parfums:
+            "ПАРФУМИ ДЛЯ ІНТЕР’ЄРУ",
+
+        aromadiffusers:
+            "АРОМАДИФУЗОР",
+
+        refills:
+            "РЕФІЛ",
+
+        discovery:
+            "DISCOVERY SET",
+
+        candles:
+            "АРОМАСВІЧКА",
+
+        "gift-sets":
+            "ПОДАРУНКОВИЙ НАБІР",
+
+        certificates:
+            "ПОДАРУНКОВИЙ СЕРТИФІКАТ",
+
+        "car-sachets":
+            "АРОМАСАШЕ ДЛЯ АВТО",
+
+        "wardrobe-sachets":
+            "АРОМАСАШЕ ДЛЯ ГАРДЕРОБУ",
+
+        "hand-soap":
+            "МИЛО ДЛЯ РУК",
+
+        "hand-cream":
+            "КРЕМ ДЛЯ РУК",
+
+        "shower-gel":
+            "ГЕЛЬ ДЛЯ ДУШУ"
+    };
+
+    return (
+        labels[
+            product.category_slug
+        ] ||
+        product.category_display_name ||
+        "ТОВАР"
+    );
+}
+
+
+function getSiteCatalogSectionId(
+    product
+) {
+    if (
+        product.category_slug ===
+        "parfums"
+    ) {
+        return (
+            `parfums-${Number(
+                product.volume_value || 0
+            )}`
+        );
+    }
+
+    return product.category_slug;
+}
+
+
+function ensureSiteCatalogSection(
+    product
+) {
+    const sectionId =
+        getSiteCatalogSectionId(
+            product
+        );
+
+    let section =
+        document.getElementById(
+            sectionId
+        );
+
+    if (section) {
+        return section;
+    }
+
+    const soonCard =
+        document.getElementById(
+            product.category_slug
+        );
+
+    const soonSection =
+        soonCard?.closest(
+            ".catalog-section--soon"
+        );
+
+    if (!soonSection) {
+        console.warn(
+            "SITE CATALOG SECTION NOT FOUND:",
+            sectionId
+        );
+
+        return null;
+    }
+
+    section =
+        document.createElement(
+            "section"
+        );
+
+    section.className =
+        "catalog-section";
+
+    section.id =
+        sectionId;
+
+    const titleId =
+        `${sectionId}-title`;
+
+    section.setAttribute(
+        "aria-labelledby",
+        titleId
+    );
+
+    section.innerHTML = `
+        <h2 id="${escapeCatalogHtml(titleId)}">
+            ${escapeCatalogHtml(
+                String(
+                    product.category_display_name ||
+                    product.category_slug
+                ).toLocaleUpperCase("uk-UA")
+            )}
+        </h2>
+
+        <div class="catalog-grid"></div>
+    `;
+
+    soonSection.parentNode
+        .insertBefore(
+            section,
+            soonSection
+        );
+
+    soonCard.remove();
+
+    if (
+        !soonSection.querySelector(
+            ".catalog-card--soon"
+        )
+    ) {
+        soonSection.hidden = true;
+    }
+
+    return section;
+}
+
+
+function createSiteCatalogModalProduct(
+    product
+) {
+    const typeLabel =
+        getSiteCatalogTypeLabel(
+            product
+        );
+
+    const images =
+        Array.isArray(
+            product.images
+        )
+            ? product.images
+                .map(image =>
+                    String(
+                        image.image_url ||
+                        ""
+                    ).trim()
+                )
+                .filter(Boolean)
+            : [];
+
+    const volumeKey =
+        product.volume_value !== null &&
+        product.volume_value !== undefined
+            ? String(
+                product.volume_value
+            )
+            : "1";
+
+    const buttonLabel =
+        product.volume_label ||
+        (
+            product.volume_unit
+                ? `${volumeKey} ${String(
+                    product.volume_unit
+                ).toLocaleUpperCase(
+                    "uk-UA"
+                )}`
+                : "1 ШТ"
+        );
+
+    const notes =
+        Array.isArray(
+            product.notes
+        )
+            ? product.notes
+            : [];
+
+    SITE_CATALOG_MODAL_PRODUCTS[
+        product.product_key
+    ] = {
+        name:
+            product.display_name,
+
+        typeLabel,
+
+        cartLabel:
+            typeLabel,
+
+        aromaSlug:
+            product.aroma_slug || "",
+
+        hasAroma:
+            Boolean(
+                product.aroma_id
+            ),
+
+        pyramid: {
+            top:
+                notes.join(" | "),
+
+            heart: "",
+            base: ""
+        },
+
+        description:
+            product.product_description ||
+            product.aroma_description ||
+            "",
+
+        longevity:
+            Number(
+                product.longevity || 0
+            ),
+
+        intensity:
+            Number(
+                product.intensity || 0
+            ),
+
+        galleryImages:
+            images,
+
+        volumes: {
+            [volumeKey]: {
+                price:
+                    Number(
+                        product.price || 0
+                    ),
+
+                image:
+                    images[0] || "",
+
+                cartName:
+                    product.display_name,
+
+                cartLabel:
+                    typeLabel,
+
+                buttonLabel
+            }
+        }
+    };
+
+    return volumeKey;
+}
+
+
+function createSiteCatalogCard(
+    product
+) {
+    const section =
+        ensureSiteCatalogSection(
+            product
+        );
+
+    if (!section) {
+        return;
+    }
+
+    const grid =
+        section.querySelector(
+            ".catalog-grid"
+        );
+
+    if (!grid) {
+        return;
+    }
+
+    if (
+        document.querySelector(
+            `[data-site-product-id="${Number(
+                product.id
+            )}"]`
+        )
+    ) {
+        return;
+    }
+
+    const volumeKey =
+        createSiteCatalogModalProduct(
+            product
+        );
+
+    const typeLabel =
+        getSiteCatalogTypeLabel(
+            product
+        );
+
+    const mainImage =
+        Array.isArray(product.images)
+            ? (
+                product.images.find(
+                    image =>
+                        Number(
+                            image.is_main || 0
+                        ) === 1
+                ) ||
+                product.images[0]
+            )
+            : null;
+
+    if (
+        !mainImage?.image_url
+    ) {
+        return;
+    }
+
+    const cardTypeText =
+        product.badge
+            ? [
+                product.badge,
+                typeLabel,
+                product.volume_label
+            ]
+                .filter(Boolean)
+                .join(" · ")
+            : [
+                typeLabel,
+                product.volume_label
+            ]
+                .filter(Boolean)
+                .join(" ");
+
+    const notesLine =
+        Array.isArray(
+            product.notes
+        )
+            ? product.notes.join(" | ")
+            : "";
+
+    const descriptionLine =
+        notesLine ||
+        product.product_description ||
+        "";
+
+    const card =
+        document.createElement("a");
+
+    card.className =
+        "catalog-card";
+
+    card.id =
+        `site-product-${Number(
+            product.id
+        )}`;
+
+    card.href =
+        `catalog.html#site-product-${Number(
+            product.id
+        )}`;
+
+    card.dataset.siteCatalogProduct =
+        "1";
+
+    card.dataset.siteProductId =
+        String(
+            Number(product.id)
+        );
+
+    card.dataset.siteProductKey =
+        product.product_key;
+
+    card.dataset.siteVolume =
+        volumeKey;
+
+    card.dataset.aromaKey =
+        product.aroma_slug || "";
+
+    card.setAttribute(
+        "aria-haspopup",
+        "dialog"
+    );
+
+    card.setAttribute(
+        "itemprop",
+        "url"
+    );
+
+    card.setAttribute(
+        "itemscope",
+        ""
+    );
+
+    card.setAttribute(
+        "itemtype",
+        "https://schema.org/Product"
+    );
+
+    card.innerHTML = `
+        <div class="catalog-card-image">
+            <img
+                src="${escapeCatalogHtml(
+                    mainImage.image_url
+                )}"
+                alt="${escapeCatalogHtml(
+                    mainImage.alt_text ||
+                    `${typeLabel} Monal ${product.display_name}`
+                )}"
+                loading="lazy"
+                decoding="async"
+                itemprop="image"
+            >
+        </div>
+
+        <div class="catalog-card-copy">
+            <p class="catalog-card-type">
+                ${escapeCatalogHtml(
+                    cardTypeText
+                )}
+            </p>
+
+            <h3 itemprop="name">
+                ${escapeCatalogHtml(
+                    product.display_name
+                )}
+            </h3>
+
+            <div
+                class="catalog-card-offer"
+                itemprop="offers"
+                itemscope
+                itemtype="https://schema.org/Offer"
+            >
+                <meta
+                    itemprop="priceCurrency"
+                    content="UAH"
+                >
+
+                <meta
+                    itemprop="price"
+                    content="${Number(
+                        product.price || 0
+                    )}"
+                >
+
+                <link
+                    itemprop="availability"
+                    href="https://schema.org/InStock"
+                >
+
+                <span>
+                    ${new Intl.NumberFormat(
+                        "uk-UA"
+                    ).format(
+                        Number(
+                            product.price || 0
+                        )
+                    )} ₴
+                </span>
+            </div>
+
+            <p itemprop="description">
+                ${escapeCatalogHtml(
+                    descriptionLine
+                )}
+            </p>
+
+            <meta
+                itemprop="brand"
+                content="Monal"
+            >
+
+            <meta
+                itemprop="sku"
+                content="${escapeCatalogHtml(
+                    product.product_key
+                )}"
+            >
+        </div>
+    `;
+
+    grid.appendChild(card);
+}
+
+
+window.SITE_CATALOG_READY =
+    (async function loadPublishedSiteCatalogProducts() {
+        try {
+            const response =
+                await fetch(
+                    "https://monal-mono-pay-production.up.railway.app/api/site-catalog/published"
+                );
+
+            const data =
+                await response.json();
+
+            if (
+                !response.ok ||
+                !data.ok
+            ) {
+                throw new Error(
+                    data.error ||
+                    "Не вдалося завантажити каталог"
+                );
+            }
+
+            const products =
+                Array.isArray(
+                    data.products
+                )
+                    ? data.products
+                    : [];
+
+            products.forEach(
+                createSiteCatalogCard
+            );
+
+            if (
+                typeof window
+                    .initCatalogQuickBuy ===
+                "function"
+            ) {
+                window
+                    .initCatalogQuickBuy();
+            }
+
+        } catch (error) {
+            console.error(
+                "LOAD SITE CATALOG PRODUCTS ERROR:",
+                error
+            );
+        }
+    })();
+
+(async function initAromaCatalogFilter() {
+    await (
+        window.SITE_CATALOG_READY ||
+        Promise.resolve()
+    );
+
+    const params =
+        new URLSearchParams(
+            window.location.search
+        );
 
     const aromaKey = String(params.get("aroma") || "")
         .trim()
@@ -2200,7 +2983,30 @@ const SOON_MODAL_PRODUCTS = {
         "bois-noir"
     ]);
 
-    if (!allowedAromas.has(aromaKey)) return;
+    Object.values(
+        SITE_CATALOG_MODAL_PRODUCTS
+    ).forEach(function (product) {
+        const dynamicAromaKey =
+            String(
+                product.aromaSlug || ""
+            )
+                .trim()
+                .toLowerCase();
+
+        if (dynamicAromaKey) {
+            allowedAromas.add(
+                dynamicAromaKey
+            );
+        }
+    });
+
+    if (
+        !allowedAromas.has(
+            aromaKey
+        )
+    ) {
+        return;
+    }
 
     const catalog = document.getElementById("catalog");
     const catalogIntro = catalog?.querySelector(".catalog-intro");
@@ -2211,7 +3017,22 @@ const SOON_MODAL_PRODUCTS = {
     if (!catalog || !catalogIntro || !sections.length) return;
 
     function getCardAromaKey(card) {
-        const id = String(card.id || "").toLowerCase();
+        const dynamicAromaKey =
+            String(
+                card.dataset.aromaKey ||
+                ""
+            )
+                .trim()
+                .toLowerCase();
+
+        if (dynamicAromaKey) {
+            return dynamicAromaKey;
+        }
+
+        const id =
+            String(
+                card.id || ""
+            ).toLowerCase();
 
         const parfumMatch = id.match(
             /^parfum-(.+)-(15|100)$/
@@ -2277,17 +3098,48 @@ const SOON_MODAL_PRODUCTS = {
         aromaSection
     );
 
-    const aroma =
-        typeof PARFUM_MODAL_PRODUCTS !== "undefined"
-            ? PARFUM_MODAL_PRODUCTS[aromaKey]
+    const staticAroma =
+        typeof PARFUM_MODAL_PRODUCTS !==
+        "undefined"
+            ? PARFUM_MODAL_PRODUCTS[
+                aromaKey
+            ]
             : null;
 
-    if (aroma) {
-        const title = catalogIntro.querySelector("h1");
-        const description = catalogIntro.querySelector("p");
+    const dynamicAroma =
+        Object.values(
+            SITE_CATALOG_MODAL_PRODUCTS
+        ).find(function (product) {
+            return (
+                String(
+                    product.aromaSlug ||
+                    ""
+                )
+                    .trim()
+                    .toLowerCase() ===
+                aromaKey
+            );
+        }) || null;
+
+    const aromaName =
+        staticAroma?.name ||
+        dynamicAroma?.name ||
+        "";
+
+    if (aromaName) {
+        const title =
+            catalogIntro.querySelector(
+                "h1"
+            );
+
+        const description =
+            catalogIntro.querySelector(
+                "p"
+            );
 
         if (title) {
-            title.textContent = aroma.name;
+            title.textContent =
+                aromaName;
         }
 
         if (description) {

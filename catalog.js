@@ -9,6 +9,8 @@ function formatMonalText(value) {
 
 const SITE_CATALOG_MODAL_PRODUCTS = {};
 
+const STATIC_CATALOG_OVERRIDES_BY_CARD_ID = {};
+
 const PARFUM_MODAL_PRODUCTS = {
     "fairytale": {
         name: "FAIRYTALE",
@@ -424,6 +426,141 @@ function getModalProduct(productType, productKey) {
     return null;
 }
 
+function getStaticCatalogModalProduct(
+    baseProduct,
+    productType,
+    initialVolume,
+    card
+) {
+    if (
+        !baseProduct ||
+        !card?.id
+    ) {
+        return baseProduct;
+    }
+
+    const override =
+        STATIC_CATALOG_OVERRIDES_BY_CARD_ID[
+            card.id
+        ];
+
+    if (!override) {
+        return baseProduct;
+    }
+
+    const volume =
+        baseProduct.volumes?.[
+            initialVolume
+        ]
+            ? initialVolume
+            : Object.keys(
+                baseProduct.volumes ||
+                {}
+            )[0];
+
+    if (
+        !volume ||
+        !baseProduct.volumes?.[
+            volume
+        ]
+    ) {
+        return baseProduct;
+    }
+
+    const currentVariant =
+        baseProduct.volumes[
+            volume
+        ];
+
+    const overrideName =
+        String(
+            override.display_name ||
+            ""
+        ).trim();
+
+    const overrideDescription =
+        String(
+            override.product_description ||
+            ""
+        ).trim();
+
+    const overridePrice =
+        Number(
+            override.price || 0
+        );
+
+    const overrideImages =
+        Array.isArray(
+            override.images
+        )
+            ? override.images
+                .map(image =>
+                    String(
+                        image.image_url ||
+                        ""
+                    ).trim()
+                )
+                .filter(Boolean)
+            : [];
+
+    let cartName =
+        currentVariant.cartName;
+
+    if (overrideName) {
+        if (
+            productType === "parfum" &&
+            String(volume) !== "100"
+        ) {
+            cartName =
+                `${overrideName} ${volume} ml`;
+        } else {
+            cartName =
+                overrideName;
+        }
+    }
+
+    return {
+        ...baseProduct,
+
+        name:
+            overrideName ||
+            baseProduct.name,
+
+        description:
+            overrideDescription ||
+            baseProduct.description,
+
+        staticOverrideVolume:
+            String(volume),
+
+        staticOverrideImages:
+            overrideImages,
+
+        staticOverrideInStock:
+            override.is_in_stock !==
+            false,
+
+        volumes: {
+            ...baseProduct.volumes,
+
+            [volume]: {
+                ...currentVariant,
+
+                price:
+                    overridePrice > 0
+                        ? overridePrice
+                        : currentVariant.price,
+
+                image:
+                    overrideImages[0] ||
+                    currentVariant.image,
+
+                cartName
+            }
+        }
+    };
+}
+
 (function initProductModal() {
     const modal = document.getElementById("parfum-modal");
 
@@ -480,8 +617,28 @@ function getModalProduct(productType, productKey) {
     }
     
     function getCurrentGalleryImages() {
-        if (!currentProduct || !currentProductKey || !currentVolume) {
+        if (
+            !currentProduct ||
+            !currentProductKey ||
+            !currentVolume
+        ) {
             return [];
+        }
+
+        if (
+            currentProduct
+                .staticOverrideVolume ===
+                String(currentVolume) &&
+            Array.isArray(
+                currentProduct
+                    .staticOverrideImages
+            ) &&
+            currentProduct
+                .staticOverrideImages
+                .length
+        ) {
+            return currentProduct
+                .staticOverrideImages;
         }
 
         if (
@@ -492,25 +649,57 @@ function getModalProduct(productType, productKey) {
                 []
             );
         }
-        
-        if (currentProductType === "parfum") {
-            if (currentVolume === "3") {
-                return discoveryGalleries[currentProductKey] || [];
+
+        if (
+            currentProductType === "parfum"
+        ) {
+            if (
+                currentVolume === "3"
+            ) {
+                return (
+                    discoveryGalleries[
+                        currentProductKey
+                    ] || []
+                );
             }
 
-            if (currentVolume === "15") {
-                return parfumsGalleries[`${currentProductKey}-15`] || [];
+            if (
+                currentVolume === "15"
+            ) {
+                return (
+                    parfumsGalleries[
+                        `${currentProductKey}-15`
+                    ] || []
+                );
             }
 
-            return parfumsGalleries[currentProductKey] || [];
+            return (
+                parfumsGalleries[
+                    currentProductKey
+                ] || []
+            );
         }
 
-        if (currentProductType === "diffuser") {
-            return aromadiffusersGalleries[currentProductKey] || [];
+        if (
+            currentProductType ===
+            "diffuser"
+        ) {
+            return (
+                aromadiffusersGalleries[
+                    currentProductKey
+                ] || []
+            );
         }
 
-        if (currentProductType === "refill") {
-            return refillsGalleries[currentProductKey] || [];
+        if (
+            currentProductType ===
+            "refill"
+        ) {
+            return (
+                refillsGalleries[
+                    currentProductKey
+                ] || []
+            );
         }
 
         return [];
@@ -570,7 +759,15 @@ function getModalProduct(productType, productKey) {
             ];
 
         const isInStock =
-            currentProduct.isInStock !== false;
+            currentProduct
+                .staticOverrideVolume ===
+                String(currentVolume)
+                ? currentProduct
+                    .staticOverrideInStock !==
+                    false
+                : currentProduct
+                    .isInStock !==
+                    false;
 
         updateGallery();
 
@@ -677,7 +874,19 @@ function getModalProduct(productType, productKey) {
     }
 
     function openModal(productType, productKey, initialVolume, card) {
-        const product = getModalProduct(productType, productKey);
+        const baseProduct =
+            getModalProduct(
+                productType,
+                productKey
+            );
+
+        const product =
+            getStaticCatalogModalProduct(
+                baseProduct,
+                productType,
+                initialVolume,
+                card
+            );
 
         if (!product) return;
 
@@ -2188,12 +2397,48 @@ function initCatalogQuickBuy() {
             return null;
         }
 
+        const staticOverride =
+            STATIC_CATALOG_OVERRIDES_BY_CARD_ID[
+                card.id
+            ] || null;
+
+        const overrideName =
+            String(
+                staticOverride
+                    ?.display_name ||
+                ""
+            ).trim();
+
+        const overridePrice =
+            Number(
+                staticOverride?.price ||
+                0
+            );
+
+        let cartName =
+            variant.cartName;
+
+        if (overrideName) {
+            if (
+                productType === "parfum" &&
+                String(volume) !== "100"
+            ) {
+                cartName =
+                    `${overrideName} ${volume} ml`;
+            } else {
+                cartName =
+                    overrideName;
+            }
+        }
+
         return {
             name:
-                variant.cartName,
+                cartName,
 
             price:
-                variant.price,
+                overridePrice > 0
+                    ? overridePrice
+                    : variant.price,
 
             label:
                 variant.cartLabel ||
@@ -2205,7 +2450,13 @@ function initCatalogQuickBuy() {
         getProductLikeVisitorId();
 
     cards.forEach(function (card) {
-        if (card.closest(".catalog-card-wrap")) {
+        if (
+            card.dataset
+                .catalogHidden === "1" ||
+            card.closest(
+                ".catalog-card-wrap"
+            )
+        ) {
             return;
         }
 
@@ -2258,8 +2509,6 @@ function initCatalogQuickBuy() {
         buyButton.textContent = "КУПИТИ";
 
         const isOutOfStock =
-            card.dataset
-                .siteCatalogProduct === "1" &&
             card.dataset
                 .inStock === "0";
 
@@ -2374,7 +2623,7 @@ function initCatalogQuickBuy() {
     loadLikedProducts(visitorId);
 };
 
-window.initCatalogQuickBuy();
+/* Quick Buy запускається після завантаження каталогу та static overrides. */
 
 (function initCatalogScrollControls() {
     const controls = document.querySelector(
@@ -2995,13 +3244,316 @@ function createSiteCatalogCard(
     grid.appendChild(card);
 }
 
+function applyStaticCatalogOverrideToCard(
+    override
+) {
+    const cardId =
+        String(
+            override?.static_card_id ||
+            ""
+        ).trim();
+
+    if (!cardId) {
+        return;
+    }
+
+    STATIC_CATALOG_OVERRIDES_BY_CARD_ID[
+        cardId
+    ] = override;
+
+    const card =
+        document.getElementById(
+            cardId
+        );
+
+    if (!card) {
+        return;
+    }
+
+    const visibilityStatus =
+        String(
+            override.visibility_status ||
+            "inherit"
+        )
+            .trim()
+            .toLowerCase();
+
+    const isHidden =
+        visibilityStatus === "hidden";
+
+    card.dataset.catalogHidden =
+        isHidden
+            ? "1"
+            : "0";
+
+    card.hidden =
+        isHidden;
+
+    if (isHidden) {
+        return;
+    }
+
+    const isInStock =
+        override.is_in_stock !== false;
+
+    card.dataset.inStock =
+        isInStock
+            ? "1"
+            : "0";
+
+    card.classList.toggle(
+        "is-out-of-stock",
+        !isInStock
+    );
+
+
+    const title =
+        card.querySelector(
+            "h3"
+        );
+
+    const overrideName =
+        String(
+            override.display_name ||
+            ""
+        ).trim();
+
+    if (
+        title &&
+        overrideName
+    ) {
+        title.textContent =
+            overrideName;
+    }
+
+
+    const description =
+        card.querySelector(
+            '[itemprop="description"]'
+        );
+
+    const overrideDescription =
+        String(
+            override.product_description ||
+            ""
+        ).trim();
+
+    if (
+        description &&
+        overrideDescription
+    ) {
+        description.textContent =
+            overrideDescription;
+    }
+
+
+    const price =
+        Number(
+            override.price || 0
+        );
+
+    if (
+        Number.isFinite(price) &&
+        price > 0
+    ) {
+        const priceMeta =
+            card.querySelector(
+                '[itemprop="price"]'
+            );
+
+        const priceText =
+            card.querySelector(
+                ".catalog-card-offer span"
+            );
+
+        if (priceMeta) {
+            priceMeta.setAttribute(
+                "content",
+                String(price)
+            );
+        }
+
+        if (priceText) {
+            priceText.textContent =
+                `${new Intl.NumberFormat(
+                    "uk-UA"
+                ).format(price)} ₴`;
+        }
+    }
+
+
+    const availability =
+        card.querySelector(
+            '[itemprop="availability"]'
+        );
+
+    if (availability) {
+        availability.setAttribute(
+            "href",
+            isInStock
+                ? "https://schema.org/InStock"
+                : "https://schema.org/OutOfStock"
+        );
+    }
+
+
+    let stockStatus =
+        card.querySelector(
+            ".catalog-card-stock-status"
+        );
+
+    if (!isInStock) {
+        if (!stockStatus) {
+            stockStatus =
+                document.createElement(
+                    "div"
+                );
+
+            stockStatus.className =
+                "catalog-card-stock-status";
+
+            stockStatus.textContent =
+                "НЕМА В НАЯВНОСТІ";
+
+            card
+                .querySelector(
+                    ".catalog-card-copy"
+                )
+                ?.appendChild(
+                    stockStatus
+                );
+        }
+    } else if (stockStatus) {
+        stockStatus.remove();
+    }
+
+
+    const typeElement =
+        card.querySelector(
+            ".catalog-card-type"
+        );
+
+    if (typeElement) {
+        if (
+            !typeElement.dataset
+                .staticBaseType
+        ) {
+            typeElement.dataset
+                .staticBaseType =
+                typeElement.textContent
+                    .trim();
+        }
+
+        const badge =
+            String(
+                override.badge ||
+                ""
+            ).trim();
+
+        typeElement.textContent =
+            badge
+                ? `${badge} · ${typeElement.dataset.staticBaseType}`
+                : typeElement.dataset
+                    .staticBaseType;
+    }
+
+
+    const images =
+        Array.isArray(
+            override.images
+        )
+            ? override.images
+            : [];
+
+    const mainImage =
+        images.find(
+            image =>
+                Number(
+                    image.is_main ||
+                    0
+                ) === 1
+        ) ||
+        images[0] ||
+        null;
+
+    if (
+        mainImage?.image_url
+    ) {
+        const image =
+            card.querySelector(
+                ".catalog-card-image img"
+            );
+
+        if (image) {
+            image.src =
+                mainImage.image_url;
+
+            if (
+                mainImage.alt_text
+            ) {
+                image.alt =
+                    mainImage.alt_text;
+            }
+        }
+    }
+}
+
+
+async function loadStaticCatalogOverrides() {
+    try {
+        const response =
+            await fetch(
+                "https://monal-mono-pay-production.up.railway.app/api/site-catalog/static-overrides",
+                {
+                    cache:
+                        "no-store"
+                }
+            );
+
+        const data =
+            await response.json();
+
+        if (
+            !response.ok ||
+            !data.ok
+        ) {
+            throw new Error(
+                data.error ||
+                "Не вдалося завантажити static overrides"
+            );
+        }
+
+        const overrides =
+            Array.isArray(
+                data.overrides
+            )
+                ? data.overrides
+                : [];
+
+        overrides.forEach(
+            applyStaticCatalogOverrideToCard
+        );
+
+    } catch (error) {
+        console.error(
+            "LOAD STATIC CATALOG OVERRIDES ERROR:",
+            error
+        );
+    }
+}
 
 window.SITE_CATALOG_READY =
     (async function loadPublishedSiteCatalogProducts() {
+        await loadStaticCatalogOverrides();
+
         try {
             const response =
                 await fetch(
-                    "https://monal-mono-pay-production.up.railway.app/api/site-catalog/published"
+                    "https://monal-mono-pay-production.up.railway.app/api/site-catalog/published",
+                    {
+                        cache:
+                            "no-store"
+                    }
                 );
 
             const data =
@@ -3028,22 +3580,23 @@ window.SITE_CATALOG_READY =
                 createSiteCatalogCard
             );
 
-            if (
-                typeof window
-                    .initCatalogQuickBuy ===
-                "function"
-            ) {
-                window
-                    .initCatalogQuickBuy();
-            }
-
         } catch (error) {
             console.error(
                 "LOAD SITE CATALOG PRODUCTS ERROR:",
                 error
             );
         }
+
+        if (
+            typeof window
+                .initCatalogQuickBuy ===
+            "function"
+        ) {
+            window
+                .initCatalogQuickBuy();
+        }
     })();
+
 
 (async function initAromaCatalogFilter() {
     await (

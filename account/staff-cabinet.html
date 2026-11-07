@@ -16907,10 +16907,8 @@ function applySiteCatalogEditAttributes(
     });
 }
 
-
 async function saveSiteCatalogEditProduct(
-    data,
-    status
+    data
 ) {
     const product =
         data?.product ||
@@ -16943,6 +16941,18 @@ async function saveSiteCatalogEditProduct(
     ) {
         return;
     }
+
+    const currentStatus =
+        source === "static"
+            ? (
+                product
+                    .visibility_status ||
+                "inherit"
+            )
+            : (
+                product.status ||
+                "draft"
+            );
 
     const categorySlug =
         String(
@@ -16978,7 +16988,8 @@ async function saveSiteCatalogEditProduct(
         )?.value || "";
 
     if (
-        status === "published" &&
+        currentStatus ===
+            "published" &&
         Number(price) <= 0
     ) {
         resultBox.classList.remove(
@@ -16986,22 +16997,7 @@ async function saveSiteCatalogEditProduct(
         );
 
         resultBox.textContent =
-            "Для публікації вкажіть ціну.";
-
-        return;
-    }
-
-    if (
-        source === "database" &&
-        status === "published" &&
-        !SITE_CATALOG_SELECTED_IMAGES.length
-    ) {
-        resultBox.classList.remove(
-            "staff-hidden"
-        );
-
-        resultBox.textContent =
-            "Для публікації потрібне хоча б одне фото.";
+            "Вкажіть ціну.";
 
         return;
     }
@@ -17019,6 +17015,9 @@ async function saveSiteCatalogEditProduct(
         "staff-hidden"
     );
 
+    resultBox.textContent =
+        "Зберігаємо зміни...";
+
     try {
         const uploadedImages =
             SITE_CATALOG_SELECTED_IMAGES.length
@@ -17026,9 +17025,6 @@ async function saveSiteCatalogEditProduct(
                     displayName
                 )
                 : [];
-
-        resultBox.textContent =
-            "Зберігаємо зміни...";
 
         const volumeValue =
             categoryConfig.showVolume
@@ -17082,7 +17078,42 @@ async function saveSiteCatalogEditProduct(
                 )?.value.trim() ||
                 "",
 
-            status,
+            notesText:
+                source === "static"
+                    ? (
+                        document.getElementById(
+                            "site-catalog-static-notes"
+                        )?.value.trim() ||
+                        ""
+                    )
+                    : "",
+
+            longevity:
+                source === "static"
+                    ? (
+                        Number(
+                            document.getElementById(
+                                "site-catalog-static-longevity"
+                            )?.value ||
+                            0
+                        ) || null
+                    )
+                    : null,
+
+            intensity:
+                source === "static"
+                    ? (
+                        Number(
+                            document.getElementById(
+                                "site-catalog-static-intensity"
+                            )?.value ||
+                            0
+                        ) || null
+                    )
+                    : null,
+
+            status:
+                currentStatus,
 
             images:
                 uploadedImages,
@@ -17125,17 +17156,44 @@ async function saveSiteCatalogEditProduct(
             );
         }
 
-        resultBox.innerHTML = `
-            <strong>
-                Зміни збережено.
-            </strong>
-        `;
-
-        SITE_CATALOG_EDIT_PRODUCT =
+        const refreshedData =
             await loadSiteCatalogEditProductData(
                 source,
                 sourceId
             );
+
+        SITE_CATALOG_EDIT_PRODUCT =
+            refreshedData;
+
+        await renderSiteCatalogEditForm(
+            refreshedData
+        );
+
+        const refreshedResultBox =
+            document.getElementById(
+                "site-catalog-edit-save-result"
+            );
+
+        if (refreshedResultBox) {
+            refreshedResultBox
+                .classList
+                .remove(
+                    "staff-hidden"
+                );
+
+            refreshedResultBox.innerHTML = `
+                <strong>
+                    ${
+                        source ===
+                            "database" &&
+                        currentStatus ===
+                            "draft"
+                            ? "Чернетку збережено."
+                            : "Зміни збережено."
+                    }
+                </strong>
+            `;
+        }
 
     } catch (err) {
         console.error(
@@ -17147,14 +17205,159 @@ async function saveSiteCatalogEditProduct(
             err.message ||
             "Не вдалося зберегти зміни.";
 
-    } finally {
         buttons.forEach(button => {
             button.disabled = false;
         });
     }
 }
 
+async function changeSiteCatalogEditStatus(
+    data,
+    status
+) {
+    const product =
+        data?.product ||
+        {};
 
+    const source =
+        String(
+            data?.source || ""
+        );
+
+    const sourceId =
+        Number(
+            product.id || 0
+        );
+
+    const form =
+        document.getElementById(
+            "site-catalog-edit-product-form"
+        );
+
+    const resultBox =
+        document.getElementById(
+            "site-catalog-edit-save-result"
+        );
+
+    if (
+        !sourceId ||
+        !form ||
+        !resultBox
+    ) {
+        return;
+    }
+
+    const buttons =
+        form.querySelectorAll(
+            "button"
+        );
+
+    buttons.forEach(button => {
+        button.disabled = true;
+    });
+
+    resultBox.classList.remove(
+        "staff-hidden"
+    );
+
+    resultBox.textContent =
+        status === "published"
+            ? "Публікуємо товар..."
+            : "Знімаємо товар з публікації...";
+
+    try {
+        const response =
+            await fetch(
+                "https://monal-mono-pay-production.up.railway.app/api/staff/site-catalog-set-status",
+                {
+                    method:
+                        "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify({
+                            staffId:
+                                staff.id,
+
+                            source,
+
+                            sourceId,
+
+                            status
+                        })
+                }
+            );
+
+        const responseData =
+            await response.json();
+
+        if (
+            !response.ok ||
+            !responseData.ok
+        ) {
+            throw new Error(
+                responseData.error ||
+                "Не вдалося змінити статус."
+            );
+        }
+
+        const refreshedData =
+            await loadSiteCatalogEditProductData(
+                source,
+                sourceId
+            );
+
+        SITE_CATALOG_EDIT_PRODUCT =
+            refreshedData;
+
+        await renderSiteCatalogEditForm(
+            refreshedData
+        );
+
+        const refreshedResultBox =
+            document.getElementById(
+                "site-catalog-edit-save-result"
+            );
+
+        if (refreshedResultBox) {
+            refreshedResultBox
+                .classList
+                .remove(
+                    "staff-hidden"
+                );
+
+            refreshedResultBox.innerHTML = `
+                <strong>
+                    ${
+                        status ===
+                            "published"
+                            ? "Товар опубліковано."
+                            : "Товар знято з публікації."
+                    }
+                </strong>
+            `;
+        }
+
+    } catch (err) {
+        console.error(
+            "CHANGE SITE CATALOG STATUS ERROR:",
+            err
+        );
+
+        resultBox.textContent =
+            err.message ||
+            "Не вдалося змінити статус.";
+
+        buttons.forEach(button => {
+            button.disabled = false;
+        });
+    }
+}
+    
 async function renderSiteCatalogEditForm(
     data
 ) {
@@ -17369,6 +17572,216 @@ async function renderSiteCatalogEditForm(
                     "draft"
                 );
 
+        const isPublished =
+            source === "static"
+                ? currentStatus !==
+                    "hidden"
+                : currentStatus ===
+                    "published";
+
+        const isDraft =
+            source === "database" &&
+            currentStatus ===
+                "draft";
+
+        const currentStatusLabel =
+            isDraft
+                ? "ЧЕРНЕТКА"
+                : isPublished
+                    ? "ОПУБЛІКОВАНИЙ"
+                    : "ЗНЯТИЙ З ПУБЛІКАЦІЇ";
+
+        const saveButtonLabel =
+            isDraft
+                ? "ЗБЕРЕГТИ ЧЕРНЕТКУ"
+                : "ЗБЕРЕГТИ ЗМІНИ";
+
+        const statusButtonHtml =
+            isPublished
+                ? `
+                    <button
+                        id="site-catalog-edit-hide-btn"
+                        class="buy-btn"
+                        type="button"
+                    >
+                        ЗНЯТИ З ПУБЛІКАЦІЇ
+                    </button>
+                `
+                : `
+                    <button
+                        id="site-catalog-edit-publish-btn"
+                        class="buy-btn"
+                        type="button"
+                    >
+                        ОПУБЛІКУВАТИ
+                    </button>
+                `;
+
+        const staticNotesValue =
+            source === "static"
+                ? (
+                    [
+                        product.notes_top,
+                        product.notes_heart,
+                        product.notes_base
+                    ]
+                        .map(value =>
+                            String(
+                                value ||
+                                ""
+                            ).trim()
+                        )
+                        .filter(Boolean)
+                        .join(
+                            " | "
+                        ) ||
+                    (
+                        Array.isArray(
+                            data.aromaNotes
+                        )
+                            ? data
+                                .aromaNotes
+                                .join(
+                                    " | "
+                                )
+                            : ""
+                    )
+                )
+                : "";
+
+        const longevityValue =
+            Number(
+                product.longevity ||
+                0
+            );
+
+        const intensityValue =
+            Number(
+                product.intensity ||
+                0
+            );
+
+        const ratingValues =
+            [
+                1,
+                2,
+                3,
+                4,
+                5
+            ];
+
+        const longevityOptions =
+            ratingValues
+                .map(value => `
+                    <option
+                        value="${value}"
+                        ${
+                            longevityValue ===
+                            value
+                                ? "selected"
+                                : ""
+                        }
+                    >
+                        ${value} / 5
+                    </option>
+                `)
+                .join("");
+
+        const intensityOptions =
+            ratingValues
+                .map(value => `
+                    <option
+                        value="${value}"
+                        ${
+                            intensityValue ===
+                            value
+                                ? "selected"
+                                : ""
+                        }
+                    >
+                        ${value} / 5
+                    </option>
+                `)
+                .join("");
+
+        const staticAromaDetailsHtml =
+            source === "static"
+                ? `
+                    <div
+                        class="site-catalog-form-card"
+                    >
+                        <div
+                            class="site-catalog-form-heading"
+                        >
+                            <h4>
+                                Ароматичні характеристики
+                            </h4>
+                        </div>
+
+                        <label
+                            class="site-catalog-field"
+                        >
+                            <span>
+                                Ноти аромату
+                            </span>
+
+                            <input
+                                id="site-catalog-static-notes"
+                                type="text"
+                                value="${escapeSiteCatalogHtml(
+                                    staticNotesValue
+                                )}"
+                                placeholder="Наприклад: коньяк | кориця | амбра | ваніль"
+                            >
+
+                            <small>
+                                Ноти розділяй символом |
+                            </small>
+                        </label>
+
+                        <div
+                            class="site-catalog-form-grid"
+                        >
+                            <label
+                                class="site-catalog-field"
+                            >
+                                <span>
+                                    Стійкість
+                                </span>
+
+                                <select
+                                    id="site-catalog-static-longevity"
+                                >
+                                    <option value="">
+                                        Не вказано
+                                    </option>
+
+                                    ${longevityOptions}
+                                </select>
+                            </label>
+
+                            <label
+                                class="site-catalog-field"
+                            >
+                                <span>
+                                    Інтенсивність
+                                </span>
+
+                                <select
+                                    id="site-catalog-static-intensity"
+                                >
+                                    <option value="">
+                                        Не вказано
+                                    </option>
+
+                                    ${intensityOptions}
+                                </select>
+                            </label>
+                        </div>
+                    </div>
+                `
+                : "";
+
         loadSiteCatalogEditImages(
             data
         );
@@ -17434,7 +17847,7 @@ async function renderSiteCatalogEditForm(
                                     "static"
                                         ? `
                                             <small>
-                                                структурне поле
+                                                не змінюється
                                             </small>
                                         `
                                         : ""
@@ -17520,8 +17933,8 @@ async function renderSiteCatalogEditForm(
                                 .product_description
                                 ? `
                                     <p>
-                                        Порожнє поле означає:
-                                        залишити поточний статичний опис без змін.
+                                        Очисти поле, якщо хочеш повернути
+                                        початковий статичний опис.
                                     </p>
                                 `
                                 : ""
@@ -17538,6 +17951,7 @@ async function renderSiteCatalogEditForm(
                     )}</textarea>
                 </div>
 
+                ${staticAromaDetailsHtml}
 
                 ${attributesHtml}
 
@@ -17616,6 +18030,17 @@ async function renderSiteCatalogEditForm(
 
 
                 <div
+                    class="staff-result"
+                >
+                    СТАТУС:
+                    <strong>
+                        ${escapeSiteCatalogHtml(
+                            currentStatusLabel
+                        )}
+                    </strong>
+                </div>
+
+                <div
                     class="site-catalog-actions"
                 >
                     <button
@@ -17623,24 +18048,12 @@ async function renderSiteCatalogEditForm(
                         class="buy-btn"
                         type="button"
                     >
-                        Зберегти зміни
+                        ${escapeSiteCatalogHtml(
+                            saveButtonLabel
+                        )}
                     </button>
 
-                    <button
-                        id="site-catalog-edit-publish-btn"
-                        class="buy-btn"
-                        type="button"
-                    >
-                        Опублікувати
-                    </button>
-
-                    <button
-                        id="site-catalog-edit-hide-btn"
-                        class="buy-btn"
-                        type="button"
-                    >
-                        Зняти з публікації
-                    </button>
+                    ${statusButtonHtml}
                 </div>
 
 
@@ -17682,8 +18095,7 @@ async function renderSiteCatalogEditForm(
                 "click",
                 () => {
                     saveSiteCatalogEditProduct(
-                        data,
-                        currentStatus
+                        data
                     );
                 }
             );
@@ -17695,7 +18107,7 @@ async function renderSiteCatalogEditForm(
             ?.addEventListener(
                 "click",
                 () => {
-                    saveSiteCatalogEditProduct(
+                    changeSiteCatalogEditStatus(
                         data,
                         "published"
                     );
@@ -17709,7 +18121,7 @@ async function renderSiteCatalogEditForm(
             ?.addEventListener(
                 "click",
                 () => {
-                    saveSiteCatalogEditProduct(
+                    changeSiteCatalogEditStatus(
                         data,
                         "hidden"
                     );

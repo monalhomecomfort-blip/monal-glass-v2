@@ -489,6 +489,24 @@ function getStaticCatalogModalProduct(
             override.price || 0
         );
 
+    const overrideNotesText =
+        String(
+            override.notes_top ||
+            ""
+        ).trim();
+
+    const overrideLongevity =
+        Number(
+            override.longevity ||
+            0
+        );
+
+    const overrideIntensity =
+        Number(
+            override.intensity ||
+            0
+        );
+
     const overrideImages =
         Array.isArray(
             override.images
@@ -529,6 +547,32 @@ function getStaticCatalogModalProduct(
         description:
             overrideDescription ||
             baseProduct.description,
+
+        pyramid:
+            overrideNotesText
+                ? {
+                    top:
+                        overrideNotesText,
+
+                    heart:
+                        "",
+
+                    base:
+                        ""
+                }
+                : baseProduct.pyramid,
+
+        longevity:
+            overrideLongevity >= 1 &&
+            overrideLongevity <= 5
+                ? overrideLongevity
+                : baseProduct.longevity,
+
+        intensity:
+            overrideIntensity >= 1 &&
+            overrideIntensity <= 5
+                ? overrideIntensity
+                : baseProduct.intensity,
 
         staticOverrideVolume:
             String(volume),

@@ -18546,6 +18546,16 @@ async function renderSiteCatalogEdit() {
         `;
     }
 }
+
+const SITE_CATALOG_SOON_SECTION_SLUGS =
+    new Set([
+        "candles",
+        "car-sachets",
+        "wardrobe-sachets",
+        "hand-soap",
+        "hand-cream",
+        "shower-gel"
+    ]);
     
 async function renderSiteCatalogAddExisting() {
     if (!siteCatalogWorkspace) return;
@@ -18566,15 +18576,47 @@ async function renderSiteCatalogAddExisting() {
 
         const existingCategories =
             categories.filter(
-                category =>
-                    String(
-                        category.section_type ||
-                        ""
-                    ) === "existing" &&
-                    Number(
-                        category.is_active ||
-                        0
-                    ) === 1
+                category => {
+                    const categorySlug =
+                        String(
+                            category.category_slug ||
+                            ""
+                        )
+                            .trim()
+                            .toLowerCase();
+
+                    const isSoonSection =
+                        SITE_CATALOG_SOON_SECTION_SLUGS
+                            .has(
+                                categorySlug
+                            );
+
+                    const hasPublishedProduct =
+                        Number(
+                            category
+                                .has_published_product ||
+                            0
+                        ) === 1;
+
+                    const isPendingSoonSection =
+                        isSoonSection &&
+                        !hasPublishedProduct;
+
+                    return (
+                        String(
+                            category.section_type ||
+                            ""
+                        )
+                            .trim()
+                            .toLowerCase() ===
+                            "existing" &&
+                        Number(
+                            category.is_active ||
+                            0
+                        ) === 1 &&
+                        !isPendingSoonSection
+                    );
+                }
             );
 
         if (
@@ -18687,18 +18729,52 @@ async function renderSiteCatalogAddSection() {
 
         const newCategories =
             categories.filter(
-                category =>
-                    String(
-                        category.section_type ||
-                        ""
-                    )
-                        .trim()
-                        .toLowerCase() !==
-                        "existing" &&
-                    Number(
-                        category.is_active ||
-                        0
-                    ) === 1
+                category => {
+                    const categorySlug =
+                        String(
+                            category.category_slug ||
+                            ""
+                        )
+                            .trim()
+                            .toLowerCase();
+
+                    const isSoonSection =
+                        SITE_CATALOG_SOON_SECTION_SLUGS
+                            .has(
+                                categorySlug
+                            );
+
+                    const hasPublishedProduct =
+                        Number(
+                            category
+                                .has_published_product ||
+                            0
+                        ) === 1;
+
+                    const isPendingSoonSection =
+                        isSoonSection &&
+                        !hasPublishedProduct;
+
+                    const isNewSection =
+                        String(
+                            category.section_type ||
+                            ""
+                        )
+                            .trim()
+                            .toLowerCase() !==
+                            "existing";
+
+                    return (
+                        Number(
+                            category.is_active ||
+                            0
+                        ) === 1 &&
+                        (
+                            isNewSection ||
+                            isPendingSoonSection
+                        )
+                    );
+                }
             );
 
         if (!newCategories.length) {

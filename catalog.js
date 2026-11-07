@@ -2833,19 +2833,29 @@ function ensureSiteCatalogSection(
             product
         );
 
-    let section =
+    const existingElement =
         document.getElementById(
             sectionId
         );
 
-    if (section) {
-        return section;
+    if (
+        existingElement?.classList
+            .contains(
+                "catalog-section"
+            )
+    ) {
+        return existingElement;
     }
 
     const soonCard =
-        document.getElementById(
-            product.category_slug
-        );
+        existingElement?.classList
+            .contains(
+                "catalog-card--soon"
+            )
+            ? existingElement
+            : document.getElementById(
+                product.category_slug
+            );
 
     const soonSection =
         soonCard?.closest(
@@ -2861,7 +2871,7 @@ function ensureSiteCatalogSection(
         return null;
     }
 
-    section =
+    const section =
         document.createElement(
             "section"
         );

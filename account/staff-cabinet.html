@@ -16273,21 +16273,82 @@ async function saveSiteCatalogProduct(
             );
         }
 
-        resultBox.innerHTML = `
-            <strong>
-                ${
-                    status === "published"
-                        ? "Товар опубліковано."
-                        : "Чернетку збережено."
-                }
-            </strong>
+        const createdProductId =
+            Number(
+                data.product?.id ||
+                0
+            );
+
+        if (!createdProductId) {
+            throw new Error(
+                "Товар створено, але не отримано його ID."
+            );
+        }
+
+        const formBox =
+            document.getElementById(
+                "site-catalog-product-form"
+            );
+
+        if (!formBox) {
+            return;
+        }
+
+        formBox.innerHTML = `
+            <div
+                id="site-catalog-edit-form"
+                class="site-catalog-product-form-wrap"
+            >
+                Завантажуємо створений товар...
+            </div>
         `;
 
-        form.reset();
+        const editData =
+            await loadSiteCatalogEditProductData(
+                "database",
+                createdProductId
+            );
 
-        clearSiteCatalogSelectedImages();
+        SITE_CATALOG_EDIT_PRODUCT =
+            editData;
 
-        renderSiteCatalogSelectedImages();
+        await renderSiteCatalogEditForm(
+            editData
+        );
+
+        const editResultBox =
+            document.getElementById(
+                "site-catalog-edit-save-result"
+            );
+
+        if (editResultBox) {
+            editResultBox
+                .classList
+                .remove(
+                    "staff-hidden"
+                );
+
+            editResultBox.innerHTML = `
+                <strong>
+                    ${
+                        status === "published"
+                            ? "Товар опубліковано. Розділ запущено."
+                            : "Чернетку збережено."
+                    }
+                </strong>
+
+                ${
+                    status === "draft"
+                        ? `
+                            <div style="margin-top:8px;">
+                                Можна продовжити редагування
+                                або опублікувати товар.
+                            </div>
+                        `
+                        : ""
+                }
+            `;
+        }
 
     } catch (err) {
         console.error(

@@ -18667,6 +18667,142 @@ async function renderSiteCatalogAddExisting() {
         `;
     }
 }
+
+async function renderSiteCatalogAddSection() {
+    if (!siteCatalogWorkspace) return;
+
+    siteCatalogWorkspace.innerHTML = `
+        <h3>
+            Додати в новий розділ
+        </h3>
+
+        <div class="staff-result">
+            Завантажуємо нові розділи...
+        </div>
+    `;
+
+    try {
+        const categories =
+            await loadSiteCatalogCategories();
+
+        const newCategories =
+            categories.filter(
+                category =>
+                    String(
+                        category.section_type ||
+                        ""
+                    )
+                        .trim()
+                        .toLowerCase() !==
+                        "existing" &&
+                    Number(
+                        category.is_active ||
+                        0
+                    ) === 1
+            );
+
+        if (!newCategories.length) {
+            siteCatalogWorkspace.innerHTML = `
+                <h3>
+                    Додати в новий розділ
+                </h3>
+
+                <div class="staff-result">
+                    Нових розділів для запуску немає.
+                </div>
+            `;
+
+            return;
+        }
+
+        const options =
+            newCategories
+                .map(category => `
+                    <option
+                        value="${Number(
+                            category.id
+                        )}"
+                    >
+                        ${escapeSiteCatalogHtml(
+                            category.display_name ||
+                            category.category_slug ||
+                            ""
+                        )}
+                    </option>
+                `)
+                .join("");
+
+        siteCatalogWorkspace.innerHTML = `
+            <h3>
+                Додати в новий розділ
+            </h3>
+
+            <p class="staff-hint">
+                Оберіть новий розділ і створіть його перший товар.
+                Після публікації розділ автоматично стане звичайним
+                розділом каталогу.
+            </p>
+
+            <div
+                class="staff-search-row"
+                style="max-width:520px;"
+            >
+                <select
+                    id="site-catalog-new-category"
+                >
+                    <option value="">
+                        Оберіть новий розділ
+                    </option>
+
+                    ${options}
+                </select>
+            </div>
+
+            <div
+                id="site-catalog-product-form"
+                class="site-catalog-product-form-wrap"
+            >
+                Оберіть новий розділ.
+            </div>
+        `;
+
+        const categorySelect =
+            document.getElementById(
+                "site-catalog-new-category"
+            );
+
+        categorySelect?.addEventListener(
+            "change",
+            () => {
+                const categoryId =
+                    Number(
+                        categorySelect.value ||
+                        0
+                    );
+
+                renderSiteCatalogProductForm(
+                    categoryId
+                );
+            }
+        );
+
+    } catch (err) {
+        console.error(
+            "RENDER SITE CATALOG ADD SECTION ERROR:",
+            err
+        );
+
+        siteCatalogWorkspace.innerHTML = `
+            <h3>
+                Додати в новий розділ
+            </h3>
+
+            <div class="staff-result">
+                Не вдалося завантажити нові розділи каталогу.
+            </div>
+        `;
+    }
+}
     
 function setSiteCatalogMode(mode) {
     if (!siteCatalogWorkspace) return;
@@ -18682,14 +18818,7 @@ function setSiteCatalogMode(mode) {
     }
 
     if (mode === "add-section") {
-        siteCatalogWorkspace.innerHTML = `
-            <h3>Додати в новий розділ</h3>
-            <p>
-                Тут буде створення нового розділу каталогу
-                та додавання першого товару.
-            </p>
-        `;
-
+        renderSiteCatalogAddSection();
         return;
     }
 

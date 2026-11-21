@@ -11,6 +11,7 @@ const isRefills = document.body.classList.contains('page-refills');
 const isDiscovery = document.body.classList.contains('page-discovery');
 const isGifts = document.body.classList.contains('page-gifts');
 const isAromadiffusers = document.body.classList.contains('page-aromadiffusers');
+const isCertificates = Boolean(document.querySelector('.certificate-gallery'));
 
 /* ===================== PARFUMS ===================== */
 const parfumsGalleries = {
@@ -366,6 +367,17 @@ const aromadiffusersGalleries = {
   ]
 };
 
+/* ===================== CERTIFICATES ===================== */
+const certificatesGalleries = {
+  "certificates": [
+    "images/2500.webp",
+    "images/3500.webp",
+    "images/5000.webp",
+    "images/1000.webp",
+    "images/короб.webp",
+    "images/короб2.webp"
+  ]
+};
 /* ===================== HELPERS ===================== */
 function initGalleries(selector, galleriesMap) {
   document.querySelectorAll(selector).forEach(gallery => {
@@ -452,4 +464,9 @@ if (isGifts) {
 if (isAromadiffusers) {
   initGalleries(".aromadiffuser-gallery", aromadiffusersGalleries);
   initSwipe(".aromadiffuser-gallery", aromadiffusersGalleries);
+}
+
+if (isCertificates) {
+  initGalleries(".certificate-gallery", certificatesGalleries);
+  initSwipe(".certificate-gallery", certificatesGalleries);
 }

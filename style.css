@@ -6596,3 +6596,94 @@ html body.catalog-page .home-nav-right,
 html body.site-page .home-nav-right {
     gap: 20px;
 }
+
+/* ===================== CERTIFICATES INLINE GALLERY ===================== */
+
+.certificate-gallery {
+    position: relative;
+    width: 100%;
+    max-width: 520px;
+    margin: 0 auto;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.certificate-gallery .product-diffuser {
+    display: block;
+    width: 100%;
+    max-height: 520px;
+    object-fit: contain;
+
+    background: none;
+    box-shadow: none;
+    border-radius: 0;
+    pointer-events: none;
+}
+
+.certificate-gallery .gallery-prev,
+.certificate-gallery .gallery-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+
+    background: none;
+    border: none;
+    padding: 0;
+
+    font-family: 'Montserrat', sans-serif;
+    font-size: 36px;
+    font-weight: 300;
+    line-height: 1;
+
+    color: rgba(0, 0, 0, 0.45);
+    cursor: pointer;
+    z-index: 2;
+    user-select: none;
+}
+
+.certificate-gallery .gallery-prev {
+    left: -10px;
+}
+
+.certificate-gallery .gallery-next {
+    right: -10px;
+}
+
+.certificate-gallery .gallery-prev:hover,
+.certificate-gallery .gallery-next:hover {
+    color: rgba(0, 0, 0, 0.75);
+}
+
+/* ===================== CERTIFICATES GALLERY — MOBILE ===================== */
+
+@media (max-width: 600px) {
+    .certificate-gallery {
+        max-width: 100%;
+        padding: 0 32px;
+    }
+
+    .certificate-gallery .product-diffuser {
+        max-height: 360px;
+    }
+
+    .certificate-gallery .gallery-prev,
+    .certificate-gallery .gallery-next {
+        font-size: 30px;
+        color: rgba(0, 0, 0, 0.6);
+    }
+
+    .certificate-gallery .gallery-prev {
+        left: 8px;
+    }
+
+    .certificate-gallery .gallery-next {
+        right: 8px;
+    }
+
+    .certificate-gallery .gallery-prev:active,
+    .certificate-gallery .gallery-next:active {
+        color: rgba(0, 0, 0, 0.85);
+    }
+}

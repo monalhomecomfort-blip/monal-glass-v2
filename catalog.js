@@ -1595,6 +1595,59 @@ const DISCOVERY_MODAL_SUBTITLES = {
     let selectedCertificateType = null;
     let selectedNominal = null;
 
+    /* ===================== CERTIFICATE GALLERY ===================== */
+
+    const certificateGallery = modal.querySelector(".certificate-modal-gallery");
+    const certificateImage = certificateGallery?.querySelector("img");
+    const certificatePrev = certificateGallery?.querySelector(".product-modal-gallery-prev");
+    const certificateNext = certificateGallery?.querySelector(".product-modal-gallery-next");
+
+    const certificateImages = [
+        "images/2500.webp",
+        "images/3500.webp",
+        "images/5000.webp",
+        "images/1000.webp",
+        "images/короб.webp",
+        "images/короб2.webp"
+    ];
+
+    let certificateImageIndex = 0;
+    let certificateTouchStartX = 0;
+
+    function showCertificateImage(index) {
+        if (!certificateImage) return;
+
+        certificateImageIndex =
+            (index + certificateImages.length) % certificateImages.length;
+
+        certificateImage.src = certificateImages[certificateImageIndex];
+    }
+
+    certificatePrev?.addEventListener("click", function () {
+        showCertificateImage(certificateImageIndex - 1);
+    });
+
+    certificateNext?.addEventListener("click", function () {
+        showCertificateImage(certificateImageIndex + 1);
+    });
+
+    certificateGallery?.addEventListener("touchstart", function (event) {
+        certificateTouchStartX = event.touches[0].clientX;
+    }, { passive: true });
+
+    certificateGallery?.addEventListener("touchend", function (event) {
+        const touchEndX = event.changedTouches[0].clientX;
+        const difference = certificateTouchStartX - touchEndX;
+
+        if (Math.abs(difference) < 40) return;
+
+        if (difference > 0) {
+            showCertificateImage(certificateImageIndex + 1);
+        } else {
+            showCertificateImage(certificateImageIndex - 1);
+        }
+    }, { passive: true });
+
     function formatPrice(value) {
         return new Intl.NumberFormat("uk-UA").format(value) + " ₴";
     }
@@ -1736,6 +1789,7 @@ const DISCOVERY_MODAL_SUBTITLES = {
 
     function openModal() {
         resetCertificateState();
+        showCertificateImage(0);
 
         recipientModal.hidden = true;
         modal.hidden = false;

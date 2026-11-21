@@ -172,10 +172,18 @@
     <div class="product-row">
 
         <!-- MEDIA -->
-        <div class="product-media micro-animate">
-            <div class="product-bg"
-                 style="background-image: url('images/сертифікат_фон_.jpg');">
-            </div>            
+        <div class="product-media">
+            <div class="certificate-gallery" data-gallery="certificates">
+                <button class="gallery-prev" type="button" aria-label="Попереднє фото">‹</button>
+
+                <img
+                    class="product-diffuser"
+                    src="images/2500.webp"
+                    alt="Подарунковий сертифікат Mōnal"
+                >
+
+                <button class="gallery-next" type="button" aria-label="Наступне фото">›</button>
+            </div>
         </div>
 
         <!-- TEXT -->
@@ -673,6 +681,7 @@ window.addEventListener("resize", function () {
 });
 </script>
 
+<script src="parfums-gallery.js"></script>    
 <script src="cookie-consent.js"></script>    
 </body>
 </html>

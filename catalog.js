@@ -866,16 +866,32 @@ function getStaticCatalogModalProduct(
     function renderVolumeButtons(product) {
         modalVolumes.innerHTML = "";
 
+        modalVolumes.style.display =
+            product.hideVolumeSelector
+                ? "none"
+                : "";
+
+        if (product.hideVolumeSelector) {
+            return;
+        }
+
         Object.keys(product.volumes)
-            .sort(function (a, b) { return Number(a) - Number(b); })
+            .sort(function (a, b) {
+                return Number(a) - Number(b);
+            })
             .forEach(function (volume) {
                 const button = document.createElement("button");
+
                 button.type = "button";
                 button.dataset.volume = volume;
-                button.textContent = product.volumes[volume].buttonLabel || volume + " ML";
+                button.textContent =
+                    product.volumes[volume].buttonLabel ||
+                    volume + " ML";
+
                 button.addEventListener("click", function () {
                     selectVolume(volume);
                 });
+
                 modalVolumes.appendChild(button);
             });
     }
@@ -1162,7 +1178,14 @@ function getStaticCatalogModalProduct(
             window.addToCart(
                 selectedVariant.cartName,
                 selectedVariant.price,
-                selectedVariant.cartLabel || currentProduct.cartLabel
+                selectedVariant.cartLabel || currentProduct.cartLabel,
+                null,
+                {
+                    image:
+                        currentGalleryImages[0] ||
+                        selectedVariant.image ||
+                        ""
+                }
             );
         }
 
@@ -2033,10 +2056,24 @@ const DISCOVERY_MODAL_SUBTITLES = {
     const priceElement = document.getElementById("ten-mini-price");
     const buyButton = document.getElementById("ten-mini-buy");
 
-    const unitPrice = 750;
-    const images = typeof giftsGalleries !== "undefined" && giftsGalleries["ten-mini"]
-        ? giftsGalleries["ten-mini"]
-        : ["images/gifts/ten mini_4 (1).png"];
+    let unitPrice = 750;
+
+    const defaultImages =
+        typeof giftsGalleries !== "undefined" &&
+        giftsGalleries["ten-mini"]
+            ? giftsGalleries["ten-mini"]
+            : ["images/gifts/ten mini_4 (1).png"];
+
+    let images = [...defaultImages];
+
+    const titleElement =
+        modal.querySelector("#ten-mini-modal-title strong");
+
+    const descriptionElement =
+        modal.querySelector(".ten-mini-modal-copy");
+
+    const originalDescriptionHtml =
+        descriptionElement?.innerHTML || "";
 
     let currentImageIndex = 0;
     let currentQuantity = 1;
@@ -2068,6 +2105,44 @@ const DISCOVERY_MODAL_SUBTITLES = {
     }
 
     function openModal() {
+        const override =
+            STATIC_CATALOG_OVERRIDES_BY_CARD_ID["ten-mini-card"];
+
+        unitPrice =
+            Number(override?.price || 0) > 0
+                ? Number(override.price)
+                : 750;
+
+        const overrideImages =
+            Array.isArray(override?.images)
+                ? override.images
+                    .map(image => image.image_url)
+                    .filter(Boolean)
+                : [];
+
+        images = overrideImages.length
+            ? overrideImages
+            : [...defaultImages];
+
+        if (titleElement) {
+            titleElement.textContent =
+                override?.display_name || "TEN MINI";
+        }
+
+        if (descriptionElement) {
+            const description =
+                String(
+                    override?.product_description || ""
+                ).trim();
+
+            descriptionElement.textContent = description;
+
+            if (!description) {
+                descriptionElement.innerHTML =
+                    originalDescriptionHtml;
+            }
+        }
+
         currentImageIndex = 0;
         currentQuantity = 1;
         updateGallery();
@@ -2113,7 +2188,18 @@ const DISCOVERY_MODAL_SUBTITLES = {
         if (typeof window.addToCart !== "function") return;
 
         for (let index = 0; index < currentQuantity; index += 1) {
-            window.addToCart("TEN MINI", unitPrice, "Подарунковий набір");
+            window.addToCart(
+                titleElement?.textContent || "TEN MINI",
+                unitPrice,
+                "Подарунковий набір",
+                null,
+                {
+                    image:
+                        modalCard.querySelector(
+                            ".catalog-card-image img"
+                        )?.getAttribute("src") || ""
+                }
+            );
         }
 
         closeModal();
@@ -2461,12 +2547,20 @@ function initCatalogQuickBuy() {
                 card.id ===
                 "ten-mini-card"
             ) {
+                const tenMiniOverride =
+                    STATIC_CATALOG_OVERRIDES_BY_CARD_ID[
+                        "ten-mini-card"
+                    ];
+
                 return {
                     name:
+                        tenMiniOverride?.display_name ||
                         "TEN MINI",
 
                     price:
-                        750,
+                        Number(
+                            tenMiniOverride?.price || 0
+                        ) || 750,
 
                     label:
                         "Подарунковий набір"
@@ -2712,9 +2806,14 @@ function initCatalogQuickBuy() {
             return;
         }
 
+        const productImage =
+            card.querySelector(
+                ".catalog-card-image img"
+            )?.getAttribute("src") || "";
+
         buyButton.setAttribute(
             "onclick",
-            `event.preventDefault(); event.stopPropagation(); addToCart(${JSON.stringify(directCartItem.name)}, ${directCartItem.price}, ${JSON.stringify(directCartItem.label)});`
+            `event.preventDefault(); event.stopPropagation(); addToCart(${JSON.stringify(directCartItem.name)}, ${directCartItem.price}, ${JSON.stringify(directCartItem.label)}, null, ${JSON.stringify({ image: productImage })});`
         );
     });
 
@@ -3006,6 +3105,9 @@ function createSiteCatalogModalProduct(
             )
             : "1";
 
+    const isGiftSet =
+        product.category_slug === "gift-sets";
+
     const buttonLabel =
         product.volume_label ||
         (
@@ -3015,7 +3117,9 @@ function createSiteCatalogModalProduct(
                 ).toLocaleUpperCase(
                     "uk-UA"
                 )}`
-                : "1 ШТ"
+                : isGiftSet
+                    ? ""
+                    : "1 ШТ"
         );
 
     const notes =
@@ -3032,6 +3136,9 @@ function createSiteCatalogModalProduct(
             product.display_name,
 
         typeLabel,
+
+        hideVolumeSelector:
+            isGiftSet,
 
         cartLabel:
             typeLabel,
@@ -3181,6 +3288,7 @@ function createSiteCatalogCard(
             : "";
 
     const descriptionLine =
+        product.short_description ||
         notesLine ||
         product.product_description ||
         "";
@@ -3442,7 +3550,7 @@ function applyStaticCatalogOverrideToCard(
 
     const overrideDescription =
         String(
-            override.product_description ||
+            override.short_description ||
             ""
         ).trim();
 

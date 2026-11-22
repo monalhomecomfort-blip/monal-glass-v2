@@ -2908,6 +2908,55 @@ function escapeCatalogHtml(value) {
         .replace(/'/g, "&#39;");
 }
 
+function watchSiteCatalogImage(image) {
+    if (!image || image.dataset.imageRetryReady === "1") {
+        return;
+    }
+
+    image.dataset.imageRetryReady = "1";
+
+    const originalUrl = image.getAttribute("src");
+
+    if (!originalUrl) {
+        return;
+    }
+
+    let attempts = 0;
+    const maxAttempts = 12;
+
+    image.addEventListener("load", function () {
+        image.style.visibility = "";
+    });
+
+    image.addEventListener("error", function () {
+        image.style.visibility = "hidden";
+
+        if (attempts >= maxAttempts) {
+            console.warn(
+                "SITE CATALOG IMAGE UNAVAILABLE:",
+                originalUrl
+            );
+            return;
+        }
+
+        attempts += 1;
+
+        window.setTimeout(function () {
+            const separator =
+                originalUrl.includes("?") ? "&" : "?";
+
+            image.src =
+                originalUrl +
+                separator +
+                "retry=" +
+                Date.now();
+        }, 5000);
+    });
+
+    if (image.complete && image.naturalWidth === 0) {
+        image.dispatchEvent(new Event("error"));
+    }
+}
 
 function getSiteCatalogTypeLabel(
     product
@@ -3458,6 +3507,10 @@ function createSiteCatalogCard(
     `;
 
     grid.appendChild(card);
+
+    watchSiteCatalogImage(
+        card.querySelector(".catalog-card-image img")
+    );
 }
 
 function applyStaticCatalogOverrideToCard(

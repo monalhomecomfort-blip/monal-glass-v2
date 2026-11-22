@@ -1374,6 +1374,16 @@ const CART_TYPE_IMAGES = {
 };
 
 function getCartItemImage(item) {
+    const savedImage =
+        String(item?.image || "").trim();
+
+    const isValidImage =
+        /^(?:\/?images\/|https:\/\/monal\.com\.ua\/images\/)/i
+            .test(savedImage);
+
+    if (savedImage && isValidImage) {
+        return savedImage;
+    }    
     const name = normalizeCartPersonalOfferText(item?.name);
     const label = normalizeCartPersonalOfferText(item?.label);
     const categorySlug = normalizeCartPersonalOfferText(item?.category_slug);
@@ -1485,9 +1495,10 @@ function renderCart() {
         const imageHtml = itemImage
             ? `
                 <img
-                    src="${itemImage}"
+                    src="${escapeCartHtml(itemImage)}"
                     alt=""
                     class="cart-item-image"
+                    loading="lazy"
                 >
             `
             : "";

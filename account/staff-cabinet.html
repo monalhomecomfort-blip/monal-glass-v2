@@ -16209,6 +16209,11 @@ async function saveSiteCatalogProduct(
 
             displayName,
 
+            shortDescription:
+                document.getElementById(
+                    "site-catalog-short-description"
+                )?.value.trim() || "",
+            
             productDescription:
                 document.getElementById(
                     "site-catalog-description"
@@ -16642,12 +16647,23 @@ async function renderSiteCatalogProductForm(
                         </p>
                     </div>
 
-                    <textarea
-                        id="site-catalog-description"
-                        rows="6"
-                        placeholder="Опис товару..."
-                    ></textarea>
-                </div>
+                    <label class="site-catalog-field">
+                        <span>Короткий опис для картки каталогу</span>
+                        <textarea
+                            id="site-catalog-short-description"
+                            rows="3"
+                            placeholder="Короткий опис під назвою та ціною"
+                        ></textarea>
+                    </label>
+
+                    <label class="site-catalog-field">
+                        <span>Повний опис для модального вікна</span>
+                        <textarea
+                            id="site-catalog-description"
+                            rows="6"
+                            placeholder="Детальний опис товару..."
+                        ></textarea>
+                    </label>
 
 
                 ${attributesHtml}
@@ -17107,6 +17123,11 @@ async function saveSiteCatalogEditProduct(
 
             displayName,
 
+            shortDescription:
+                document.getElementById(
+                    "site-catalog-short-description"
+                )?.value.trim() || "",
+            
             productDescription:
                 document.getElementById(
                     "site-catalog-description"
@@ -18002,14 +18023,29 @@ async function renderSiteCatalogEditForm(
                         }
                     </div>
 
-                    <textarea
-                        id="site-catalog-description"
-                        rows="6"
-                        placeholder="Опис товару..."
-                    >${escapeSiteCatalogHtml(
-                        product.product_description ||
-                        ""
-                    )}</textarea>
+                    <label class="site-catalog-field">
+                        <span>Короткий опис для картки каталогу</span>
+                        <textarea
+                            id="site-catalog-short-description"
+                            rows="3"
+                            placeholder="Короткий опис під назвою та ціною"
+                        >${escapeSiteCatalogHtml(
+                            product.short_description ||
+                            ""
+                        )}</textarea>
+                    </label>
+
+                    <label class="site-catalog-field">
+                        <span>Повний опис для модального вікна</span>
+                        <textarea
+                            id="site-catalog-description"
+                            rows="6"
+                            placeholder="Детальний опис товару..."
+                        >${escapeSiteCatalogHtml(
+                            product.product_description ||
+                            ""
+                        )}</textarea>
+                    </label>
                 </div>
 
                 ${staticAromaDetailsHtml}

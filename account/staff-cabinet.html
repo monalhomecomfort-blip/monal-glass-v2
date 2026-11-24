@@ -16608,6 +16608,41 @@ async function renderSiteCatalogProductForm(
                         ${volumeHtml}
 
 
+                        ${
+                            [
+                                "aromadiffusers",
+                                "refills",
+                                "parfums"
+                            ].includes(category.category_slug)
+                                ? `
+                                    <label class="site-catalog-field">
+                                        <span>Стійкість аромату</span>
+                                        <select id="site-catalog-aroma-longevity">
+                                            <option value="">Не вказано</option>
+                                            <option value="1">1 / 5</option>
+                                            <option value="2">2 / 5</option>
+                                            <option value="3">3 / 5</option>
+                                            <option value="4">4 / 5</option>
+                                            <option value="5">5 / 5</option>
+                                        </select>
+                                    </label>
+
+                                    <label class="site-catalog-field">
+                                        <span>Інтенсивність аромату</span>
+                                        <select id="site-catalog-aroma-intensity">
+                                            <option value="">Не вказано</option>
+                                            <option value="1">1 / 5</option>
+                                            <option value="2">2 / 5</option>
+                                            <option value="3">3 / 5</option>
+                                            <option value="4">4 / 5</option>
+                                            <option value="5">5 / 5</option>
+                                        </select>
+                                    </label>
+                                `
+                                : ""
+                        }
+
+
                         <label
                             class="site-catalog-field"
                         >
@@ -16664,7 +16699,7 @@ async function renderSiteCatalogProductForm(
                             placeholder="Детальний опис товару..."
                         ></textarea>
                     </label>
-
+                </div>
 
                 ${attributesHtml}
 
@@ -16828,37 +16863,82 @@ async function renderSiteCatalogProductForm(
                 "site-catalog-display-name"
             );
 
-        aromaSelect
-            ?.addEventListener(
-                "change",
-                () => {
-                    if (
-                        !displayNameInput ||
-                        displayNameInput
-                            .value
-                            .trim()
-                    ) {
-                        return;
-                    }
+        aromaSelect?.addEventListener(
+            "change",
+            () => {
+                const selectedAromaId =
+                    Number(aromaSelect.value || 0);
 
-                    const selectedOption =
-                        aromaSelect.options[
-                            aromaSelect
-                                .selectedIndex
-                        ];
+                const selectedAroma =
+                    aromas.find(aroma =>
+                        Number(aroma.id) === selectedAromaId
+                    );
 
-                    if (
-                        selectedOption &&
-                        selectedOption.value
-                    ) {
-                        displayNameInput.value =
-                            selectedOption
-                                .textContent
-                                .trim();
-                    }
+                if (!selectedAroma) {
+                    return;
                 }
-            );
 
+                const shortDescriptionInput =
+                    document.getElementById(
+                        "site-catalog-short-description"
+                    );
+
+                const descriptionInput =
+                    document.getElementById(
+                        "site-catalog-description"
+                    );
+
+                const longevityInput =
+                    document.getElementById(
+                        "site-catalog-aroma-longevity"
+                    );
+
+                const intensityInput =
+                    document.getElementById(
+                        "site-catalog-aroma-intensity"
+                    );
+
+                const notes =
+                    Array.isArray(selectedAroma.notes)
+                        ? selectedAroma.notes
+                            .map(note =>
+                                String(
+                                    note.display_name || ""
+                                ).trim()
+                            )
+                            .filter(Boolean)
+                        : [];
+
+                if (displayNameInput) {
+                    displayNameInput.value =
+                        selectedAroma.display_name || "";
+                }
+
+                if (descriptionInput) {
+                    descriptionInput.value =
+                        selectedAroma.description || "";
+                }
+
+                if (shortDescriptionInput) {
+                    shortDescriptionInput.value =
+                        notes.join(" | ");
+                }
+
+                if (longevityInput) {
+                    longevityInput.value =
+                        String(
+                            selectedAroma.longevity || ""
+                        );
+                }
+
+                if (intensityInput) {
+                    intensityInput.value =
+                        String(
+                            selectedAroma.intensity || ""
+                        );
+                }
+            }
+        );
     } catch (err) {
         console.error(
             "RENDER SITE CATALOG PRODUCT FORM ERROR:",

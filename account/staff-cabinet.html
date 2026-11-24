@@ -17265,28 +17265,22 @@ async function saveSiteCatalogEditProduct(
                     : "",
 
             longevity:
-                source === "static"
-                    ? (
-                        Number(
-                            document.getElementById(
-                                "site-catalog-static-longevity"
-                            )?.value ||
-                            0
-                        ) || null
-                    )
-                    : null,
+                Number(
+                    document.getElementById(
+                        source === "static"
+                            ? "site-catalog-static-longevity"
+                            : "site-catalog-aroma-longevity"
+                    )?.value || 0
+                ) || null,
 
             intensity:
-                source === "static"
-                    ? (
-                        Number(
-                            document.getElementById(
-                                "site-catalog-static-intensity"
-                            )?.value ||
-                            0
-                        ) || null
-                    )
-                    : null,
+                Number(
+                    document.getElementById(
+                        source === "static"
+                            ? "site-catalog-static-intensity"
+                            : "site-catalog-aroma-intensity"
+                    )?.value || 0
+                ) || null,
 
             status:
                 currentStatus,
@@ -18067,6 +18061,34 @@ async function renderSiteCatalogEditForm(
 
 
                         ${volumeHtml}
+
+
+                        ${
+                            source === "database" &&
+                            [
+                                "aromadiffusers",
+                                "refills",
+                                "parfums"
+                            ].includes(category.category_slug)
+                                ? `
+                                    <label class="site-catalog-field">
+                                        <span>Стійкість аромату</span>
+                                        <select id="site-catalog-aroma-longevity">
+                                            <option value="">Не вказано</option>
+                                            ${longevityOptions}
+                                        </select>
+                                    </label>
+
+                                    <label class="site-catalog-field">
+                                        <span>Інтенсивність аромату</span>
+                                        <select id="site-catalog-aroma-intensity">
+                                            <option value="">Не вказано</option>
+                                            ${intensityOptions}
+                                        </select>
+                                    </label>
+                                `
+                                : ""
+                        }
 
 
                         <label

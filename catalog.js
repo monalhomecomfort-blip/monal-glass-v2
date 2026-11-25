@@ -2724,7 +2724,16 @@ function initCatalogQuickBuy() {
 
             label:
                 variant.cartLabel ||
-                product.cartLabel
+                product.cartLabel,
+
+            product_id:
+                Number(variant.productId || 0) || undefined,
+
+            product_key:
+                variant.productKey || undefined,
+
+            category_slug:
+                variant.categorySlug || undefined
         };
     }
 
@@ -2903,7 +2912,12 @@ function initCatalogQuickBuy() {
 
         buyButton.setAttribute(
             "onclick",
-            `event.preventDefault(); event.stopPropagation(); addToCart(${JSON.stringify(directCartItem.name)}, ${directCartItem.price}, ${JSON.stringify(directCartItem.label)}, null, ${JSON.stringify({ image: productImage })});`
+            `event.preventDefault(); event.stopPropagation(); addToCart(${JSON.stringify(directCartItem.name)}, ${directCartItem.price}, ${JSON.stringify(directCartItem.label)}, null, ${JSON.stringify({
+                image: productImage,
+                product_id: directCartItem.product_id,
+                product_key: directCartItem.product_key,
+                category_slug: directCartItem.category_slug
+            })});`
         );
     });
 

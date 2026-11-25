@@ -596,6 +596,91 @@
 <script src="search.js"></script>
 
 <script>
+    (async function syncHomeAromaMenus() {
+        const desktopMenu = document.querySelector(
+            '.home-catalog-menu:has(.home-catalog-button) .home-catalog-dropdown'
+        );
+
+        const mobileGroups = Array.from(
+            document.querySelectorAll('.home-mobile-nav-group')
+        );
+
+        const aromaMobileGroup = mobileGroups.find(function (group) {
+            return group.querySelector('.home-mobile-nav-toggle')
+                ?.textContent.trim().toLowerCase() === 'аромати';
+        });
+
+        const mobileMenu = aromaMobileGroup?.querySelector(
+            '.home-mobile-nav-dropdown'
+        );
+
+        if (!desktopMenu && !mobileMenu) return;
+
+        try {
+            const response = await fetch(
+                'https://monal-mono-pay-production.up.railway.app/api/site-catalog/published',
+                { cache: 'no-store' }
+            );
+
+            if (!response.ok) {
+                throw new Error('Не вдалося завантажити аромати');
+            }
+
+            const data = await response.json();
+
+            if (!data.ok || !Array.isArray(data.products)) {
+                throw new Error('Некоректна відповідь каталогу');
+            }
+
+            const aromas = new Map();
+
+            data.products.forEach(function (product) {
+                const slug = String(product.aroma_slug || '')
+                    .trim()
+                    .toLowerCase();
+
+                const name = String(product.aroma_display_name || '')
+                    .trim();
+
+                if (!slug || !name || aromas.has(slug)) return;
+
+                aromas.set(slug, name);
+            });
+
+            [desktopMenu, mobileMenu].filter(Boolean).forEach(function (menu) {
+                const existingSlugs = new Set(
+                    Array.from(menu.querySelectorAll('a[href]'))
+                        .map(function (link) {
+                            const url = new URL(link.href, window.location.href);
+                            return String(url.searchParams.get('aroma') || '')
+                                .toLowerCase();
+                        })
+                );
+
+                aromas.forEach(function (name, slug) {
+                    if (existingSlugs.has(slug)) return;
+
+                    const link = document.createElement('a');
+
+                    link.href =
+                        'catalog.html?aroma=' +
+                        encodeURIComponent(slug) +
+                        '#catalog';
+
+                    link.textContent = name.toLocaleUpperCase('uk-UA');
+
+                    menu.appendChild(link);
+                    existingSlugs.add(slug);
+                });
+            });
+
+        } catch (error) {
+            console.error('HOME AROMA MENU ERROR:', error);
+        }
+    })();
+</script>
+
+<script>
     (function () {
         const subscribeForm = document.getElementById('home-subscribe-form');
         const emailInput = document.getElementById('home-email');

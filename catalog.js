@@ -8,6 +8,7 @@ function formatMonalText(value) {
 }
 
 const SITE_CATALOG_MODAL_PRODUCTS = {};
+const SITE_CATALOG_MODAL_GROUPS = {};
 
 const STATIC_CATALOG_OVERRIDES_BY_CARD_ID = {};
 
@@ -370,31 +371,94 @@ const REFILL_MODAL_IMAGES = {
     "stone-salt": "images/refills/stone_salt_.png"
 };
 
+function mergeSiteCatalogVariants(baseProduct, group) {
+    if (!group) return baseProduct;
+    if (!baseProduct) return group;
+
+    return {
+        ...baseProduct,
+        name: group.name || baseProduct.name,
+        typeLabel: group.typeLabel || baseProduct.typeLabel,
+        cartLabel: group.cartLabel || baseProduct.cartLabel,
+        aromaSlug: group.aromaSlug || "",
+        staticType: group.staticType || "",
+        hasAroma: group.hasAroma,
+        isInStock: true,
+        pyramid: group.pyramid?.top
+            ? group.pyramid
+            : baseProduct.pyramid,
+        description: group.description || baseProduct.description,
+        longevity: group.longevity || baseProduct.longevity,
+        intensity: group.intensity || baseProduct.intensity,
+        galleryImages: group.galleryImages || [],
+        volumes: {
+            ...baseProduct.volumes,
+            ...group.volumes
+        }
+    };
+}
+
+function getStaticCatalogVariantOverrides(product, productType, aromaKey) {
+    if (!product) return null;
+
+    const volumes = { ...product.volumes };
+
+    Object.keys(volumes).forEach(function (volume) {
+        const cardId = productType === "parfum"
+            ? `parfum-${aromaKey}-${volume}`
+            : productType === "diffuser"
+                ? `diffuser-${aromaKey}`
+                : `refill-${aromaKey}`;
+
+        const override = STATIC_CATALOG_OVERRIDES_BY_CARD_ID[cardId];
+        if (!override) return;
+
+        const images = Array.isArray(override.images)
+            ? override.images
+                .map(image => String(image.image_url || "").trim())
+                .filter(Boolean)
+            : [];
+
+        const price = Number(override.price || 0);
+
+        volumes[volume] = {
+            ...volumes[volume],
+            price: price > 0 ? price : volumes[volume].price,
+            image: images[0] || volumes[volume].image,
+            galleryImages: images.length ? images : undefined,
+            isInStock: override.is_in_stock !== false
+        };
+    });
+
+    return { ...product, volumes };
+}
+
 function getModalProduct(productType, productKey) {
     if (productType === "site") {
-        return (
-            SITE_CATALOG_MODAL_PRODUCTS[
-                productKey
-            ] || null
-        );
+        const group = SITE_CATALOG_MODAL_PRODUCTS[productKey] || null;
+        if (!group) return null;
+
+        const staticProduct = group.staticType && group.aromaSlug
+            ? getModalProduct(group.staticType, group.aromaSlug)
+            : null;
+
+        return mergeSiteCatalogVariants(staticProduct, group);
     }
 
-    const aroma =
-        PARFUM_MODAL_PRODUCTS[productKey];
-
+    const aroma = PARFUM_MODAL_PRODUCTS[productKey];
     if (!aroma) return null;
 
+    let product = null;
+
     if (productType === "parfum") {
-        return {
+        product = {
             ...aroma,
             typeLabel: "ПАРФУМИ ДЛЯ ІНТЕР’ЄРУ",
             cartLabel: "Парфуми для інтер’єру",
             volumes: aroma.volumes
         };
-    }
-
-    if (productType === "diffuser" && DIFFUSER_MODAL_IMAGES[productKey]) {
-        return {
+    } else if (productType === "diffuser" && DIFFUSER_MODAL_IMAGES[productKey]) {
+        product = {
             ...aroma,
             typeLabel: "АРОМАДИФУЗОР",
             cartLabel: "Аромадифузор",
@@ -406,10 +470,8 @@ function getModalProduct(productType, productKey) {
                 }
             }
         };
-    }
-
-    if (productType === "refill" && REFILL_MODAL_IMAGES[productKey]) {
-        return {
+    } else if (productType === "refill" && REFILL_MODAL_IMAGES[productKey]) {
+        product = {
             ...aroma,
             typeLabel: "РЕФІЛ ДЛЯ АРОМАДИФУЗОРА",
             cartLabel: "Рефіл",
@@ -423,7 +485,18 @@ function getModalProduct(productType, productKey) {
         };
     }
 
-    return null;
+    if (!product) return null;
+
+    const withOverrides = getStaticCatalogVariantOverrides(
+        product,
+        productType,
+        productKey
+    );
+
+    return mergeSiteCatalogVariants(
+        withOverrides,
+        SITE_CATALOG_MODAL_GROUPS[`${productKey}-${productType}`]
+    );
 }
 
 function getStaticCatalogModalProduct(
@@ -685,13 +758,31 @@ function getStaticCatalogModalProduct(
                 .staticOverrideImages;
         }
 
-        if (
-            currentProductType === "site"
-        ) {
-            return (
-                currentProduct.galleryImages ||
-                []
-            );
+        if (currentProductType === "site") {
+            const variantImages = currentProduct.volumes?.[currentVolume]?.galleryImages;
+
+            if (Array.isArray(variantImages) && variantImages.length) {
+                return variantImages;
+            }
+
+            const staticType = currentProduct.staticType;
+            const aromaKey = currentProduct.aromaSlug;
+
+            if (staticType === "parfum") {
+                return currentVolume === "15"
+                    ? (parfumsGalleries[`${aromaKey}-15`] || [])
+                    : (parfumsGalleries[aromaKey] || []);
+            }
+
+            if (staticType === "diffuser") {
+                return aromadiffusersGalleries[aromaKey] || [];
+            }
+
+            if (staticType === "refill") {
+                return refillsGalleries[aromaKey] || [];
+            }
+
+            return currentProduct.galleryImages || [];
         }
 
         if (
@@ -803,15 +894,11 @@ function getStaticCatalogModalProduct(
             ];
 
         const isInStock =
-            currentProduct
-                .staticOverrideVolume ===
-                String(currentVolume)
-                ? currentProduct
-                    .staticOverrideInStock !==
-                    false
-                : currentProduct
-                    .isInStock !==
-                    false;
+            selectedVariant.isInStock !== undefined
+                ? selectedVariant.isInStock !== false
+                : currentProduct.staticOverrideVolume === String(currentVolume)
+                    ? currentProduct.staticOverrideInStock !== false
+                    : currentProduct.isInStock !== false;
 
         updateGallery();
 
@@ -904,7 +991,7 @@ function getStaticCatalogModalProduct(
         ]
             .flatMap(function (value) {
                 return String(value || "")
-                    .split(" | ")
+                    .split(/\s*[|,;\n\r]+\s*/u)
                     .map(function (note) {
                         return note.trim();
                     })
@@ -1163,7 +1250,7 @@ function getStaticCatalogModalProduct(
         if (
             !currentProduct ||
             !currentVolume ||
-            currentProduct.isInStock === false ||
+            buyButton.disabled ||
             typeof window.addToCart !== "function"
         ) {
             return;
@@ -1184,7 +1271,10 @@ function getStaticCatalogModalProduct(
                     image:
                         currentGalleryImages[0] ||
                         selectedVariant.image ||
-                        ""
+                        "",
+                    product_id: selectedVariant.productId || undefined,
+                    product_key: selectedVariant.productKey || undefined,
+                    category_slug: selectedVariant.categorySlug || undefined
                 }
             );
         }
@@ -3124,131 +3214,93 @@ function ensureSiteCatalogSection(
     return section;
 }
 
-function createSiteCatalogModalProduct(
-    product
-) {
-    const typeLabel =
-        getSiteCatalogTypeLabel(
-            product
-        );
+function createSiteCatalogModalProduct(product) {
+    const typeLabel = getSiteCatalogTypeLabel(product);
 
-    const images =
-        Array.isArray(
-            product.images
-        )
-            ? product.images
-                .map(image =>
-                    String(
-                        image.image_url ||
-                        ""
-                    ).trim()
-                )
-                .filter(Boolean)
-            : [];
+    const images = Array.isArray(product.images)
+        ? product.images
+            .map(image => String(image.image_url || "").trim())
+            .filter(Boolean)
+        : [];
 
-    const volumeKey =
-        product.volume_value !== null &&
+    const volumeKey = product.volume_value !== null &&
         product.volume_value !== undefined
-            ? String(
-                product.volume_value
-            )
+            ? String(Number(product.volume_value))
             : "1";
 
-    const isGiftSet =
-        product.category_slug === "gift-sets";
+    const isGiftSet = product.category_slug === "gift-sets";
 
-    const buttonLabel =
-        product.volume_label ||
-        (
-            product.volume_unit
-                ? `${volumeKey} ${String(
-                    product.volume_unit
-                ).toLocaleUpperCase(
-                    "uk-UA"
-                )}`
-                : isGiftSet
-                    ? ""
-                    : "1 ШТ"
-        );
+    const buttonLabel = product.volume_label || (
+        product.volume_unit
+            ? `${volumeKey} ${String(product.volume_unit).toLocaleUpperCase("uk-UA")}`
+            : isGiftSet ? "" : "1 ШТ"
+    );
 
-    const notes =
-        Array.isArray(
-            product.notes
-        )
-            ? product.notes
-            : [];
+    const groupKey = String(
+        product.product_group_key || product.product_key || ""
+    ).trim();
 
-    SITE_CATALOG_MODAL_PRODUCTS[
-        product.product_key
-    ] = {
-        name:
-            product.display_name,
+    const notes = Array.isArray(product.notes) ? product.notes : [];
 
-        typeLabel,
+    let group = SITE_CATALOG_MODAL_GROUPS[groupKey];
 
-        hideVolumeSelector:
-            isGiftSet,
+    if (!group) {
+        const staticTypeByCategory = {
+            parfums: "parfum",
+            aromadiffusers: "diffuser",
+            refills: "refill"
+        };
 
-        cartLabel:
+        group = {
+            name: product.aroma_display_name || product.display_name,
             typeLabel,
+            cartLabel: typeLabel,
+            hideVolumeSelector: isGiftSet,
+            isInStock: true,
+            hasAroma: Boolean(product.aroma_id),
+            aromaSlug: product.aroma_slug || "",
+            staticType: staticTypeByCategory[product.category_slug] || "",
+            pyramid: {
+                top: notes.join(" | "),
+                heart: "",
+                base: ""
+            },
+            description: product.product_description ||
+                product.aroma_description || "",
+            longevity: Number(product.longevity || 0),
+            intensity: Number(product.intensity || 0),
+            galleryImages: images,
+            volumes: {}
+        };
 
-        isInStock:
-            product.is_in_stock !== false,
+        SITE_CATALOG_MODAL_GROUPS[groupKey] = group;
+    }
 
-        aromaSlug:
-            product.aroma_slug || "",
+    if (!group.pyramid.top && notes.length) {
+        group.pyramid.top = notes.join(" | ");
+    }
 
-        hasAroma:
-            Boolean(
-                product.aroma_id
-            ),
+    if (!group.description) {
+        group.description = product.product_description ||
+            product.aroma_description || "";
+    }
 
-        pyramid: {
-            top:
-                notes.join(" | "),
-
-            heart: "",
-            base: ""
-        },
-
-        description:
-            product.product_description ||
-            product.aroma_description ||
-            "",
-
-        longevity:
-            Number(
-                product.longevity || 0
-            ),
-
-        intensity:
-            Number(
-                product.intensity || 0
-            ),
-
-        galleryImages:
-            images,
-
-        volumes: {
-            [volumeKey]: {
-                price:
-                    Number(
-                        product.price || 0
-                    ),
-
-                image:
-                    images[0] || "",
-
-                cartName:
-                    product.display_name,
-
-                cartLabel:
-                    typeLabel,
-
-                buttonLabel
-            }
-        }
+    group.volumes[volumeKey] = {
+        price: Number(product.price || 0),
+        image: images[0] || "",
+        galleryImages: images,
+        isInStock: product.is_in_stock !== false,
+        cartName: buttonLabel && product.volume_value !== null
+            ? `${product.display_name} ${buttonLabel}`
+            : product.display_name,
+        cartLabel: typeLabel,
+        buttonLabel,
+        productId: Number(product.products_catalog_id || 0),
+        productKey: product.product_key,
+        categorySlug: product.category_slug
     };
+
+    SITE_CATALOG_MODAL_PRODUCTS[product.product_key] = group;
 
     return volumeKey;
 }

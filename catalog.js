@@ -991,7 +991,7 @@ function getStaticCatalogModalProduct(
         ]
             .flatMap(function (value) {
                 return String(value || "")
-                    .split(/\s*[|,;\n\r]+\s*/u)
+                    .split(/\s*[|,;•·∙\/\n\r–—]+\s*/u)
                     .map(function (note) {
                         return note.trim();
                     })

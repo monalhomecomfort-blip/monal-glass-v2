@@ -2276,6 +2276,26 @@ ${finalItemsText}
           ? "Електронний сертифікат"
           : np,
       itemsText: finalItemsText,
+
+      items: cart.map(item => ({
+          name: item.name || "",
+          label: item.label || "",
+          price: Number(item.price || 0),
+          product_id:
+              Number(item.product_id || 0) ||
+              null,
+          product_key:
+              item.product_key || "",
+          category_slug:
+              item.category_slug || "",
+          image:
+              item.image || "",
+          items:
+              Array.isArray(item.items)
+                  ? item.items
+                  : null
+      })),
+
       totalAmount: total,
       orderAmount: afterDiscounts,  
       paidAmount: payNow,
@@ -2409,6 +2429,7 @@ fetch("https://monal-mono-pay-production.up.railway.app/register-order", {
     buyerPhone: PAYMENT_CONTEXT.buyerPhone || "",
     delivery: PAYMENT_CONTEXT.delivery || "",
     itemsText: PAYMENT_CONTEXT.itemsText || "",
+    items: PAYMENT_CONTEXT.items || [],
     totalAmount: PAYMENT_CONTEXT.totalAmount || "",
     orderAmount: PAYMENT_CONTEXT.orderAmount || "",  
     paidAmount: PAYMENT_CONTEXT.paidAmount || "",

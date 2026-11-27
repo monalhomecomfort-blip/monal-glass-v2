@@ -1724,6 +1724,13 @@ const DISCOVERY_MODAL_SUBTITLES = {
         "images/короб2.webp"
     ];
 
+    const certificateNominalImages = {
+        1000: "images/1000.webp",
+        2500: "images/2500.webp",
+        3500: "images/3500.webp",
+        5000: "images/5000.webp"
+    };
+
     let certificateImageIndex = 0;
     let certificateTouchStartX = 0;
 

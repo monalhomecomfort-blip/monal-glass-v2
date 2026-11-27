@@ -1964,6 +1964,24 @@ const DISCOVERY_MODAL_SUBTITLES = {
                 button.dataset.certificateNominal
             );
 
+            const nominalImage =
+                certificateNominalImages[
+                    selectedNominal
+                ];
+
+            const nominalImageIndex =
+                certificateImages.indexOf(
+                    nominalImage
+                );
+
+            if (
+                nominalImageIndex >= 0
+            ) {
+                showCertificateImage(
+                    nominalImageIndex
+                );
+            }
+
             nominalButtons.forEach(function (item) {
                 const isActive = item === button;
 
@@ -3931,6 +3949,51 @@ window.SITE_CATALOG_READY =
                 .initCatalogQuickBuy();
         }
     })();
+
+
+(function restoreCatalogHashAfterDynamicLoad() {
+    const hash =
+        window.location.hash;
+
+    if (
+        !hash ||
+        hash === "#catalog"
+    ) {
+        return;
+    }
+
+    const targetId =
+        decodeURIComponent(
+            hash.slice(1)
+        );
+
+    (async function () {
+        await (
+            window.SITE_CATALOG_READY ||
+            Promise.resolve()
+        );
+
+        await new Promise(resolve => {
+            requestAnimationFrame(() => {
+                requestAnimationFrame(resolve);
+            });
+        });
+
+        const target =
+            document.getElementById(
+                targetId
+            );
+
+        if (!target) {
+            return;
+        }
+
+        target.scrollIntoView({
+            behavior: "auto",
+            block: "start"
+        });
+    })();
+})();
 
 
 (async function initAromaCatalogFilter() {

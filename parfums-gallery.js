@@ -370,8 +370,8 @@ const aromadiffusersGalleries = {
 /* ===================== CERTIFICATES ===================== */
 const certificatesGalleries = {
   "certificates": [
-    "images/2500.webp",
     "images/3500.webp",
+    "images/2500.webp",
     "images/5000.webp",
     "images/1000.webp",
     "images/короб.webp",

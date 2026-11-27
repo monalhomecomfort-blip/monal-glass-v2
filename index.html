@@ -597,8 +597,17 @@
 
 <script>
     (async function syncHomeAromaMenus() {
-        const desktopMenu = document.querySelector(
-            '.home-catalog-menu:has(.home-catalog-button) .home-catalog-dropdown'
+        const desktopGroups = Array.from(
+            document.querySelectorAll('.home-catalog-menu')
+        );
+
+        const aromaDesktopGroup = desktopGroups.find(function (group) {
+            return group.querySelector('.home-catalog-button')
+                ?.textContent.trim().toLowerCase() === 'аромати';
+        });
+
+        const desktopMenu = aromaDesktopGroup?.querySelector(
+            '.home-catalog-dropdown'
         );
 
         const mobileGroups = Array.from(

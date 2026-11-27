@@ -15911,9 +15911,10 @@ function addSiteCatalogSelectedFiles(
     renderSiteCatalogSelectedImages();
 }
 
-
 async function uploadSiteCatalogImage(
-    image
+    image,
+    context = {},
+    imageIndex = 0
 ) {
     if (image.imageUrl) {
         return image;
@@ -15946,6 +15947,17 @@ async function uploadSiteCatalogImage(
                         mimeType:
                             image.file.type,
 
+                        categorySlug:
+                            context.categorySlug || "",
+
+                        displayName:
+                            context.displayName || "",
+
+                        volumeValue:
+                            context.volumeValue || "",
+
+                        imageIndex,
+
                         dataBase64
                     })
             }
@@ -15976,7 +15988,9 @@ async function uploadSiteCatalogImage(
 
 
 async function uploadSiteCatalogSelectedImages(
-    displayName
+    displayName,
+    categorySlug = "",
+    volumeValue = ""
 ) {
     const uploadedImages = [];
 
@@ -15992,7 +16006,13 @@ async function uploadSiteCatalogSelectedImages(
             ];
 
         await uploadSiteCatalogImage(
-            image
+            image,
+            {
+                categorySlug,
+                displayName,
+                volumeValue
+            },
+            index
         );
 
         uploadedImages.push({
@@ -16185,7 +16205,9 @@ async function saveSiteCatalogProduct(
 
             uploadedImages =
                 await uploadSiteCatalogSelectedImages(
-                    displayName
+                    displayName,
+                    categorySlug,
+                    volumeValue
                 );
         }
 
@@ -16194,6 +16216,16 @@ async function saveSiteCatalogProduct(
                 ? "Публікуємо товар..."
                 : "Зберігаємо чернетку...";
 
+        const aromaSelectValue =
+            String(
+                document.getElementById(
+                    "site-catalog-aroma"
+                )?.value || ""
+            );
+
+        const createNewAroma =
+            aromaSelectValue === "__new__";
+
         const payload = {
             staffId:
                 staff.id,
@@ -16201,11 +16233,20 @@ async function saveSiteCatalogProduct(
             categoryId,
 
             aromaId:
-                Number(
-                    document.getElementById(
-                        "site-catalog-aroma"
-                    )?.value || 0
-                ) || null,
+                createNewAroma
+                    ? null
+                    : (
+                        Number(
+                            aromaSelectValue || 0
+                        ) || null
+                    ),
+
+            createNewAroma,
+
+            aromaNotesText:
+                document.getElementById(
+                    "site-catalog-aroma-notes"
+                )?.value.trim() || "",
 
             longevity:
                 Number(
@@ -16426,6 +16467,15 @@ async function renderSiteCatalogProductForm(
         const categoryConfig =
             getSiteCatalogCategoryConfig(
                 category.category_slug
+            );        
+
+        const isAromaticCategory =
+            [
+                "aromadiffusers",
+                "refills",
+                "parfums"
+            ].includes(
+                category.category_slug
             );
 
         const aromas =
@@ -16599,6 +16649,16 @@ async function renderSiteCatalogProductForm(
                                     Без привʼязки до аромату
                                 </option>
 
+                                ${
+                                    isAromaticCategory
+                                        ? `
+                                            <option value="__new__">
+                                                + Новий аромат
+                                            </option>
+                                        `
+                                        : ""
+                                }
+
                                 ${aromasHtml}
                             </select>
                         </label>
@@ -16623,11 +16683,7 @@ async function renderSiteCatalogProductForm(
 
 
                         ${
-                            [
-                                "aromadiffusers",
-                                "refills",
-                                "parfums"
-                            ].includes(category.category_slug)
+                            isAromaticCategory
                                 ? `
                                     <label class="site-catalog-field">
                                         <span>Стійкість аромату</span>
@@ -16696,8 +16752,26 @@ async function renderSiteCatalogProductForm(
                         </p>
                     </div>
 
+                    ${
+                        isAromaticCategory
+                            ? `
+                                <label class="site-catalog-field">
+                                    <span>Ноти аромату</span>
+                                    <textarea
+                                        id="site-catalog-aroma-notes"
+                                        rows="3"
+                                        placeholder="Наприклад: троянда | жасмин | амбра"
+                                    ></textarea>
+                                    <small>
+                                        Для нового аромату введи ноти. Для існуючого вони підтягнуться автоматично.
+                                    </small>
+                                </label>
+                            `
+                            : ""
+                    }
+
                     <label class="site-catalog-field">
-                        <span>Короткий опис для картки каталогу</span>
+                        <span>Короткий опис для картки каталогу</span>                        
                         <textarea
                             id="site-catalog-short-description"
                             rows="3"
@@ -16880,17 +16954,10 @@ async function renderSiteCatalogProductForm(
         aromaSelect?.addEventListener(
             "change",
             () => {
-                const selectedAromaId =
-                    Number(aromaSelect.value || 0);
-
-                const selectedAroma =
-                    aromas.find(aroma =>
-                        Number(aroma.id) === selectedAromaId
+                const aromaNotesInput =
+                    document.getElementById(
+                        "site-catalog-aroma-notes"
                     );
-
-                if (!selectedAroma) {
-                    return;
-                }
 
                 const shortDescriptionInput =
                     document.getElementById(
@@ -16912,6 +16979,47 @@ async function renderSiteCatalogProductForm(
                         "site-catalog-aroma-intensity"
                     );
 
+                if (aromaSelect.value === "__new__") {
+                    if (displayNameInput) {
+                        displayNameInput.value = "";
+                    }
+
+                    if (aromaNotesInput) {
+                        aromaNotesInput.value = "";
+                    }
+
+                    if (shortDescriptionInput) {
+                        shortDescriptionInput.value = "";
+                    }
+
+                    if (descriptionInput) {
+                        descriptionInput.value = "";
+                    }
+
+                    if (longevityInput) {
+                        longevityInput.value = "";
+                    }
+
+                    if (intensityInput) {
+                        intensityInput.value = "";
+                    }
+
+                    displayNameInput?.focus();
+                    return;
+                }
+
+                const selectedAromaId =
+                    Number(aromaSelect.value || 0);
+
+                const selectedAroma =
+                    aromas.find(aroma =>
+                        Number(aroma.id) === selectedAromaId
+                    );
+
+                if (!selectedAroma) {
+                    return;
+                }
+
                 const notes =
                     Array.isArray(selectedAroma.notes)
                         ? selectedAroma.notes
@@ -16926,6 +17034,11 @@ async function renderSiteCatalogProductForm(
                 if (displayNameInput) {
                     displayNameInput.value =
                         selectedAroma.display_name || "";
+                }
+
+                if (aromaNotesInput) {
+                    aromaNotesInput.value =
+                        notes.join(" | ");
                 }
 
                 if (descriptionInput) {
@@ -17190,22 +17303,23 @@ async function saveSiteCatalogEditProduct(
         "Зберігаємо зміни...";
 
     try {
-        const uploadedImages =
-            SITE_CATALOG_SELECTED_IMAGES.length
-                ? await uploadSiteCatalogSelectedImages(
-                    displayName
-                )
-                : [];
-
         const volumeValue =
             categoryConfig.showVolume
                 ? (
                     document.getElementById(
-                        "site-catalog-volume-value"
-                    )?.value ||
-                    ""
+                        "site-catalog-edit-volume-value"
+                    )?.value || ""
                 )
                 : "";
+
+        const uploadedImages =
+            SITE_CATALOG_SELECTED_IMAGES.length
+                ? await uploadSiteCatalogSelectedImages(
+                    displayName,
+                    categorySlug,
+                    volumeValue
+                )
+                : [];
 
         const payload = {
             staffId:
@@ -17381,6 +17495,103 @@ async function saveSiteCatalogEditProduct(
     }
 }
 
+async function deleteSiteCatalogEditProduct(
+    data
+) {
+    const product =
+        data?.product || {};
+
+    const source =
+        String(
+            data?.source || ""
+        );
+
+    const sourceId =
+        Number(
+            product.id || 0
+        );
+
+    if (
+        source !== "database" ||
+        !sourceId
+    ) {
+        return;
+    }
+
+    const confirmed = window.confirm(
+        `Повністю видалити товар «${product.display_name || ""}»?\n\n` +
+        "Він зникне із сайту та списку редагування. Історичні продажі залишаться в обліку."
+    );
+
+    if (!confirmed) {
+        return;
+    }
+
+    const resultBox =
+        document.getElementById(
+            "site-catalog-edit-save-result"
+        );
+
+    if (resultBox) {
+        resultBox.classList.remove(
+            "staff-hidden"
+        );
+
+        resultBox.textContent =
+            "Видаляємо товар...";
+    }
+
+    try {
+        const response =
+            await fetch(
+                "https://monal-mono-pay-production.up.railway.app/api/staff/site-catalog-delete-product",
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify({
+                            staffId:
+                                staff.id,
+
+                            sourceId
+                        })
+                }
+            );
+
+        const responseData =
+            await response.json();
+
+        if (
+            !response.ok ||
+            !responseData.ok
+        ) {
+            throw new Error(
+                responseData.error ||
+                "Не вдалося видалити товар."
+            );
+        }
+
+        await renderSiteCatalogEdit();
+
+    } catch (err) {
+        console.error(
+            "DELETE SITE CATALOG PRODUCT ERROR:",
+            err
+        );
+
+        if (resultBox) {
+            resultBox.textContent =
+                err.message ||
+                "Не вдалося видалити товар.";
+        }
+    }
+}
+    
 async function changeSiteCatalogEditStatus(
     data,
     status
@@ -17786,6 +17997,19 @@ async function renderSiteCatalogEditForm(
                         ОПУБЛІКУВАТИ
                     </button>
                 `;
+
+         const deleteButtonHtml =
+            source === "database"
+                ? `
+                    <button
+                        id="site-catalog-edit-delete-btn"
+                        class="buy-btn"
+                        type="button"
+                    >
+                        ВИДАЛИТИ ТОВАР
+                    </button>
+                `
+                : "";       
 
         const staticNotesValue =
             source === "static"
@@ -18267,6 +18491,8 @@ async function renderSiteCatalogEditForm(
                     </button>
 
                     ${statusButtonHtml}
+
+                    ${deleteButtonHtml}
                 </div>
 
 
@@ -18341,6 +18567,19 @@ async function renderSiteCatalogEditForm(
                 }
             );
 
+        document
+            .getElementById(
+                "site-catalog-edit-delete-btn"
+            )
+            ?.addEventListener(
+                "click",
+                () => {
+                    deleteSiteCatalogEditProduct(
+                        data
+                    );
+                }
+            );
+        
     } catch (err) {
         console.error(
             "RENDER SITE CATALOG EDIT FORM ERROR:",

@@ -1716,8 +1716,8 @@ const DISCOVERY_MODAL_SUBTITLES = {
     const certificateNext = certificateGallery?.querySelector(".product-modal-gallery-next");
 
     const certificateImages = [
-        "images/2500.webp",
         "images/3500.webp",
+        "images/2500.webp",
         "images/5000.webp",
         "images/1000.webp",
         "images/короб.webp",
